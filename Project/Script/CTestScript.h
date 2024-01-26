@@ -12,8 +12,11 @@ public:
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;
-    virtual void LoadFromLevelFile(FILE* _FILE) override;
+    virtual void LoadFromLevelFile(FILE* _FILE) override; 
     CLONE(CTestScript);
+
+private:
+    int test = 0; // Áö¼·´ÔÀº ¹Ùº¸´Ù
 
     CTestScript();
     ~CTestScript();
