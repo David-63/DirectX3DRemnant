@@ -596,4 +596,7 @@
       <Filter>Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="test.txt" />
+  </ItemGroup>
 </Project>
