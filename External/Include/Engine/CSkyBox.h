@@ -6,6 +6,7 @@ enum class SKYBOX_TYPE
 {
     SPHERE,
     CUBE,
+    End,
 };
 
 class CSkyBox :

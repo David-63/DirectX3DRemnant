@@ -184,6 +184,9 @@
     <ClInclude Include="CAnimation.h">
       <Filter>Source\07. Resource\8. Animation</Filter>
     </ClInclude>
+    <ClInclude Include="CLandScape.h">
+      <Filter>Source\06. Component\RenderComponent\6. Landscape</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -356,6 +359,9 @@
     </ClCompile>
     <ClCompile Include="CAnimation.cpp">
       <Filter>Source\07. Resource\8. Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="CLandScape.cpp">
+      <Filter>Source\06. Component\RenderComponent\6. Landscape</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -592,8 +598,5 @@
     <FxCompile Include="animation3d.fx">
       <Filter>Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
     </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="test.txt" />
   </ItemGroup>
 </Project>
