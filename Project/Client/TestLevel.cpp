@@ -129,33 +129,41 @@ void CreateTestLevel()
 		SpawnGameObject(pObject, Vec3(550.f, -750.f, 0.f), L"Player");
 	}
 
-	// Background
-	{
-		CGameObject* pObject = new CGameObject;
-		pObject->SetName(L"Plane");
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CMeshRender);
 
-		pObject->Transform()->SetRelativeScale(Vec3(8000.f, 8000.f, 8000.f));
-		pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	// LandScape Object
+	CGameObject* pLandScape = new CGameObject;
+	pLandScape->SetName(L"LandScape");
 
-		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+	pLandScape->AddComponent(new CTransform);
+	pLandScape->AddComponent(new CLandScape);
 
-		SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Background");
+	pLandScape->Transform()->SetRelativeScale(Vec3(1000.f, 4000.f, 1000.f));
 
-		pObject = new CGameObject;
-		pObject->SetName(L"Decal");
-		pObject->AddComponent(new CTransform);
-		pObject->AddComponent(new CDecal);
+	pLandScape->LandScape()->SetFace(64, 64);
+	pLandScape->LandScape()->SetFrustumCheck(false);
+	pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));
+	SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
 
-		pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
-		pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-
-		pObject->Decal()->SetDeferredDecal(true);
-		pObject->Decal()->ActivateEmissive(false);
-		pObject->Decal()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\MagicCircle.png"));
-
-		SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Background");
-	}
+	//// Background
+	//{
+	//	CGameObject* pObject = new CGameObject;
+	//	pObject->SetName(L"Plane");
+	//	pObject->AddComponent(new CTransform);
+	//	pObject->AddComponent(new CMeshRender);
+	//	pObject->Transform()->SetRelativeScale(Vec3(8000.f, 8000.f, 8000.f));
+	//	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	//	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+	//	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+	//	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Background");
+	//	pObject = new CGameObject;
+	//	pObject->SetName(L"Decal");
+	//	pObject->AddComponent(new CTransform);
+	//	pObject->AddComponent(new CDecal);
+	//	pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
+	//	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	//	pObject->Decal()->SetDeferredDecal(true);
+	//	pObject->Decal()->ActivateEmissive(false);
+	//	pObject->Decal()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\MagicCircle.png"));
+	//	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Background");
+	//}
 }

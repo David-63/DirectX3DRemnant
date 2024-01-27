@@ -114,6 +114,44 @@ void CGraphicsShader::CreateVertexShader(const wstring& _strFileName, const stri
 	}
 }
 
+void CGraphicsShader::CreateHullShader(const wstring& _strFileName, const string& _strFuncName)
+{
+	// Shader 파일 경로
+	wstring strShaderFile = CPathMgr::GetInst()->GetContentPath();
+	strShaderFile += _strFileName;
+
+	// Shader Compile	
+	if (FAILED(D3DCompileFromFile(strShaderFile.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, _strFuncName.c_str(), "hs_5_0", 0, 0, m_HSBlob.GetAddressOf(), m_ErrBlob.GetAddressOf())))
+	{
+		MessageBoxA(nullptr, (const char*)m_ErrBlob->GetBufferPointer()
+			, "Shader Compile Failed!!", MB_OK);
+	}
+
+	// 컴파일된 객체로 Shader 를 만든다.
+	DEVICE->CreateHullShader(m_HSBlob->GetBufferPointer(), m_HSBlob->GetBufferSize()
+		, nullptr, m_HS.GetAddressOf());
+}
+
+void CGraphicsShader::CreateDomainShader(const wstring& _strFileName, const string& _strFuncName)
+{
+	// Shader 파일 경로
+	wstring strShaderFile = CPathMgr::GetInst()->GetContentPath();
+	strShaderFile += _strFileName;
+
+	// Shader Compile	
+	if (FAILED(D3DCompileFromFile(strShaderFile.c_str(), nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE
+		, _strFuncName.c_str(), "ds_5_0", 0, 0, m_DSBlob.GetAddressOf(), m_ErrBlob.GetAddressOf())))
+	{
+		MessageBoxA(nullptr, (const char*)m_ErrBlob->GetBufferPointer()
+			, "Shader Compile Failed!!", MB_OK);
+	}
+
+	// 컴파일된 객체로 Shader 를 만든다.
+	DEVICE->CreateDomainShader(m_DSBlob->GetBufferPointer(), m_DSBlob->GetBufferSize()
+		, nullptr, m_DS.GetAddressOf());
+}
+
 void CGraphicsShader::CreateGeometryShader(const wstring& _strFileName, const string& _strFuncName)
 {
 	// Shader 파일 경로
