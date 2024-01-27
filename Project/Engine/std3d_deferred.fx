@@ -53,10 +53,10 @@ VS_OUT VS_Std3D_Deferred(VS_IN _in)
     VS_OUT output = (VS_OUT) 0.f;
     
     // 애니메이션이 있으면 스킨작업
-    if (g_iAnim)
-    {
-        Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeights, _in.vIndices, 0);
-    }
+    //if (g_iAnim)
+    //{
+    //    Skinning(_in.vPos, _in.vTangent, _in.vBinormal, _in.vNormal, _in.vWeights, _in.vIndices, 0);
+    //}
     
     // 로컬에서의 Normal 방향을 월드로 이동      
     output.vViewPos = mul(float4(_in.vPos, 1.f), g_matWV);

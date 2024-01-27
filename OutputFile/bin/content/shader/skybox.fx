@@ -20,6 +20,8 @@ struct VS_SKY_OUT
 };
 
 #define SKYBOX_TYPE g_int_0
+#define Sphere  0
+#define Cube    1
 
 
 VS_SKY_OUT VS_SkyBoxShader(VS_SKY_IN _in)
@@ -42,7 +44,7 @@ float4 PS_SkyBoxShader(VS_SKY_OUT _in) : SV_Target
     float4 vOutColor = (float4) 0.f;
     
     // 0 : Sphere Type
-    if (0 == SKYBOX_TYPE)
+    if (Sphere == SKYBOX_TYPE)
     {
         if (g_btex_0)
         {
@@ -51,7 +53,7 @@ float4 PS_SkyBoxShader(VS_SKY_OUT _in) : SV_Target
     }
     
     // 1 : Cube Type
-    else if (1 == SKYBOX_TYPE)
+    else if (Cube == SKYBOX_TYPE)
     {
         if (g_btexcube_0)
         {

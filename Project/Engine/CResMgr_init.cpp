@@ -31,7 +31,7 @@ void CResMgr::CreateDefaultMesh()
 	// =============
 	// RectMesh »ý¼º
 	// =============
-	// 0 --- 1 
+	// 0 --- 1
 	// |  \  |
 	// 3 --- 2
 	v.vPos = Vec3(-0.5f, 0.5f, 0.f);
@@ -643,27 +643,6 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 
 	// ============================
-	// TestShader
-	// RS_TYPE : CULL_NONE
-	// DS_TYPE : LESS
-	// BS_TYPE : DEFAULT	 
-	// Domain : MASK
-	// ============================
-	pShader = new CGraphicsShader;
-	pShader->SetKey(L"TestShader");
-	pShader->CreateVertexShader(L"shader\\test.fx", "VS_TestShader");
-	pShader->CreatePixelShader(L"shader\\test.fx", "PS_TestShader");
-	pShader->SetRSType(RS_TYPE::CULL_NONE);
-	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
-	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
-
-	// Parameter
-	pShader->AddScalarParam(INT_0, "Color Type");
-	pShader->AddTexParam(TEX_0, "Output Texture");
-
-
-
-	// ============================
 	// Std3DShader
 	// RS_TYPE : CULL_BACK
 	// DS_TYPE : LESS
@@ -891,11 +870,6 @@ void CResMgr::CreateDefaultMaterial()
 {
 	Ptr<CMaterial> pMtrl = nullptr;
 
-	// Test Material
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TestShader"));
-	AddRes(L"TestMtrl", pMtrl);
-
 	// Std2D Material
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"Std2DShader"));
@@ -949,10 +923,6 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DistortionShader"));
 	AddRes(L"DistortionMtrl", pMtrl);
 
-	// TestShader
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TestShader"));
-	AddRes(L"TestShaderMtrl", pMtrl);
 
 	// Std3DMtrl	
 	pMtrl = new CMaterial(true);
@@ -972,9 +942,7 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DeferredDecalShader"));
 	AddRes(L"DeferredDecalMtrl", pMtrl);
-
 	
-
 
 	// Std3D_DeferredShader
 	pMtrl = new CMaterial(true);
@@ -996,11 +964,6 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ShadowMapShader"));
 	AddRes(L"ShadowMapMtrl", pMtrl);
-
-
-
-
-
 
 	// MergeMtrl
 	pMtrl = new CMaterial(true);

@@ -550,9 +550,6 @@
     <FxCompile Include="particle_update.fx">
       <Filter>Source\08. ShaderCode\Compute\ParticleUpdate</Filter>
     </FxCompile>
-    <FxCompile Include="test.fx">
-      <Filter>Source\08. ShaderCode</Filter>
-    </FxCompile>
     <FxCompile Include="std3d.fx">
       <Filter>Source\08. ShaderCode\Render</Filter>
     </FxCompile>
