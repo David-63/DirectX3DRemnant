@@ -72,10 +72,10 @@ PatchOutput PatchConstFunc(InputPatch<VS_OUT, 3> _input, uint PatchID : SV_Primi
     float3 vCamWorldPos = CamWorldPos;
     vCamWorldPos.y = 0.f;
     
-    output.Edges[0] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vUpDown), 1, 4, 500.f, 20000.f));
-    output.Edges[1] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vLeftRight), 1, 4, 500.f, 20000.f));
-    output.Edges[2] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vSlide), 1, 4, 500.f, 20000.f));
-    output.Inside = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vMid), 1, 4, 500.f, 20000.f));
+    output.Edges[0] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vUpDown), 1, 4, 2000.f, 20000.f));
+    output.Edges[1] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vLeftRight), 1, 4, 2000.f, 20000.f));
+    output.Edges[2] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vSlide), 1, 4, 2000.f, 20000.f));
+    output.Inside = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vMid), 1, 4, 2000.f, 20000.f));
 
     return output;
 }

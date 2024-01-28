@@ -36,6 +36,9 @@
 #include "C:\david\teamDXProject\Project\Engine\CConstBuffer.cpp"
 
 
+#include "C:\david\teamDXProject\Project\Engine\CCopyBoneShader.cpp"
+
+
 #include "C:\david\teamDXProject\Project\Engine\CDecal.cpp"
 
 

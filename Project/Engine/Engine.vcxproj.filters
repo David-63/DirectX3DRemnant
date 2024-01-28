@@ -196,6 +196,12 @@
     <ClInclude Include="CWeightMapShader.h">
       <Filter>Source\08. ShaderCode\Compute\LandScape\WeightMap</Filter>
     </ClInclude>
+    <ClInclude Include="CCopyBoneShader.h">
+      <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
+    </ClInclude>
+    <ClInclude Include="CInstancingBuffer.h">
+      <Filter>Source\03. Manager\11. instancingMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -383,6 +389,12 @@
     </ClCompile>
     <ClCompile Include="CWeightMapShader.cpp">
       <Filter>Source\08. ShaderCode\Compute\LandScape\WeightMap</Filter>
+    </ClCompile>
+    <ClCompile Include="CCopyBoneShader.cpp">
+      <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
+    </ClCompile>
+    <ClCompile Include="CInstancingBuffer.cpp">
+      <Filter>Source\03. Manager\11. instancingMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -581,6 +593,12 @@
     <Filter Include="Source\08. ShaderCode\Compute\LandScape\WeightMap">
       <UniqueIdentifier>{a7b78c20-47d0-4b89-ad9a-4a1592af6ece}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source\08. ShaderCode\Compute\CopyBone">
+      <UniqueIdentifier>{082f1b75-8f73-4c84-9600-2d914661b23c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\03. Manager\11. instancingMgr">
+      <UniqueIdentifier>{260482ba-d75b-40cd-93b4-c94c51737196}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="SimpleMath.inl">
@@ -648,6 +666,9 @@
     </FxCompile>
     <FxCompile Include="weightmap.fx">
       <Filter>Source\08. ShaderCode\Compute\LandScape\WeightMap</Filter>
+    </FxCompile>
+    <FxCompile Include="copybone.fx">
+      <Filter>Source\08. ShaderCode\Compute\CopyBone</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

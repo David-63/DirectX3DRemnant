@@ -23,10 +23,12 @@ private:
     Matrix                  m_matProj;
     Matrix                  m_matProjInv;
 
-    bool                    m_isDeferredCamera = true;
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D;	    // Deferred
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_F;	    // Foward ( Opaque, Mask )	
+    map<INT_PTR, vector<tInstObj>>		m_mapSingleObj;		    // Single Object
 
-    vector<CGameObject*>    m_vecDeferred;
-    vector<CGameObject*>    m_vecDeferredDecal;
+    //vector<CGameObject*>    m_vecDeferred;
+    //vector<CGameObject*>    m_vecDeferredDecal;
 
     vector<CGameObject*>    m_vecOpaque;
     vector<CGameObject*>    m_vecMask;
@@ -70,15 +72,12 @@ public:
     const Matrix& GetViewInvMat() { return m_matViewInv; }
     const Matrix& GetProjInvMat() { return m_matProjInv; }
 
-    bool IsDeferredCamera() const { return m_isDeferredCamera; }
-    void TurnDeferredCamera(bool _power) { m_isDeferredCamera = _power; }
 public:
     void SortObject();
     void SortObject_Shadow();
     void render();
     void render_shadowmap();
 
-    void updateMatrix();
 
 public:
     virtual void begin() override;
@@ -90,14 +89,16 @@ protected:
 private:
     void clear();
     void clear_shadow();
+
     void render_deferred();
+    void render_forward();
 
-    void geometryRender();
-    void lightRender();
-    void mergeRender();
+    void geometryRender();  // 함수 크기 줄이려고 만든것
+    void lightRender();     // 
+    void mergeRender();     // 
 
-    void render_opaque();
-    void render_mask();
+    //void render_opaque();
+    //void render_mask();
     void render_decal();
     void render_transparent();
     void render_postprocess();
@@ -106,6 +107,7 @@ private:
 
     void CalcViewMat();
     void CalcProjMat();
+    void updateMatrix();
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;

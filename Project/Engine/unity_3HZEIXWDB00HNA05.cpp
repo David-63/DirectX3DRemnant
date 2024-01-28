@@ -6,6 +6,9 @@
 #include "C:\david\teamDXProject\Project\Engine\CHeightMapShader.cpp"
 
 
+#include "C:\david\teamDXProject\Project\Engine\CInstancingBuffer.cpp"
+
+
 #include "C:\david\teamDXProject\Project\Engine\CKeyMgr.cpp"
 
 

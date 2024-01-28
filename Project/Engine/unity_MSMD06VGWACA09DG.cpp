@@ -59,3 +59,6 @@
 
 #include "C:\david\teamDXProject\Project\Engine\func.cpp"
 
+
+#include "C:\david\teamDXProject\Project\Engine\CEngine.cpp"
+

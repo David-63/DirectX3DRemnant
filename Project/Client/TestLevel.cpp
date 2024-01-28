@@ -55,7 +55,6 @@ void CreateTestLevel()
 		pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 		pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 		pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
-		pUICam->Camera()->TurnDeferredCamera(false);
 		SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 	}
 	// SkyBox 추가
@@ -95,20 +94,26 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-
+		
+		// 인스턴싱 테스트
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\house.mdat");
-		//pObj = pMeshData->Instantiate();
-		//pObj->SetName(L"House");
 
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		for (int i = 0; i < 10; ++i)
+		{
+			pObj = pMeshData->Instantiate();
+			pObj->SetName(L"Monster");
+			SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
+		}
+		
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		pObj = pMeshData->Instantiate();
-		pObj->SetName(L"Monster");
-		pObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
+		//pObj = pMeshData->Instantiate();
+		//pObj->SetName(L"Monster");
+		//pObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
 
-		SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
+		//SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
 	}
 
 	// player
