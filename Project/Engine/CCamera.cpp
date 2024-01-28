@@ -96,8 +96,8 @@ void CCamera::CalRay()
 	m_ray.vStart = Transform()->GetWorldPos();
 
 	// view space 에서의 방향
-	m_ray.vDir.x = ( ( ((vMousePos.x - tVP.TopLeftX) * 2.f / tVP.Width) - 1.f ) - m_matProj._31) / m_matProj._11;
-	m_ray.vDir.y = (-( ((vMousePos.y - tVP.TopLeftY) * 2.f / tVP.Height) - 1.f ) - m_matProj._32) / m_matProj._22;
+	m_ray.vDir.x = ((((vMousePos.x - tVP.TopLeftX) * 2.f / tVP.Width) - 1.f) - m_matProj._31) / m_matProj._11;
+	m_ray.vDir.y = (-(((vMousePos.y - tVP.TopLeftY) * 2.f / tVP.Height) - 1.f) - m_matProj._32) / m_matProj._22;
 	m_ray.vDir.z = 1.f;
 
 	// world space 에서의 방향
@@ -139,14 +139,14 @@ void CCamera::CalcProjMat()
 	// 투영 행렬 계산
 	// =============
 	m_matProj = XMMatrixIdentity();
-	
+
 	if (PROJ_TYPE::ORTHOGRAPHIC == m_ProjType)
 	{
 		// 직교 투영
-		m_matProj =  XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), 1.f, 10000.f);
+		m_matProj = XMMatrixOrthographicLH(m_OrthoWidth * (1.f / m_fScale), m_OrthoHeight * (1.f / m_fScale), 1.f, 10000.f);
 	}
 	else
-	{	
+	{
 		// 원근 투영
 		m_matProj = XMMatrixPerspectiveFovLH(m_Fov, m_fAspectRatio, 1.f, m_Far);
 	}
@@ -214,8 +214,14 @@ void CCamera::SortObject()
 					continue;
 
 				// Frustum Check
-				if (pRenderCom->IsUseFrustumCheck() && false == m_Frustum.FrustumCheckBound
+				/*if (pRenderCom->IsUseFrustumCheck() && false == m_Frustum.FrustumCheckBound
 					(vecObject[objIdx]->Transform()->GetWorldPos(), vecObject[objIdx]->Transform()->GetRelativeScale().x / 5.f))
+					continue;*/
+
+				Vec3 objPos = vecObject[objIdx]->Transform()->GetWorldPos();
+				float radius = vecObject[objIdx]->Transform()->GetSphereRadius();
+				if (pRenderCom->IsUseFrustumCheck()
+					&& false == m_Frustum.FrustumCheckBound(objPos, radius))
 					continue;
 
 				// 머티리얼 개수만큼 반복
@@ -235,7 +241,7 @@ void CCamera::SortObject()
 
 					switch (eDomain)
 					{
-					case SHADER_DOMAIN::DOMAIN_DEFERRED:						
+					case SHADER_DOMAIN::DOMAIN_DEFERRED:
 					case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
 					case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					case SHADER_DOMAIN::DOMAIN_MASK:
@@ -334,13 +340,13 @@ void CCamera::render()
 {
 	geometryRender();
 	lightRender();
-	mergeRender();	
-	
-	
+	mergeRender();
+
+
 	render_forward();
 	render_decal();
 	render_transparent();
-		
+
 	render_postprocess();
 
 	render_ui();
@@ -671,7 +677,7 @@ void CCamera::render_ui()
 }
 
 void CCamera::SaveToLevelFile(FILE* _File)
-{	
+{
 	fwrite(&m_Frustum, sizeof(CFrustum), 1, _File);
 	fwrite(&m_fAspectRatio, sizeof(float), 1, _File);
 	fwrite(&m_fScale, sizeof(float), 1, _File);
@@ -679,7 +685,7 @@ void CCamera::SaveToLevelFile(FILE* _File)
 	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
 	fwrite(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fwrite(&m_iCamIdx, sizeof(int), 1, _File);
-	
+
 }
 
 void CCamera::LoadFromLevelFile(FILE* _File)

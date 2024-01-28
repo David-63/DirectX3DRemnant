@@ -140,7 +140,6 @@ void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool Dep
 	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
 }
 
-
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
 	, Vec3 _vRotation, float _fTime, bool DepthTest)
 {
@@ -150,13 +149,15 @@ void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
 	info.eShape = SHAPE_TYPE::SPHERE;
 	info.fMaxTime = _fTime;
 	info.vWorldPos = _vWorldPos;
-	info.vWorldScale = Vec3(_fRadius, _fRadius, 1.f);
+	// 스피어 메쉬의 반지름이 0.5이기 때문에 반지름을 1처럼 취급해야하므로 2를 곱해준다.
+	info.vWorldScale = Vec3(_fRadius * 2, _fRadius * 2, _fRadius * 2);
 	info.vWorldRotation = _vRotation;
 	info.vColor = _vColor;
 	info.bDepthTest = DepthTest;
 
 	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
 }
+
 void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool DepthTest)
 {
 	tDebugShapeInfo info = {};
