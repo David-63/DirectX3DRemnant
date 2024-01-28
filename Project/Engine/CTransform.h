@@ -9,13 +9,13 @@ private:
     Vec3    m_vRelativeScale;
     Vec3    m_vRelativeRot;
 
-    bool    m_bAbsolute;    // 상대 이동, 크기를 절대값으로 지정    
+    bool    m_bAbsolute;        // 상대적 크기와 위치를 절대값으로 지정    
 
     Vec3    m_vRelativeDir[3];
     Vec3    m_vWorldDir[3];
 
     Matrix  m_matWorldScale;    // 월드 크기 행렬
-    Matrix  m_matWorld; // 크기, 회전, 이동 정보를 합쳐놓음
+    Matrix  m_matWorld;         // 크기, 회전, 이동 정보를 합쳐놓음
     Matrix  m_matWorldInv;
 
 public:
@@ -40,6 +40,7 @@ public:
 
     const Matrix& GetWorldScaleMat() { return m_matWorldScale; }
     const Matrix& GetWorldMat() const { return m_matWorld; }
+    const Matrix& GetWorldInvMat() const { return m_matWorldInv; }
 
     void SetWorldMat(const Matrix& _mat) { m_matWorld = _mat; }
 

@@ -5,15 +5,21 @@
 #include "func.fx"
 #include "struct.fx"
 
+
 // ========================
 // LandScape
-#define FaceX           g_int_0
-#define FaceZ           g_int_1
-#define ColorTexture    g_tex_0
-#define NormalTexture   g_tex_1
-#define HeightMap       g_tex_2
-// ========================
+#define                     FaceX                           g_int_0
+#define                     FaceZ                           g_int_1
 
+#define                     ColorTexture                    g_tex_0
+#define                     NormalTexture                   g_tex_1
+#define                     HeightMap                       g_tex_2
+
+#define                     TileCount                       g_float_1   // 배열 개수
+#define                     WeightMapResolution             g_vec2_1    // 가중치 버퍼 해상도
+#define                     TileTexArr                      g_arrtex_0  // Tile 배열 텍스쳐
+StructuredBuffer<float4>    WEIGHT_MAP : register(t17);                 // 가중치 버퍼
+// ========================
 struct VS_IN
 {
     float3 vPos : POSITION;
@@ -24,6 +30,8 @@ struct VS_OUT
 {
     float3 vLocalPos : POSITION;
     float2 vUV : TEXCOORD;
+    
+    float3 vViewPos : POSITION1;
 };
 
 VS_OUT VS_LandScape(VS_IN _in)
@@ -32,9 +40,11 @@ VS_OUT VS_LandScape(VS_IN _in)
 
     output.vLocalPos = _in.vPos;
     output.vUV = _in.vUV;
-
+    output.vViewPos = mul( float4(_in.vPos, 1.f), g_matWV ).xyz;
+    
     return output;
 }
+
 
 // ===========
 // Hull Shader
@@ -47,16 +57,19 @@ struct PatchOutput
     float Inside : SV_InsideTessFactor;
 };
 
-// LOD Option
-PatchOutput PatchConstFunc(InputPatch<VS_OUT, 3> _input
-    , uint PatchID : SV_PrimitiveID)
+PatchOutput PatchConstFunc(InputPatch<VS_OUT, 3> _input, uint PatchID : SV_PrimitiveID)
 {
     PatchOutput output = (PatchOutput) 0.f;
+    
+    float3 vUpDown = (_input[1].vViewPos + _input[2].vViewPos) / 2.f;
+    float3 vLeftRight = (_input[0].vViewPos + _input[2].vViewPos) / 2.f;
+    float3 vSlide = (_input[0].vViewPos + _input[1].vViewPos) / 2.f;
+    float3 vMid = (_input[0].vViewPos + _input[1].vViewPos + _input[2].vViewPos) / 3.f;
 
-    output.Edges[0] = 16;
-    output.Edges[1] = 16;
-    output.Edges[2] = 16;
-    output.Inside = 16;
+    output.Edges[0] = pow(2, (int) GetTessFactor(vUpDown, 1, 4, 500.f, 2000.f));
+    output.Edges[1] = pow(2, (int) GetTessFactor(vLeftRight, 1, 4, 500.f, 2000.f));
+    output.Edges[2] = pow(2, (int) GetTessFactor(vSlide, 1, 4, 500.f, 2000.f));
+    output.Inside = pow(2, (int) GetTessFactor(vMid, 1, 4, 500.f, 2000.f));
 
     return output;
 }
@@ -64,7 +77,7 @@ PatchOutput PatchConstFunc(InputPatch<VS_OUT, 3> _input
 struct HS_OUT
 {
     float3 vLocalPos : POSITION;
-    float2 vUV : TEXCOORD;
+    float2 vUV       : TEXCOORD;
 };
 
 [domain("tri")]
@@ -74,9 +87,7 @@ struct HS_OUT
 [outputcontrolpoints(3)]
 [patchconstantfunc("PatchConstFunc")]
 [maxtessfactor(32)]
-HS_OUT HS_LandScape(InputPatch<VS_OUT, 3> _input
-    , uint i : SV_OutputControlPointID
-    , uint PatchID : SV_PrimitiveID)
+HS_OUT HS_LandScape(InputPatch<VS_OUT, 3> _input, uint i : SV_OutputControlPointID, uint PatchID : SV_PrimitiveID)
 {
     HS_OUT output = (HS_OUT) 0.f;
 
@@ -88,20 +99,19 @@ HS_OUT HS_LandScape(InputPatch<VS_OUT, 3> _input
 
 struct DS_OUT
 {
-    float4 vPosition : SV_Position;
-    float2 vUV : TEXCOORD;
+    float4 vPosition     : SV_Position;
+    float2 vUV           : TEXCOORD;
+    float2 vFullUV       : TEXCOORD1;
 
-    float3 vViewPos : POSITION;
-    float3 vViewNormal : NORMAL;
-    float3 vViewTangent : TANGENT;
+    float3 vViewPos      : POSITION;
+    float3 vViewNormal   : NORMAL;
+    float3 vViewTangent  : TANGENT;
     float3 vViewBinormal : BINORMAL;
 };
 
 
 [domain("tri")]
-DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _origin
-    , float3 _vWeight : SV_DomainLocation
-    , PatchOutput _patchtess)
+DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _origin, float3 _vWeight : SV_DomainLocation, PatchOutput _patchtess)
 {
     DS_OUT output = (DS_OUT) 0.f;
 
@@ -119,6 +129,8 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _origin
     vLocalPos.y = HeightMap.SampleLevel(g_sam_0, vHeightMapUV, 0).x;
 
     // Normal, Tangent, Binormal 재 계산
+
+
     // 도메인 쉐이더 정점의 주변(위, 아래, 좌, 우) 로 접근하기 위한 간격
     float fLocalStep = 1.f / _patchtess.Inside;
     float2 vUVStep = fLocalStep / float2(FaceX, FaceZ);
@@ -137,6 +149,7 @@ DS_OUT DS_LandScape(const OutputPatch<HS_OUT, 3> _origin
     // 투영좌표계
     output.vPosition = mul(float4(vLocalPos, 1.f), g_matWVP);
     output.vUV = vUV;
+    output.vFullUV = vHeightMapUV;
 
     output.vViewPos = mul(float4(vLocalPos, 1.f), g_matWV).xyz;
     output.vViewNormal = normalize(mul(float4(vNormal, 0.f), g_matView)).xyz;
@@ -155,11 +168,57 @@ struct PS_OUT
     float4 vEmissive : SV_Target4;
 };
 
+
 PS_OUT PS_LandScape(DS_OUT _in)
 {
     PS_OUT output = (PS_OUT) 0.f;
+    
+    float3 vViewNormal = _in.vViewNormal;
+    
+    // 타일 배열 인덱스가 있다면
+    output.vColor = float4(0.7f, 0.7f, 0.7f, 1.f);
+    
+    if (g_btexarr_0)
+    {
+        float2 derivX = ddx(_in.vUV); // 인접픽셀과 x축 편미분값을 구한다
+        float2 derivY = ddy(_in.vUV); // 인접픽셀과 y축 편미분값을 구한다
 
-    output.vColor = float4(0.8f, 0.8f, 0.8f, 1.f);
+        // 타일 색상
+        int2 iWeightIdx = (int2) (_in.vFullUV * WeightMapResolution);
+        float4 vWeight = WEIGHT_MAP[iWeightIdx.y * (int) WeightMapResolution.x + iWeightIdx.x];
+        float4 vColor = (float4) 0.f;
+
+        int iMaxWeightIdx = -1;
+        float fMaxWeight = 0.f;
+
+        // SampleGrad 함수에 인자로 편미분 값을 넣으면 자동으로 mipLevel에 맞는 텍스쳐를 할당함
+        
+        for (int i = 0; i < 4; ++i)
+        {
+            vColor += TileTexArr.SampleGrad(g_sam_0, float3(_in.vUV, i), derivX, derivY) * vWeight[i];
+            //vColor += TileTexArr.SampleLevel(g_sam_0, float3(_in.vUV, i), 0) * vWeight[i];
+
+            if (fMaxWeight < vWeight[i])
+            {
+                fMaxWeight = vWeight[i];
+                iMaxWeightIdx = i;
+            }
+        }
+       
+        output.vColor = float4(vColor.rgb, 1.f);
+
+        // 타일 노말
+        if (-1 != iMaxWeightIdx)
+        {            
+            float3 vTangentSpaceNormal = TileTexArr.SampleGrad(g_sam_0, float3(_in.vUV, iMaxWeightIdx + TileCount), derivX, derivY).xyz;
+            //float3 vTangentSpaceNormal = TileTexArr.SampleLevel(g_sam_0, float3(_in.vUV, iMaxWeightIdx + TileCount), 0).xyz;
+            vTangentSpaceNormal = vTangentSpaceNormal * 2.f - 1.f;
+
+            float3x3 matTBN = { _in.vViewTangent, _in.vViewBinormal, _in.vViewNormal };
+            vViewNormal = normalize(mul(vTangentSpaceNormal, matTBN));
+        }
+    }
+
     output.vNormal = float4(_in.vViewNormal, 1.f);
     output.vPosition = float4(_in.vViewPos, 1.f);
     output.vData;

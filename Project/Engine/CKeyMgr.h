@@ -2,10 +2,7 @@
 
 enum class KEY
 {
-	UP,		// VK_UP
-	DOWN,
-	LEFT,
-	RIGHT,
+	UP, DOWN, LEFT, RIGHT,
 
 	SPACE,
 	ENTER,
@@ -18,34 +15,23 @@ enum class KEY
 	LBTN,
 	RBTN,
 	
-	Q,
-	W,
-	E,
-	R,
+	Q, W, E, R,  T,Y,U,I,O,P,
+	A, S, D, F,
+	Z, X, C, V,
 
-	T,Y,U,I,O,P,
-
-	A,
-	S,
-	D,
-	F,
-
-	Z,
-	X,
-	C,
-	V,
-
-	_0,
-	_1,
-	_2,
-	_3,
-	_4,
-	_5,
-	_6,
-	_7,
-	_8,
-	_9,
+	_0, _1, _2, _3, _4, _5, _6, _7, _8, _9,
 	
+	NUM_0,
+	NUM_1,
+	NUM_2,
+	NUM_3,
+	NUM_4,
+	NUM_5,
+	NUM_6,
+	NUM_7,
+	NUM_8,
+	NUM_9,
+
 	END,
 };
 

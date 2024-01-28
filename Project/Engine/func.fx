@@ -131,6 +131,7 @@ void CalcLight3D(float3 _vViewPos, float3 _vViewNormal, int _LightIdx, inout tLi
 // ======
 // Random
 // ======
+
 static float GaussianFilter[5][5] =
 {
     0.003f,  0.0133f, 0.0219f, 0.0133f, 0.003f,
@@ -140,6 +141,7 @@ static float GaussianFilter[5][5] =
     0.003f,  0.0133f, 0.0219f, 0.0133f, 0.003f,
 };
 
+// 가우시안 샘플링
 void GaussianSample(in Texture2D _NoiseTex, float2 _vResolution, float _NomalizedThreadID, out float3 _vOut)
 {
     float2 vUV = float2(_NomalizedThreadID, 0.5f);       
@@ -179,6 +181,7 @@ matrix GetBoneMat(int _iBoneIdx, int _iRowIdx)
     return g_arrBoneMat[(g_iBoneCount * _iRowIdx) + _iBoneIdx];
 }
 
+// 본 인근의 정점에 가중치 적용
 void Skinning(inout float3 _vPos, inout float3 _vTangent, inout float3 _vBinormal, inout float3 _vNormal
     , inout float4 _vWeight, inout float4 _vIndices
     , int _iRowIdx)
@@ -205,6 +208,73 @@ void Skinning(inout float3 _vPos, inout float3 _vTangent, inout float3 _vBinorma
     _vTangent = normalize(info.vTangent);
     _vBinormal = normalize(info.vBinormal);
     _vNormal = normalize(info.vNormal);
+}
+
+// Ray가 충돌하는지 확인
+int IntersectsLay(float3 _vertices[3], float3 _vStart, float3 _vDir, out float3 _vCrossPoint, out float _fResult)
+{
+    float3 edge[2] = { (float3) 0.f, (float3) 0.f };
+    edge[0] = _vertices[1].xyz - _vertices[0].xyz;
+    edge[1] = _vertices[2].xyz - _vertices[0].xyz;
+
+    float3 normal = normalize(cross(edge[0], edge[1]));
+    float b = dot(normal, _vDir);
+
+    float3 w0 = _vStart - _vertices[0].xyz;
+    float a = -dot(normal, w0);
+    float t = a / b;
+
+    _fResult = t;
+
+    float3 p = _vStart + t * _vDir;
+
+    _vCrossPoint = p;
+
+    float uu, uv, vv, wu, wv, inverseD;
+    uu = dot(edge[0], edge[0]);
+    uv = dot(edge[0], edge[1]);
+    vv = dot(edge[1], edge[1]);
+
+    float3 w = p - _vertices[0].xyz;
+    wu = dot(w, edge[0]);
+    wv = dot(w, edge[1]);
+    inverseD = uv * uv - uu * vv;
+    inverseD = 1.0f / inverseD;
+
+    float u = (uv * wv - vv * wu) * inverseD;
+    if (u < 0.0f || u > 1.0f)
+    {
+        return 0;
+    }
+
+    float v = (uv * wu - uu * wv) * inverseD;
+    if (v < 0.0f || (u + v) > 1.0f)
+    {
+        return 0;
+    }
+
+    return 1;
+}
+
+// 거리가 멀면 테셀레이션 레벨 부여
+float GetTessFactor(float3 _vPos, int _iMinLevel, int _iMaxLevel, float _MinDistance, float _MaxDistance)
+{
+    float fDistance = abs(length(_vPos));
+
+    if (_MaxDistance < fDistance)
+    {
+        return 0.f;
+    }
+    else if (fDistance < _MinDistance)
+    {
+        return _iMaxLevel;
+    }
+    else
+    {
+        float fLevel = _iMaxLevel - (_iMaxLevel - _iMinLevel) * ((fDistance - _MinDistance) / (_MaxDistance - _MinDistance));
+
+        return fLevel;
+    }
 }
 
 #endif

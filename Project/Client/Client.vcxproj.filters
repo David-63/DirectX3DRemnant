@@ -128,6 +128,9 @@
     <Filter Include="UI\InspectorUI\ComponentUI\08. Light3DUI">
       <UniqueIdentifier>{92272743-9935-413d-a80a-5fd7a9674bc5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\RenderCompUI\6. LandscapeUI">
+      <UniqueIdentifier>{195cf3c3-6182-4d66-911a-fc1726967c4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">

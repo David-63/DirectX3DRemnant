@@ -3,19 +3,21 @@
 
 #include "CDevice.h"
 #include "CRenderMgr.h"
-#include "CTransform.h"
-#include "CLight3D.h"
+#include "CKeyMgr.h"
 
 #include "CLevelMgr.h"
 #include "CLevel.h"
 #include "CLayer.h"
 #include "CGameObject.h"
-#include "CRenderComponent.h"
-#include "CMaterial.h"
-#include "CGraphicsShader.h"
+
+#include "CTransform.h"
+#include "CLight3D.h"
 
 #include "CRenderMgr.h"
 #include "CMRT.h"
+#include "CRenderComponent.h"
+#include "CMaterial.h"
+#include "CGraphicsShader.h"
 
 #include "CResMgr.h"
 #include "CMesh.h"
@@ -77,6 +79,30 @@ void CCamera::finaltick()
 
 	CalcProjMat();
 	m_Frustum.finaltick();
+	CalRay();
+}
+
+void CCamera::CalRay()
+{
+	// 마우스 방향을 향하는 Ray 구하기
+	// SwapChain 타겟의 ViewPort 정보
+	CMRT* pMRT = CRenderMgr::GetInst()->GetMRT(MRT_TYPE::SWAPCHAIN);
+	D3D11_VIEWPORT tVP = pMRT->GetViewPort();
+
+	//  현재 마우스 좌표
+	Vec2 vMousePos = CKeyMgr::GetInst()->GetMousePos();
+
+	// 직선은 카메라의 좌표를 반드시 지난다.
+	m_ray.vStart = Transform()->GetWorldPos();
+
+	// view space 에서의 방향
+	m_ray.vDir.x = ( ( ((vMousePos.x - tVP.TopLeftX) * 2.f / tVP.Width) - 1.f ) - m_matProj._31) / m_matProj._11;
+	m_ray.vDir.y = (-( ((vMousePos.y - tVP.TopLeftY) * 2.f / tVP.Height) - 1.f ) - m_matProj._32) / m_matProj._22;
+	m_ray.vDir.z = 1.f;
+
+	// world space 에서의 방향
+	m_ray.vDir = XMVector3TransformNormal(m_ray.vDir, m_matViewInv);
+	m_ray.vDir.Normalize();
 }
 
 void CCamera::CalcViewMat()
