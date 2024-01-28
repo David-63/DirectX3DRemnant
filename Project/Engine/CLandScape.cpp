@@ -33,6 +33,12 @@ void CLandScape::finaltick()
 		m_eMod = LANDSCAPE_MOD::HEIGHT_MAP;
 	else if (KEY_TAP(KEY::NUM_2))
 		m_eMod = LANDSCAPE_MOD::SPLAT;
+	else if (KEY_TAP(KEY::NUM_3))
+	{
+		m_iWeightIdx++;
+		if (3 <= m_iWeightIdx)
+			m_iWeightIdx = 0;
+	}
 
 	if (LANDSCAPE_MOD::NONE == m_eMod)
 	{
@@ -98,6 +104,10 @@ void CLandScape::render()
 
 	// 타일 텍스쳐 전달
 	GetMaterial(0)->SetTexParam(TEX_PARAM::TEX_ARR_0, m_pTileArrTex);
+
+	// Camera World Pos 전달
+	Vec3 vCamWorldPos = CRenderMgr::GetInst()->GetMainCam()->Transform()->GetWorldPos();
+	GetMaterial(0)->SetScalarParam(VEC4_0, &vCamWorldPos);
 
 	// 재질 바인딩(업데이트)
 	GetMaterial(0)->UpdateData();

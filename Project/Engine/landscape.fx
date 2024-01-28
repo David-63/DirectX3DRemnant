@@ -17,6 +17,9 @@
 
 #define                     TileCount                       g_float_1   // 배열 개수
 #define                     WeightMapResolution             g_vec2_1    // 가중치 버퍼 해상도
+
+
+#define                     CamWorldPos                     g_vec4_0.xyz// 카메라 월드 좌표
 #define                     TileTexArr                      g_arrtex_0  // Tile 배열 텍스쳐
 StructuredBuffer<float4>    WEIGHT_MAP : register(t17);                 // 가중치 버퍼
 // ========================
@@ -31,7 +34,7 @@ struct VS_OUT
     float3 vLocalPos : POSITION;
     float2 vUV : TEXCOORD;
     
-    float3 vViewPos : POSITION1;
+    float3 vWorldPos : POSITION1;
 };
 
 VS_OUT VS_LandScape(VS_IN _in)
@@ -40,7 +43,7 @@ VS_OUT VS_LandScape(VS_IN _in)
 
     output.vLocalPos = _in.vPos;
     output.vUV = _in.vUV;
-    output.vViewPos = mul( float4(_in.vPos, 1.f), g_matWV ).xyz;
+    output.vWorldPos = mul(float4(_in.vPos, 1.f), g_matWorld).xyz;
     
     return output;
 }
@@ -61,15 +64,18 @@ PatchOutput PatchConstFunc(InputPatch<VS_OUT, 3> _input, uint PatchID : SV_Primi
 {
     PatchOutput output = (PatchOutput) 0.f;
     
-    float3 vUpDown = (_input[1].vViewPos + _input[2].vViewPos) / 2.f;
-    float3 vLeftRight = (_input[0].vViewPos + _input[2].vViewPos) / 2.f;
-    float3 vSlide = (_input[0].vViewPos + _input[1].vViewPos) / 2.f;
-    float3 vMid = (_input[0].vViewPos + _input[1].vViewPos + _input[2].vViewPos) / 3.f;
-
-    output.Edges[0] = pow(2, (int) GetTessFactor(vUpDown, 1, 4, 500.f, 2000.f));
-    output.Edges[1] = pow(2, (int) GetTessFactor(vLeftRight, 1, 4, 500.f, 2000.f));
-    output.Edges[2] = pow(2, (int) GetTessFactor(vSlide, 1, 4, 500.f, 2000.f));
-    output.Inside = pow(2, (int) GetTessFactor(vMid, 1, 4, 500.f, 2000.f));
+    float3 vUpDown = (_input[1].vWorldPos + _input[2].vWorldPos) / 2.f;
+    float3 vLeftRight = (_input[0].vWorldPos + _input[2].vWorldPos) / 2.f;
+    float3 vSlide = (_input[0].vWorldPos + _input[1].vWorldPos) / 2.f;
+    float3 vMid = (_input[0].vWorldPos + _input[1].vWorldPos + _input[2].vWorldPos) / 3.f;
+        
+    float3 vCamWorldPos = CamWorldPos;
+    vCamWorldPos.y = 0.f;
+    
+    output.Edges[0] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vUpDown), 1, 4, 2000.f, 20000.f));
+    output.Edges[1] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vLeftRight), 1, 4, 2000.f, 20000.f));
+    output.Edges[2] = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vSlide), 1, 4, 2000.f, 20000.f));
+    output.Inside = pow(2, (int) GetTessFactor(distance(vCamWorldPos, vMid), 1, 4, 2000.f, 20000.f));
 
     return output;
 }
@@ -193,8 +199,9 @@ PS_OUT PS_LandScape(DS_OUT _in)
 
         // SampleGrad 함수에 인자로 편미분 값을 넣으면 자동으로 mipLevel에 맞는 텍스쳐를 할당함
         
-        for (int i = 0; i < 4; ++i)
+        for (int i = 0; i < TileCount; ++i)
         {
+            // 배열 텍스쳐를 샘플링할 때 UV의 3번째 값이 배열인덱스
             vColor += TileTexArr.SampleGrad(g_sam_0, float3(_in.vUV, i), derivX, derivY) * vWeight[i];
             //vColor += TileTexArr.SampleLevel(g_sam_0, float3(_in.vUV, i), 0) * vWeight[i];
 

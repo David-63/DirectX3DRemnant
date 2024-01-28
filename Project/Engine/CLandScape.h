@@ -17,6 +17,10 @@ struct tWeight_4
     float arrWeight[4];
 };
 
+struct tWeight_8
+{
+    float arrWeight[8];
+};
 
 class CLandScape : public CRenderComponent
 {
