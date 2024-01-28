@@ -29,10 +29,6 @@ private:
     // 애니메이션 정보
     tAnim3DData                 m_AnimData;
 
-    //int                         m_AnimClipIdx;          // 이 애니메이션의 클립 인덱스 (직접 만들어서 사용)
-    //float                       m_StartTime;            // 애니메이션 클립의 시작시간
-    //float                       m_EndTime;              // 애니메이션 클립의 종료시간
-
     vector<float>				m_AnimUpdateTime;       // 애니메이션 진행 누적시간
 
     int							m_CurFrameIdx;          // 현재 진행중인 프레임

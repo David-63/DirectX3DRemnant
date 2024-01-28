@@ -5,32 +5,30 @@
 class CCamera : public CComponent
 {
 private:
-    CFrustum    m_Frustum;
+    CFrustum                m_Frustum;
+    tRay                    m_ray;      // 마우스 방향을 향하는 직선
 
-    float       m_fAspectRatio;
-    float       m_fScale;           // Orthograpic 에서 사용하는 카메라 배율
-    float       m_Far;
-    float       m_Fov;
+    int                     m_iCamIdx;          // 카메라 우선순위
+    PROJ_TYPE               m_ProjType;
+    UINT                    m_iLayerMask;
+    float                   m_fAspectRatio;
+    float                   m_fScale;           // Orthograpic 에서 사용하는 카메라 배율
+    float                   m_Far;
+    float                   m_Fov;
+    float                   m_OrthoWidth;
+    float                   m_OrthoHeight;
 
-    float       m_OrthoWidth;
-    float       m_OrthoHeight;
+    Matrix                  m_matView;
+    Matrix                  m_matViewInv;
+    Matrix                  m_matProj;
+    Matrix                  m_matProjInv;
 
-    PROJ_TYPE   m_ProjType;
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D;	    // Deferred
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_F;	    // Foward ( Opaque, Mask )	
+    map<INT_PTR, vector<tInstObj>>		m_mapSingleObj;		    // Single Object
 
-    Matrix      m_matView;
-    Matrix      m_matViewInv;
-
-    Matrix      m_matProj;
-    Matrix      m_matProjInv;
-
-    UINT        m_iLayerMask;
-
-    int         m_iCamIdx;          // 카메라 우선순위
-
-    bool        m_isDeferredCamera = true;
-
-    vector<CGameObject*>    m_vecDeferred;
-    vector<CGameObject*>    m_vecDeferredDecal;
+    //vector<CGameObject*>    m_vecDeferred;
+    //vector<CGameObject*>    m_vecDeferredDecal;
 
     vector<CGameObject*>    m_vecOpaque;
     vector<CGameObject*>    m_vecMask;
@@ -40,7 +38,6 @@ private:
     vector<CGameObject*>    m_vecPost;
 
     vector<CGameObject*>    m_vecShadow;
-
 
 public:
     void SetProjType(PROJ_TYPE _Type) { m_ProjType = _Type; }
@@ -57,6 +54,7 @@ public:
 
     void SetCameraIndex(int _idx);
 
+    const tRay& GetRay() { return m_ray; }
     // 추후에 degree 변환 기능 추가하기
     void SetFov(float _Radian) { m_Fov = _Radian; }
     float GetFov() { return m_Fov; }
@@ -68,39 +66,39 @@ public:
     float GetOrthoHeight() { return m_OrthoHeight; }
 
 
-
     const Matrix& GetViewMat() { return m_matView; }
     const Matrix& GetProjMat() { return m_matProj; }
 
     const Matrix& GetViewInvMat() { return m_matViewInv; }
     const Matrix& GetProjInvMat() { return m_matProjInv; }
 
-    bool IsDeferredCamera() const { return m_isDeferredCamera; }
-    void TurnDeferredCamera(bool _power) { m_isDeferredCamera = _power; }
 public:
     void SortObject();
     void SortObject_Shadow();
     void render();
     void render_shadowmap();
 
-    void updateMatrix();
 
 public:
     virtual void begin() override;
     virtual void finaltick() override;
 
+protected:
+    void CalRay();  // 마우스 방향으로 광선 연산
 
 private:
     void clear();
     void clear_shadow();
+
     void render_deferred();
+    void render_forward();
 
-    void geometryRender();
-    void lightRender();
-    void mergeRender();
+    void geometryRender();  // 함수 크기 줄이려고 만든것
+    void lightRender();     // 
+    void mergeRender();     // 
 
-    void render_opaque();
-    void render_mask();
+    //void render_opaque();
+    //void render_mask();
     void render_decal();
     void render_transparent();
     void render_postprocess();
@@ -109,6 +107,7 @@ private:
 
     void CalcViewMat();
     void CalcProjMat();
+    void updateMatrix();
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;

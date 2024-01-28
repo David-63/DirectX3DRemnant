@@ -113,9 +113,6 @@
     <Filter Include="UI\InspectorUI\ComponentUI\06. Animator3DUI">
       <UniqueIdentifier>{ab071584-6691-47ba-8cfa-a4c8d96a3e75}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\InspectorUI\ComponentUI\08. Light3D">
-      <UniqueIdentifier>{92272743-9935-413d-a80a-5fd7a9674bc5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="UI\InspectorUI\ComponentUI\RenderCompUI\3. ParticleSystemUI">
       <UniqueIdentifier>{e8376552-4b03-428e-b0e6-31865f9a9182}</UniqueIdentifier>
     </Filter>
@@ -127,6 +124,12 @@
     </Filter>
     <Filter Include="UI\InspectorUI\ResUI\AnimationUI">
       <UniqueIdentifier>{75070595-b908-45bf-9090-3e8d5db0c825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\08. Light3DUI">
+      <UniqueIdentifier>{92272743-9935-413d-a80a-5fd7a9674bc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\RenderCompUI\6. LandscapeUI">
+      <UniqueIdentifier>{195cf3c3-6182-4d66-911a-fc1726967c4a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -255,7 +258,7 @@
       <Filter>UI\InspectorUI\ComponentUI\06. Animator3DUI</Filter>
     </ClInclude>
     <ClInclude Include="Light3DUI.h">
-      <Filter>UI\InspectorUI\ComponentUI\08. Light3D</Filter>
+      <Filter>UI\InspectorUI\ComponentUI\08. Light3DUI</Filter>
     </ClInclude>
     <ClInclude Include="ParticleSystemUI.h">
       <Filter>UI\InspectorUI\ComponentUI\RenderCompUI\3. ParticleSystemUI</Filter>
@@ -404,7 +407,7 @@
       <Filter>UI\InspectorUI\ComponentUI\06. Animator3DUI</Filter>
     </ClCompile>
     <ClCompile Include="Light3DUI.cpp">
-      <Filter>UI\InspectorUI\ComponentUI\08. Light3D</Filter>
+      <Filter>UI\InspectorUI\ComponentUI\08. Light3DUI</Filter>
     </ClCompile>
     <ClCompile Include="ParticleSystemUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\RenderCompUI\3. ParticleSystemUI</Filter>

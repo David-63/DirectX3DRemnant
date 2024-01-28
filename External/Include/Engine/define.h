@@ -14,7 +14,8 @@
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 #define ScaleDT CTimeMgr::GetInst()->GetScaledDeltaTime()
 
-#define MAX_LAYER 32
+#define MAX_LAYER	32
+#define MAX_MIP		8
 
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
 
