@@ -21,7 +21,7 @@ public:
 	void SetOutputBuffer(CStructuredBuffer* _buffer) { m_pOutputBuffer = _buffer; }
 
 public:
-	virtual void UpdateData() override;
+	virtual void UpdateData();
 	virtual void Clear();
 
 public:

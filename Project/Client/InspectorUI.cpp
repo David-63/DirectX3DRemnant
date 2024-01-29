@@ -19,7 +19,6 @@
 #include "ParticleSystemUI.h"
 #include "SkyBoxUI.h"
 #include "DecalUI.h"
-//#include "LandScapeUI.h"
 
 #include "MeshDataUI.h"
 #include "TextureUI.h"
@@ -89,10 +88,7 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::DECAL]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::DECAL]);
 
-	//m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE] = new LandScapeUI;
-	//m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE]->SetSize(0.f, 150.f);
-	//AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE]);
-	
+
 
 	// ResUI
 	m_arrResUI[(UINT)RES_TYPE::MESHDATA] = new MeshDataUI;

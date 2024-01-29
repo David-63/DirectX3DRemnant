@@ -25,7 +25,6 @@ private:
 
 public:
     virtual void render() = 0;
-    virtual void render(UINT _iSubset) = 0;
     virtual void render_shadowmap();
 
 public:
@@ -39,7 +38,6 @@ public:
     Ptr<CMaterial> GetDynamicMaterial(UINT _idx);
 
     UINT GetMtrlCount() { return (UINT)m_vecMtrls.size(); }
-    ULONG64 GetInstID(UINT _iMtrlIdx);
 
     void SetFrustumCheck(bool _bUse) { m_bFrustumCheck = _bUse; }
     bool IsUseFrustumCheck() { return m_bFrustumCheck; }

@@ -395,15 +395,13 @@ int CDevice::CreateSampler()
     tSamDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    tSamDesc.Filter   = D3D11_FILTER_ANISOTROPIC;
-    tSamDesc.MaxLOD   = D3D11_FLOAT32_MAX;
+    tSamDesc.Filter   = D3D11_FILTER_ANISOTROPIC;    
     DEVICE->CreateSamplerState(&tSamDesc, m_Sampler[0].GetAddressOf());
 
     tSamDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
     tSamDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-    tSamDesc.Filter   = D3D11_FILTER_MIN_MAG_MIP_POINT;
-    tSamDesc.MaxLOD   = D3D11_FLOAT32_MAX;
+    tSamDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT;
     DEVICE->CreateSamplerState(&tSamDesc, m_Sampler[1].GetAddressOf());
 
 
@@ -413,14 +411,12 @@ int CDevice::CreateSampler()
     CONTEXT->DSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
     CONTEXT->GSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
     CONTEXT->PSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
-    CONTEXT->CSSetSamplers(0, 1, m_Sampler[0].GetAddressOf());
 
     CONTEXT->VSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
     CONTEXT->HSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
     CONTEXT->DSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
     CONTEXT->GSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
     CONTEXT->PSSetSamplers(1, 1, m_Sampler[1].GetAddressOf());
-    CONTEXT->CSSetSamplers(1, 1, m_Sampler[0].GetAddressOf());
 
 
     return S_OK;

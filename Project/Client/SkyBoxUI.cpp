@@ -23,16 +23,16 @@ int SkyBoxUI::render_update()
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
 
-	static int skyType = static_cast<int>(GetTarget()->SkyBox()->GetSkyBoxType());
-	const char* skyTypes[static_cast<int>(SKYBOX_TYPE::End)] = { "SPHERE", "CUBE" };
-	const char* currentTypeName = (skyType >= 0 && skyType < static_cast<int>(LIGHT_TYPE::End)) ? skyTypes[skyType] : "Unknown";
+	char szBuff[50] = {};
+	int skyType = static_cast<int>(GetTarget()->SkyBox()->GetSkyBoxType());
+	Ptr<CTexture> skyTexture = GetTarget()->SkyBox()->GetSkyBoxTexture();
+
 
 	ImGui::Text("SkyType");
 	ImGui::SameLine();
-	ImGui::SliderInt("##Sky Type", &skyType, 0, static_cast<int>(SKYBOX_TYPE::End) - 1, currentTypeName);
+	ImGui::SliderInt("##Sky Type", &skyType, 0, 1);
 
-	char szBuff[50] = {};
-	Ptr<CTexture> skyTexture = GetTarget()->SkyBox()->GetSkyBoxTexture();
+
 	ImGui::Text("SkyTexture");
 	ImGui::SameLine();
 	GetResKey(skyTexture.Get(), szBuff, 50);

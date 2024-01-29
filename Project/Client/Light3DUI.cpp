@@ -17,18 +17,16 @@ int Light3DUI::render_update()
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
 
+	int eLightType = static_cast<int>(GetTarget()->Light3D()->GetLightType());
 	Vec3 vColor = GetTarget()->Light3D()->GetLightColor();
 	Vec3 vAmbient = GetTarget()->Light3D()->GetLightAmbient();
 	float fRadius = GetTarget()->Light3D()->GetRadius();
 	bool bShow = GetTarget()->Light3D()->GetDebugRendering();
 
-	static int eLightType = static_cast<int>(GetTarget()->Light3D()->GetLightType());
-	const char* lightTypes[static_cast<int>(LIGHT_TYPE::End)] = { "DIRECTIONAL", "POINT", "SPOT" };
-	const char* currentTypeName = (eLightType >= 0 && eLightType < static_cast<int>(LIGHT_TYPE::End)) ? lightTypes[eLightType] : "Unknown";
-	
+	ImGui::Text("0: Dir, 1: Point, 2: Spot");
 	ImGui::Text("LightType");
 	ImGui::SameLine();
-	ImGui::SliderInt("##Light Type", &eLightType, 0, static_cast<int>(LIGHT_TYPE::End) - 2, currentTypeName);
+	ImGui::SliderInt("##Light Type", &eLightType, 0, static_cast<int>(LIGHT_TYPE::End) - 2);
 
 	ImGui::Text("Radius	");
 	ImGui::SameLine();

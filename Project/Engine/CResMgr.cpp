@@ -22,6 +22,8 @@ void CResMgr::init()
 	CreateDefaultMaterial();	
 }
 
+
+
 void CResMgr::InitSound()
 {
 	FMOD::System_Create(&CSound::g_pFMOD);
@@ -109,37 +111,4 @@ void CResMgr::DeleteRes(RES_TYPE _type, const wstring& _strKey)
 	m_arrRes[(UINT)_type].erase(iter);	
 
 	m_Changed = true;
-}
-
-
-void CResMgr::AddInputLayout(DXGI_FORMAT _eFormat, const char* _strSemanticName, UINT _iSlotNum, UINT _iSemanticIdx)
-{
-	D3D11_INPUT_ELEMENT_DESC LayoutDesc = {};
-
-	if (0 == _iSlotNum)
-	{
-		LayoutDesc.AlignedByteOffset = m_iLayoutOffset_0;
-		LayoutDesc.InputSlotClass = D3D11_INPUT_PER_VERTEX_DATA;
-		LayoutDesc.InstanceDataStepRate = 0;
-	}
-	else if (1 == _iSlotNum)
-	{
-		LayoutDesc.AlignedByteOffset = m_iLayoutOffset_1;
-		LayoutDesc.InputSlotClass = D3D11_INPUT_PER_INSTANCE_DATA;
-		LayoutDesc.InstanceDataStepRate = 1;
-	}
-
-	LayoutDesc.Format = _eFormat;
-	LayoutDesc.InputSlot = _iSlotNum;
-	LayoutDesc.SemanticName = _strSemanticName;
-	LayoutDesc.SemanticIndex = _iSemanticIdx;
-
-	m_vecLayoutInfo.push_back(LayoutDesc);
-
-
-	// Offset ¡ı∞°
-	if (0 == _iSlotNum)
-		m_iLayoutOffset_0 += GetSizeofFormat(_eFormat);
-	else if (1 == _iSlotNum)
-		m_iLayoutOffset_1 += GetSizeofFormat(_eFormat);
 }

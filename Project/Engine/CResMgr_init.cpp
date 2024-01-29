@@ -5,8 +5,6 @@
 #include "CSetColorShader.h"
 #include "CParticleUpdateShader.h"
 #include "CAnimation3DShader.h"
-#include "CCopyBoneShader.h"
-
 
 void CResMgr::CreateDefaultMesh()
 {
@@ -33,7 +31,7 @@ void CResMgr::CreateDefaultMesh()
 	// =============
 	// RectMesh »ý¼º
 	// =============
-	// 0 --- 1
+	// 0 --- 1 
 	// |  \  |
 	// 3 --- 2
 	v.vPos = Vec3(-0.5f, 0.5f, 0.f);
@@ -429,31 +427,6 @@ void CResMgr::CreateDefaultMesh()
 
 void CResMgr::CreateDefaultGraphicsShader()
 {
-	AddInputLayout(DXGI_FORMAT_R32G32B32_FLOAT, "POSITION", 0, 0);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "COLOR", 0, 0);
-	AddInputLayout(DXGI_FORMAT_R32G32_FLOAT, "TEXCOORD", 0, 0);
-
-	AddInputLayout(DXGI_FORMAT_R32G32B32_FLOAT, "NORMAL", 0, 0);
-	AddInputLayout(DXGI_FORMAT_R32G32B32_FLOAT, "TANGENT", 0, 0);
-	AddInputLayout(DXGI_FORMAT_R32G32B32_FLOAT, "BINORMAL", 0, 0);
-
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "BLENDWEIGHT", 0, 0);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "BLENDINDICES", 0, 0);
-
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WORLD", 1, 0);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WORLD", 1, 1);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WORLD", 1, 2);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WORLD", 1, 3);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WV", 1, 0);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WV", 1, 1);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WV", 1, 2);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WV", 1, 3);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WVP", 1, 0);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WVP", 1, 1);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WVP", 1, 2);
-	AddInputLayout(DXGI_FORMAT_R32G32B32A32_FLOAT, "WVP", 1, 3);
-	AddInputLayout(DXGI_FORMAT_R32_UINT, "ROWINDEX", 1, 0);
-
 	Ptr<CGraphicsShader> pShader = nullptr;
 
 	// ============================
@@ -670,6 +643,27 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 
 	// ============================
+	// TestShader
+	// RS_TYPE : CULL_NONE
+	// DS_TYPE : LESS
+	// BS_TYPE : DEFAULT	 
+	// Domain : MASK
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"TestShader");
+	pShader->CreateVertexShader(L"shader\\test.fx", "VS_TestShader");
+	pShader->CreatePixelShader(L"shader\\test.fx", "PS_TestShader");
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+
+	// Parameter
+	pShader->AddScalarParam(INT_0, "Color Type");
+	pShader->AddTexParam(TEX_0, "Output Texture");
+
+
+
+	// ============================
 	// Std3DShader
 	// RS_TYPE : CULL_BACK
 	// DS_TYPE : LESS
@@ -868,32 +862,6 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_LIGHT);
 
 	AddRes(pShader->GetKey(), pShader);
-
-	// ============================
-	// LandScapeShader	
-	// RS_TYPE : CULL_BACK
-	// DS_TYPE : LESS
-	// BS_TYPE : DEFAULT
-	// 
-	// Parameter
-	// g_tex_0 : Output Texture
-	// g_tex_1 : Normal Texture
-	// Domain : Opaque
-	// ============================
-	pShader = new CGraphicsShader;
-	pShader->SetKey(L"LandScapeShader");
-	pShader->CreateVertexShader(L"shader\\landscape.fx", "VS_LandScape");
-	pShader->CreateHullShader(L"shader\\landscape.fx", "HS_LandScape");
-	pShader->CreateDomainShader(L"shader\\landscape.fx", "DS_LandScape");
-	pShader->CreatePixelShader(L"shader\\landscape.fx", "PS_LandScape");
-
-	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST);
-	pShader->SetRSType(RS_TYPE::CULL_BACK);
-	pShader->SetDSType(DS_TYPE::LESS);
-	pShader->SetBSType(BS_TYPE::DEFAULT);
-	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED);
-
-	AddRes(pShader->GetKey(), pShader);
 }
 
 void CResMgr::CreateDefaultComputeShader()
@@ -917,17 +885,16 @@ void CResMgr::CreateDefaultComputeShader()
 	pCS->SetKey(L"Animation3DUpdateCS");
 	pCS->CreateComputeShader(L"shader\\animation3d.fx", "CS_Animation3D");
 	AddRes(pCS->GetKey(), pCS);
-
-	// Animation Matrix Copy ½¦ÀÌ´õ
-	pCS = new CCopyBoneShader(1024, 1, 1);
-	pCS->SetKey(L"CopyBoneCS");
-	pCS->CreateComputeShader(L"shader\\copybone.fx", "CS_CopyBoneMatrix");
-	AddRes(pCS->GetKey(), pCS);
 }
 
 void CResMgr::CreateDefaultMaterial()
 {
 	Ptr<CMaterial> pMtrl = nullptr;
+
+	// Test Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TestShader"));
+	AddRes(L"TestMtrl", pMtrl);
 
 	// Std2D Material
 	pMtrl = new CMaterial(true);
@@ -982,6 +949,10 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DistortionShader"));
 	AddRes(L"DistortionMtrl", pMtrl);
 
+	// TestShader
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TestShader"));
+	AddRes(L"TestShaderMtrl", pMtrl);
 
 	// Std3DMtrl	
 	pMtrl = new CMaterial(true);
@@ -1001,7 +972,9 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"DeferredDecalShader"));
 	AddRes(L"DeferredDecalMtrl", pMtrl);
+
 	
+
 
 	// Std3D_DeferredShader
 	pMtrl = new CMaterial(true);
@@ -1024,13 +997,15 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ShadowMapShader"));
 	AddRes(L"ShadowMapMtrl", pMtrl);
 
+
+
+
+
+
 	// MergeMtrl
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"MergeShader"));
 	AddRes(L"MergeMtrl", pMtrl);	
 
-	// LandScapeMtrl
-	pMtrl = new CMaterial(true);
-	pMtrl->SetShader(FindRes<CGraphicsShader>(L"LandScapeShader"));
-	AddRes(L"LandScapeMtrl", pMtrl);
+
 }

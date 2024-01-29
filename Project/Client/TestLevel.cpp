@@ -55,6 +55,7 @@ void CreateTestLevel()
 		pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 		pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 		pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
+		pUICam->Camera()->TurnDeferredCamera(false);
 		SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 	}
 	// SkyBox 추가
@@ -94,32 +95,25 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-		
-		// 인스턴싱 테스트
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		for (int i = 0; i < 10; ++i)
-		{
-			pObj = pMeshData->Instantiate();
-			pObj->SetName(L"Monster");
-			pObj->Transform()->SetDebugSphereUse(true);
-			SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
-		}
-		
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\house.mdat");
+		//pObj = pMeshData->Instantiate();
+		//pObj->SetName(L"House");
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		//pObj = pMeshData->Instantiate();
-		//pObj->SetName(L"Monster");
-		//pObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
+		pObj = pMeshData->Instantiate();
+		pObj->SetName(L"Monster");
+		pObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
 
-		//SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
+		SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
 	}
 
 	// player
 	{
-		/*CGameObject* pObject = new CGameObject;
+		CGameObject* pObject = new CGameObject;
 		pObject->SetName(L"Player");
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CMeshRender);		
@@ -132,45 +126,36 @@ void CreateTestLevel()
 		pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
 		pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
 
-		SpawnGameObject(pObject, Vec3(550.f, -750.f, 0.f), L"Player");*/
+		SpawnGameObject(pObject, Vec3(550.f, -750.f, 0.f), L"Player");
 	}
 
+	// Background
+	{
+		CGameObject* pObject = new CGameObject;
+		pObject->SetName(L"Plane");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
 
-	// LandScape Object
-	CGameObject* pLandScape = new CGameObject;
-	pLandScape->SetName(L"LandScape");
+		pObject->Transform()->SetRelativeScale(Vec3(8000.f, 8000.f, 8000.f));
+		pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
 
-	pLandScape->AddComponent(new CTransform);
-	pLandScape->AddComponent(new CLandScape);
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
 
-	pLandScape->Transform()->SetRelativeScale(Vec3(1000.f, 4000.f, 1000.f));
+		SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Background");
 
-	pLandScape->LandScape()->SetFace(64, 64);
-	pLandScape->LandScape()->SetFrustumCheck(false);
-	//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));
-	SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 0);
+		pObject = new CGameObject;
+		pObject->SetName(L"Decal");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CDecal);
 
-	//// Background
-	
-	//{
-	//	CGameObject* pObject = new CGameObject;
-	//	pObject->SetName(L"Plane");
-	//	pObject->AddComponent(new CTransform);
-	//	pObject->AddComponent(new CMeshRender);
-	//	pObject->Transform()->SetRelativeScale(Vec3(8000.f, 8000.f, 8000.f));
-	//	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
-	//	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-	//	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-	//	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Background");
-	//	pObject = new CGameObject;
-	//	pObject->SetName(L"Decal");
-	//	pObject->AddComponent(new CTransform);
-	//	pObject->AddComponent(new CDecal);
-	//	pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
-	//	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
-	//	pObject->Decal()->SetDeferredDecal(true);
-	//	pObject->Decal()->ActivateEmissive(false);
-	//	pObject->Decal()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\MagicCircle.png"));
-	//	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Background");
-	//}
+		pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
+		pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+
+		pObject->Decal()->SetDeferredDecal(true);
+		pObject->Decal()->ActivateEmissive(false);
+		pObject->Decal()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\MagicCircle.png"));
+
+		SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Background");
+	}
 }

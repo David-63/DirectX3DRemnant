@@ -67,8 +67,13 @@ public:
     const vector<CLight2D*>& GetLight2D() { return m_vecLight2D; }
     const vector<CLight3D*>& GetLight3D() { return m_vecLight3D; }
 
-    // level main 카메라 혹은 editor 카메라 가져오기
-    CCamera* GetMainCam();
+    CCamera* GetMainCam() 
+    { 
+        if (m_vecCam.empty())
+            return nullptr;
+
+        return m_vecCam[0];
+    }
 
     void CopyRenderTarget();
 

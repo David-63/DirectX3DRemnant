@@ -11,8 +11,6 @@
 
 #include "CResMgr.h"
 #include "CMRT.h"
-#include "CLevelMgr.h"
-#include "CLevel.h"
 
 CRenderMgr::CRenderMgr()
     : m_Light2DBuffer(nullptr)
@@ -159,19 +157,4 @@ void CRenderMgr::Clear()
     m_vecLight2DInfo.clear();
     m_vecLight3D.clear();
     m_vecLight3DInfo.clear();
-}
-
-CCamera* CRenderMgr::GetMainCam()
-{
-    if (CLevelMgr::GetInst()->GetCurLevel()->GetState() == LEVEL_STATE::PLAY)
-    {
-        if (m_vecCam.empty())
-            return nullptr;
-
-        return m_vecCam[0];
-    }
-    else
-    {
-        return m_pEditorCam;
-    }
 }

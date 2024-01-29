@@ -7,13 +7,11 @@
 CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
 	, m_vRelativeScale(Vec3(1.f, 1.f, 1.f))
-	, m_bAbsolute(false)
+	, m_bAbsolute(false)	
 	, m_vRelativeDir{
 		  Vec3(1.f, 0.f, 0.f)
 		, Vec3(0.f, 1.f, 0.f)
-		, Vec3(0.f, 0.f, 1.f) }
-	, m_DebugSphereUse(false)
-	, m_SphereRadius(50.f)
+		, Vec3(0.f, 0.f, 1.f)}	
 {
 	SetName(L"Transform");
 }
@@ -26,7 +24,7 @@ void CTransform::finaltick()
 {
 	m_matWorldScale = XMMatrixIdentity();
 	m_matWorldScale = XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
-
+	
 	Matrix matRot = XMMatrixIdentity();
 	matRot = XMMatrixRotationX(m_vRelativeRot.x);
 	matRot *= XMMatrixRotationY(m_vRelativeRot.y);
@@ -34,7 +32,7 @@ void CTransform::finaltick()
 
 	Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
 
-
+	
 	m_matWorld = m_matWorldScale * matRot * matTranslation;
 
 	Vec3 vDefaultDir[3] = {
@@ -66,7 +64,7 @@ void CTransform::finaltick()
 			m_matWorldScale = pParent->Transform()->m_matWorldScale;
 			m_matWorld *= pParent->Transform()->m_matWorld;
 		}
-
+		
 		// 3방향 벡터 업데이트
 		for (int i = 0; i < 3; ++i)
 		{
@@ -76,15 +74,6 @@ void CTransform::finaltick()
 	}
 
 	m_matWorldInv = XMMatrixInverse(nullptr, m_matWorld);
-
-	if (m_DebugSphereUse)
-	{
-		//float scaledRadius = m_SphereRadius * max(m_vRelativeScale.x, max(m_vRelativeScale.y, m_vRelativeScale.z));
-		// RealativePos를 처음에 넣어줬는데, 애초에 개념을 잘못 이해하고 있었음.
-		// RelatviePos를 여기다가 넣어봤자 어차피 월드행렬의 것을 쓰고 있기 때문에 소용 없음
-		// RelatviePos는 단순히 상대적인 개념이라 여기다가 넣는게 아니다. 
-		DrawDebugSphere(GetWorldPos(), m_SphereRadius, Vec4(0.f, 1.f, 3.f, 1.f), Vec3(0.f, 0.f, 0.f), 0.f, true);
-	}
 }
 
 void CTransform::UpdateData()
@@ -104,20 +93,16 @@ void CTransform::UpdateData()
 
 void CTransform::SaveToLevelFile(FILE* _File)
 {
-	fwrite(&m_vRelativePos, sizeof(Vec3), 1, _File);
+	fwrite(&m_vRelativePos	, sizeof(Vec3), 1, _File);
 	fwrite(&m_vRelativeScale, sizeof(Vec3), 1, _File);
-	fwrite(&m_vRelativeRot, sizeof(Vec3), 1, _File);
+	fwrite(&m_vRelativeRot	, sizeof(Vec3), 1, _File);
 	fwrite(&m_bAbsolute, sizeof(bool), 1, _File);
-	fwrite(&m_DebugSphereUse, sizeof(bool), 1, _File);
-	fwrite(&m_SphereRadius, sizeof(float), 1, _File);
 }
 
 void CTransform::LoadFromLevelFile(FILE* _FILE)
-{
+{	
 	fread(&m_vRelativePos, sizeof(Vec3), 1, _FILE);
 	fread(&m_vRelativeScale, sizeof(Vec3), 1, _FILE);
 	fread(&m_vRelativeRot, sizeof(Vec3), 1, _FILE);
 	fread(&m_bAbsolute, sizeof(bool), 1, _FILE);
-	fread(&m_DebugSphereUse, sizeof(bool), 1, _FILE);
-	fread(&m_SphereRadius, sizeof(float), 1, _FILE);
 }
