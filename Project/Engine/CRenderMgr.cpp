@@ -80,6 +80,8 @@ void CRenderMgr::render_play()
             continue;
         m_vecCam[i]->SortObject();
         m_MRT[(UINT)MRT_TYPE::SWAPCHAIN]->OMSet();
+
+        if (i != 1) // UI카메라만 render 제외(디퍼드 렌더링 안되도록)
         m_vecCam[i]->render();
     }
 }
