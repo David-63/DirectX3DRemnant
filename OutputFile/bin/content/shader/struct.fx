@@ -115,4 +115,11 @@ struct tSkinningInfo
     float3 vNormal;
 };
 
+struct tRaycastOut
+{
+    float2 vUV;
+    float fDist;
+    int success;
+};
+
 #endif

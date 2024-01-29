@@ -108,8 +108,8 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
 		m_CamObj->Camera()->SetFar(100000.f);
 		m_CamObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		m_CamObj->Camera()->SetOrthoWidth(16000.f);
-		m_CamObj->Camera()->SetOrthoHeight(16000.f);
+		m_CamObj->Camera()->SetOrthoWidth(6000.f);
+		m_CamObj->Camera()->SetOrthoHeight(6000.f);
 
 	}
 
@@ -118,9 +118,9 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 		m_Mesh = CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh");
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"PointLightMtrl");
 	}
-
+	// ConeMesh 랑 SpotLight는 없어서 UI패널조작에서 막아놓음
 	else 
-	{		
+	{
 		m_Mesh = CResMgr::GetInst()->FindRes<CMesh>(L"ConeMesh");
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"SpotLightMtrl");
 	}

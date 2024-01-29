@@ -45,6 +45,11 @@ void CDecal::render()
 	GetMesh()->render(0);	
 }
 
+void CDecal::render(UINT _iSubset)
+{
+	render();
+}
+
 void CDecal::SaveToLevelFile(FILE* _File)
 {
 	CRenderComponent::SaveToLevelFile(_File);
