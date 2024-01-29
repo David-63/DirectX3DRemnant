@@ -102,7 +102,8 @@ int Animator3DUI::render_update()
 
 		if (ImGui::Button("Create!"))
 		{
-			GetTarget()->Animator3D()->CreateAnimation3D(inputAnimName, curClipIdx, inputStartTime, inputEndTime);
+			wstring outputName(inputAnimName, &inputAnimName[128]);
+			GetTarget()->Animator3D()->CreateAnimation3D(outputName, curClipIdx, inputStartTime, inputEndTime);
 		}
 
 		ImGui::TreePop();
@@ -156,7 +157,7 @@ int Animator3DUI::render_update()
 void Animator3DUI::AnimList()
 {
 	static vector<const char*> animList;
-	map<string, CAnim3D*> anims = GetTarget()->Animator3D()->GetAnims();
+	map<wstring, CAnim3D*> anims = GetTarget()->Animator3D()->GetAnims();
 	for (const auto& anim : anims)
 	{
 		animList.push_back(anim.second->GetAnimName().c_str());
@@ -172,7 +173,8 @@ void Animator3DUI::AnimList()
 			if (ImGui::Selectable(animList[idx], is_selected))
 			{
 				item_current_idx = idx;
-				GetTarget()->Animator3D()->Change(animList[idx]);
+				std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;				
+				GetTarget()->Animator3D()->Change(converter.from_bytes(animList[idx]));
 			}
 
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)

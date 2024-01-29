@@ -14,7 +14,7 @@ private:
 	const vector<tMTBone>*		m_pVecBones;
 	const vector<tMTAnimClip>*	m_pVecClip;
 
-	map<string, CAnim3D*>		m_mapAnim;  // Animation 목록
+	map<wstring, CAnim3D*>		m_mapAnim;  // Animation 목록
 	CAnim3D*					m_pCurAnim; // 현재 재생중인 Animation
 	bool						m_bRepeat;  // 반복
 
@@ -24,13 +24,13 @@ public:
 	void ClearData();
 
 public:
-	void CreateAnimation3D(const string& _strAnimName, int _clipIdx, float _startTime, float _endTime);
-	void Play(const string& _strName, bool _bRepeat);
+	void CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
+	void Play(const wstring& _strName, bool _bRepeat);
 
 	void Stop() { m_pCurAnim->Stop(); }
 	void Continue(bool _bRepeat) { m_pCurAnim->Continue(); m_bRepeat = _bRepeat; }
-	void Change(const string& _strName);
-	CAnim3D* FindAnim(const string& _strName);
+	void Change(const wstring& _strName);
+	CAnim3D* FindAnim(const wstring& _strName);
 
 
 public:
@@ -42,7 +42,7 @@ public:
 	bool IsRepeat() { return m_bRepeat; }
 
 
-	const map<string, CAnim3D*>& GetAnims() { return m_mapAnim; }
+	const map<wstring, CAnim3D*>& GetAnims() { return m_mapAnim; }
 	CAnim3D* GetCurAnim() { return m_pCurAnim; }
 	
 	// 이거 아마 안쓰는듯?

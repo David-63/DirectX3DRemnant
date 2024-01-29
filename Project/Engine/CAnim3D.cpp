@@ -7,18 +7,8 @@
 #include "CResMgr.h"
 #include "CMeshRender.h"
 
-CAnim3D::CAnim3D()
-: m_Owner(nullptr), m_strAnimName()
-, m_iFrameCount(30), m_AnimUpdateTime()
-, m_CurFrameIdx(0), m_NextFrameIdx(0), m_Ratio(0.f)
-, m_pBoneFinalMatBuffer(nullptr)
-, m_bFinalMatUpdate(false), m_Finish(false)
-{
-	m_pBoneFinalMatBuffer = new CStructuredBuffer;
-}
-//CAnim3D::CAnim3D(bool _bEngine)
-//: CRes(RES_TYPE::ANIMCLIP, _bEngine)
-//	, m_Owner(nullptr), m_strAnimName()
+//CAnim3D::CAnim3D()
+//: m_Owner(nullptr), m_strAnimName()
 //, m_iFrameCount(30), m_AnimUpdateTime()
 //, m_CurFrameIdx(0), m_NextFrameIdx(0), m_Ratio(0.f)
 //, m_pBoneFinalMatBuffer(nullptr)
@@ -26,6 +16,15 @@ CAnim3D::CAnim3D()
 //{
 //	m_pBoneFinalMatBuffer = new CStructuredBuffer;
 //}
+CAnim3D::CAnim3D(bool _bEngine) : CRes(RES_TYPE::ANIMCLIP, _bEngine)
+	, m_Owner(nullptr)
+	, m_iFrameCount(30), m_AnimUpdateTime()
+	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_Ratio(0.f)
+	, m_pBoneFinalMatBuffer(nullptr)
+	, m_bFinalMatUpdate(false), m_Finish(false)
+{
+	m_pBoneFinalMatBuffer = new CStructuredBuffer;
+}
 
 CAnim3D::~CAnim3D()
 {
@@ -121,9 +120,9 @@ void CAnim3D::check_mesh(Ptr<CMesh> _pMesh)
 	}
 }
 
-void CAnim3D::CreateAnimation3D(const string& _strAnimName, int _clipIdx, float _startTime, float _endTime)
+void CAnim3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
 {
-	m_strAnimName = _strAnimName;
+	SetKey(_strAnimName);
 	m_AnimData.AnimClipIdx = _clipIdx;
 	m_AnimData.StartTime = _startTime;
 	m_AnimData.EndTime = _endTime;

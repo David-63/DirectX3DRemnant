@@ -1,5 +1,5 @@
 #pragma once
-#include "CEntity.h"
+#include "CRes.h"
 
 #include "ptr.h"
 #include "CMaterial.h"
@@ -17,12 +17,10 @@ struct tAnim3DData
 
 class CAnimator3D;
 class CStructuredBuffer;
-class CAnim3D : public CEntity
+class CAnim3D : public CRes
 {
 private:    
     CAnimator3D*                m_Owner;                // Owner를 알아야 컴포넌트에 접근 가능함
-    string                      m_strAnimName;           // 애니메이션 Key Name
-
 
     int							m_iFrameCount;          // 현재 프레임 (30 기준)
 
@@ -50,11 +48,15 @@ public:
 
 
 public:
-    void CreateAnimation3D(const string& _strAnimName, int _clipIdx, float _startTime, float _endTime);
+    void CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
     //void CreateAnimation3D(const string& _strAnimName, int _clipIdx, int _startFrame, int _endFrame); // 안씀
 
 public: // GUI에 노출시키는 함수
-    const string& GetAnimName() { return m_strAnimName; }
+    const string& GetAnimName()
+    {
+        std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
+        return converter.to_bytes(GetKey());
+    }
     int GetAnimClipIdx() { return m_AnimData.AnimClipIdx; }
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
     float* GetStartTime() { return &m_AnimData.StartTime; }
@@ -87,8 +89,7 @@ public:
 
     CLONE(CAnim3D);
 public:
-    CAnim3D();
-    //CAnim3D(bool _bEngine);
+    CAnim3D(bool _bEngine);
     ~CAnim3D();
 
     friend class CAnimator3D;

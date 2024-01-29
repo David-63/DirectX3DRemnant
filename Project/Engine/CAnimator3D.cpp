@@ -64,9 +64,9 @@ void CAnimator3D::ClearData()
 }
 
 
-void CAnimator3D::CreateAnimation3D(const string& _strAnimName, int _clipIdx, float _startTime, float _endTime)
+void CAnimator3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
 {
-	CAnim3D* pAnim = new CAnim3D();
+	CAnim3D* pAnim = new CAnim3D(true);
 	pAnim->m_Owner = this;
 	pAnim->CreateAnimation3D(_strAnimName, _clipIdx, _startTime, _endTime);
 	m_mapAnim.insert(make_pair(_strAnimName, pAnim));
@@ -74,7 +74,7 @@ void CAnimator3D::CreateAnimation3D(const string& _strAnimName, int _clipIdx, fl
 	m_pCurAnim->Stop();
 }
 
-void CAnimator3D::Play(const string& _strName, bool _bRepeat)
+void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 {
 	CAnim3D* pAnim = FindAnim(_strName);
 	assert(pAnim);
@@ -84,7 +84,7 @@ void CAnimator3D::Play(const string& _strName, bool _bRepeat)
 	m_bRepeat = _bRepeat;
 }
 
-void CAnimator3D::Change(const string& _strName)
+void CAnimator3D::Change(const wstring& _strName)
 {
 	CAnim3D* pAnim = FindAnim(_strName);
 	assert(pAnim);
@@ -94,9 +94,9 @@ void CAnimator3D::Change(const string& _strName)
 	m_bRepeat = false;
 }
 
-CAnim3D* CAnimator3D::FindAnim(const string& _strName)
+CAnim3D* CAnimator3D::FindAnim(const wstring& _strName)
 {
-	map<string, CAnim3D*>::iterator iter = m_mapAnim.find(_strName);
+	map<wstring, CAnim3D*>::iterator iter = m_mapAnim.find(_strName);
 
 	if (iter == m_mapAnim.end())
 	{
