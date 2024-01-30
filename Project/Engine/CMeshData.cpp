@@ -40,8 +40,8 @@ CGameObject* CMeshData::Instantiate()
 	pAnimator->SetBones(m_pMesh->GetBones());
 	pAnimator->SetAnimClip(m_pMesh->GetAnimClip());
 	// 하드코딩으로 애니메이션 생성이 되는지 테스트
-	pAnimator->CreateAnimation3D("firstAnim", 0, 3.f, 6.f);
-	pAnimator->CreateAnimation3D("SecondAnim", 0, 10.f, 14.f);
+	pAnimator->CreateAnimation3D(L"firstAnim", 0, 3.f, 6.f);
+	pAnimator->CreateAnimation3D(L"SecondAnim", 0, 10.f, 14.f);
 
 	return pNewObj;
 }
