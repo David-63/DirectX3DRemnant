@@ -201,6 +201,26 @@ const char* ToString(COMPONENT_TYPE type)
 {
 	return COMPONENT_TYPE_STR[(UINT)type];
 }
+std::wstring ToWString(const std::string& _str)
+{
+	const int Length = MultiByteToWideChar(CP_ACP, 0, _str.c_str(), -1, nullptr, 0);
+	std::wstring wString{};
+	wString = wstring(_str.begin(), _str.end());
+
+	return wString;
+}
+
+std::string ToString(const std::wstring& _wstr)
+{
+	const int Length = WideCharToMultiByte(CP_ACP, 0, _wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+	std::string String{};
+
+	String.resize(Length);
+	WideCharToMultiByte(CP_ACP, 0, &_wstr[0], -1, &String[0], Length, nullptr, nullptr);
+	String.pop_back();
+
+	return String;
+}
 const wchar_t* ToWString(COMPONENT_TYPE type)
 {
 	return COMPONENT_TYPE_WSTR[(UINT)type];
