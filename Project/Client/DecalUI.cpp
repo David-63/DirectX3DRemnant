@@ -5,9 +5,9 @@
 #include <Engine/CDecal.h>
 #include <Engine/CResMgr.h>
 
-DecalUI::DecalUI() : ComponentUI("##Decal", COMPONENT_TYPE::DECAL)
+DecalUI::DecalUI() : ComponentUI("##DecalUI", COMPONENT_TYPE::DECAL)
 {
-	SetName("Decal");
+	SetName("DecalUI");
 }
 
 DecalUI::~DecalUI()

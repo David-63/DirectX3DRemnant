@@ -6,6 +6,7 @@
 ComponentUI::ComponentUI(const string& _Name, COMPONENT_TYPE _Type)
 	: UI(_Name)
 	, m_Type(_Type)
+	, m_Target(nullptr)
 {
 }
 
