@@ -54,6 +54,9 @@ int ScriptUI::render_update()
 		case SCRIPT_PARAM::VEC2:
 			ParamUI::Param_Vec2(vecScriptParam[i].strDesc, (Vec2*)vecScriptParam[i].pData);
 			break;
+		case SCRIPT_PARAM::VEC3:
+			ParamUI::Param_Vec3(vecScriptParam[i].strDesc, (Vec3*)vecScriptParam[i].pData);
+			break;
 		case SCRIPT_PARAM::VEC4:
 			ParamUI::Param_Vec4(vecScriptParam[i].strDesc, (Vec4*)vecScriptParam[i].pData);
 			break;

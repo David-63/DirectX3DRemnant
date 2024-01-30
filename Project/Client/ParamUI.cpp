@@ -70,7 +70,7 @@ int ParamUI::Param_Vec2(const string& _strDesc, Vec2* _pData, bool _bDrag)
     ImGui::Text(_strDesc.c_str());
     ImGui::SameLine(100);
 
-    string strIntName = GetNextName("##Param_Int");
+    string strIntName = GetNextName("##Param_Vec2");
     ImGui::SetNextItemWidth(150);
 
     float arrFloat[2] = { _pData->x, _pData->y };
@@ -98,12 +98,40 @@ int ParamUI::Param_Vec2(const string& _strDesc, Vec2* _pData, bool _bDrag)
     return 0;
 }
 
+int ParamUI::Param_Vec3(const string& _strDesc, Vec3* _pData, bool _bDrag)
+{
+    ImGui::Text(_strDesc.c_str());
+    ImGui::SameLine(100);
+
+    string strIntName = GetNextName("##Param_Vec3");
+    ImGui::SetNextItemWidth(200);
+
+
+    if (_bDrag)
+    {
+        if (ImGui::DragFloat3(strIntName.c_str(), *_pData))
+        {
+            return 1;
+        }
+    }
+
+    else
+    {
+        if (ImGui::InputFloat3(strIntName.c_str(), *_pData))
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 int ParamUI::Param_Vec4(const string& _strDesc, Vec4* _pData, bool _bDrag)
 {
     ImGui::Text(_strDesc.c_str());
     ImGui::SameLine(100);
 
-    string strIntName = GetNextName("##Param_Int");
+    string strIntName = GetNextName("##Param_Vec4");
     ImGui::SetNextItemWidth(200);
    
 
