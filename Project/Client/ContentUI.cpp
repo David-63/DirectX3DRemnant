@@ -128,9 +128,10 @@ void ContentUI::ResetContent()
 	for (size_t i = 0; i < (UINT)RES_TYPE::END; ++i)
 	{
 		const map<wstring, Ptr<CRes>>& mapRes = CResMgr::GetInst()->GetResources((RES_TYPE)i);
-
+		RES_TYPE resType = (RES_TYPE)i;
 		// m_Tree 에 현재 리소스 목록을 AddItem
-		TreeNode* pCategory = m_Tree->AddItem(ToString((RES_TYPE)i), 0);
+		string item = ToString((RES_TYPE)i);
+		TreeNode* pCategory = m_Tree->AddItem(item, 0);
         pCategory->SetCategoryNode(true);
 
 		for (const auto& pair : mapRes)

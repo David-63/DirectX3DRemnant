@@ -7,16 +7,42 @@
 #include "CMesh.h"
 #include "CAnim3D.h"
 
+
+struct Event
+{
+	void operator=(std::function<void()> func)
+	{
+		mEvent = std::move(func);
+	}
+	void operator()()
+	{
+		if (mEvent)
+			mEvent();
+	}
+	std::function<void()> mEvent;
+};
+struct Events
+{
+	Event StartEvent;
+	Event CompleteEvent;
+	Event EndEvent;
+	std::vector<Event> ActionEvents;
+};
+
 class CStructuredBuffer;
 class CAnimator3D : public CComponent
 {
 private:
 	const vector<tMTBone>*		m_pVecBones;
 	const vector<tMTAnimClip>*	m_pVecClip;
+	map<wstring, Events*>		m_Events;
 
-	map<string, CAnim3D*>		m_mapAnim;  // Animation 목록
+	map<wstring, CAnim3D*>		m_mapAnim;  // Animation 목록
+
 	CAnim3D*					m_pCurAnim; // 현재 재생중인 Animation
 	bool						m_bRepeat;  // 반복
+
+	// 여기서 애님 블렌딩을 위한 정보를 저장하면 좋을듯
 
 public:
 	virtual void finaltick() override;
@@ -24,15 +50,24 @@ public:
 	void ClearData();
 
 public:
-	void CreateAnimation3D(const string& _strAnimName, int _clipIdx, float _startTime, float _endTime);
-	void Play(const string& _strName, bool _bRepeat);
+	void CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
+	void Play(const wstring& _strName, bool _bRepeat);
 
 	void Stop() { m_pCurAnim->Stop(); }
 	void Continue(bool _bRepeat) { m_pCurAnim->Continue(); m_bRepeat = _bRepeat; }
-	void Change(const string& _strName);
-	CAnim3D* FindAnim(const string& _strName);
+	void Change(const wstring& _strName);
+	CAnim3D* FindAnim(const wstring& _strName);
+
+	//event func
+public:
+	Events* FindEvents(const std::wstring& name);
+	std::function<void()>& StartEvent(const std::wstring& name);
+	std::function<void()>& CompleteEvent(const std::wstring& name);
+	std::function<void()>& EndEvent(const std::wstring& name);
+	std::function<void()>& ActionEvent(const std::wstring& name, UINT index);
 
 
+	// animSet func
 public:
 	void SetBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; }
 	const vector<tMTBone>* GetBones() { return m_pVecBones; }
@@ -42,7 +77,7 @@ public:
 	bool IsRepeat() { return m_bRepeat; }
 
 
-	const map<string, CAnim3D*>& GetAnims() { return m_mapAnim; }
+	const map<wstring, CAnim3D*>& GetAnims() { return m_mapAnim; }
 	CAnim3D* GetCurAnim() { return m_pCurAnim; }
 	
 	// 이거 아마 안쓰는듯?
@@ -55,7 +90,8 @@ public:
 	// Anim3D에 전달하는 함수
 	UINT GetBoneCount() { return (UINT)m_pVecBones->size(); }
 
-	// GUI에 전달하는 함수
+	// getset gpu func
+public:
 	tMTAnimClip GetCurClip()
 	{
 		if (nullptr != m_pCurAnim)
@@ -63,8 +99,9 @@ public:
 	}
 	int GetClipIdx() { return m_pCurAnim->GetAnimClipIdx(); }
 
-	float* GetStartTime() { return m_pCurAnim->GetStartTime(); }
-	float* GetEndTime() { return m_pCurAnim->GetEndTime(); }
+	float GetBeginTime() { return m_pCurAnim->GetBeginTime(); }
+	float GetEndTime() { return m_pCurAnim->GetEndTime(); }
+	float GetFinishTime() { return m_pCurAnim->GetFinishTime(); }
 	float GetCurTime() { return m_pCurAnim->GetCurTime(); }
 	int GetCurFrame() { return m_pCurAnim->GetCurFrame(); }
 

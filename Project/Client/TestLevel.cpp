@@ -103,6 +103,7 @@ void CreateTestLevel()
 		{
 			pObj = pMeshData->Instantiate();
 			pObj->SetName(L"Monster");
+			pObj->Transform()->SetDebugSphereUse(true);
 			SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
 		}
 		
@@ -118,7 +119,7 @@ void CreateTestLevel()
 
 	// player
 	{
-		CGameObject* pObject = new CGameObject;
+		/*CGameObject* pObject = new CGameObject;
 		pObject->SetName(L"Player");
 		pObject->AddComponent(new CTransform);
 		pObject->AddComponent(new CMeshRender);		
@@ -131,7 +132,7 @@ void CreateTestLevel()
 		pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
 		pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
 
-		SpawnGameObject(pObject, Vec3(550.f, -750.f, 0.f), L"Player");
+		SpawnGameObject(pObject, Vec3(550.f, -750.f, 0.f), L"Player");*/
 	}
 
 
