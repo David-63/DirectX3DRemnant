@@ -52,6 +52,8 @@ void CAnimator3D::finaltick()
 			events->CompleteEvent();
 		if (m_bRepeat)
 			m_pCurAnim->Reset();
+		else
+			m_pCurAnim->TimeReset();
 	}
 	
 	// 임의의 클립을 Start / End Time을 0 ~ end로 보정하기
@@ -61,6 +63,8 @@ void CAnimator3D::finaltick()
 
 	if (events)
 	{
+		if (frameIndex >= events->ActionEvents.size())
+			return;
 		// Complete가 아니고, 프레임 중간에 ActionEvent가 있다면 그것을 실행
 		if (frameIndex != -1 && events->ActionEvents[frameIndex].mEvent)
 		{
@@ -104,11 +108,27 @@ void CAnimator3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, f
 
 void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 {
-	CAnim3D* pAnim = FindAnim(_strName);
-	assert(pAnim);
-	m_pCurAnim->Reset();	// 초기화 한 다음에 변경해주기
-	m_pCurAnim = pAnim;
-	m_pCurAnim->Reset();	// 변경한 애니메이션을 초기화 해줌	
+	CAnim3D* prevAnim = m_pCurAnim;
+	Events* events;
+	if (prevAnim)
+	{
+		events = FindEvents(prevAnim->GetKey());
+		if (events)
+			events->EndEvent();
+	}
+
+	CAnim3D* pNextAnim = FindAnim(_strName);
+	assert(pNextAnim);
+
+	if (pNextAnim)
+	{
+		m_pCurAnim->Reset();	// 초기화 한 다음에 변경해주기
+		m_pCurAnim = pNextAnim;
+		m_pCurAnim->Reset();	// 변경한 애니메이션을 초기화 해줌
+		events = FindEvents(m_pCurAnim->GetKey());
+		if (events)
+			events->StartEvent();
+	}
 	m_bRepeat = _bRepeat;
 }
 

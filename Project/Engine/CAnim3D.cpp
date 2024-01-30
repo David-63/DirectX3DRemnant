@@ -49,6 +49,7 @@ int CAnim3D::finaltick()
 		m_Finish = true;
 	}
 	
+	// 프레임 구하기 : 클립 시작시간 + 현재 시간 * 기준 프레임(30)
 	double dFrameIdx = 
 		(m_AnimUpdateTime[m_AnimData.AnimClipIdx] + m_AnimData.BeginTime) * (double)m_iFrameCount;
 	m_CurFrameIdx = (int)(dFrameIdx);
@@ -62,6 +63,13 @@ int CAnim3D::finaltick()
 	m_bFinalMatUpdate = false;
 
 	int retFrameIdx = m_CurFrameIdx - (m_AnimData.BeginTime * 30);
+
+	// 프레임이 인덱스를 넘어가지 않게 예외처리
+
+	// 6 * 30 = 180
+	int limitFrame = (m_AnimData.EndTime * 30);
+	if (retFrameIdx >= limitFrame)
+		retFrameIdx = limitFrame - 1;
 	return retFrameIdx;
 }
 
@@ -126,6 +134,8 @@ void CAnim3D::check_mesh(Ptr<CMesh> _pMesh)
 void CAnim3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
 {
 	SetKey(_strAnimName);
+	string convert(_strAnimName.begin(), _strAnimName.end());
+	m_AnimName = convert;
 	// 클립 정보
 	m_AnimData.AnimClipIdx = _clipIdx;
 	m_AnimData.BeginTime = _startTime;

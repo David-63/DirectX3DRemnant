@@ -116,20 +116,7 @@ int Animator3DUI::render_update()
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Select Anims");
 	AnimList();
 
-	// 애니메이션 재생
-	bool repeat = GetTarget()->Animator3D()->IsRepeat();
-	ImGui::Checkbox("Is Repeat?", &repeat);
-	GetTarget()->Animator3D()->SetRepeat(repeat);
-	ImGui::SameLine();
-	if (ImGui::Button("Play"))
-	{
-		GetTarget()->Animator3D()->Continue(repeat);
-	}
-	ImGui::SameLine();
-	if (ImGui::Button("Stop"))
-	{
-		GetTarget()->Animator3D()->Stop();
-	}
+	
 	
 	
 
@@ -155,6 +142,7 @@ void Animator3DUI::AnimList()
 {
 	static vector<const char*> animList;
 	map<wstring, CAnim3D*> anims = GetTarget()->Animator3D()->GetAnims();
+	
 	for (const auto& anim : anims)
 	{
 		animList.push_back(anim.second->GetAnimName().c_str());
@@ -162,6 +150,8 @@ void Animator3DUI::AnimList()
 
 	static int item_current_idx = 0; // Here we store our selection data as an index.
 	const char* combo_preview_value = animList[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)
+
+	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> charToWstring;
 	if (ImGui::BeginCombo("Anim Key List", combo_preview_value))
 	{
 		for (int idx = 0; idx < animList.size(); idx++)
@@ -170,8 +160,7 @@ void Animator3DUI::AnimList()
 			if (ImGui::Selectable(animList[idx], is_selected))
 			{
 				item_current_idx = idx;
-				std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;				
-				GetTarget()->Animator3D()->Change(converter.from_bytes(animList[idx]));
+				GetTarget()->Animator3D()->Change(charToWstring.from_bytes(animList[item_current_idx]));
 			}
 
 			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -180,5 +169,21 @@ void Animator3DUI::AnimList()
 		}
 		ImGui::EndCombo();
 	}
+
+	// 애니메이션 재생
+	bool repeat = GetTarget()->Animator3D()->IsRepeat();
+	ImGui::Checkbox("Is Repeat?", &repeat);
+	GetTarget()->Animator3D()->SetRepeat(repeat);
+	ImGui::SameLine();
+	if (ImGui::Button("Play"))
+	{
+		GetTarget()->Animator3D()->Play(charToWstring.from_bytes(animList[item_current_idx]), repeat);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Stop"))
+	{
+		GetTarget()->Animator3D()->Stop();
+	}
+
 	animList.clear();
 }

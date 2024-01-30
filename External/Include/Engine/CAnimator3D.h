@@ -51,8 +51,11 @@ public:
 
 public:
 	void CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
+
+	// 반복애니메이션의 경우 Play가 호출될 일 없으니 현재 애니메이션이 재생중 Play를 호출하는경우 EndEvent가 반드시 호출됨
 	void Play(const wstring& _strName, bool _bRepeat);
 
+	// 아래에 있는 기능들은 나중에 손볼 예정임, 안쓰는게 나을듯?
 	void Stop() { m_pCurAnim->Stop(); }
 	void Continue(bool _bRepeat) { m_pCurAnim->Continue(); m_bRepeat = _bRepeat; }
 	void Change(const wstring& _strName);

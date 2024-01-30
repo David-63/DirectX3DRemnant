@@ -12,7 +12,7 @@ struct tAnim3DData
     float                       BeginTime;          // 클립의 시작시간
     float                       EndTime;            // 클립의 종료시간
 
-    float                       StartTime;          // 애니메이션 시작시간
+    float                       StartTime;          // 애니메이션 시작시간   // 어쩌피 0이라서 없어도 되는 변수
     float                       FinishTime;         // 애니메이션 종료시간
 
     tAnim3DData() : AnimClipIdx(0), BeginTime(0.f), EndTime(0.f)
@@ -27,6 +27,7 @@ class CAnim3D : public CRes
 {
 private:    
     CAnimator3D*                m_Owner;                // Owner를 알아야 컴포넌트에 접근 가능함
+    string                      m_AnimName;
 
     int							m_iFrameCount;          // 현재 프레임 (30 기준)
 
@@ -61,6 +62,7 @@ public:
     bool IsFinish() { return m_Finish; }
 
     // 리셋은 애니메이션을 초기상태로 돌리지만, 실행시키진 않음
+    void TimeReset() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; }
     void Reset() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; m_Finish = false; }
     void Stop() { m_Finish = true; }
     void Continue()
@@ -76,11 +78,7 @@ public:
 
     // GUI에 노출시키는 함수
 public: // 클립 정보    
-    const string& GetAnimName()
-    {
-        std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
-        return converter.to_bytes(GetKey());
-    }
+    const string& GetAnimName() { return m_AnimName; }
     int GetAnimClipIdx() { return m_AnimData.AnimClipIdx; }
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
     const float& GetBeginTime() { return m_AnimData.BeginTime; }
