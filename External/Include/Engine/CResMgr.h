@@ -60,12 +60,12 @@ public:
 
     template<typename T>
     void AddRes(const wstring& _strKey, Ptr<T> _Res);
+    void DeleteRes(RES_TYPE _type, const wstring& _strKey);
+    void DeleteMaterial(const wstring& _strKey);
 
     template<typename T>
     Ptr<T> Load(const wstring& _strKey, const wstring& _strRelativePath);
 
-private:
-    void DeleteRes(RES_TYPE _type, const wstring& _strKey);
 
     friend class CEventMgr;
 };

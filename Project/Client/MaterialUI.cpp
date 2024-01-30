@@ -4,6 +4,9 @@
 #include "ParamUI.h"
 #include "TreeUI.h"
 #include "ListUI.h"
+#include "ContentUI.h"
+#include "ImGuiMgr.h"
+#include "InspectorUI.h"
 
 #include <Engine\CResMgr.h>
 #include <Engine\CMaterial.h>
@@ -29,6 +32,80 @@ int MaterialUI::render_update()
     Ptr<CMaterial> pMtrl = (CMaterial*)GetTargetRes().Get();
     string strKey = string(pMtrl->GetKey().begin(), pMtrl->GetKey().end());
     ImGui::InputText("##MtrlUIName", (char*)strKey.c_str(), ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
+
+
+     //메터리얼 삭제
+    if (false == pMtrl->IsEngineRes())
+    {
+        // Delete Resource Button
+        if (ImGui::Button("Del##Resource")) {
+            // Resource 삭제
+            // 1. Content UI 창에서 정보 삭제
+            CResMgr::GetInst()->DeleteMaterial(pMtrl->GetKey());
+            ContentUI* content = (ContentUI*)ImGuiMgr::GetInst()->FindUI("##Content");
+            content->ResetContent();
+
+            // 2. Inspector UI창에서 정보 삭제 (사라진 정보를 띄우는 것은 말이 안되므로)
+            InspectorUI* Inspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
+            Inspector->ClearTargetResource();
+
+
+        }
+    }
+
+    // ===========================
+// 재질 생성 기능 
+    ImGui::SameLine();
+    if (ImGui::Button("Create New Mtrl"))
+    {
+        // 비긴팝모달이랑 꼭 문자열 똑같이 해야됨
+        ImGui::OpenPopup("Making New Mtrl");
+    }
+
+    bool unused_open = true;
+    if (ImGui::BeginPopupModal("Making New Mtrl", &unused_open))
+    {
+        ImGui::Text("SetName \n\n");
+        static char buf[512];
+        ImGui::InputText("##SetName", buf, IM_ARRAYSIZE(buf), ImGuiInputTextFlags_None);
+
+
+        if (ImGui::Button("Complete"))
+        {
+            string name = buf;
+            wstring newName = wstring(name.begin(), name.end());
+
+            Ptr<CMaterial> pNewMtrl = new CMaterial(false); // Create Material 
+            pNewMtrl->SetKey(newName);
+
+
+            // ====== 상대경로로 지정 
+            wstring MtrlResKey = L"material\\" + newName + L".mtrl";
+            pNewMtrl->SetRelativePath(MtrlResKey);
+
+            // 위에서 한 내용을 토대로 리소스 추가
+            CResMgr::GetInst()->AddRes<CMaterial>(newName, pNewMtrl);
+
+            // 실제 경로의 파일로 저장
+            pNewMtrl->Save(MtrlResKey);
+
+            ContentUI* content = (ContentUI*)ImGuiMgr::GetInst()->FindUI("##Content");
+            if (CResMgr::GetInst()->IsResourceChanged())
+            {
+                content->ResetContent(); // 이건 쌤꺼 
+            }
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
+
+
+
+
+
+
+
+
 
     // GraphicsShader 이름
     ImGui::Text("Shader  ");
