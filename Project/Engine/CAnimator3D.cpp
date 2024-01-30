@@ -35,6 +35,7 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 CAnimator3D::~CAnimator3D()
 {
 	Safe_Del_Map(m_mapAnim);
+	Safe_Del_Map(m_Events);
 }
 
 
