@@ -5,9 +5,9 @@
 #include <Engine/CAnimator3D.h>
 #include <Engine/CTimeMgr.h>
 
-Animator3DUI::Animator3DUI() : ComponentUI("##Animator3D", COMPONENT_TYPE::ANIMATOR3D)
+Animator3DUI::Animator3DUI() : ComponentUI("##Animator3DUI", COMPONENT_TYPE::ANIMATOR3D)
 {
-	SetName("Animator3D");
+	SetName("Animator3DUI");
 }
 
 Animator3DUI::~Animator3DUI()
