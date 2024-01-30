@@ -32,24 +32,25 @@ CAnim3D::~CAnim3D()
 		delete m_pBoneFinalMatBuffer;
 }
 
-void CAnim3D::finaltick()
+int CAnim3D::finaltick()
 {
 	if (nullptr == m_Owner)
-		return;
+		return -1;
 
 	if (m_Finish)
-		return;
+		return -1;
 
 	// m_AnimUpdateTime[m_AnimClipIdx] 이 변수는 CreateAnim 단계에서 StartTime 값으로 초기화 되어야함
 
 	m_AnimUpdateTime[m_AnimData.AnimClipIdx] += ScaleDT;
-	if (m_AnimUpdateTime[m_AnimData.AnimClipIdx] >= m_AnimData.EndTime)
+	if (m_AnimUpdateTime[m_AnimData.AnimClipIdx] >= m_AnimData.FinishTime)
 	{
 		// 시간은 여기서 초기화 하는게 아니라 애니메이터에서 초기화함수를 호출하는 방식으로 구현		
 		m_Finish = true;
 	}
 	
-	double dFrameIdx = m_AnimUpdateTime[m_AnimData.AnimClipIdx] * (double)m_iFrameCount;
+	double dFrameIdx = 
+		(m_AnimUpdateTime[m_AnimData.AnimClipIdx] + m_AnimData.BeginTime) * (double)m_iFrameCount;
 	m_CurFrameIdx = (int)(dFrameIdx);
 
 	if (m_CurFrameIdx >= m_Owner->GetAnimClip()->at(m_AnimData.AnimClipIdx).iFrameLength - 1)
@@ -58,8 +59,10 @@ void CAnim3D::finaltick()
 		m_NextFrameIdx = m_CurFrameIdx + 1;
 
 	m_Ratio = (float)(dFrameIdx - (double)m_NextFrameIdx);
-
 	m_bFinalMatUpdate = false;
+
+	int retFrameIdx = m_CurFrameIdx - (m_AnimData.BeginTime * 30);
+	return retFrameIdx;
 }
 
 void CAnim3D::UpdateData()
@@ -123,11 +126,23 @@ void CAnim3D::check_mesh(Ptr<CMesh> _pMesh)
 void CAnim3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
 {
 	SetKey(_strAnimName);
+	// 클립 정보
 	m_AnimData.AnimClipIdx = _clipIdx;
-	m_AnimData.StartTime = _startTime;
+	m_AnimData.BeginTime = _startTime;
 	m_AnimData.EndTime = _endTime;
+
+	// 애니메이션 정보
+	m_AnimData.StartTime = 0.f;
+	m_AnimData.FinishTime = m_AnimData.EndTime - m_AnimData.BeginTime;
+
+	// 클립 수만큼 배열 늘리기
 	m_AnimUpdateTime.resize(m_Owner->GetAnimClip()[m_AnimData.AnimClipIdx].size());
-	m_AnimUpdateTime[m_AnimData.AnimClipIdx] = m_AnimData.StartTime;
+	m_AnimUpdateTime[m_AnimData.AnimClipIdx] = m_AnimData.StartTime; // 사실상 별 의미 없음
+}
+
+int CAnim3D::ConvertTimeToFrame(float _idxTime)
+{
+	return 0;
 }
 
 //void CAnim3D::CreateAnimation3D(const string& _strAnimName, int _clipIdx, int _startFrame, int _endFrame)

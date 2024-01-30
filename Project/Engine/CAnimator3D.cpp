@@ -40,14 +40,32 @@ CAnimator3D::~CAnimator3D()
 
 void CAnimator3D::finaltick()
 {
-	if (nullptr != m_pCurAnim)
-	{
-		if (m_bRepeat && m_pCurAnim->IsFinish())
-		{
-			m_pCurAnim->Reset();
-		}
+	if (nullptr == m_pCurAnim)
+		return;
 
-		m_pCurAnim->finaltick();
+	// 애니메이션에 있는 이벤트 가져오기
+	Events* events = FindEvents(m_pCurAnim->GetKey());
+
+	if (m_pCurAnim->IsFinish())
+	{
+		if (events)
+			events->CompleteEvent();
+		if (m_bRepeat)
+			m_pCurAnim->Reset();
+	}
+	
+	// 임의의 클립을 Start / End Time을 0 ~ end로 보정하기
+	// 초 -> Frame 변환 기능
+
+	UINT frameIndex = m_pCurAnim->finaltick();
+
+	if (events)
+	{
+		// Complete가 아니고, 프레임 중간에 ActionEvent가 있다면 그것을 실행
+		if (frameIndex != -1 && events->ActionEvents[frameIndex].mEvent)
+		{
+			events->ActionEvents[frameIndex].mEvent();
+		}
 	}
 }
 
@@ -72,6 +90,16 @@ void CAnimator3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, f
 	m_mapAnim.insert(make_pair(_strAnimName, pAnim));
 	m_pCurAnim = pAnim;
 	m_pCurAnim->Stop();
+
+	Events* events = FindEvents(_strAnimName);
+	if (events)
+		return;
+	
+	events = new Events();
+	// 최대 프레임수만큼
+	int maxFrame = (_endTime - _startTime) * 30 + 1;
+	events->ActionEvents.resize(maxFrame);
+	m_Events.insert(std::make_pair(_strAnimName, events));
 }
 
 void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
@@ -104,6 +132,41 @@ CAnim3D* CAnimator3D::FindAnim(const wstring& _strName)
 	}
 
 	return iter->second;
+}
+
+Events* CAnimator3D::FindEvents(const std::wstring& name)
+{
+	std::map<std::wstring, Events*>::iterator iter
+		= m_Events.find(name);
+
+	if (iter == m_Events.end())
+		return nullptr;
+
+	return iter->second;
+}
+
+std::function<void()>& CAnimator3D::StartEvent(const std::wstring& name)
+{
+	Events* events = FindEvents(name);
+	return events->StartEvent.mEvent;
+}
+
+std::function<void()>& CAnimator3D::CompleteEvent(const std::wstring& name)
+{
+	Events* events = FindEvents(name);
+	return events->CompleteEvent.mEvent;
+}
+
+std::function<void()>& CAnimator3D::EndEvent(const std::wstring& name)
+{
+	Events* events = FindEvents(name);
+	return events->EndEvent.mEvent;
+}
+
+std::function<void()>& CAnimator3D::ActionEvent(const std::wstring& name, UINT index)
+{
+	Events* events = FindEvents(name);
+	return events->ActionEvents[index].mEvent;
 }
 
 

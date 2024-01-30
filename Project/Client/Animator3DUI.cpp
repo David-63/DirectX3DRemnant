@@ -76,14 +76,17 @@ int Animator3DUI::render_update()
 	const vector<tMTAnimClip>* AnimClips = GetTarget()->Animator3D()->GetAnimClip();
 	int curClipIdx = GetTarget()->Animator3D()->GetClipIdx();
 	int iClipCount = AnimClips->size();
-
 	float fTimeLength = static_cast<float>(AnimClips->at(curClipIdx).dTimeLength);
-	
+	float fBeginTime = GetTarget()->Animator3D()->GetBeginTime();
+	float fEndTime = GetTarget()->Animator3D()->GetEndTime();
+
 	if (ImGui::TreeNode("Clip Info"))
 	{
-		ImGui::Text("AnimClipCount %i", iClipCount);
-		ImGui::Text("Clip TimeLength %.1f", fTimeLength);
+		ImGui::Text("AnimClipCount	  %i", iClipCount);
+		ImGui::Text("Clip TimeLength  %.1f", fTimeLength);
 		ImGui::Text("Clip FrameLenght %i", AnimClips->at(curClipIdx).iFrameLength);
+		ImGui::Text("Clip BeginTime	  %.1f", fBeginTime);
+		ImGui::Text("Clip EndTime	  %.1f", fEndTime);
 		ImGui::TreePop();
 	}
 
@@ -128,28 +131,22 @@ int Animator3DUI::render_update()
 		GetTarget()->Animator3D()->Stop();
 	}
 	
+	
 
 	// 애니메이션 정보
-	float* fStartTime = GetTarget()->Animator3D()->GetStartTime();
-	float* fEndTime = GetTarget()->Animator3D()->GetEndTime();
+	float fFinishTime = GetTarget()->Animator3D()->GetFinishTime();
 	float fCurTime = GetTarget()->Animator3D()->GetCurTime();
 	int curFrame = GetTarget()->Animator3D()->GetCurFrame();
 
 	if (ImGui::TreeNode("Animation Info"))
 	{
-		ImGui::SliderFloat("StartTime	", fStartTime, 0.0f, fTimeLength, "ratio = %.2f");
-
-		if (fStartTime >= fEndTime)
-			fEndTime = fStartTime;
-		ImGui::SliderFloat("EndTime		", fEndTime, *fStartTime, fTimeLength, "ratio = %.2f");
-				
+		ImGui::Text("FinishTime	%.2f", fFinishTime);				
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "UpdateTime	%.1f", fCurTime);
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "UpdateFrame % i", curFrame);
 
 		// save 버튼 추가해서 anim파일 생성하는 기능도 추가해야할듯
 		ImGui::TreePop();
-	}
-	
+	}	
 	
 	return TRUE;
 }

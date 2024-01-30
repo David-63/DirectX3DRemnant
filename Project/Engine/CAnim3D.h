@@ -8,10 +8,16 @@
 
 struct tAnim3DData
 {
-    int                         AnimClipIdx;          // 이 애니메이션의 클립 인덱스 (직접 만들어서 사용)
-    float                       StartTime;            // 애니메이션 클립의 시작시간
-    float                       EndTime;              // 애니메이션 클립의 종료시간
-    tAnim3DData() : AnimClipIdx(0), StartTime(0.f), EndTime(0.f) {}
+    int                         AnimClipIdx;        // 클립 인덱스 (직접 만들어서 사용)
+    float                       BeginTime;          // 클립의 시작시간
+    float                       EndTime;            // 클립의 종료시간
+
+    float                       StartTime;          // 애니메이션 시작시간
+    float                       FinishTime;         // 애니메이션 종료시간
+
+    tAnim3DData() : AnimClipIdx(0), BeginTime(0.f), EndTime(0.f)
+        , StartTime(0.f), FinishTime(0.f)
+    {}
     ~tAnim3DData() {}
 };
 
@@ -41,17 +47,35 @@ private:
     bool						m_bFinalMatUpdate;      // 업데이트 체크용
 
 public:
-    void finaltick();
+    int finaltick();
     void UpdateData();
     void ClearData();
     void check_mesh(Ptr<CMesh> _pMesh);
 
-
+    // 애니메이터에서 사용하는 함수
 public:
     void CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
-    //void CreateAnimation3D(const string& _strAnimName, int _clipIdx, int _startFrame, int _endFrame); // 안씀
+    int ConvertTimeToFrame(float _idxTime);
 
-public: // GUI에 노출시키는 함수
+public: 
+    bool IsFinish() { return m_Finish; }
+
+    // 리셋은 애니메이션을 초기상태로 돌리지만, 실행시키진 않음
+    void Reset() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; m_Finish = false; }
+    void Stop() { m_Finish = true; }
+    void Continue()
+    {
+        if (m_AnimUpdateTime[m_AnimData.AnimClipIdx] >= m_AnimData.FinishTime)
+        {
+            m_AnimUpdateTime[m_AnimData.AnimClipIdx] = m_AnimData.StartTime;
+            m_Finish = true;
+        }
+        m_Finish = false;
+    }
+    void Edit() { m_AnimData.FinishTime = m_AnimData.EndTime - m_AnimData.BeginTime; }
+
+    // GUI에 노출시키는 함수
+public: // 클립 정보    
     const string& GetAnimName()
     {
         std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> converter;
@@ -59,26 +83,14 @@ public: // GUI에 노출시키는 함수
     }
     int GetAnimClipIdx() { return m_AnimData.AnimClipIdx; }
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
-    float* GetStartTime() { return &m_AnimData.StartTime; }
-    float* GetEndTime() { return &m_AnimData.EndTime; }
+    const float& GetBeginTime() { return m_AnimData.BeginTime; }
+    const float& GetEndTime() { return m_AnimData.EndTime; }
+
+    // 애님 정보
+    const float& GetFinishTime() { return m_AnimData.FinishTime; }
     const float& GetCurTime() { return m_AnimUpdateTime[m_AnimData.AnimClipIdx]; }
     const int& GetCurFrame() { return m_CurFrameIdx; }
 
-public: // 애니메이터에서 사용하는 함수
-    bool IsFinish() { return m_Finish; }
-
-    // 리셋은 애니메이션을 초기상태로 돌리지만, 실행시키진 않음
-    void Reset() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = m_AnimData.StartTime; m_Finish = false; }
-    void Stop() { m_Finish = true; }
-    void Continue()
-    {
-        if (m_AnimUpdateTime[m_AnimData.AnimClipIdx] >= m_AnimData.EndTime)
-        {
-            m_AnimUpdateTime[m_AnimData.AnimClipIdx] = m_AnimData.StartTime;
-            m_Finish = true;
-        }
-        m_Finish = false;
-    }
 public:
     int Save(const wstring& _strFilePath);
     int Load(const wstring& _strFilePath);
