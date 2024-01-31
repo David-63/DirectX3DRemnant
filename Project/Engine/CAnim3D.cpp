@@ -54,7 +54,7 @@ int CAnim3D::finaltick()
 		(m_AnimUpdateTime[m_AnimData.AnimClipIdx] + m_AnimData.BeginTime) * (double)m_iFrameCount;
 	m_CurFrameIdx = (int)(dFrameIdx);
 
-	if (m_CurFrameIdx >= m_Owner->GetAnimClip()->at(m_AnimData.AnimClipIdx).iFrameLength - 1)
+	if (m_CurFrameIdx >= m_Owner->GetMTAnimClips()->at(m_AnimData.AnimClipIdx).iFrameLength - 1)
 		m_NextFrameIdx = m_CurFrameIdx;
 	else
 		m_NextFrameIdx = m_CurFrameIdx + 1;
@@ -89,7 +89,7 @@ void CAnim3D::UpdateData()
 		pUpdateShader->SetOutputBuffer(m_pBoneFinalMatBuffer);
 
 		
-		UINT iBoneCount = m_Owner->GetBoneCount();
+		UINT iBoneCount = m_Owner->GetMTBoneCount();
 		pUpdateShader->SetBoneCount(iBoneCount);
 		pUpdateShader->SetFrameIndex(m_CurFrameIdx);
 		pUpdateShader->SetNextFrameIdx(m_NextFrameIdx);
@@ -124,14 +124,14 @@ void CAnim3D::ClearData()
 
 void CAnim3D::check_mesh(Ptr<CMesh> _pMesh)
 {
-	UINT iBoneCount = _pMesh->GetBoneCount();
+	UINT iBoneCount = _pMesh->GetMTBoneCount();
 	if (m_pBoneFinalMatBuffer->GetElementCount() != iBoneCount)
 	{
 		m_pBoneFinalMatBuffer->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, false, nullptr);
 	}
 }
 
-void CAnim3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
+void CAnim3D::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
 {
 	SetKey(_strAnimName);
 	string convert(_strAnimName.begin(), _strAnimName.end());
@@ -146,7 +146,7 @@ void CAnim3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float
 	m_AnimData.FinishTime = m_AnimData.EndTime - m_AnimData.BeginTime;
 
 	// 클립 수만큼 배열 늘리기
-	m_AnimUpdateTime.resize(m_Owner->GetAnimClip()[m_AnimData.AnimClipIdx].size());
+	m_AnimUpdateTime.resize(m_Owner->GetMTAnimClips()[m_AnimData.AnimClipIdx].size());
 	m_AnimUpdateTime[m_AnimData.AnimClipIdx] = m_AnimData.StartTime; // 사실상 별 의미 없음
 }
 

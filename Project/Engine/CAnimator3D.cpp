@@ -87,11 +87,11 @@ void CAnimator3D::ClearData()
 }
 
 
-void CAnimator3D::CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
+void CAnimator3D::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
 {
 	CAnim3D* pAnim = new CAnim3D(true);
 	pAnim->m_Owner = this;
-	pAnim->CreateAnimation3D(_strAnimName, _clipIdx, _startTime, _endTime);
+	pAnim->NewAnimClip(_strAnimName, _clipIdx, _startTime, _endTime);
 	m_mapAnim.insert(make_pair(_strAnimName, pAnim));
 	m_pCurAnim = pAnim;
 	m_pCurAnim->Stop();
@@ -131,16 +131,6 @@ void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 			events->StartEvent();
 	}
 	m_bRepeat = _bRepeat;
-}
-
-void CAnimator3D::Change(const wstring& _strName)
-{
-	CAnim3D* pAnim = FindAnim(_strName);
-	assert(pAnim);
-	m_pCurAnim->Reset();	// 초기화 한 다음에 변경해주기
-	m_pCurAnim = pAnim;
-	m_pCurAnim->Reset();	// 변경한 애니메이션을 초기화 해줌	
-	m_bRepeat = false;
 }
 
 CAnim3D* CAnimator3D::FindAnim(const wstring& _strName)
@@ -191,14 +181,6 @@ std::function<void()>& CAnimator3D::ActionEvent(const std::wstring& name, UINT i
 }
 
 
-void CAnimator3D::SaveAnimClip()
-{
-	//m_pCurAnim->Save();
-}
-
-void CAnimator3D::LoadAnimClip()
-{
-}
 
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {

@@ -27,7 +27,7 @@ void CLevelMgr::tick()
 
 	if (LEVEL_STATE::PLAY == m_pCurLevel->GetState())
 	{
-		m_pCurLevel->tick();		
+		m_pCurLevel->tick();
 	}
 
 	m_pCurLevel->finaltick();

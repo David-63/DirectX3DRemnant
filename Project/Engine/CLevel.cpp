@@ -92,6 +92,7 @@ void CLevel::clear()
 {
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
+		//m_arrLayer[i]->m_vecPrevObj = std::move(m_arrLayer[i]->m_vecObject);
 		m_arrLayer[i]->m_vecObject.clear();
 	}	
 }
