@@ -130,6 +130,7 @@
       <MinFilesInUnityFile>10</MinFilesInUnityFile>
       <MaxFilesInUnityFile>20</MaxFilesInUnityFile>
       <UnityFilesDirectory>$(ProjectDir)</UnityFilesDirectory>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -156,6 +157,7 @@ call CodeGen.exe</Command>
       <MinFilesInUnityFile>10</MinFilesInUnityFile>
       <MaxFilesInUnityFile>20</MaxFilesInUnityFile>
       <UnityFilesDirectory>$(ProjectDir)</UnityFilesDirectory>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>

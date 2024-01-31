@@ -1,6 +1,5 @@
 #pragma once
-
-
+#include "define.h"
 
 struct tVertex
 {
@@ -312,5 +311,69 @@ struct tGlobal
 
 extern tGlobal GlobalData;
 
+struct Geometries
+{
+	Geometries(eGeometryType _geometryType, physx::PxVec3 vBoxHalfSize)
+		: eGeomType(eGeometryType::Box)
+	{
+		if (eGeometryType::Box == _geometryType)
+		{
+			boxGeom = physx::PxBoxGeometry(vBoxHalfSize);
+		}
+	}
 
+	Geometries(eGeometryType _geometryType, float fRadius, float fHalfHeight)
+		: eGeomType(eGeometryType::Capsule)
+	{
+		if (eGeometryType::Capsule == _geometryType)
+		{
+			capsuleGeom = physx::PxCapsuleGeometry(fRadius, fHalfHeight);
+		}
+	}
+
+	Geometries(eGeometryType _geometryType, float fRadius)
+		: eGeomType(eGeometryType::Sphere)
+	{
+		if (eGeometryType::Sphere == _geometryType)
+		{
+			sphereGeom = physx::PxSphereGeometry(fRadius);
+		}
+	}
+
+	Geometries(eGeometryType _geometryType)
+		: eGeomType(eGeometryType::Plane)
+	{
+		// RigidStatic¿œ ãö,
+		if (eGeometryType::Plane == _geometryType)
+		{
+			planeGeom = physx::PxPlaneGeometry();
+		}
+	}
+
+	physx::PxBoxGeometry boxGeom;
+	physx::PxCapsuleGeometry capsuleGeom;
+	physx::PxPlaneGeometry planeGeom;
+	physx::PxSphereGeometry sphereGeom;
+	define::eGeometryType eGeomType;
+};
+
+struct tPhysicsInfo
+{
+	tPhysicsInfo()
+		: eActorType(eActorType::Static)
+		, eGeomType(eGeometryType::Box)
+		, size(float3(1.f, 1.f, 1.f))
+		, massProperties(tMassProperties())
+		, pGeometries(nullptr)
+		, filterData{}
+	{
+	}
+
+	eActorType eActorType;
+	eGeometryType eGeomType;
+	float3 size;
+	tMassProperties massProperties;
+	Geometries* pGeometries;
+	physx::PxFilterData filterData;
+};
 
