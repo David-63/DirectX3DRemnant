@@ -1,5 +1,8 @@
 #include "pch.h"
 
+#include "C:\ello\github\teamProject\DirectX3DRemnant\Project\Client\Light2DUI.cpp"
+
+
 #include "C:\ello\github\teamProject\DirectX3DRemnant\Project\Client\Light3DUI.cpp"
 
 

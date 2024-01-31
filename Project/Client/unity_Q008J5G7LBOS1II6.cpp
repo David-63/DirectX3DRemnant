@@ -9,6 +9,9 @@
 #include "C:\ello\github\teamProject\DirectX3DRemnant\Project\Client\Animator3DUI.cpp"
 
 
+#include "C:\ello\github\teamProject\DirectX3DRemnant\Project\Client\AnimClipUI.cpp"
+
+
 #include "C:\ello\github\teamProject\DirectX3DRemnant\Project\Client\CameraUI.cpp"
 
 
@@ -66,5 +69,5 @@
 #include "C:\ello\github\teamProject\DirectX3DRemnant\Project\Client\InspectorUI.cpp"
 
 
-#include "C:\ello\github\teamProject\DirectX3DRemnant\Project\Client\Light2DUI.cpp"
+#include "C:\ello\github\teamProject\DirectX3DRemnant\Project\Client\LandScapeUI.cpp"
 

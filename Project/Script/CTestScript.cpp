@@ -44,14 +44,16 @@ void CTestScript::tick()
 
 	if (KEY_PRESSED(KEY::LEFT))
 	{
-		vPos -= DT * vRight * fSpeed;
+		vRot -= Vec3(0, XMConvertToRadians(DT * fSpeed), 0);
 	}
 
 	if (KEY_PRESSED(KEY::RIGHT))
 	{
-		vPos += DT * vRight * fSpeed;
+		vRot += Vec3(0, XMConvertToRadians(DT * fSpeed), 0);
 	}
+	
 	Transform()->SetRelativePos(vPos);
+	Transform()->SetRelativeRot(vRot);
 	// Event Test
 
 }
