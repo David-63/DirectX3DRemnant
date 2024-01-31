@@ -12,11 +12,7 @@ private:
     wstring         m_strRelativePath;
 
     bool            m_bEngine;  // 엔진이 관리하는 리소스
-
-protected:
-    void SetKey(const wstring& _strKey) { m_strKey = _strKey; }
-    void SetRelativePath(const wstring& _strPath) { m_strRelativePath = _strPath; }
-
+  
 private:
     void AddRef() { ++m_iRefCount; }
     void Release();
@@ -37,7 +33,10 @@ public:
     virtual CRes* Clone() { return nullptr; assert(nullptr); }
 
 public:
+    void SetKey(const wstring& _strKey) { m_strKey = _strKey; }
     const wstring& GetKey() { return m_strKey; }
+
+    void SetRelativePath(const wstring& _strPath) { m_strRelativePath = _strPath; }
     const wstring& GetRelativePath() { return m_strRelativePath; }
     RES_TYPE GetType() { return m_Type; }
     bool IsEngineRes() { return m_bEngine; }

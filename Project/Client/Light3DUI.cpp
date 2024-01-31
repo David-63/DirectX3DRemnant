@@ -3,9 +3,9 @@
 #include <Engine\CGameObject.h>
 #include <Engine/CLight3D.h>
 
-Light3DUI::Light3DUI() : ComponentUI("##Light3D", COMPONENT_TYPE::LIGHT3D)
+Light3DUI::Light3DUI() : ComponentUI("##Light3DUI", COMPONENT_TYPE::LIGHT3D)
 {
-	SetName("Light3D");
+	SetName("Light3DUI");
 }
 
 Light3DUI::~Light3DUI()

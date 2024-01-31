@@ -19,7 +19,7 @@
 #include "ParticleSystemUI.h"
 #include "SkyBoxUI.h"
 #include "DecalUI.h"
-//#include "LandScapeUI.h"
+#include "LandScapeUI.h"
 
 #include "MeshDataUI.h"
 #include "TextureUI.h"
@@ -30,6 +30,7 @@
 #include "ComputeShaderUI.h"
 #include "MaterialUI.h"
 #include "ScriptUI.h"
+#include "AnimClipUI.h"
 
 
 
@@ -89,9 +90,9 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::DECAL]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::DECAL]);
 
-	//m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE] = new LandScapeUI;
-	//m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE]->SetSize(0.f, 150.f);
-	//AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE]);
+	m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE] = new LandScapeUI;
+	m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE]->SetSize(0.f, 150.f);
+	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE]);
 	
 
 	// ResUI
@@ -106,6 +107,11 @@ InspectorUI::InspectorUI()
 	m_arrResUI[(UINT)RES_TYPE::TEXTURE] = new TextureUI;
 	m_arrResUI[(UINT)RES_TYPE::TEXTURE]->SetSize(0.f, 0.f);
 	AddChildUI(m_arrResUI[(UINT)RES_TYPE::TEXTURE]);
+
+	m_arrResUI[(UINT)RES_TYPE::ANIMCLIP] = new AnimClipUI;
+	m_arrResUI[(UINT)RES_TYPE::ANIMCLIP]->SetSize(0.f, 0.f);
+	AddChildUI(m_arrResUI[(UINT)RES_TYPE::ANIMCLIP]);
+
 
 	m_arrResUI[(UINT)RES_TYPE::GRAPHICS_SHADER] = new GraphicsShaderUI;
 	m_arrResUI[(UINT)RES_TYPE::GRAPHICS_SHADER]->SetSize(0.f, 0.f);

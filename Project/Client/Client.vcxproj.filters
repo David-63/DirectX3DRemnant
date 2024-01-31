@@ -131,6 +131,9 @@
     <Filter Include="UI\InspectorUI\ComponentUI\RenderCompUI\6. LandscapeUI">
       <UniqueIdentifier>{195cf3c3-6182-4d66-911a-fc1726967c4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ResUI\AnimClipUI">
+      <UniqueIdentifier>{daf151cb-b41d-4c47-823c-579cc5239e2d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -271,6 +274,12 @@
     </ClInclude>
     <ClInclude Include="AnimationUI.h">
       <Filter>UI\InspectorUI\ResUI\AnimationUI</Filter>
+    </ClInclude>
+    <ClInclude Include="AnimClipUI.h">
+      <Filter>UI\InspectorUI\ResUI\AnimClipUI</Filter>
+    </ClInclude>
+    <ClInclude Include="LandScapeUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\RenderCompUI\6. LandscapeUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -420,6 +429,12 @@
     </ClCompile>
     <ClCompile Include="AnimationUI.cpp">
       <Filter>UI\InspectorUI\ResUI\AnimationUI</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimClipUI.cpp">
+      <Filter>UI\InspectorUI\ResUI\AnimClipUI</Filter>
+    </ClCompile>
+    <ClCompile Include="LandScapeUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\RenderCompUI\6. LandscapeUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

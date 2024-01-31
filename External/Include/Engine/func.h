@@ -38,12 +38,15 @@ void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, 
 bool IsValidObj(CGameObject*& _Target);
 
 
-// string
+// <To string> Or <To Wstring>
 const char* ToString(RES_TYPE);
 const wchar_t* ToWSTring(RES_TYPE);
 
 const char* ToString(COMPONENT_TYPE);
 const wchar_t* ToWSTring(COMPONENT_TYPE);
+
+std::wstring ToWString(const std::string& _str);
+std::string ToString(const std::wstring& _wstr);
 
 
 // Relative Path 가져오기
