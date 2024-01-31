@@ -42,7 +42,7 @@ void CMeshRender::render()
 				continue;
 
 			GetMaterial(idx)->SetAnim3D(true);
-			GetMaterial(idx)->SetBoneCount(Animator3D()->GetBoneCount());
+			GetMaterial(idx)->SetBoneCount(Animator3D()->GetMTBoneCount());
 		}
 	}
 
@@ -86,7 +86,7 @@ void CMeshRender::render(UINT _iSubset)
 	{
 		Animator3D()->UpdateData();
 		GetMaterial(_iSubset)->SetAnim3D(true); // Animation Mesh 알리기
-		GetMaterial(_iSubset)->SetBoneCount(Animator3D()->GetBoneCount());
+		GetMaterial(_iSubset)->SetBoneCount(Animator3D()->GetMTBoneCount());
 	}
 
 	// 사용할 재질 업데이트

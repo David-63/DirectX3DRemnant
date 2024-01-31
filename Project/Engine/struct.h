@@ -190,6 +190,7 @@ struct tFrameTrans
 	Vec4	vRot;
 };
 
+// MT : Meshdata sTruct
 struct tMTKeyFrame
 {
 	double	dTime;
