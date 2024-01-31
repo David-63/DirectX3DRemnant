@@ -14,6 +14,7 @@
 #include <Engine/CSetColorShader.h>
 #include <Script/CPlanetScript.h>
 #include <Script/CCameraMoveScript.h>
+#include <Engine/CSound.h>
 
 void CreateTestLevel()
 {
@@ -26,6 +27,7 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(2)->SetName(L"Player");
 	pCurLevel->GetLayer(3)->SetName(L"Objects");
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
+
 
 	// camera
 	{
