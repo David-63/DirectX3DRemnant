@@ -202,6 +202,9 @@
     <ClInclude Include="CInstancingBuffer.h">
       <Filter>Source\03. Manager\11. instancingMgr</Filter>
     </ClInclude>
+    <ClInclude Include="Physics.h">
+      <Filter>Source\09. Module\Physics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -395,6 +398,9 @@
     </ClCompile>
     <ClCompile Include="CInstancingBuffer.cpp">
       <Filter>Source\03. Manager\11. instancingMgr</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics.cpp">
+      <Filter>Source\09. Module\Physics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -598,6 +604,9 @@
     </Filter>
     <Filter Include="Source\03. Manager\11. instancingMgr">
       <UniqueIdentifier>{260482ba-d75b-40cd-93b4-c94c51737196}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\09. Module\Physics">
+      <UniqueIdentifier>{87565bc5-6ae1-44dd-90d0-7d301d4b4b58}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
