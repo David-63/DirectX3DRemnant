@@ -238,6 +238,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="pch.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="ptr.h" />
+    <ClInclude Include="RigidBody.h" />
     <ClInclude Include="SimpleMath.h" />
     <ClInclude Include="struct.h" />
   </ItemGroup>
@@ -315,6 +316,10 @@ call EngineCopy.bat</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Physics.cpp" />
+<<<<<<< Updated upstream
+=======
+    <ClCompile Include="RigidBody.cpp" />
+>>>>>>> Stashed changes
   </ItemGroup>
   <ItemGroup>
     <None Include="cpp.hint" />

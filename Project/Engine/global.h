@@ -95,4 +95,8 @@ static void AssertEx(bool _expression, const std::wstring& _message)
 
 	MessageBoxW(NULL, _message.c_str(), L"Assert", MB_OK);
 	assert(_expression);
+<<<<<<< Updated upstream
 }
+=======
+}
+>>>>>>> Stashed changes

@@ -1,8 +1,5 @@
 #include "pch.h"
 
-#include "C:\Pss_Programing\Remnant\Project\Engine\CGraphicsShader.cpp"
-
-
 #include "C:\Pss_Programing\Remnant\Project\Engine\CHeightMapShader.cpp"
 
 
@@ -61,4 +58,10 @@
 
 
 #include "C:\Pss_Programing\Remnant\Project\Engine\CRaycastShader.cpp"
+
+
+#include "C:\Pss_Programing\Remnant\Project\Engine\CRenderComponent.cpp"
+
+
+#include "C:\Pss_Programing\Remnant\Project\Engine\CRenderMgr.cpp"
 

@@ -72,7 +72,11 @@ void Physics::render()
 
 void Physics::AddActor(CGameObject* _gameObject)
 {
+<<<<<<< Updated upstream
 	AssertEx(_gameObject, L"Physics::AddActor() - GameObject is nullptr");
+=======
+	//AssertEx(_gameObject, L"Physics::AddActor() - GameObject is nullptr");
+>>>>>>> Stashed changes
 	//AssertEx(_gameObject->GetComponent<Com_RigidBody>(), L"Physics::AddActor() - RigidBody is nullptr");
 	//AssertEx(_gameObject->GetComponent<Com_RigidBody>()->IsAppliedPhysics(), L"Physics::AddActor() - Is not applied physics");
 	//mScene->addActor(*_gameObject->GetComponent<Com_RigidBody>()->GetActor());
@@ -80,7 +84,11 @@ void Physics::AddActor(CGameObject* _gameObject)
 
 void Physics::RemoveActor(CGameObject* _gameObject)
 {
+<<<<<<< Updated upstream
 	AssertEx(_gameObject, L"Physics::RemoveActor() - GameObject is nullptr");
+=======
+	//AssertEx(_gameObject, L"Physics::RemoveActor() - GameObject is nullptr");
+>>>>>>> Stashed changes
 	//AssertEx(_gameObject->GetComponent<Com_RigidBody>(), L"Physics::RemoveActor() - RigidBody is nullptr");
 	//AssertEx(_gameObject->GetComponent<Com_RigidBody>()->IsAppliedPhysics(), L"Physics::RemoveActor() - Is not applied physics");
 	//mScene->removeActor(*_gameObject->GetComponent<Com_RigidBody>()->GetActor());

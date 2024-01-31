@@ -62,3 +62,6 @@
 
 #include "C:\Pss_Programing\Remnant\Project\Engine\CGameObject.cpp"
 
+
+#include "C:\Pss_Programing\Remnant\Project\Engine\CGraphicsShader.cpp"
+

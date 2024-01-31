@@ -296,3 +296,11 @@ enum class MRT_TYPE
 
 	END,
 };
+
+enum class eGeometryType
+{
+	Sphere,
+	Box,
+	Capsule,
+	Plane
+};

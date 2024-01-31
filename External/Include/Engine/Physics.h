@@ -1,6 +1,9 @@
 #pragma once
 #include <PhysX/PxPhysicsAPI.h>
+<<<<<<< Updated upstream
 #include "global.h"
+=======
+>>>>>>> Stashed changes
 #include "SimpleMath.h"
 
 using namespace physx;
@@ -42,9 +45,17 @@ public:
 		PxFilterObjectAttributes _attributes1, PxFilterData _filterData1,
 		PxPairFlags& _pairFlags, const void* _constantBlock, PxU32 _constantBlockSize);
 
+<<<<<<< Updated upstream
 
 public:
 	Physics();
 	~Physics();
+=======
+public:
+	Physics();
+	~Physics();
+
+
+>>>>>>> Stashed changes
 };
 
