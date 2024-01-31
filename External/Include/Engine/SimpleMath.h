@@ -29,6 +29,10 @@
 #define XM_CONSTEXPR
 #endif
 
+#ifdef PX_PHYSICS_API_H
+#include <PhysX/PxPhysicsAPI.h>
+#endif
+
 struct ImVec2;
 struct ImVec4;
 
@@ -261,6 +265,15 @@ namespace DirectX
 				return *((float*)this + _iIdx);
 			}
 
+#ifdef PX_PHYSICS_API_H
+            Vector3(const physx::PxVec3& V)
+            {
+                x = V.x;
+                y = V.y;
+                z = V.z;
+            }
+#endif
+
             // Assignment operators
             Vector3& operator= (const XMVECTORF32& F) { x = F.f[0]; y = F.f[1]; z = F.f[2]; return *this; }
             Vector3& operator+= (const Vector3& V);
@@ -268,6 +281,19 @@ namespace DirectX
             Vector3& operator*= (const Vector3& V);
             Vector3& operator*= (float S);
             Vector3& operator/= (float S);
+
+
+#ifdef PX_PHYSICS_API_H
+            operator physx::PxVec3()
+            {
+                return physx::PxVec3(x, y, z);
+            }
+
+            operator physx::PxVec3() const
+            {
+                return physx::PxVec3(x, y, z);
+            }
+#endif
 
             // Unary operators
             Vector3 operator+ () const { return *this; }
@@ -711,6 +737,16 @@ namespace DirectX
             Quaternion(FXMVECTOR V) { XMStoreFloat4(this, V); }
             Quaternion(const XMFLOAT4& q) { this->x = q.x; this->y = q.y; this->z = q.z; this->w = q.w; }
             explicit Quaternion(const XMVECTORF32& F) { this->x = F.f[0]; this->y = F.f[1]; this->z = F.f[2]; this->w = F.f[3]; }
+
+#ifdef PX_PHYSICS_API_H
+            Quaternion(const physx::PxQuat& q)
+            {
+                x = q.x;
+                y = q.y;
+                z = q.z;
+                w = q.w;
+            }
+#endif
 
             Quaternion(const Quaternion&) = default;
             Quaternion& operator=(const Quaternion&) = default;
