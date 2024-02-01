@@ -54,7 +54,7 @@ void CAnimator3D::finaltick()
 		if (m_bRepeat)
 			m_pCurAnim->Reset();
 		else
-			m_pCurAnim->TimeReset();
+			m_pCurAnim->TimeClear();
 	}
 	
 	// 임의의 클립을 Start / End Time을 0 ~ end로 보정하기
@@ -109,27 +109,37 @@ void CAnimator3D::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _
 
 void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 {
-	CAnim3D* prevAnim = m_pCurAnim;
 	Events* events;
-	if (prevAnim)
+	m_pPreAnim = m_pCurAnim;
+	m_pCurAnim = FindAnim(_strName);
+	assert(m_pCurAnim);
+
+	// 현재 애니메이션과 이전 애니메이션의 키를 비교 : 같은 애니메이션이면 그냥 Play
+	if (m_pPreAnim->GetKey() == m_pCurAnim->GetKey())
 	{
-		events = FindEvents(prevAnim->GetKey());
+		if (m_pCurAnim->IsFinish())
+		{
+			m_pCurAnim->Reset();
+			m_pCurAnim->Play();
+		}
+		else
+			m_pCurAnim->Play();
+	}	
+	// 다른 애니메이션이면 EndEvent 날리고 초기화해주기
+	else
+	{
+		events = FindEvents(m_pPreAnim->GetKey());
 		if (events)
 			events->EndEvent();
-	}
+		m_pPreAnim->Reset();
 
-	CAnim3D* pNextAnim = FindAnim(_strName);
-	assert(pNextAnim);
-
-	if (pNextAnim)
-	{
-		m_pCurAnim->Reset();	// 초기화 한 다음에 변경해주기
-		m_pCurAnim = pNextAnim;
-		m_pCurAnim->Reset();	// 변경한 애니메이션을 초기화 해줌
 		events = FindEvents(m_pCurAnim->GetKey());
 		if (events)
 			events->StartEvent();
+		m_pCurAnim->Reset();
+		m_pCurAnim->Play();
 	}
+
 	m_bRepeat = _bRepeat;
 }
 

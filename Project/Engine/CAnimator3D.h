@@ -39,6 +39,7 @@ private:
 
 	map<wstring, CAnim3D*>		m_mapAnim;  // Animation 목록
 
+	CAnim3D*					m_pPreAnim; // 현재 재생중인 Animation
 	CAnim3D*					m_pCurAnim; // 현재 재생중인 Animation
 	bool						m_bRepeat;  // 반복
 
@@ -55,7 +56,8 @@ public:
 
 
 	// btn func
-public:
+public:	
+	// 이건 Save Load 기능이 구현되면 추가할 예정
 	void Add() {}
 	void Remove() {}
 

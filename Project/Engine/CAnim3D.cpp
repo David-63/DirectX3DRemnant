@@ -34,42 +34,40 @@ CAnim3D::~CAnim3D()
 
 int CAnim3D::finaltick()
 {
+	// Animator가 사라졌으면 멈추기?
 	if (nullptr == m_Owner)
 		return -1;
-
+	// run 상태가 아니면 멈추기
+	if (!m_isRun)
+		return -1;
+	// 끝난 상태면 멈추기
 	if (m_Finish)
 		return -1;
 
-	// m_AnimUpdateTime[m_AnimClipIdx] 이 변수는 CreateAnim 단계에서 StartTime 값으로 초기화 되어야함
 
+	// Is Finish
 	m_AnimUpdateTime[m_AnimData.AnimClipIdx] += ScaleDT;
 	if (m_AnimUpdateTime[m_AnimData.AnimClipIdx] >= m_AnimData.FinishTime)
-	{
-		// 시간은 여기서 초기화 하는게 아니라 애니메이터에서 초기화함수를 호출하는 방식으로 구현		
 		m_Finish = true;
-	}
-	
-	// 프레임 구하기 : 클립 시작시간 + 현재 시간 * 기준 프레임(30)
+
+	// CurFrame : BeginTime + UpdateTime * defaultFrameRate(30)
 	double dFrameIdx = 
 		(m_AnimUpdateTime[m_AnimData.AnimClipIdx] + m_AnimData.BeginTime) * (double)m_iFrameCount;
 	m_CurFrameIdx = (int)(dFrameIdx);
 
+	// GetNextFrame
 	if (m_CurFrameIdx >= m_Owner->GetMTAnimClips()->at(m_AnimData.AnimClipIdx).iFrameLength - 1)
 		m_NextFrameIdx = m_CurFrameIdx;
 	else
 		m_NextFrameIdx = m_CurFrameIdx + 1;
 
+	// GetRatio
 	m_Ratio = (float)(dFrameIdx - (double)m_NextFrameIdx);
 	m_bFinalMatUpdate = false;
 
+	// ReturnFrameIdx
 	int retFrameIdx = m_CurFrameIdx - (m_AnimData.BeginTime * 30);
 
-	// 프레임이 인덱스를 넘어가지 않게 예외처리
-
-	// 6 * 30 = 180
-	int limitFrame = (m_AnimData.EndTime * 30);
-	if (retFrameIdx >= limitFrame)
-		retFrameIdx = limitFrame - 1;
 	return retFrameIdx;
 }
 
@@ -142,23 +140,20 @@ void CAnim3D::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _star
 	m_AnimData.EndTime = _endTime;
 
 	// 애니메이션 정보
-	m_AnimData.StartTime = 0.f;
 	m_AnimData.FinishTime = m_AnimData.EndTime - m_AnimData.BeginTime;
 
-	// 클립 수만큼 배열 늘리기
+	// 클립 수 만큼 배열 늘리기
 	m_AnimUpdateTime.resize(m_Owner->GetMTAnimClips()[m_AnimData.AnimClipIdx].size());
-	m_AnimUpdateTime[m_AnimData.AnimClipIdx] = m_AnimData.StartTime; // 사실상 별 의미 없음
+	m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f;
 }
 
-int CAnim3D::ConvertTimeToFrame(float _idxTime)
+void CAnim3D::Edit(float _begin, float _end)
 {
-	return 0;
+	m_AnimData.BeginTime = _begin;
+	m_AnimData.EndTime = _end;
+	m_AnimData.FinishTime = m_AnimData.EndTime - m_AnimData.BeginTime;
+	m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f;
 }
-
-//void CAnim3D::CreateAnimation3D(const string& _strAnimName, int _clipIdx, int _startFrame, int _endFrame)
-//{
-//	// 안쓸듯?
-//}
 
 int CAnim3D::Save(const wstring& _strFilePath)
 {

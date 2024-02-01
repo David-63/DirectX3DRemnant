@@ -12,11 +12,9 @@ struct tAnim3DData
     float                       BeginTime;          // 클립의 시작시간
     float                       EndTime;            // 클립의 종료시간
 
-    float                       StartTime;          // 애니메이션 시작시간   // 어쩌피 0이라서 없어도 되는 변수
     float                       FinishTime;         // 애니메이션 종료시간
 
-    tAnim3DData() : AnimClipIdx(0), BeginTime(0.f), EndTime(0.f)
-        , StartTime(0.f), FinishTime(0.f)
+    tAnim3DData() : AnimClipIdx(0), BeginTime(0.f), EndTime(0.f), FinishTime(0.f)
     {}
     ~tAnim3DData() {}
 };
@@ -40,6 +38,7 @@ private:
     int							m_NextFrameIdx;         // 다음 프레임 인덱스
     float						m_Ratio;                // 두 프레임간 진행도 비율
 
+    bool                        m_isRun;
     bool                        m_Finish;
 
 
@@ -56,25 +55,20 @@ public:
     // 애니메이터에서 사용하는 함수
 public:
     void NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
-    int ConvertTimeToFrame(float _idxTime);
+    void Edit(float _begin, float _end);
 
 public: 
+    bool IsRun() { return m_isRun; }
     bool IsFinish() { return m_Finish; }
 
+    void Play() { m_isRun = true; }
+    void Stop() { m_isRun = false; }
     // 리셋은 애니메이션을 초기상태로 돌리지만, 실행시키진 않음
-    void TimeReset() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; }
     void Reset() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; m_Finish = false; }
-    void Stop() { m_Finish = true; }
-    void Continue()
-    {
-        if (m_AnimUpdateTime[m_AnimData.AnimClipIdx] >= m_AnimData.FinishTime)
-        {
-            m_AnimUpdateTime[m_AnimData.AnimClipIdx] = m_AnimData.StartTime;
-            m_Finish = true;
-        }
-        m_Finish = false;
-    }
-    void Edit() { m_AnimData.FinishTime = m_AnimData.EndTime - m_AnimData.BeginTime; }
+    void TimeClear() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; }
+
+    // 안쓰는 함수
+    int ConvertTimeToFrame(float _idxTime) {}
 
     // GUI에 노출시키는 함수
 public: // 클립 정보    

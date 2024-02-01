@@ -7,9 +7,6 @@ public:
     virtual int render_update() override;
 
 public:
-    void AnimList();
-
-public:
     Animator3DUI();
     ~Animator3DUI();
 };
