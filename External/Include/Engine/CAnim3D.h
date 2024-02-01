@@ -55,7 +55,7 @@ public:
 
     // 애니메이터에서 사용하는 함수
 public:
-    void CreateAnimation3D(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
+    void NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
     int ConvertTimeToFrame(float _idxTime);
 
 public: 
@@ -79,8 +79,7 @@ public:
     // GUI에 노출시키는 함수
 public: // 클립 정보    
     const string& GetAnimName() { return m_AnimName; }
-    int GetAnimClipIdx() { return m_AnimData.AnimClipIdx; }
-    CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
+    int GetClipIdx() { return m_AnimData.AnimClipIdx; }
     const float& GetBeginTime() { return m_AnimData.BeginTime; }
     const float& GetEndTime() { return m_AnimData.EndTime; }
 
@@ -89,6 +88,8 @@ public: // 클립 정보
     const float& GetCurTime() { return m_AnimUpdateTime[m_AnimData.AnimClipIdx]; }
     const int& GetCurFrame() { return m_CurFrameIdx; }
 
+public:
+    CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
 public:
     int Save(const wstring& _strFilePath);
     int Load(const wstring& _strFilePath);

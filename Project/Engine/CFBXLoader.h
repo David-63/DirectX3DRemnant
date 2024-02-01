@@ -103,8 +103,8 @@ public:
 public:
 	int GetContainerCount() { return (int)m_vecContainer.size(); }
 	const tContainer& GetContainer(int _iIdx) { return m_vecContainer[_iIdx]; }
-	vector<tBone*>& GetBones() { return m_vecBone; }
-	vector<tAnimClip*>& GetAnimClip() { return m_vecAnimClip; }
+	vector<tBone*>& GetMTBones() { return m_vecBone; }
+	vector<tAnimClip*>& GetMTAnimClips() { return m_vecAnimClip; }
 
 private:
 	void LoadMeshDataFromNode(FbxNode* _pRoot);

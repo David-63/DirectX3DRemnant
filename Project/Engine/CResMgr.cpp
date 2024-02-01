@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CResMgr.h"
-
 #include "CPathMgr.h"
+
 
 CResMgr::CResMgr()
 	: m_Changed(false)
@@ -109,6 +109,42 @@ void CResMgr::DeleteRes(RES_TYPE _type, const wstring& _strKey)
 	m_arrRes[(UINT)_type].erase(iter);	
 
 	m_Changed = true;
+}
+
+void CResMgr::DeleteMaterial(const wstring& _strKey)
+{
+	Ptr<CMaterial> pMtrl = FindRes<CMaterial>(_strKey);
+	wstring strRelativePath = pMtrl->GetRelativePath();
+	wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	strPath += strRelativePath;
+
+	if (pMtrl.Get())
+	{
+
+		string Path = ToString(strPath);
+
+		// 실제 파일 삭제
+		if (remove(Path.c_str()) != 0)
+		{
+#ifdef _DEBUG
+			// 비주얼 스튜디오 출력 창에 문구 출력
+			std::cerr << "Failed to delete file : " << Path << std::endl;
+#endif
+		}
+
+		{ 
+			// RAM 메모리 내에서도 리소스 삭제
+			map<wstring, Ptr<CRes>>::iterator iter = m_arrRes[(UINT)RES_TYPE::MATERIAL].begin();
+			for (; iter != m_arrRes[(UINT)RES_TYPE::MATERIAL].end(); ++iter) {
+				if ((*iter).first == _strKey)
+				{
+					Ptr<CRes> pMtrl = iter->second.Get();
+					m_arrRes[(UINT)RES_TYPE::MATERIAL].erase(iter);
+					break;
+				}
+			}
+		}
+	}
 }
 
 

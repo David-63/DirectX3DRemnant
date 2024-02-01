@@ -5,9 +5,9 @@
 #include <Engine/CCamera.h>
 
 CameraUI::CameraUI()
-    : ComponentUI("##Camera", COMPONENT_TYPE::CAMERA)
+    : ComponentUI("##CameraUI", COMPONENT_TYPE::CAMERA)
 {
-    SetName("Camera");
+    SetName("CameraUI");
 }
 
 CameraUI::~CameraUI()
