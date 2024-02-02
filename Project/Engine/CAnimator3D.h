@@ -5,7 +5,7 @@
 #include "CTexture.h"
 #include "CMaterial.h"
 #include "CMesh.h"
-#include "CAnim3D.h"
+#include "CAnimClip.h"
 
 
 struct Event
@@ -33,17 +33,16 @@ class CStructuredBuffer;
 class CAnimator3D : public CComponent
 {
 private:
-	const vector<tMTBone>*		m_pVecBones;
-	const vector<tMTAnimClip>*	m_pVecClip;
+	// Animator value
 	map<wstring, Events*>		m_Events;
+	map<wstring, Ptr<CAnimClip>>m_mapAnim;  // Animation 목록
 
-	map<wstring, CAnim3D*>		m_mapAnim;  // Animation 목록
-
-	CAnim3D*					m_pPreAnim; // 현재 재생중인 Animation
-	CAnim3D*					m_pCurAnim; // 현재 재생중인 Animation
+	
+	CAnimClip*					m_pPreAnim; // 현재 재생중인 Animation
+	CAnimClip*					m_pCurAnim; // 현재 재생중인 Animation
 	bool						m_bRepeat;  // 반복
 
-	// 여기서 애님 블렌딩을 위한 정보를 저장하면 좋을듯
+	
 
 public:
 	virtual void finaltick() override;
@@ -51,22 +50,23 @@ public:
 	void ClearData();
 
 public:
-	CAnim3D* FindAnim(const wstring& _strName);
+	Ptr<CAnimClip> FindAnim(const wstring& _strName);
 
 
 
 	// btn func
-public:	
+public:
 	// 이건 Save Load 기능이 구현되면 추가할 예정
 	void Add() {}
 	void Remove() {}
 
-	void NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
+	void SelectMeshData() {}
+	void CreateAnimClip(wstring _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh);	// Engine에서 생성할 때
+	void NewAnimClip(string _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh);		// UI에서 생성할 때
 	void Edit(float _begin, float _end) {}
 
 
 	void Play(const wstring& _strName, bool _bRepeat);
-	void Stop() {}
 
 	void SetRepeat(bool _isRepeat) { m_bRepeat = _isRepeat; }
 	bool IsRepeat() { return m_bRepeat; }
@@ -86,13 +86,9 @@ public:
 	tMTAnimClip GetCurMTClip()
 	{
 		if (nullptr != m_pCurAnim)
-			return m_pVecClip->at(m_pCurAnim->GetClipIdx());
+			return m_pCurAnim->GetMTAnimClips()->at(m_pCurAnim->GetClipIdx());
 	}
-	void SetMTBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; }
-	const vector<tMTBone>* GetMTBones() { return m_pVecBones; }
-	void SetMTAnimClips(const vector<tMTAnimClip>* _vecAnimClip) { m_pVecClip = _vecAnimClip; }
-	const vector<tMTAnimClip>* GetMTAnimClips() { return m_pVecClip; }
-	UINT GetMTBoneCount() { return (UINT)m_pVecBones->size(); }
+	
 
 	// 이거 아마 안쓰는듯?
 	CStructuredBuffer* GetFinalBoneMat()
@@ -103,8 +99,8 @@ public:
 
 	// Anim func
 public:
-	const map<wstring, CAnim3D*>& GetAnims() { return m_mapAnim; }
-	CAnim3D* GetCurAnim() { return m_pCurAnim; }
+	const map<wstring, Ptr<CAnimClip>>& GetAnims() { return m_mapAnim; }
+	CAnimClip* GetCurAnim() { return m_pCurAnim; }
 	
 public:
 	void SaveAnimClip() {}
@@ -118,6 +114,6 @@ public:
 	CAnimator3D(const CAnimator3D& _origin);
 	~CAnimator3D();
 
-	friend class CAnim3D;
+	friend class CAnimClip;
 };
 

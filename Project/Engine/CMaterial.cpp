@@ -230,7 +230,8 @@ int CMaterial::Load(const wstring& _strFilePath)
 	// Res
 	wstring strKey;
 	LoadWString(strKey, pFile);
-	
+	SetKey(strKey);
+
 	// Shader
 	LoadResRef(m_pShader, pFile);
 

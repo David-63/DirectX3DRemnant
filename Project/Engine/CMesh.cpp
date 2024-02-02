@@ -180,16 +180,17 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
 		vector<tFrameTrans> vecFrameTrans;
 		vecFrameTrans.resize((UINT)pMesh->m_vecBones.size() * iFrameCount);
 
-		for (size_t i = 0; i < pMesh->m_vecBones.size(); ++i)
+		for (size_t boneIdx = 0; boneIdx < pMesh->m_vecBones.size(); ++boneIdx)
 		{
-			vecOffset.push_back(pMesh->m_vecBones[i].matOffset);
+			vecOffset.push_back(pMesh->m_vecBones[boneIdx].matOffset);
 
-			for (size_t j = 0; j < pMesh->m_vecBones[i].vecKeyFrame.size(); ++j)
+			for (size_t keyIdx = 0; keyIdx < pMesh->m_vecBones[boneIdx].vecKeyFrame.size(); ++keyIdx)
 			{
-				vecFrameTrans[(UINT)pMesh->m_vecBones.size() * j + i]
-					= tFrameTrans{ Vec4(pMesh->m_vecBones[i].vecKeyFrame[j].vTranslate, 0.f)
-					, Vec4(pMesh->m_vecBones[i].vecKeyFrame[j].vScale, 0.f)
-					, pMesh->m_vecBones[i].vecKeyFrame[j].qRot };
+				vecFrameTrans[(UINT)pMesh->m_vecBones.size() * keyIdx + boneIdx]
+					= tFrameTrans{
+					  Vec4(pMesh->m_vecBones[boneIdx].vecKeyFrame[keyIdx].vTranslate, 0.f)
+					, Vec4(pMesh->m_vecBones[boneIdx].vecKeyFrame[keyIdx].vScale, 0.f)
+					, pMesh->m_vecBones[boneIdx].vecKeyFrame[keyIdx].qRot };
 			}
 		}
 
@@ -325,7 +326,7 @@ int CMesh::Save(const wstring& _strRelativePath)
 	SaveWString(GetKey(), pFile);
 	SaveWString(GetRelativePath(), pFile);
 
-	// 정점 데이터 저장				
+	// 정점 데이터 저장
 	int iByteSize = m_tVBDesc.ByteWidth;
 	fwrite(&iByteSize, sizeof(int), 1, pFile);
 	fwrite(m_pVtxSys, iByteSize, 1, pFile);

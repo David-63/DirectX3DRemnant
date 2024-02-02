@@ -2,8 +2,6 @@
 
 #include "CAnimator3D.h"
 
-#include "CAnim3D.h"
-
 #include "CTimeMgr.h"
 #include "CMeshRender.h"
 #include "CStructuredBuffer.h"
@@ -15,8 +13,7 @@
 
 
 CAnimator3D::CAnimator3D()
-	: m_pVecBones(nullptr)
-	, m_pVecClip(nullptr)
+	: m_pPreAnim(nullptr)
 	, m_pCurAnim(nullptr)
 	, m_bRepeat(false)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
@@ -24,8 +21,7 @@ CAnimator3D::CAnimator3D()
 }
 
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
-	: m_pVecBones(_origin.m_pVecBones)
-	, m_pVecClip(_origin.m_pVecClip)
+	: m_pPreAnim(nullptr)
 	, m_pCurAnim(_origin.m_pCurAnim) // 이렇게 만들면 안되용 (임시)
 	, m_bRepeat(_origin.m_bRepeat)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
@@ -34,7 +30,7 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 
 CAnimator3D::~CAnimator3D()
 {
-	Safe_Del_Map(m_mapAnim);
+	//Safe_Del_Map(m_mapAnim);
 	Safe_Del_Map(m_Events);
 }
 
@@ -87,13 +83,19 @@ void CAnimator3D::ClearData()
 }
 
 
-void CAnimator3D::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
-{
-	CAnim3D* pAnim = new CAnim3D(true);
-	pAnim->m_Owner = this;
+void CAnimator3D::CreateAnimClip(wstring _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh)
+{	
+	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(_strAnimName);
+	if (nullptr != pAnim)
+		return;
+	pAnim = new CAnimClip(true);
+	
+	pAnim->SetAnimationBuffer(_inMesh);									// mesh 세팅
 	pAnim->NewAnimClip(_strAnimName, _clipIdx, _startTime, _endTime);
-	m_mapAnim.insert(make_pair(_strAnimName, pAnim));
-	m_pCurAnim = pAnim;
+	
+	pAnim->m_Owner = this;
+	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
+	m_pCurAnim = pAnim.Get();
 	m_pCurAnim->Stop();
 
 	Events* events = FindEvents(_strAnimName);
@@ -107,11 +109,51 @@ void CAnimator3D::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _
 	m_Events.insert(std::make_pair(_strAnimName, events));
 }
 
+void CAnimator3D::NewAnimClip(string _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh)
+{
+	wstring strPath = wstring(_strAnimName.begin(), _strAnimName.end());
+
+
+	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(strPath);
+	if (nullptr != pAnim)
+		return;
+	pAnim = new CAnimClip(false);
+
+	pAnim->SetAnimationBuffer(_inMesh);
+	pAnim->NewAnimClip(strPath, _clipIdx, _startTime, _endTime);
+
+	// 리소스 생성
+
+	pAnim->SetKey(strPath);
+	pAnim->SetRelativePath(strPath);
+	CResMgr::GetInst()->AddRes<CAnimClip>(pAnim->GetKey(), pAnim.Get());
+
+	pAnim->SetAnimName(_strAnimName);
+	pAnim->Save(strPath);
+
+
+	pAnim->m_Owner = this;
+	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
+	m_pCurAnim = pAnim.Get();
+	m_pCurAnim->Stop();
+
+	Events* events = FindEvents(strPath);
+	if (events)
+		return;
+
+	events = new Events();
+	// 최대 프레임수만큼
+	int maxFrame = (_endTime - _startTime) * 30 + 1;
+	events->ActionEvents.resize(maxFrame);
+	m_Events.insert(std::make_pair(strPath, events));
+}
+
 void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 {
 	Events* events;
 	m_pPreAnim = m_pCurAnim;
-	m_pCurAnim = FindAnim(_strName);
+
+	m_pCurAnim = FindAnim(_strName).Get();
 	assert(m_pCurAnim);
 
 	// 현재 애니메이션과 이전 애니메이션의 키를 비교 : 같은 애니메이션이면 그냥 Play
@@ -137,16 +179,15 @@ void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 		if (events)
 			events->StartEvent();
 		m_pCurAnim->Reset();
-		m_pCurAnim->Play();
+		m_pCurAnim->Play();		
 	}
-
 	m_bRepeat = _bRepeat;
 }
 
-CAnim3D* CAnimator3D::FindAnim(const wstring& _strName)
+Ptr<CAnimClip> CAnimator3D::FindAnim(const wstring& _strName)
 {
-	map<wstring, CAnim3D*>::iterator iter = m_mapAnim.find(_strName);
-
+	map<wstring, Ptr<CAnimClip>>::iterator iter = m_mapAnim.find(_strName);
+	//animclip//AnimTest
 	if (iter == m_mapAnim.end())
 	{
 		return nullptr;
@@ -194,6 +235,7 @@ std::function<void()>& CAnimator3D::ActionEvent(const std::wstring& name, UINT i
 
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {
+	
 }
 
 void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
