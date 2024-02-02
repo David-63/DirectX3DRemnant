@@ -217,6 +217,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CRenderMgr.h" />
     <ClInclude Include="CRes.h" />
     <ClInclude Include="CResMgr.h" />
+    <ClInclude Include="CRigidBody.h" />
     <ClInclude Include="CScript.h" />
     <ClInclude Include="CSetColorShader.h" />
     <ClInclude Include="CShader.h" />
@@ -230,6 +231,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="CWeightMapShader.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="EnumFlags.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
@@ -292,6 +294,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CRes.cpp" />
     <ClCompile Include="CResMgr.cpp" />
     <ClCompile Include="CResMgr_Init.cpp" />
+    <ClCompile Include="CRigidBody.cpp" />
     <ClCompile Include="CScript.cpp" />
     <ClCompile Include="CSetColorShader.cpp" />
     <ClCompile Include="CShader.cpp" />

@@ -17,3 +17,8 @@ CComponent::CComponent(const CComponent& _Other)
 CComponent::~CComponent()
 {
 }
+
+bool CComponent::IsPhysicsObject()
+{
+	return GetOwner()->IsPhysicsObject();
+}

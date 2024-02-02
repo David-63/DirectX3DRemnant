@@ -19,6 +19,7 @@ CCollisionMgr::~CCollisionMgr()
 
 }
 
+
 void CCollisionMgr::tick()
 {
 	CLevel* pLevel = CLevelMgr::GetInst()->GetCurLevel();
@@ -206,3 +207,4 @@ void CCollisionMgr::LayerCheck(const wstring& _strLeftLayer, const wstring& _str
 
 	LayerCheck(pLeft->GetLayerIndex(), pRight->GetLayerIndex());
 }
+

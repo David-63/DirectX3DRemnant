@@ -1,5 +1,7 @@
 #pragma once
 #include "CSingleton.h"
+#include <array>
+
 
 class CLayer;
 class CCollider2D;
@@ -22,8 +24,9 @@ class CCollisionMgr :
 {
 	SINGLE(CCollisionMgr);
 private:
-	UINT					m_matrix[MAX_LAYER];
-	map<UINT_PTR, bool>		m_mapColID;
+	std::array<UINT, MAX_LAYER>		m_matrix;
+	map<UINT_PTR, bool>				m_mapColID;
+	
 
 public:
 	void LayerCheck(UINT _left, UINT _right);
@@ -31,8 +34,10 @@ public:
 
 	void Clear()
 	{
-		memset(m_matrix, 0, sizeof(UINT) * MAX_LAYER);
+		memset(&m_matrix, 0, sizeof(UINT) * MAX_LAYER);
 	}
+
+	std::array<UINT, MAX_LAYER> GetMat() { return m_matrix; }
 
 public:
 	void tick();

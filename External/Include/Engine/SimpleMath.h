@@ -293,6 +293,14 @@ namespace DirectX
             {
                 return physx::PxVec3(x, y, z);
             }
+
+            physx::PxVec3& operator=(const Vector3& other)
+            {
+                x = other.x;
+                y = other.y;
+                z = other.z;
+            }
+
 #endif
 
             // Unary operators

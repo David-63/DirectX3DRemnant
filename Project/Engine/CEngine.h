@@ -8,6 +8,8 @@ private:
 
 	// 윈도우 해상도
 	Vec2	m_vResolution;
+
+	
 	
 
 public:

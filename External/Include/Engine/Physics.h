@@ -4,23 +4,24 @@
 
 using namespace physx;
 
-class GameObject;
-class Physics
+class CGameObject;
+class Physics :
+	public CSingleton<Physics>
 {
 public:
 	Physics();
 	~Physics();
 
 public:
-	void Initialize();
-	void Update();
-	void Render();
+	void init();
+	void tick();
+	void render();
 
 public:
-	void AddActor(GameObject* _gameObject);
-	void RemoveActor(GameObject* _gameObject);
+	void AddActor(CGameObject* _gameObject);
+	void RemoveActor(CGameObject* _gameObject);
 
-	const PxVec3& GetGravity() { return mGravity; }
+	const Vector3& GetGravity() { return mGravity; }
 	PxPhysics* GetPhysics() { return mPhysics; }
 
 	static PxFilterFlags PlayerFilterShader(
@@ -43,7 +44,7 @@ private:
 	PxDefaultCpuDispatcher* mCpuDispatcher;
 	class ContactCallback* mCallback;
 
-	PxVec3 mGravity;
+	Vector3 mGravity;
 };
 
 

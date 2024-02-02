@@ -205,6 +205,12 @@
     <ClInclude Include="Physics.h">
       <Filter>Source\09. Module\Physics</Filter>
     </ClInclude>
+    <ClInclude Include="CRigidBody.h">
+      <Filter>Source\06. Component\8. RigidBody</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumFlags.h">
+      <Filter>Source\00. Header</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -401,6 +407,9 @@
     </ClCompile>
     <ClCompile Include="Physics.cpp">
       <Filter>Source\09. Module\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="CRigidBody.cpp">
+      <Filter>Source\06. Component\8. RigidBody</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -607,6 +616,9 @@
     </Filter>
     <Filter Include="Source\09. Module\Physics">
       <UniqueIdentifier>{87565bc5-6ae1-44dd-90d0-7d301d4b4b58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\06. Component\8. RigidBody">
+      <UniqueIdentifier>{3cdfe0d4-7d9d-4aa7-91ce-a74825ee834b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

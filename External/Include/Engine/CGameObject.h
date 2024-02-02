@@ -18,6 +18,7 @@ class CTileMap;
 class CDecal;
 class CLandScape;
 class CScript;
+class CRigidBody;
 
 #define GET_COMPONENT(Type, TYPE) C##Type* Type() const { return (C##Type*)m_arrCom[(UINT)COMPONENT_TYPE::TYPE]; }
 
@@ -73,6 +74,7 @@ public:
     GET_COMPONENT(SkyBox, SKYBOX);
     GET_COMPONENT(Decal, DECAL);
     GET_COMPONENT(LandScape, LANDSCAPE);
+    GET_COMPONENT(RigidBody, RIGIDBODY);
 
 
     CRenderComponent* GetRenderComponent() const {  return m_RenderCom; }
@@ -96,7 +98,7 @@ public:
 
     bool IsDead() { return m_bDead; }
     bool IsAncestor(CGameObject* _Target);
-
+    bool IsPhysicsObject();
 
 private:
     void DisconnectFromParent();
@@ -126,3 +128,4 @@ inline T* CGameObject::GetScript()
 
     return nullptr;
 }
+
