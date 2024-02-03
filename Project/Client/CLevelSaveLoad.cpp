@@ -189,13 +189,14 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::COLLIDER2D:
 			Component = new CCollider2D;
 			break;
-		case COMPONENT_TYPE::COLLIDER3D:
+		//case COMPONENT_TYPE::COLLIDER3D:
 			//Component = new CCollider2D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR2D:
 			Component = new CAnimator2D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR3D:
+			Component = new CAnimator3D;
 			break;
 		case COMPONENT_TYPE::LIGHT2D:
 			Component = new CLight2D;
@@ -215,13 +216,14 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::TILEMAP:
 			Component = new CTileMap;
 			break;
-		case COMPONENT_TYPE::LANDSCAPE:			
-			break;
-		case COMPONENT_TYPE::DECAL:
-			Component = new CDecal;
+		case COMPONENT_TYPE::LANDSCAPE:
+			Component = new CLandScape;
 			break;
 		case COMPONENT_TYPE::SKYBOX:
 			Component = new CSkyBox;
+			break;
+		case COMPONENT_TYPE::DECAL:
+			Component = new CDecal;
 			break;
 
 		}
