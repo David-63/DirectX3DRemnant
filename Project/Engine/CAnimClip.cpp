@@ -29,7 +29,10 @@ CAnimClip::CAnimClip(bool _bEngine) : CRes(RES_TYPE::ANIMCLIP, _bEngine)
 CAnimClip::~CAnimClip()
 {
 	if (nullptr != m_pBoneFinalMatBuffer)
+	{
 		delete m_pBoneFinalMatBuffer;
+		m_pBoneFinalMatBuffer = nullptr;
+	}
 }
 
 int CAnimClip::finaltick()
@@ -54,9 +57,10 @@ int CAnimClip::finaltick()
 	double dFrameIdx = 
 		(m_AnimUpdateTime[m_AnimData.AnimClipIdx] + m_AnimData.BeginTime) * (double)m_iFrameCount;
 	m_CurFrameIdx = (int)(dFrameIdx);
-
+	
 	// GetNextFrame
-	if (m_CurFrameIdx >= m_pVecClip->at(m_AnimData.AnimClipIdx).iFrameLength - 1)
+	
+	if (m_CurFrameIdx >= m_originMesh.Get()->GetMTAnimClips().at(m_AnimData.AnimClipIdx).iFrameLength - 1)
 		m_NextFrameIdx = m_CurFrameIdx;
 	else
 		m_NextFrameIdx = m_CurFrameIdx + 1;
@@ -81,12 +85,13 @@ void CAnimClip::UpdateData()
 		// Bone Data
 		Ptr<CMesh> pMesh = m_Owner->MeshRender()->GetMesh();
 		check_mesh(pMesh);
-
-		pUpdateShader->SetFrameDataBuffer(m_FrameDataBuffer);
-		pUpdateShader->SetOffsetMatBuffer(m_BoneOffsetBuffer);
+		
+		// 여기있는 버퍼들을 다 긁어와서 사용해야함..
+		pUpdateShader->SetFrameDataBuffer(m_originMesh.Get()->GetBoneFrameDataBuffer());
+		pUpdateShader->SetOffsetMatBuffer(m_originMesh.Get()->GetBoneOffsetBuffer());
 		pUpdateShader->SetOutputBuffer(m_pBoneFinalMatBuffer);
 				
-		UINT iBoneCount = (UINT)m_pVecBones->size();
+		UINT iBoneCount = (UINT)m_originMesh.Get()->GetMTBoneCount();
 		pUpdateShader->SetBoneCount(iBoneCount);
 		pUpdateShader->SetFrameIndex(m_CurFrameIdx);
 		pUpdateShader->SetNextFrameIdx(m_NextFrameIdx);
@@ -128,9 +133,11 @@ void CAnimClip::check_mesh(Ptr<CMesh> _pMesh)
 	}
 }
 
-void CAnimClip::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime)
+void CAnimClip::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _pMesh)
 {
 	SetKey(_strAnimName);
+	m_originMesh = _pMesh;
+	
 	string convert(_strAnimName.begin(), _strAnimName.end());
 	m_AnimName = convert;
 	// 클립 정보
@@ -142,16 +149,8 @@ void CAnimClip::NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _st
 	m_AnimData.FinishTime = m_AnimData.EndTime - m_AnimData.BeginTime;
 
 	// 클립 수 만큼 배열 늘리기
-	m_AnimUpdateTime.resize(m_pVecClip[m_AnimData.AnimClipIdx].size());
+	m_AnimUpdateTime.resize(m_originMesh.Get()->GetMTAnimClips().size());
 	m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f;
-}
-
-void CAnimClip::SetAnimationBuffer(Ptr<CMesh> _inMesh)
-{
-	m_pVecBones = _inMesh->GetMTBones();
-	m_pVecClip = _inMesh->GetMTAnimClips();
-	m_BoneOffsetBuffer = _inMesh->GetBoneOffsetBuffer();
-	m_FrameDataBuffer = _inMesh->GetBoneFrameDataBuffer();
 }
 
 void CAnimClip::Edit(float _begin, float _end)
@@ -188,17 +187,16 @@ int CAnimClip::Save(const wstring& _strRelativePath)
 	const wstring& path = GetRelativePath();
 	SaveWString(path, pFile);
 
-	// mtData
-	fwrite(&m_pVecBones, sizeof(const vector<tMTBone>*), 1, pFile);
-	fwrite(&m_pVecClip, sizeof(const vector<tMTAnimClip>*), 1, pFile);
-	// buffers
-	fwrite(&m_BoneOffsetBuffer, sizeof(CStructuredBuffer*), 1, pFile);
-	fwrite(&m_FrameDataBuffer, sizeof(CStructuredBuffer*), 1, pFile);
-	
 	// tAnim3DData	애니메이션 정보
 	fwrite(&m_AnimData, sizeof(tAnim3DData), 1, pFile);
 	// UpdateTime 정보
-	fwrite(&m_AnimUpdateTime, sizeof(vector<float>), 1, pFile);
+	UINT iTimeCount = (UINT)m_AnimUpdateTime.size();
+	fwrite(&iTimeCount, sizeof(int), 1, pFile);
+
+	
+	// mtData
+	SaveResRef(m_originMesh.Get(), pFile);
+
 
 	fclose(pFile);
 
@@ -225,18 +223,21 @@ int CAnimClip::Load(const wstring& _strFilePath)
 	string convert(strKey.begin(), strKey.end());
 	m_AnimName = convert;
 
-	// mtData
-	fwrite(&m_pVecBones, sizeof(const vector<tMTBone>*), 1, pFile);
-	fwrite(&m_pVecClip, sizeof(const vector<tMTAnimClip>*), 1, pFile);
-	// buffers
-	fwrite(&m_BoneOffsetBuffer, sizeof(CStructuredBuffer*), 1, pFile);
-	fwrite(&m_FrameDataBuffer, sizeof(CStructuredBuffer*), 1, pFile);
-
 	// tAnim3DData	애니메이션 정보
 	fread(&m_AnimData, sizeof(tAnim3DData), 1, pFile);
-	// vector<Matrix> 뼈 정보
-	fread(&m_AnimUpdateTime, sizeof(vector<float>), 1, pFile);
-	
+	// UpdateTime 정보
+	int iTimeCount = 0;
+	fread(&iTimeCount, sizeof(int), 1, pFile);
+	m_AnimUpdateTime.resize(iTimeCount);
+	for (int i = 0; i < iTimeCount; ++i)
+	{
+		m_AnimUpdateTime[i] = 0.f;
+	}
+
+	// mtData
+	LoadResRef(m_originMesh, pFile);
+
+
 	// 제어 변수
 	m_isRun = false;
 	m_Finish = false;

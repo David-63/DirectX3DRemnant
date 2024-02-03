@@ -39,7 +39,7 @@ int Animator3DUI::render_update()
 
 	bool repeat = GetTarget()->Animator3D()->IsRepeat();
 	map<wstring, Ptr<CAnimClip>> anims = GetTarget()->Animator3D()->GetAnims();
-	static vector<const char*> animList;	
+	static vector<const char*> animList;
 	for (const auto& anim : anims)
 	{
 		animList.push_back(anim.second.Get()->GetAnimName().c_str());
@@ -69,15 +69,24 @@ int Animator3DUI::render_update()
 		}
 		ImGui::EndCombo();
 	}
-	
-	if (ImGui::Button("Add"))
+	ImGui::Text("Add");
+	ImGui::SameLine();
+	if (ImGui::Button("##AnimClipSelectBtn", ImVec2(18, 18)))
 	{
-		// Load From File 구현 한 다음에 기능 추가
+		const map<wstring, Ptr<CRes>>& mapAnimClip = CResMgr::GetInst()->GetResources(RES_TYPE::ANIMCLIP);
+		ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+		pListUI->Reset("AnimClip List", ImVec2(300.f, 500.f));
+		for (const auto& pair : mapAnimClip)
+		{
+			pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+		}
+		// 항목 선택시 호출받을 델리게이트 등록
+		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&Animator3DUI::SelectAnimClip);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Remove"))
 	{
-		// 위랑 같음
+		
 	}	
 	ImGui::Separator();
 
@@ -102,13 +111,13 @@ int Animator3DUI::render_update()
 	static int mtClipCount = 0;
 	static int selectClipIdx = 0;
 	static float selectTimeLength = 0.f;
-	const vector<tMTAnimClip>* mtAnimClip = nullptr;
+	vector<tMTAnimClip> mtAnimClip;
 	if (nullptr != m_SelectMesh)
 	{
 		if (m_SelectMesh->IsAnimMesh())
 		{
 			mtAnimClip = m_SelectMesh->GetMTAnimClips();
-			mtClipCount = m_SelectMesh->GetMTAnimClips()->size();
+			mtClipCount = m_SelectMesh->GetMTAnimClips().size();
 		}
 	}
 
@@ -151,7 +160,7 @@ int Animator3DUI::render_update()
 		{
 			if (m_SelectMesh->IsAnimMesh())
 			{
-				selectTimeLength = static_cast<float>(mtAnimClip->at(selectClipIdx).dTimeLength);
+				selectTimeLength = static_cast<float>(mtAnimClip[selectClipIdx].dTimeLength);
 			}
 		}
 		
@@ -217,9 +226,9 @@ int Animator3DUI::render_update()
 
 
 	int curClipIdx = curAnim->GetClipIdx();
-	const vector<tMTAnimClip>* AnimClips = curAnim->GetMTAnimClips();
-	int iClipCount = AnimClips->size();
-	float curTimeLength = static_cast<float>(AnimClips->at(curClipIdx).dTimeLength);
+	vector<tMTAnimClip> AnimClips = curAnim->GetMTAnimClips();
+	int iClipCount = AnimClips.size();
+	float curTimeLength = static_cast<float>(AnimClips.at(curClipIdx).dTimeLength);
 	float fBeginTime = curAnim->GetBeginTime();
 	float fEndTime = curAnim->GetEndTime();
 
@@ -227,7 +236,7 @@ int Animator3DUI::render_update()
 	{
 		ImGui::Text("AnimClipCount	  %i", iClipCount);
 		ImGui::Text("TimeLength  %.1f", curTimeLength);
-		ImGui::Text("FrameLenght %i", AnimClips->at(curClipIdx).iFrameLength);
+		ImGui::Text("FrameLenght %i", AnimClips.at(curClipIdx).iFrameLength);
 		ImGui::Text("Begin To End %.1f - %.1f", fBeginTime, fEndTime);
 
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "Edit Interface");
@@ -257,4 +266,11 @@ void Animator3DUI::SelectMesh(DWORD_PTR _Key)
 {
 	string strKey = (char*)_Key;
 	m_SelectMesh = CResMgr::GetInst()->FindRes<CMesh>(wstring(strKey.begin(), strKey.end()));
+}
+
+void Animator3DUI::SelectAnimClip(DWORD_PTR _Key)
+{
+	string strKey = (char*)_Key;
+	m_SelectAnimClip = CResMgr::GetInst()->FindRes<CAnimClip>(wstring(strKey.begin(), strKey.end()));
+	GetTarget()->Animator3D()->Add(m_SelectAnimClip);
 }

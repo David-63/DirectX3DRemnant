@@ -25,11 +25,13 @@ class CAnimClip : public CRes
 {
 private:
     CAnimator3D*                m_Owner;
+    Ptr<CMesh>                  m_originMesh;
     // mesh로부터 가져온 boneData
-    const vector<tMTBone>*      m_pVecBones;
-    const vector<tMTAnimClip>*  m_pVecClip;
-    CStructuredBuffer*          m_BoneOffsetBuffer;     // 뼈 기본 위치              // mesh 로부터 가져와서 사용중
-    CStructuredBuffer*          m_FrameDataBuffer;      // 프레임별 뼈 이동위치       // mesh 로부터 가져와서 사용중
+    //vector<tMTAnimClip>         m_pVecClip;
+    //vector<tMTBone>             m_pVecBones;
+    //CStructuredBuffer*          m_BoneOffsetBuffer;     // 뼈 기본 위치              // mesh 로부터 가져와서 사용중
+    //CStructuredBuffer*          m_FrameDataBuffer;      // 프레임별 뼈 이동위치       // mesh 로부터 가져와서 사용중
+
     CStructuredBuffer*          m_pBoneFinalMatBuffer;  // CS에서 업데이트 되는 최종 뼈 행렬
 
 
@@ -60,8 +62,7 @@ public:
 
     // 애니메이터에서 사용하는 함수
 public:
-    void NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime);
-    void SetAnimationBuffer(Ptr<CMesh> _inMesh);
+    void NewAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _pMesh);
     void Edit(float _begin, float _end);
 
 public: 
@@ -80,11 +81,8 @@ public:
     // GUI에 노출시키는 함수
 public: 
     // MT 정보
-    void SetMTBones(const vector<tMTBone>* _vecBones) { m_pVecBones = _vecBones; }
-    void SetMTAnimClips(const vector<tMTAnimClip>* _vecAnimClip) { m_pVecClip = _vecAnimClip; }
-    const vector<tMTBone>* GetMTBones() { return m_pVecBones; }
-    const vector<tMTAnimClip>* GetMTAnimClips() { return m_pVecClip; }
-    UINT GetMTBoneCount() { return (UINT)m_pVecBones->size(); }
+    vector<tMTAnimClip> GetMTAnimClips() { return m_originMesh.Get()->GetMTAnimClips(); }
+
     // 클립 정보
     void SetAnimName(const string& _name) { m_AnimName = _name; }
     const string& GetAnimName() { return m_AnimName; }
@@ -109,7 +107,7 @@ public:
 
     CLONE(CAnimClip);
 public:
-    CAnimClip(bool _bEngine);
+    CAnimClip(bool _bEngine = false);
     ~CAnimClip();
 
     friend class CAnimator3D;

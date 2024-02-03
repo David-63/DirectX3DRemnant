@@ -172,7 +172,6 @@ call EngineCopy.bat</Command>
   <ItemGroup>
     <ClInclude Include="CAnim2D.h" />
     <ClInclude Include="CAnimClip.h" />
-    <ClInclude Include="CAnimation.h" />
     <ClInclude Include="CAnimation3DShader.h" />
     <ClInclude Include="CAnimator2D.h" />
     <ClInclude Include="CAnimator3D.h" />
@@ -242,7 +241,6 @@ call EngineCopy.bat</Command>
   <ItemGroup>
     <ClCompile Include="CAnim2D.cpp" />
     <ClCompile Include="CAnimClip.cpp" />
-    <ClCompile Include="CAnimation.cpp" />
     <ClCompile Include="CAnimation3DShader.cpp" />
     <ClCompile Include="CAnimator2D.cpp" />
     <ClCompile Include="CAnimator3D.cpp" />

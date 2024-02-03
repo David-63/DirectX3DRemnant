@@ -57,7 +57,7 @@ public:
 	// btn func
 public:
 	// 이건 Save Load 기능이 구현되면 추가할 예정
-	void Add() {}
+	void Add(Ptr<CAnimClip> _clip);
 	void Remove() {}
 
 	void SelectMeshData() {}
@@ -86,7 +86,7 @@ public:
 	tMTAnimClip GetCurMTClip()
 	{
 		if (nullptr != m_pCurAnim)
-			return m_pCurAnim->GetMTAnimClips()->at(m_pCurAnim->GetClipIdx());
+			return m_pCurAnim->GetMTAnimClips().at(m_pCurAnim->GetClipIdx());
 	}
 	
 

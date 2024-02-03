@@ -83,15 +83,31 @@ void CAnimator3D::ClearData()
 }
 
 
+void CAnimator3D::Add(Ptr<CAnimClip> _clip)
+{
+	_clip->m_Owner = this;
+	m_mapAnim.insert(make_pair(_clip->GetKey(), _clip.Get()));
+	m_pCurAnim = _clip.Get();
+	m_pCurAnim->Stop();
+
+	Events* events = FindEvents(_clip->GetKey());
+	if (events)
+		return;
+
+	events = new Events();
+	// 최대 프레임수만큼
+	int maxFrame = (m_pCurAnim->GetEndTime() - m_pCurAnim->GetBeginTime()) * 30 + 1;
+	events->ActionEvents.resize(maxFrame);
+	m_Events.insert(std::make_pair(_clip->GetKey(), events));
+}
+
 void CAnimator3D::CreateAnimClip(wstring _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh)
 {	
 	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(_strAnimName);
 	if (nullptr != pAnim)
 		return;
-	pAnim = new CAnimClip(true);
-	
-	pAnim->SetAnimationBuffer(_inMesh);									// mesh 세팅
-	pAnim->NewAnimClip(_strAnimName, _clipIdx, _startTime, _endTime);
+	pAnim = new CAnimClip(true);	
+	pAnim->NewAnimClip(_strAnimName, _clipIdx, _startTime, _endTime, _inMesh);
 	
 	pAnim->m_Owner = this;
 	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
@@ -118,11 +134,7 @@ void CAnimator3D::NewAnimClip(string _strAnimName, int _clipIdx, float _startTim
 	if (nullptr != pAnim)
 		return;
 	pAnim = new CAnimClip(false);
-
-	pAnim->SetAnimationBuffer(_inMesh);
-	pAnim->NewAnimClip(strPath, _clipIdx, _startTime, _endTime);
-
-	// 리소스 생성
+	pAnim->NewAnimClip(strPath, _clipIdx, _startTime, _endTime, _inMesh);
 
 	pAnim->SetKey(strPath);
 	pAnim->SetRelativePath(strPath);
