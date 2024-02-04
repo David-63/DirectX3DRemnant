@@ -75,8 +75,9 @@ public:
     void Reset() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; m_Finish = false; }
     void TimeClear() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; }
 
-    // 안쓰는 함수
-    int ConvertTimeToFrame(float _idxTime) {}
+    
+    int ConvertTimeToFrame(float _idxTime);
+    int GetStartFrame();
 
     // GUI에 노출시키는 함수
 public: 

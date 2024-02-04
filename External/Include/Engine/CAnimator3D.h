@@ -37,17 +37,42 @@ private:
 	map<wstring, Events*>		m_Events;
 	map<wstring, Ptr<CAnimClip>>m_mapAnim;  // Animation 목록
 
-	
-	CAnimClip*					m_pPreAnim; // 현재 재생중인 Animation
-	CAnimClip*					m_pCurAnim; // 현재 재생중인 Animation
-	bool						m_bRepeat;  // 반복
+	// local value
+	CAnimClip*					m_pCurrentAnim; // 현재 재생중인 애님
+	CAnimClip*					m_pNextAnim;	// 변경될 애님
+	bool						m_bRepeat;		// 반복 체크
 
-	
+	// blend value
+	bool						m_isBlend;
+	float						m_blendUpdateTime;
+	float						m_blendFinishTime;
+	float						m_blendRatio;
+
+	int							m_prevFrameIdx;
+	int							m_nextFrameIdx;
+
+	CStructuredBuffer*			m_BlendAnimMatBuffer;  // CS에서 업데이트 되는 최종 뼈 행렬
+	bool						m_isBlendMatUpdate;
+
+
+
 
 public:
 	virtual void finaltick() override;
 	void UpdateData();
 	void ClearData();
+
+public:
+	void animaTick();
+	void blendTick();
+
+	void animaUpdateData();
+	void blendUpdateData();
+
+	void animaClearData();
+	void blendClearData();
+
+	void check_mesh(Ptr<CMesh> _pMesh);
 
 public:
 	Ptr<CAnimClip> FindAnim(const wstring& _strName);
@@ -85,22 +110,22 @@ public:
 public:
 	tMTAnimClip GetCurMTClip()
 	{
-		if (nullptr != m_pCurAnim)
-			return m_pCurAnim->GetMTAnimClips().at(m_pCurAnim->GetClipIdx());
+		if (nullptr != m_pCurrentAnim)
+			return m_pCurrentAnim->GetMTAnimClips().at(m_pCurrentAnim->GetClipIdx());
 	}
 	
 
 	// 이거 아마 안쓰는듯?
 	CStructuredBuffer* GetFinalBoneMat()
 	{
-		if (nullptr != m_pCurAnim)
-			return m_pCurAnim->GetFinalBoneMat();
+		if (nullptr != m_pCurrentAnim)
+			return m_pCurrentAnim->GetFinalBoneMat();
 	}
 
 	// Anim func
 public:
 	const map<wstring, Ptr<CAnimClip>>& GetAnims() { return m_mapAnim; }
-	CAnimClip* GetCurAnim() { return m_pCurAnim; }
+	CAnimClip* GetCurAnim() { return m_pCurrentAnim; }
 	
 public:
 	void SaveAnimClip() {}

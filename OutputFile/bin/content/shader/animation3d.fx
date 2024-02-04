@@ -3,6 +3,19 @@
 
 #include "value.fx"
 
+/*
+여기서 수행하는 역할
+
+1. 전체 애니메이션 뼈 행렬 정보를 가져와서, 현재 프레임에 해당하는 BoneOffset, BoneFrameData 정보를 가져옴
+
+2. 원소 단위로 존재하는 행렬 정보를 조립함 (Scale, Transform, Rotate)
+
+3. outputBuffer에 담아서 반환
+*/
+
+
+
+
 float4 VectorLess(float4 _vQ1, float4 _vQ2)
 {
     float4 vReturn =
@@ -239,13 +252,13 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iNextFrameDataIdx].vTranslate, Ratio);
     float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iNextFrameDataIdx].qRot, Ratio);
 
-    // 최종 본행렬 연산
+    // 최종 본행렬 연산 (lerp)
     MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
 
     // 최종 본행렬 연산    
     //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
 
-    // 뼈를 offset(기본) 위치로 이동시킴
+    // 담당하는 뼈의 위치를 offset(기본) 위치로 이동시킴
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
 
     // 구조화버퍼에 결과값 저장 : 프레임위치에 오프셋으로 이동시킨 뼈를 곱해서 최종 뼈위치를 구함

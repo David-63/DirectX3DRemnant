@@ -77,6 +77,7 @@ int CAnimClip::finaltick()
 
 void CAnimClip::UpdateData()
 {
+	// BoneFinalMat 버퍼를 UpdateShader 로부터 받아서 쉐이더에 전달해야함	
 	if (!m_bFinalMatUpdate)
 	{
 		// Animation3D Update Compute Shader
@@ -86,11 +87,14 @@ void CAnimClip::UpdateData()
 		Ptr<CMesh> pMesh = m_Owner->MeshRender()->GetMesh();
 		check_mesh(pMesh);
 		
-		// 여기있는 버퍼들을 다 긁어와서 사용해야함..
+		// 쉐이더에 등록하는 버퍼는 메쉬로부터 가져오지만
+		// 내부적으로는 각 애니메이터마다 계산되는 프레임 정보가 다르기 때문에
+		// 동일한 애니메이션 클립을 사용해도 개별로 동작함
 		pUpdateShader->SetFrameDataBuffer(m_originMesh.Get()->GetBoneFrameDataBuffer());
 		pUpdateShader->SetOffsetMatBuffer(m_originMesh.Get()->GetBoneOffsetBuffer());
 		pUpdateShader->SetOutputBuffer(m_pBoneFinalMatBuffer);
-				
+
+		// m_Const 변수에 담기는 데이터
 		UINT iBoneCount = (UINT)m_originMesh.Get()->GetMTBoneCount();
 		pUpdateShader->SetBoneCount(iBoneCount);
 		pUpdateShader->SetFrameIndex(m_CurFrameIdx);
@@ -160,6 +164,25 @@ void CAnimClip::Edit(float _begin, float _end)
 	m_AnimData.FinishTime = m_AnimData.EndTime - m_AnimData.BeginTime;
 	m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f;
 }
+
+int CAnimClip::ConvertTimeToFrame(float _idxTime)
+{
+	double dFrameIdx = (_idxTime + m_AnimData.BeginTime) * (double)m_iFrameCount;
+	int calcFrameidx = (int)(dFrameIdx);
+	// 인자가 클립 최대치를 넘기면
+	if (_idxTime >= m_AnimData.FinishTime)
+	{
+		return calcFrameidx = m_AnimData.EndTime * (double)m_iFrameCount;
+	}
+	return calcFrameidx -= (m_AnimData.BeginTime * 30);
+}
+
+int CAnimClip::GetStartFrame()
+{
+	double dFrameIdx = (m_AnimData.BeginTime) * (double)m_iFrameCount;
+	return (int)(dFrameIdx);
+}
+
 
 int CAnimClip::Save(const wstring& _strRelativePath)
 {
