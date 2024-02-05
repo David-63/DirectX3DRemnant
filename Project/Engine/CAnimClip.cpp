@@ -177,7 +177,7 @@ int CAnimClip::ConvertTimeToFrame(float _idxTime)
 	return calcFrameidx -= (m_AnimData.BeginTime * 30);
 }
 
-int CAnimClip::GetStartFrame()
+const int& CAnimClip::GetStartFrame()
 {
 	double dFrameIdx = (m_AnimData.BeginTime) * (double)m_iFrameCount;
 	return (int)(dFrameIdx);

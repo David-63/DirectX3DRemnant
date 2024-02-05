@@ -38,9 +38,14 @@ private:
 	map<wstring, Ptr<CAnimClip>>m_mapAnim;  // Animation 목록
 
 	// local value
-	CAnimClip*					m_pCurrentAnim; // 현재 재생중인 애님
-	CAnimClip*					m_pNextAnim;	// 변경될 애님
 	bool						m_bRepeat;		// 반복 체크
+	CAnimClip*					m_pPrevAnim;	// 이전 애님
+	CAnimClip*					m_pCurrentAnim; // 현재 재생중인 애님
+
+	bool						m_isFinalMatUpdate;      // 업데이트 체크용
+	CStructuredBuffer*			m_BoneFinalMatBuffer;  // CS에서 업데이트 되는 최종 뼈 행렬
+
+
 
 	// blend value
 	bool						m_isBlend;
@@ -49,13 +54,6 @@ private:
 	float						m_blendRatio;
 
 	int							m_prevFrameIdx;
-	int							m_nextFrameIdx;
-
-	CStructuredBuffer*			m_BlendAnimMatBuffer;  // CS에서 업데이트 되는 최종 뼈 행렬
-	bool						m_isBlendMatUpdate;
-
-
-
 
 public:
 	virtual void finaltick() override;
@@ -97,6 +95,11 @@ public:
 	bool IsRepeat() { return m_bRepeat; }
 
 
+	// Gui 에서 Blend 확인하는 함수
+
+	float GetBlendUpdateTime() { return m_blendUpdateTime; }
+	float GetBlendRatio() { return m_blendRatio; }
+	int GetPrevFrameIdx() { return m_prevFrameIdx; }
 
 	//event func
 public:

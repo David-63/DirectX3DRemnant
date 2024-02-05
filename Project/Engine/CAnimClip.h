@@ -32,6 +32,7 @@ private:
     //CStructuredBuffer*          m_BoneOffsetBuffer;     // 뼈 기본 위치              // mesh 로부터 가져와서 사용중
     //CStructuredBuffer*          m_FrameDataBuffer;      // 프레임별 뼈 이동위치       // mesh 로부터 가져와서 사용중
 
+    bool						m_bFinalMatUpdate;      // 업데이트 체크용
     CStructuredBuffer*          m_pBoneFinalMatBuffer;  // CS에서 업데이트 되는 최종 뼈 행렬
 
 
@@ -50,7 +51,6 @@ private:
     // 애니메이션 제어 변수
     bool                        m_isRun;
     bool                        m_Finish;
-    bool						m_bFinalMatUpdate;      // 업데이트 체크용
 
     vector<Matrix>				m_vecFinalBoneMat;      // 안쓰지만, 혹시 몰라서 냅둠
 
@@ -77,11 +77,15 @@ public:
 
     
     int ConvertTimeToFrame(float _idxTime);
-    int GetStartFrame();
+    const int& GetStartFrame();
+    const int& GetCurFrame() { return m_CurFrameIdx; }
+    const int& GetNextFrame() { return m_NextFrameIdx; }
+    const float& GetFrameRatio() { return m_Ratio; }
 
     // GUI에 노출시키는 함수
 public: 
     // MT 정보
+    Ptr<CMesh> GetOriginMesh() { return m_originMesh; }
     vector<tMTAnimClip> GetMTAnimClips() { return m_originMesh.Get()->GetMTAnimClips(); }
 
     // 클립 정보
@@ -94,7 +98,6 @@ public:
     // 애님 정보
     const float& GetFinishTime() { return m_AnimData.FinishTime; }
     const float& GetCurTime() { return m_AnimUpdateTime[m_AnimData.AnimClipIdx]; }
-    const int& GetCurFrame() { return m_CurFrameIdx; }
 
 public:
     CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }

@@ -253,6 +253,14 @@ int Animator3DUI::render_update()
 
 
 
+	// blend debug ui
+	float fblendUpdate = GetTarget()->Animator3D()->GetBlendUpdateTime();
+	float fblendRatio = GetTarget()->Animator3D()->GetBlendRatio();
+	int iprevFrame = GetTarget()->Animator3D()->GetPrevFrameIdx();
+
+	ImGui::Text("Blend Update %.1f", fblendUpdate);
+	ImGui::Text("Blend Ratio  %.1f", fblendRatio);
+	ImGui::Text("Prev Frame % i", iprevFrame);
 
 	
 	
