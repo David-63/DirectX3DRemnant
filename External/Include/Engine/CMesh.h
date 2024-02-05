@@ -23,20 +23,30 @@ private:
 	vector<tIndexInfo>		m_vecIdxInfo;
 
 	// Animation 3D 정보
-	vector<tMTAnimClip>		m_vecAnimClip;
-	vector<tMTBone>			m_vecBones;
+	vector<tMTAnimClip>		m_pVecClip;			// 기본 정보
+	vector<tMTBone>			m_pVecBones;		// 기본 정보
 
-	CStructuredBuffer*		m_pBoneFrameData;	// 전체 폰 프레임의 행렬 정보
-	CStructuredBuffer*		m_pBoneOffset;		// 1행짜리 각 뼈의 offset 행렬
+	CStructuredBuffer*		m_pBoneFrameData;	// 전체 폰 프레임의 행렬 정보 | m_pVecBones 로부터 추출함
+	CStructuredBuffer*		m_pBoneOffset;		// 1행짜리 각 뼈의 offset 행렬 | m_pVecBones 로부터 추출함
+
+	// offset
+
+	// 같은 캐릭터의 애니메이션 : Offset 은 같음
+
+
+	// frameData
+
+
+	// Anim은 위의 뼈 정보 없어도 CStructuredBuffer <- 이거만 있으면 될듯?
 
 public:
 	Vtx* GetVtxSysMem() { return (Vtx*)m_pVtxSys; }
 	UINT GetSubsetCount() { return (UINT)m_vecIdxInfo.size(); }
 
-	const vector<tMTBone>* GetMTBones() { return &m_vecBones; }
-	UINT GetMTBoneCount() { return (UINT)m_vecBones.size(); }
-	const vector<tMTAnimClip>* GetMTAnimClips() { return &m_vecAnimClip; }
-	bool IsAnimMesh() { return !m_vecAnimClip.empty(); }
+	vector<tMTBone> GetMTBones() { return m_pVecBones; }
+	UINT GetMTBoneCount() { return (UINT)m_pVecBones.size(); }
+	vector<tMTAnimClip> GetMTAnimClips() { return m_pVecClip; }
+	bool IsAnimMesh() { return !m_pVecClip.empty(); }
 
 	CStructuredBuffer* GetBoneFrameDataBuffer() { return m_pBoneFrameData; }
 	CStructuredBuffer* GetBoneOffsetBuffer() { return m_pBoneOffset; }

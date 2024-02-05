@@ -3,6 +3,19 @@
 
 #include "value.fx"
 
+/*
+여기서 수행하는 역할
+
+1. 전체 애니메이션 뼈 행렬 정보를 가져와서, 현재 프레임에 해당하는 BoneOffset, BoneFrameData 정보를 가져옴
+
+2. 원소 단위로 존재하는 행렬 정보를 조립함 (Scale, Transform, Rotate)
+
+3. outputBuffer에 담아서 반환
+*/
+
+
+
+
 float4 VectorLess(float4 _vQ1, float4 _vQ2)
 {
     float4 vReturn =
@@ -208,12 +221,15 @@ struct tFrameTrans
 
 StructuredBuffer<tFrameTrans> g_arrFrameTrans : register(t16);
 StructuredBuffer<matrix> g_arrOffset : register(t17);
+StructuredBuffer<tFrameTrans> g_arrFrameTrans_next : register(t18);
+
 RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 
 // ===========================
 // Animation3D Compute Shader
 #define BoneCount   g_int_0
 #define CurFrame    g_int_1
+#define NextFrame   g_int_2
 #define Ratio       g_float_0
 // ===========================
 [numthreads(256, 1, 1)]
@@ -222,27 +238,40 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     if (BoneCount <= _iThreadIdx.x)
         return;
 
-    // 오프셋 행렬을 곱하여 최종 본행렬을 만들어낸다.		
+    // _iThreadIdx.x : 1차원 배열 형태의 스레드를 통해서 각 스레드마다 한개의 뼈를 담당하여 연산
+    
+    // 오프셋 행렬을 곱하여 최종 본행렬을 만들어낸다.
     float4 vQZero = float4(0.f, 0.f, 0.f, 1.f);
     matrix matBone = (matrix) 0.f;
 
     // Frame Data Index == Bone Count * Frame Count + _iThreadIdx.x
     uint iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
-    uint iNextFrameDataIdx = BoneCount * (CurFrame + 1) + _iThreadIdx.x;
+    uint iNextFrameDataIdx = BoneCount * NextFrame + _iThreadIdx.x;
 
-    float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans[iNextFrameDataIdx].vScale, Ratio);
-    float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans[iNextFrameDataIdx].vTranslate, Ratio);
-    float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iNextFrameDataIdx].qRot, Ratio);
+    // 여기서 구하는 프레임 인덱스는
+    // 뼈의 애니메이션 정보를 배열로 가진 버퍼에 접근하기 위한 인덱스임
+    // 0 프레임부터 시작하는 경우
+    // 0 프레임 + 스레드가 담당하는 뼈 = 애니메이션 인덱스
+    // 1 프레임인 경우 뼈가 132개인 경우 132 + 스레드가 담당하는 뼈 = 1프레임 애니메이션 인덱스값
+    
+    
+    
+    // 여기에서 블렌딩
+    // 각 프레임 인덱스에 해당하는 프레임 행렬값을 비율로 가져옴
+    float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans_next[iNextFrameDataIdx].vScale, Ratio);
+    float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans_next[iNextFrameDataIdx].vTranslate, Ratio);
+    float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans_next[iNextFrameDataIdx].qRot, Ratio);
 
-    // 최종 본행렬 연산
+    // 최종 본행렬 연산 (lerp)
     MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
 
     // 최종 본행렬 연산    
     //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
 
+    // 담당하는 뼈의 위치를 offset(기본) 위치로 이동시킴
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
 
-    // 구조화버퍼에 결과값 저장
+    // 구조화버퍼에 결과값 저장 : 프레임위치에 오프셋으로 이동시킨 뼈를 곱해서 최종 뼈위치를 구함
     g_arrFinelMat[_iThreadIdx.x] = mul(matOffset, matBone);
 }
 

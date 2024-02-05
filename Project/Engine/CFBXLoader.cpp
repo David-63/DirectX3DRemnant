@@ -28,10 +28,10 @@ CFBXLoader::~CFBXLoader()
 			delete m_vecBone[i];
 	}
 
-	for (size_t i = 0; i < m_vecAnimClip.size(); ++i)
+	for (size_t i = 0; i < m_pVecClip.size(); ++i)
 	{
-		if (nullptr != m_vecAnimClip[i])
-			delete m_vecAnimClip[i];
+		if (nullptr != m_pVecClip[i])
+			delete m_pVecClip[i];
 	}
 
 	for (int i = 0; i < m_arrAnimName.Size(); ++i)
@@ -590,7 +590,7 @@ void CFBXLoader::LoadAnimationClip()
 
 
 
-		m_vecAnimClip.push_back(pAnimClip);
+		m_pVecClip.push_back(pAnimClip);
 	}
 }
 
@@ -619,7 +619,7 @@ void CFBXLoader::LoadAnimationData(FbxMesh* _pMesh, tContainer* _pContainer)
 {
 	// Animation Data 로드할 필요가 없음
 	int iSkinCount = _pMesh->GetDeformerCount(FbxDeformer::eSkin);
-	if (iSkinCount <= 0 || m_vecAnimClip.empty())
+	if (iSkinCount <= 0 || m_pVecClip.empty())
 		return;
 
 	_pContainer->bAnimation = true;
@@ -723,7 +723,7 @@ void CFBXLoader::CheckWeightAndIndices(FbxMesh* _pMesh, tContainer* _pContainer)
 void CFBXLoader::LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster
 	, const FbxAMatrix& _matNodeTransform, int _iBoneIdx, tContainer* _pContainer)
 {
-	if (m_vecAnimClip.empty())
+	if (m_pVecClip.empty())
 		return;
 
 	FbxVector4	v1 = { 1, 0, 0, 0 };
@@ -740,8 +740,8 @@ void CFBXLoader::LoadKeyframeTransform(FbxNode* _pNode, FbxCluster* _pCluster
 
 	FbxTime::EMode eTimeMode = m_pScene->GetGlobalSettings().GetTimeMode();
 
-	FbxLongLong llStartFrame = m_vecAnimClip[0]->tStartTime.GetFrameCount(eTimeMode);
-	FbxLongLong llEndFrame = m_vecAnimClip[0]->tEndTime.GetFrameCount(eTimeMode);
+	FbxLongLong llStartFrame = m_pVecClip[0]->tStartTime.GetFrameCount(eTimeMode);
+	FbxLongLong llEndFrame = m_pVecClip[0]->tEndTime.GetFrameCount(eTimeMode);
 
 	for (FbxLongLong i = llStartFrame; i < llEndFrame; ++i)
 	{

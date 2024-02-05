@@ -175,14 +175,8 @@
     <ClInclude Include="CAnimation3DShader.h">
       <Filter>Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
     </ClInclude>
-    <ClInclude Include="CAnim3D.h">
-      <Filter>Source\06. Component\7. Animator3D</Filter>
-    </ClInclude>
     <ClInclude Include="CComponent.h">
       <Filter>Source\06. Component</Filter>
-    </ClInclude>
-    <ClInclude Include="CAnimation.h">
-      <Filter>Source\07. Resource\8. Animation</Filter>
     </ClInclude>
     <ClInclude Include="CLandScape.h">
       <Filter>Source\06. Component\RenderComponent\6. Landscape</Filter>
@@ -204,6 +198,9 @@
     </ClInclude>
     <ClInclude Include="Physics.h">
       <Filter>Source\09. Module\Physics</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimClip.h">
+      <Filter>Source\07. Resource\8. AnimClip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -372,12 +369,6 @@
     <ClCompile Include="CAnimation3DShader.cpp">
       <Filter>Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
     </ClCompile>
-    <ClCompile Include="CAnim3D.cpp">
-      <Filter>Source\06. Component\7. Animator3D</Filter>
-    </ClCompile>
-    <ClCompile Include="CAnimation.cpp">
-      <Filter>Source\07. Resource\8. Animation</Filter>
-    </ClCompile>
     <ClCompile Include="CLandScape.cpp">
       <Filter>Source\06. Component\RenderComponent\6. Landscape</Filter>
     </ClCompile>
@@ -401,6 +392,9 @@
     </ClCompile>
     <ClCompile Include="Physics.cpp">
       <Filter>Source\09. Module\Physics</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimClip.cpp">
+      <Filter>Source\07. Resource\8. AnimClip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -578,9 +572,6 @@
     <Filter Include="Source\06. Component\RenderComponent\4. SkyBox">
       <UniqueIdentifier>{cdaf2dfe-96ef-4fd7-a1c9-a117acce104d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source\07. Resource\8. Animation">
-      <UniqueIdentifier>{31f1874e-bc67-4112-a438-a1ec4cc0945d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source\08. ShaderCode\Render\2D">
       <UniqueIdentifier>{932a37bb-478f-4f88-9d41-9d560e5e5a86}</UniqueIdentifier>
     </Filter>
@@ -607,6 +598,9 @@
     </Filter>
     <Filter Include="Source\09. Module\Physics">
       <UniqueIdentifier>{87565bc5-6ae1-44dd-90d0-7d301d4b4b58}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\07. Resource\8. AnimClip">
+      <UniqueIdentifier>{31f1874e-bc67-4112-a438-a1ec4cc0945d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
