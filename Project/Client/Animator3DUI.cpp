@@ -25,50 +25,54 @@ int Animator3DUI::render_update()
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
 	ImGui::Separator();
-	
+
 	// 속도 조절
 	float fTimeScale = CTimeMgr::GetInst()->GetTimeScale();
 	ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "Change Time Scale");
-	
+
 	ImGui::SliderFloat("Scale", &fTimeScale, 0.01f, 5.49f, "ratio = %.2f");
 	CTimeMgr::GetInst()->SetTimeScale(fTimeScale);
 	ImGui::Separator();
 
 	// ====================================================================================================================
-	
+
 
 	bool repeat = GetTarget()->Animator3D()->IsRepeat();
 	map<wstring, Ptr<CAnimClip>> anims = GetTarget()->Animator3D()->GetAnims();
 	static vector<const char*> animList;
-	for (const auto& anim : anims)
-	{
-		animList.push_back(anim.second.Get()->GetAnimName().c_str());
-	}	
 	static int item_current_idx = 0; // Here we store our selection data as an index.
-	const char* combo_preview_value = animList[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)	
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> charToWstring;
-	
-	
-	// 필요한 변수 anims
-	ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "AnimClip List");
-	ImGui::Separator();
-	if (ImGui::BeginCombo("Select", combo_preview_value))
+	if (!anims.empty())
 	{
-		for (int idx = 0; idx < animList.size(); idx++)
+		for (const auto& anim : anims)
 		{
-			const bool is_selected = (item_current_idx == idx);
-			if (ImGui::Selectable(animList[idx], is_selected))
-			{
-				item_current_idx = idx;
-				GetTarget()->Animator3D()->Play(charToWstring.from_bytes(animList[item_current_idx]), repeat);
-			}
-	
-			// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-			if (is_selected)
-				ImGui::SetItemDefaultFocus();
+			animList.push_back(anim.second.Get()->GetAnimName().c_str());
 		}
-		ImGui::EndCombo();
+		const char* combo_preview_value = animList[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)	
+
+
+		// 필요한 변수 anims
+		ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "AnimClip List");
+		ImGui::Separator();
+		if (ImGui::BeginCombo("Select", combo_preview_value))
+		{
+			for (int idx = 0; idx < animList.size(); idx++)
+			{
+				const bool is_selected = (item_current_idx == idx);
+				if (ImGui::Selectable(animList[idx], is_selected))
+				{
+					item_current_idx = idx;
+					GetTarget()->Animator3D()->Play(charToWstring.from_bytes(animList[item_current_idx]), repeat);
+				}
+
+				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+				if (is_selected)
+					ImGui::SetItemDefaultFocus();
+			}
+			ImGui::EndCombo();
+		}
 	}
+
 	ImGui::Text("Add");
 	ImGui::SameLine();
 	if (ImGui::Button("##AnimClipSelectBtn", ImVec2(18, 18)))
@@ -86,8 +90,11 @@ int Animator3DUI::render_update()
 	ImGui::SameLine();
 	if (ImGui::Button("Remove"))
 	{
-		
-	}	
+		if (!anims.empty())
+		{
+			GetTarget()->Animator3D()->Remove(charToWstring.from_bytes(animList[item_current_idx]));
+		}
+	}
 	ImGui::Separator();
 
 
@@ -103,9 +110,9 @@ int Animator3DUI::render_update()
 
 	// Mesh 선택
 	Ptr<CMesh> pMesh = GetTarget()->MeshRender()->GetMesh();	// 초기에 보여주는 용도 외로는 안쓰는건가?
-	char szBuff[50] = {};	
+	char szBuff[50] = {};
 	GetResKey(pMesh.Get(), szBuff, 50);
-	
+
 	// Mesh가 있다면 MTAnimClip 정보 표시
 
 	static int mtClipCount = 0;
@@ -163,7 +170,7 @@ int Animator3DUI::render_update()
 				selectTimeLength = static_cast<float>(mtAnimClip[selectClipIdx].dTimeLength);
 			}
 		}
-		
+
 		ImGui::Text("TimeLength %.1f", selectTimeLength);
 
 		// AnimClip
@@ -184,7 +191,7 @@ int Animator3DUI::render_update()
 
 			if (nullptr != m_SelectMesh)
 				GetTarget()->Animator3D()->NewAnimClip(outPath, selectClipIdx, inputStartTime, inputEndTime, m_SelectMesh);
-		}		
+		}
 
 		ImGui::TreePop();
 	}
@@ -198,22 +205,32 @@ int Animator3DUI::render_update()
 
 	// Cur Anim Info
 	CAnimClip* curAnim = GetTarget()->Animator3D()->GetCurAnim(); // Current AnimClip
-	float fFinishTime = curAnim->GetFinishTime();
-	float fCurTime = curAnim->GetCurTime();
-	int curFrame = curAnim->GetCurFrame();
+	float fFinishTime = -1;
+	float fCurTime = -1;
+	int curFrame = -1;
 
 	// Edit Clip values
-	float fEditBeginTime;
-	float fEditEndTime;
+	float fEditBeginTime = -1;
+	float fEditEndTime = -1;
+
+	if (curAnim)
+	{
+		fFinishTime = curAnim->GetFinishTime();
+		fCurTime = curAnim->GetCurTime();
+		curFrame = curAnim->GetCurFrame();
+	}
+
 	static float v2EditTime[2] = { 0.f, 0.f };
 	if (ImGui::Button("Play"))
 	{
-		GetTarget()->Animator3D()->Play(charToWstring.from_bytes(animList[item_current_idx]), repeat);
+		if (curAnim)
+			GetTarget()->Animator3D()->Play(charToWstring.from_bytes(animList[item_current_idx]), repeat);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Stop"))
 	{
-		curAnim->Stop();
+		if (curAnim)
+			curAnim->Stop();
 	}
 	ImGui::SameLine();
 	ImGui::Checkbox("Is Repeat?", &repeat);
@@ -224,26 +241,40 @@ int Animator3DUI::render_update()
 	ImGui::Separator();
 
 
-
-	int curClipIdx = curAnim->GetClipIdx();
-	vector<tMTAnimClip> AnimClips = curAnim->GetMTAnimClips();
-	int iClipCount = AnimClips.size();
-	float curTimeLength = static_cast<float>(AnimClips.at(curClipIdx).dTimeLength);
-	float fBeginTime = curAnim->GetBeginTime();
-	float fEndTime = curAnim->GetEndTime();
+	int curClipIdx = -1;
+	vector<tMTAnimClip> AnimClips;
+	int iClipCount = -1;
+	float curTimeLength = -1;
+	int curFrameLength = -1;
+	float fBeginTime = -1;
+	float fEndTime = -1;
+	if (curAnim)
+	{
+		curClipIdx = curAnim->GetClipIdx();
+		AnimClips = curAnim->GetMTAnimClips();
+		iClipCount = AnimClips.size();
+		curTimeLength = static_cast<float>(AnimClips.at(curClipIdx).dTimeLength);
+		curFrameLength = AnimClips.at(curClipIdx).iFrameLength;
+		fBeginTime = curAnim->GetBeginTime();
+		fEndTime = curAnim->GetEndTime();
+	}
+	
+	 
+	
 
 	if (ImGui::TreeNode("Edit Clip"))
 	{
 		ImGui::Text("AnimClipCount	  %i", iClipCount);
 		ImGui::Text("TimeLength  %.1f", curTimeLength);
-		ImGui::Text("FrameLenght %i", AnimClips.at(curClipIdx).iFrameLength);
+		ImGui::Text("FrameLenght %i", curFrameLength);
 		ImGui::Text("Begin To End %.1f - %.1f", fBeginTime, fEndTime);
 
 		ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "Edit Interface");
 		ImGui::DragFloat2("Edit Time", v2EditTime, 0.01f, 0.0f, curTimeLength, "%.1f");
 		if (ImGui::Button("Edit Now!"))
 		{
-			curAnim->Edit(v2EditTime[0], v2EditTime[1]);
+			if (curAnim)
+				curAnim->Edit(v2EditTime[0], v2EditTime[1]);
 		}
 		ImGui::TreePop();
 	}
@@ -261,9 +292,6 @@ int Animator3DUI::render_update()
 	ImGui::Text("Blend Update %.1f", fblendUpdate);
 	ImGui::Text("Blend Ratio  %.1f", fblendRatio);
 	ImGui::Text("Prev Frame % i", iprevFrame);
-
-	
-	
 
 	
 	animList.clear();

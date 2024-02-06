@@ -16,7 +16,7 @@ CAnimator3D::CAnimator3D()
 	: m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(false)
 
 	, m_isBlend(false), m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr)
-	, m_blendUpdateTime(0.f), m_blendFinishTime(0.5f), m_blendRatio(0.f), m_prevFrameIdx(0)
+	, m_blendUpdateTime(0.f), m_blendFinishTime(0.32f), m_blendRatio(0.f), m_prevFrameIdx(0)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_BoneFinalMatBuffer = new CStructuredBuffer();
@@ -217,6 +217,12 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	int maxFrame = (m_pCurrentAnim->GetEndTime() - m_pCurrentAnim->GetBeginTime()) * 30 + 1;
 	events->ActionEvents.resize(maxFrame);
 	m_Events.insert(std::make_pair(_clip->GetKey(), events));
+}
+
+void CAnimator3D::Remove(const wstring& _key)
+{
+	m_mapAnim.erase(_key);
+	m_pCurrentAnim = nullptr;
 }
 
 void CAnimator3D::CreateAnimClip(wstring _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh)

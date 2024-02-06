@@ -81,7 +81,7 @@ public:
 public:
 	// 이건 Save Load 기능이 구현되면 추가할 예정
 	void Add(Ptr<CAnimClip> _clip);
-	void Remove() {}
+	void Remove(const wstring& _key);
 
 	void SelectMeshData() {}
 	void CreateAnimClip(wstring _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh);	// Engine에서 생성할 때
