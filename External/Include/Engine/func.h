@@ -57,10 +57,10 @@ wstring GetRelativePath(const wstring& _strBase, const wstring& _strPath);
 void SaveWString(const wstring& _str, FILE* _File);
 void LoadWString(wstring& _str, FILE* _File);
 
-Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat);
-
-
 int GetSizeofFormat(DXGI_FORMAT _eFormat);
+Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat);
+Vec3 DecomposeRotMat(const Matrix& matRot);
+
 
 
 class CRes;

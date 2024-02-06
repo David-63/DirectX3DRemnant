@@ -50,13 +50,14 @@ void CAnimator3D::finaltick()
 	animaTick();
 
 	if (m_isBlend)
-		blendTick();	
+		blendTick();
 }
 
 void CAnimator3D::UpdateData()
 {
 	if (nullptr == m_pCurrentAnim)
 		return;
+
 	if (!m_isFinalMatUpdate)
 	{
 		// Animation3D Update Compute Shader
@@ -230,7 +231,7 @@ void CAnimator3D::CreateAnimClip(wstring _strAnimName, int _clipIdx, float _star
 	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(_strAnimName);
 	if (nullptr != pAnim)
 		return;
-	pAnim = new CAnimClip(true);	
+	pAnim = new CAnimClip(true);
 	pAnim->NewAnimClip(_strAnimName, _clipIdx, _startTime, _endTime, _inMesh);
 	
 	pAnim->m_Owner = this;

@@ -169,7 +169,7 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
 		tClip.iFrameLength = tClip.iEndFrame - tClip.iStartFrame;
 		tClip.eMode = vecAnimClip[i]->eMode;
 
-		pMesh->m_pVecClip.push_back(tClip);
+		pMesh->m_vecAnimClip.push_back(tClip);
 	}
 
 	// Animation 이 있는 Mesh 경우 structuredbuffer 만들어두기
@@ -345,19 +345,19 @@ int CMesh::Save(const wstring& _strRelativePath)
 	}
 
 	// Animation3D 정보
-	UINT iCount = (UINT)m_pVecClip.size();
+	UINT iCount = (UINT)m_vecAnimClip.size();
 	fwrite(&iCount, sizeof(int), 1, pFile);
 	for (UINT i = 0; i < iCount; ++i)
 	{
-		SaveWString(m_pVecClip[i].strAnimName, pFile);
-		fwrite(&m_pVecClip[i].dStartTime, sizeof(double), 1, pFile);
-		fwrite(&m_pVecClip[i].dEndTime, sizeof(double), 1, pFile);
-		fwrite(&m_pVecClip[i].dTimeLength, sizeof(double), 1, pFile);
-		fwrite(&m_pVecClip[i].eMode, sizeof(int), 1, pFile);
-		fwrite(&m_pVecClip[i].fUpdateTime, sizeof(float), 1, pFile);
-		fwrite(&m_pVecClip[i].iStartFrame, sizeof(int), 1, pFile);
-		fwrite(&m_pVecClip[i].iEndFrame, sizeof(int), 1, pFile);
-		fwrite(&m_pVecClip[i].iFrameLength, sizeof(int), 1, pFile);
+		SaveWString(m_vecAnimClip[i].strAnimName, pFile);
+		fwrite(&m_vecAnimClip[i].dStartTime, sizeof(double), 1, pFile);
+		fwrite(&m_vecAnimClip[i].dEndTime, sizeof(double), 1, pFile);
+		fwrite(&m_vecAnimClip[i].dTimeLength, sizeof(double), 1, pFile);
+		fwrite(&m_vecAnimClip[i].eMode, sizeof(int), 1, pFile);
+		fwrite(&m_vecAnimClip[i].fUpdateTime, sizeof(float), 1, pFile);
+		fwrite(&m_vecAnimClip[i].iStartFrame, sizeof(int), 1, pFile);
+		fwrite(&m_vecAnimClip[i].iEndFrame, sizeof(int), 1, pFile);
+		fwrite(&m_vecAnimClip[i].iFrameLength, sizeof(int), 1, pFile);
 	}
 
 	iCount = (UINT)m_pVecBones.size();
@@ -463,7 +463,7 @@ int CMesh::Load(const wstring& _strFilePath)
 		fread(&tClip.iEndFrame, sizeof(int), 1, pFile);
 		fread(&tClip.iFrameLength, sizeof(int), 1, pFile);
 
-		m_pVecClip.push_back(tClip);
+		m_vecAnimClip.push_back(tClip);
 	}
 
 	iCount = 0;
@@ -490,7 +490,7 @@ int CMesh::Load(const wstring& _strFilePath)
 	}
 
 	// Animation 이 있는 Mesh 경우 Bone StructuredBuffer 만들기
-	if (m_pVecClip.size() > 0 && m_pVecBones.size() > 0)
+	if (m_vecAnimClip.size() > 0 && m_pVecBones.size() > 0)
 	{
 		wstring strBone = GetName();
 

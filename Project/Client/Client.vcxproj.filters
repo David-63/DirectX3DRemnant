@@ -247,7 +247,6 @@
     <ClInclude Include="ParamUI.h">
       <Filter>UI\Module\ParamUI</Filter>
     </ClInclude>
-    <ClInclude Include="TestLevel.h" />
     <ClInclude Include="MenuUI.h">
       <Filter>UI\MenuUI</Filter>
     </ClInclude>

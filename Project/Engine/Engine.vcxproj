@@ -170,6 +170,7 @@ call EngineCopy.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\Client\TestLevel.h" />
     <ClInclude Include="CAnim2D.h" />
     <ClInclude Include="CAnimClip.h" />
     <ClInclude Include="CAnimation3DShader.h" />

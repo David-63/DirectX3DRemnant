@@ -63,13 +63,6 @@ public:
 public:
 	void animaTick();
 	void blendTick();
-
-	void animaUpdateData();
-	void blendUpdateData();
-
-	void animaClearData();
-	void blendClearData();
-
 	void check_mesh(Ptr<CMesh> _pMesh);
 
 public:
