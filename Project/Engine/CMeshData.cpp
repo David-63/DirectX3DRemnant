@@ -37,10 +37,6 @@ CGameObject* CMeshData::Instantiate()
 	CAnimator3D* pAnimator = new CAnimator3D;
 	pNewObj->AddComponent(pAnimator);
 
-	//// 애니메이션 생성 테스트 (코드)
-	pAnimator->CreateAnimClip(L"firstAnim", 0, 3.f, 6.f, m_pMesh);
-	pAnimator->CreateAnimClip(L"SecondAnim", 0, 10.f, 14.f, m_pMesh);
-
 	return pNewObj;
 }
 
