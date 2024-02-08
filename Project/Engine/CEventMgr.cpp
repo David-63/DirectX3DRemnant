@@ -6,6 +6,9 @@
 #include "CGameObject.h"
 #include "CResMgr.h"
 #include "CRenderMgr.h"
+#include "CCollisionMgr.h"
+#include "CRigidBody.h"
+#include <algorithm>
 
 
 CEventMgr::CEventMgr()
@@ -80,9 +83,6 @@ void CEventMgr::tick()
 
 			m_LevelChanged = true;
 		}
-			
-
-		
 			break;
 		case EVENT_TYPE::DELETE_RESOURCE:
 			// wParam : RES_TYPE, lParam : Resource Adress
@@ -102,12 +102,19 @@ void CEventMgr::tick()
 			m_LevelChanged = true;
 		}
 			break;		
+		break;
 		}
+
 	}
 
 	m_vecEvent.clear();
 }
 
+void CEventMgr::AddEvent(const tEvent& _evn)
+{
+	m_vecEvent.push_back(_evn);
+	sort(m_vecEvent.begin(), m_vecEvent.end(), less_than_value());
+}
 
 void CEventMgr::GC_Clear()
 {

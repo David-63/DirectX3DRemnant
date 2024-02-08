@@ -2638,7 +2638,7 @@ inline Matrix Matrix::CreateFromQuaternion(const Quaternion& rotation)
 {
     using namespace DirectX;
     Matrix R;
-    XMVECTOR quatv = XMLoadFloat4(&rotation);
+    const XMVECTOR quatv = XMLoadFloat4(&rotation);
     XMStoreFloat4x4(&R, XMMatrixRotationQuaternion(quatv));
     return R;
 }

@@ -11,7 +11,6 @@ void DeleteArray(T* (&Arr)[_Size])
 }
 
 
-
 // 오브젝트 생성
 class CGameObject;
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx);
@@ -27,7 +26,7 @@ void DrawDebugRect(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bo
 void DrawDebugCircle(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
 void DrawDebugCircle(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bool DepthTest = false);
 
-void DrawDebugCube(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
+void DrawDebugCube(Vec3 _vWorldPos, Vec3 _vSize, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);
 void DrawDebugCube(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f, bool DepthTest = false);
 
 void DrawDebugSphere(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor, Vec3 _vRotation, float _fTime = 0.f, bool DepthTest = false);

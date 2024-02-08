@@ -19,6 +19,7 @@
 
 #define SINGLE(type) private: type(); ~type(); friend class CSingleton<type>;
 
+#define GLOBAL_GRAVITY Physics::GetInst()->GetGravity()
 
 
 
@@ -45,11 +46,12 @@ enum class COMPONENT_TYPE
 	SKYBOX,			// SkyBox
 	DECAL,			// ³»ºÎ ·»´õ¸µ
 	
-
+	RIGIDBODY,
 	END,
 
 	// custom
 	SCRIPT,
+	   
 };
 
 extern const char* COMPONENT_TYPE_STR[(UINT)COMPONENT_TYPE::END];
@@ -225,6 +227,7 @@ enum class EVENT_TYPE
 
 	DELETE_RESOURCE,	// wParam : RES_TYPE, lParam : Resource Adress
 
+
 	LEVEL_CHANGE,	
 };
 
@@ -245,6 +248,15 @@ enum class COLLIDER2D_TYPE
 	CIRCLE,
 };
 
+enum class COLLIDER3D_TYPE
+{
+	NONE,
+	RECT,
+	CIRCLE,
+	BOX,
+	SPHERE,
+	END,
+};
 
 enum class LIGHT_TYPE
 {
@@ -295,4 +307,28 @@ enum class MRT_TYPE
 	SHADOWMAP,
 
 	END,
+};
+
+enum class GEOMETRY_TYPE
+{
+	Sphere,
+	Box,
+	Capsule,
+	Plane
+};
+
+enum class ACTOR_TYPE
+{
+	Static,
+	Dynamic,
+	Kinematic,
+	Character,
+};
+
+enum class AXIS3D_TYPE
+{
+	X,
+	Y,
+	Z,
+	END
 };

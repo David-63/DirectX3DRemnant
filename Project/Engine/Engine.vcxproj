@@ -176,7 +176,9 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CAnimator2D.h" />
     <ClInclude Include="CAnimator3D.h" />
     <ClInclude Include="CCamera.h" />
+    <ClInclude Include="CColCallBack.h" />
     <ClInclude Include="CCollider2D.h" />
+    <ClInclude Include="CCollider3D.h" />
     <ClInclude Include="CCollisionMgr.h" />
     <ClInclude Include="CComponent.h" />
     <ClInclude Include="CComputeShader.h" />
@@ -216,6 +218,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CRenderMgr.h" />
     <ClInclude Include="CRes.h" />
     <ClInclude Include="CResMgr.h" />
+    <ClInclude Include="CRigidBody.h" />
     <ClInclude Include="CScript.h" />
     <ClInclude Include="CSetColorShader.h" />
     <ClInclude Include="CShader.h" />
@@ -229,6 +232,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="CTransform.h" />
     <ClInclude Include="CWeightMapShader.h" />
     <ClInclude Include="define.h" />
+    <ClInclude Include="EnumFlags.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="func.h" />
     <ClInclude Include="global.h" />
@@ -245,7 +249,9 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CAnimator2D.cpp" />
     <ClCompile Include="CAnimator3D.cpp" />
     <ClCompile Include="CCamera.cpp" />
+    <ClCompile Include="CColCallBack.cpp" />
     <ClCompile Include="CCollider2D.cpp" />
+    <ClCompile Include="CCollider3D.cpp" />
     <ClCompile Include="CCollisionMgr.cpp" />
     <ClCompile Include="CComponent.cpp" />
     <ClCompile Include="CComputeShader.cpp" />
@@ -290,6 +296,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CRes.cpp" />
     <ClCompile Include="CResMgr.cpp" />
     <ClCompile Include="CResMgr_Init.cpp" />
+    <ClCompile Include="CRigidBody.cpp" />
     <ClCompile Include="CScript.cpp" />
     <ClCompile Include="CSetColorShader.cpp" />
     <ClCompile Include="CShader.cpp" />

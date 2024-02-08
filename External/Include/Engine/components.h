@@ -15,6 +15,8 @@
 #include "CSkyBox.h"
 #include "CDecal.h"
 #include "CLandscape.h"
+#include "CRigidBody.h"
+#include "CCollider3D.h"
 
-//#include "CCollider3D.h"
+
 

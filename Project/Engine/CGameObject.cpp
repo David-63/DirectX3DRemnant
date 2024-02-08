@@ -3,6 +3,7 @@
 
 #include "CComponent.h"
 #include "CMeshRender.h"
+#include "CRigidBody.h"
 
 #include "CScript.h"
 
@@ -257,4 +258,13 @@ void CGameObject::AddParentList()
 {
 	CLayer* pLayer = CLevelMgr::GetInst()->GetCurLevel()->GetLayer(m_iLayerIdx);
 	pLayer->AddParentList(this);
+}
+
+bool CGameObject::IsPhysicsObject()
+{
+    CRigidBody* rigidBody = CGameObject::RigidBody();
+    if (nullptr == rigidBody)
+        return false;
+
+    return rigidBody->IsAppliedPhysics();
 }
