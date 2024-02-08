@@ -21,6 +21,7 @@ CTestScript::~CTestScript()
 
 void CTestScript::begin()
 {
+
 	Animator3D()->StartEvent(L"firstAnim") = std::bind(&CTestScript::Start, this);
 	Animator3D()->CompleteEvent(L"firstAnim") = std::bind(&CTestScript::Complete, this);
 	Animator3D()->EndEvent(L"firstAnim") = std::bind(&CTestScript::End, this);
