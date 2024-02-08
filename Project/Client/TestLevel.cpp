@@ -12,9 +12,10 @@
 #include <Engine/CCollisionMgr.h>
 
 // Scripts
-#include <Script/CPlanetScript.h>
 #include <Script/CCameraMoveScript.h>
 #include <Script/CTestScript.h>
+#include <Script/CShoulderViewScript.h>
+#include <Script/CCharacterMoveScript.h>
 
 
 void CreateTestLevel()
@@ -30,7 +31,7 @@ void CreateTestLevel()
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 	// camera
-	{
+	
 		// Main Camera Object 생성
 		CGameObject* pMainCam = new CGameObject;
 		pMainCam->SetName(L"MainCamera");
@@ -38,7 +39,11 @@ void CreateTestLevel()
 		pMainCam->AddComponent(new CTransform);
 		pMainCam->AddComponent(new CCamera);
 		pMainCam->AddComponent(new CCameraMoveScript);
-
+		
+		/*
+		// 숄더뷰용
+		pMainCam->AddComponent(new CShoulderViewScript);
+		CShoulderViewScript* pCamMoveScript = pMainCam->GetScript<CShoulderViewScript>(); */
 
 		pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 		pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
@@ -58,7 +63,11 @@ void CreateTestLevel()
 		pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 		pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
 		SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
-	}
+
+
+	
+
+
 	// SkyBox 추가
 	{
 		CGameObject* pSkyBox = new CGameObject;
@@ -107,6 +116,9 @@ void CreateTestLevel()
 		pObj->SetName(L"Monster");
 		pObj->Transform()->SetDebugSphereUse(true);
 		SpawnGameObject(pObj, Vec3(50.f, 200.f, 500.f), 0);
+
+		// pCamMoveScript->SetCamTarget(pObj); //숄더뷰 용
+
 		
 		//for (int i = 0; i < 10; ++i)
 		//{
