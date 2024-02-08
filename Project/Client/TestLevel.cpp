@@ -14,9 +14,10 @@
 #include <Engine/Physics.h>
 
 // Scripts
-#include <Script/CPlanetScript.h>
 #include <Script/CCameraMoveScript.h>
 #include <Script/CTestScript.h>
+#include <Script/CShoulderViewScript.h>
+#include <Script/CCharacterMoveScript.h>
 
 
 void CreateTestLevel()
