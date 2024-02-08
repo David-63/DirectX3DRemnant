@@ -260,11 +260,11 @@ void CGameObject::AddParentList()
 	pLayer->AddParentList(this);
 }
 
-inline bool CGameObject::IsPhysicsObject()
+bool CGameObject::IsPhysicsObject()
 {
-	CRigidBody* rigidBody = RigidBody();
-	if (nullptr == rigidBody)
-		return false;
+    CRigidBody* rigidBody = CGameObject::RigidBody();
+    if (nullptr == rigidBody)
+        return false;
 
-	return rigidBody->IsAppliedPhysics();
+    return rigidBody->IsAppliedPhysics();
 }

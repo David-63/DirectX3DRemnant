@@ -42,9 +42,11 @@ private:
 	PxControllerManager* mControllerMgr;
 
 	PxDefaultCpuDispatcher* mCpuDispatcher;
-	class ContactCallback* mCallback;
+	class CColCallBack* mCallback;
 
 	Vector3 mGravity;
+
+	
 };
 
 

@@ -31,7 +31,7 @@ void CTestScript::tick()
 	Vec3 vFront = Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 	Vec3 vRight = Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
 	Vec3 vUp = Transform()->GetRelativeDir(DIR_TYPE::UP);
-	float fSpeed = 200.f;
+	float fSpeed = 100.f;
 	if (KEY_PRESSED(KEY::UP))
 	{
 		vPos += DT * vFront * fSpeed;
@@ -51,8 +51,11 @@ void CTestScript::tick()
 	{
 		vPos += DT * vRight * fSpeed;
 	}
-	Transform()->SetRelativePos(vPos);
+	
 	// Event Test
+
+
+	Transform()->SetRelativePos(vPos);
 
 }
 

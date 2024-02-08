@@ -227,6 +227,7 @@ enum class EVENT_TYPE
 
 	DELETE_RESOURCE,	// wParam : RES_TYPE, lParam : Resource Adress
 
+
 	LEVEL_CHANGE,	
 };
 
@@ -247,6 +248,15 @@ enum class COLLIDER2D_TYPE
 	CIRCLE,
 };
 
+enum class COLLIDER3D_TYPE
+{
+	NONE,
+	RECT,
+	CIRCLE,
+	BOX,
+	SPHERE,
+	END,
+};
 
 enum class LIGHT_TYPE
 {

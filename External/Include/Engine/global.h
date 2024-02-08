@@ -23,7 +23,6 @@ using namespace std::experimental;
 using namespace std::experimental::filesystem;
 
 
-
 #include <wrl.h>
 using namespace Microsoft::WRL;
 

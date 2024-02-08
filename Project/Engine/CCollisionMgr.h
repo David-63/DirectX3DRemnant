@@ -29,8 +29,8 @@ private:
 	
 
 public:
-	void LayerCheck(UINT _left, UINT _right);
-	void LayerCheck(const wstring& _strLeftLayer, const wstring& _strRightLayer);
+	void SetColLayer(UINT _left, UINT _right);
+	void SetColLayer(const wstring& _strLeftLayer, const wstring& _strRightLayer);
 
 	void Clear()
 	{
@@ -43,8 +43,8 @@ public:
 	void tick();
 
 private:
-	void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);
-	void CollisionBtwObject(CGameObject* _LeftObject, CGameObject* _RightObject);
-	bool CollisionBtwCollider(CCollider2D* _pLeft, CCollider2D* _pRight);
+	//void CollisionBtwLayer(CLayer* _LeftLayer, CLayer* _RightLayer);
+	//void CollisionBtwObject(CGameObject* _LeftObject, CGameObject* _RightObject);
+	//bool CollisionBtwCollider(CCollider2D* _pLeft, CCollider2D* _pRight);
 };
 

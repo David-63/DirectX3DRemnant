@@ -98,7 +98,7 @@ void CEngine::tick()
 	Physics::GetInst()->tick();
 
 	// Level 내에 GameObject 들의 변경점에 의해서 발생한 충돌을 체크한다.
-	CCollisionMgr::GetInst()->tick();
+	//CCollisionMgr::GetInst()->tick();
 }
 
 void CEngine::render()

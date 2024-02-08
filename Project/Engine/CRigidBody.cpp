@@ -14,6 +14,7 @@ CRigidBody::CRigidBody()
 	, mbAppliedPhysics(false)
 	, mbAppliedGravity(false)
 	, mbIsActorInLevel(false)
+	, mbdrawCollider(true)
 {
 }
 CRigidBody::~CRigidBody()
@@ -33,7 +34,6 @@ void CRigidBody::begin()
 		false == mbIsActorInLevel &&
 		nullptr != mActor)
 		Physics::GetInst()->AddActor(GetOwner());
-
 }
 void CRigidBody::tick()
 {
@@ -45,15 +45,31 @@ void CRigidBody::finaltick()
 		AddGravity();
 	}
 
+	if (mbAppliedPhysics && mbdrawCollider)
+	{
+		if (mPhysicsInfo.eGeomType == GEOMETRY_TYPE::Box)
+		{
+			DrawDebugCube(GetOwner()->Transform()->GetWorldPos(), mPhysicsInfo.size*2, Vec4(0.7f, 0.0f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+		}
+		else if (mPhysicsInfo.eGeomType == GEOMETRY_TYPE::Sphere)
+		{
+			DrawDebugSphere(GetOwner()->Transform()->GetWorldPos(), mPhysicsInfo.size.x, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+		}
+	}
+
 	if (true == mbAppliedPhysics && ACTOR_TYPE::Static == mPhysicsInfo.eActorType)
 		return;
-
 	else
 	{
 		CTransform* tr = (CTransform*)GetOwner()->GetComponent(COMPONENT_TYPE::TRANSFORM);
 		tr->Move(mVelocity);
 	}
-		GetOwner()->Transform()->Move(mVelocity);
+
+	GetOwner()->Transform()->Move(mVelocity);
+
+	
+
+
 }
 void CRigidBody::Destroy()
 {
@@ -347,6 +363,13 @@ void CRigidBody::AddForce(const Vector3& _force)
 		physx::PxForceMode::eFORCE
 	);
 }
+
+void CRigidBody::Test()
+{
+	//mRigidActor->
+	//mActor->
+}
+
 void CRigidBody::CreateBoxGeometry()
 {
 	mPhysicsInfo.pGeometries = new Geometries(mPhysicsInfo.eGeomType, mPhysicsInfo.size);
@@ -369,7 +392,9 @@ void CRigidBody::CreateGeometry()
 	switch (mPhysicsInfo.eGeomType)
 	{
 	case GEOMETRY_TYPE::Box:
+	{
 		CreateBoxGeometry();
+	}
 		break;
 
 	case GEOMETRY_TYPE::Capsule:
@@ -377,7 +402,9 @@ void CRigidBody::CreateGeometry()
 		break;
 
 	case GEOMETRY_TYPE::Sphere:
+	{
 		CreateSphereGeometry();
+	}
 		break;
 
 	case GEOMETRY_TYPE::Plane:
@@ -415,8 +442,9 @@ void CRigidBody::CreateActor()
 	switch (mPhysicsInfo.eActorType)
 	{
 	case ACTOR_TYPE::Dynamic:
-		mActor = Physics::GetInst()->GetPhysics()->
+		mRigidBody = Physics::GetInst()->GetPhysics()->
 			createRigidDynamic(physx::PxTransform(PxVec3(_x, _y, _z )));
+		mActor = mRigidBody;
 		break;
 
 	case ACTOR_TYPE::Static:
@@ -432,25 +460,32 @@ void CRigidBody::CreateActor()
 	}
 
 	AssertEx(mActor, L"RigidBody::CreateActor() - Actor 생성 실패");
+
+	
+
 }
 void CRigidBody::CreateMaterial()
 {
 	mMaterial = Physics::GetInst()->GetPhysics()->createMaterial(mPhysicsInfo.massProperties.staticFriction,
 		mPhysicsInfo.massProperties.dynamicFriction,
 		mPhysicsInfo.massProperties.restitution);
+	mMaterial->setRestitution(0.f);
 }
 void CRigidBody::InitializeActor()
 {
 	physx::PxRigidActor* pActor = mActor->is<physx::PxRigidActor>();
 	pActor->userData = GetOwner();
 
-	mPhysicsInfo.filterData.word0 = 1 << GetOwner()->GetLayerIndex();
+	int layerIdx = GetOwner()->GetLayerIndex();
+	mPhysicsInfo.filterData.word0 = 1 << layerIdx;
 
 	std::array<UINT, MAX_LAYER> collisionGroup = CCollisionMgr::GetInst()->GetMat();
 
 	for (int i = 0; i < MAX_LAYER; ++i)
 	{
-		if (true == collisionGroup[i])
+		int mask = 0;
+		mask = 1 << i;
+		if((collisionGroup[layerIdx] & mask) != 0)
 			mPhysicsInfo.filterData.word1 |= 1 << i;
 	}
 

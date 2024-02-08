@@ -9,6 +9,7 @@
 #include "CRenderMgr.h"
 #include "ptr.h"
 #include "CResMgr.h"
+#include "CRigidBody.h"
 
 void SpawnGameObject(CGameObject* _NewObject, Vec3 _vWorldPos, int _LayerIdx)
 {
@@ -47,8 +48,6 @@ void DestroyObject(CGameObject* _DeletObject)
 	
 	CEventMgr::GetInst()->AddEvent(evn);
 }
-
-
 
 
 void DrawDebugRect(Vec3 _vWorldPos, Vec2 _vWorldScale, Vec4 _vColor
@@ -111,7 +110,7 @@ void DrawDebugCircle(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool D
 }
 
 
-void DrawDebugCube(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
+void DrawDebugCube(Vec3 _vWorldPos, Vec3 _vSize, Vec4 _vColor
 					, Vec3 _vRotation, float _fTime, bool DepthTest)
 {
 	tDebugShapeInfo info = {};
@@ -120,7 +119,7 @@ void DrawDebugCube(Vec3 _vWorldPos, float _fRadius, Vec4 _vColor
 	info.eShape = SHAPE_TYPE::CUBE;
 	info.fMaxTime = _fTime;
 	info.vWorldPos = _vWorldPos;
-	info.vWorldScale = Vec3(_fRadius, _fRadius, 1.f);
+	info.vWorldScale = Vec3(_vSize.x, _vSize.y, _vSize.z);
 	info.vWorldRotation = _vRotation;
 	info.vColor = _vColor;
 	info.bDepthTest = DepthTest;

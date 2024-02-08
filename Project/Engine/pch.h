@@ -15,6 +15,8 @@
 
 
 #include "global.h"
+#include <PhysX/PxPhysicsAPI.h>
+#include "SimpleMath.h"
 
 
 #endif //PCH_H

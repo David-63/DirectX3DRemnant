@@ -3,7 +3,7 @@
 #include "global.h"
 #include "define.h"
 #include "CGameObject.h"
-//#include "ContactCallback.h"
+#include "CColCallBack.h"
 #include "CRigidBody.h"
 #include "CTimeMgr.h"
 
@@ -45,16 +45,17 @@ void Physics::init()
 	mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, PxTolerancesScale(), false, mPvd);
 
 	mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
-	//mCallback = new ContactCallback;
+	mCallback = new CColCallBack;
 
 	PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
 	sceneDesc.gravity = PxVec3(mGravity.x, mGravity.y, mGravity.z);
 	sceneDesc.cpuDispatcher = mCpuDispatcher;
 	sceneDesc.filterShader = PlayerFilterShader;
-	//sceneDesc.simulationEventCallback = mCallback;
+	sceneDesc.simulationEventCallback = mCallback;
 
 	mScene = mPhysics->createScene(sceneDesc);
 	mSceneClient = mScene->getScenePvdClient();
+	
 
 	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
 	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);

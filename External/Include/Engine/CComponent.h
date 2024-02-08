@@ -43,6 +43,7 @@ public:
     GET_OTHER_COMPONENT(Animator3D);
     GET_OTHER_COMPONENT(LandScape);
     GET_OTHER_COMPONENT(RigidBody);
+    GET_OTHER_COMPONENT(Collider3D);
 
 public:
     CComponent(COMPONENT_TYPE _Type);

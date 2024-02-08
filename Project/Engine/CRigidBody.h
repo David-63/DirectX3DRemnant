@@ -38,6 +38,7 @@ public:
 	bool IsAppliedPhysics();
 
 	physx::PxActor* GetActor() { return mActor; }
+	physx::PxRigidActor* GetRigidActor() { return mRigidActor; }
 
 	template<typename T>
 	inline T* GetActor() const
@@ -84,6 +85,10 @@ public:
 
 	void AddForce(const Vector3& _force);
 
+	void SetMass(float _mass) { if (mRigidBody) mRigidBody->setMass(_mass); }
+	void SetRestitution(float _val) { if (mMaterial) mMaterial->setRestitution(_val); }
+	void Test();
+
 private:
 	void CreateBoxGeometry();
 	void CreateCapsuleGeometry();
@@ -101,6 +106,8 @@ private:
 	EnumFlags<FreezeRotationFlag, uint16_t> mFreezeRotationFlag;
 	tPhysicsInfo mPhysicsInfo;
 
+	physx::PxRigidBody* mRigidBody;
+	physx::PxRigidActor* mRigidActor;
 	physx::PxActor* mActor;
 	physx::PxShape* mShape;
 	physx::PxMaterial* mMaterial;
@@ -111,5 +118,6 @@ private:
 	bool mbAppliedPhysics;
 	bool mbAppliedGravity;
 	bool mbIsActorInLevel;
+	bool mbdrawCollider;
 };
 

@@ -6,6 +6,9 @@
 #include "CRigidBody.h"
 #include "CTimeMgr.h"
 
+
+using namespace physx;
+
 CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
 	, m_vRelativeScale(Vec3(1.f, 1.f, 1.f))
@@ -26,18 +29,44 @@ CTransform::~CTransform()
 
 void CTransform::finaltick()
 {
-	m_matWorldScale = XMMatrixIdentity();
-	m_matWorldScale = XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
+	Matrix matRot = {};
+	if (IsPhysicsObject())
+	{
+		physx::PxTransform transform = GetOwner()->RigidBody()->GetPhysicsTransform();
 
-	Matrix matRot = XMMatrixIdentity();
-	matRot = XMMatrixRotationX(m_vRelativeRot.x);
-	matRot *= XMMatrixRotationY(m_vRelativeRot.y);
-	matRot *= XMMatrixRotationZ(m_vRelativeRot.z);
+		m_matWorldScale = XMMatrixIdentity();
+		m_matWorldScale = XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
 
-	Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
+		Matrix matTranslation = Matrix::CreateTranslation({ transform.p.x, transform.p.y, transform.p.z });
+		m_vRelativePos.x = transform.p.x;
+		m_vRelativePos.y = transform.p.y;
+		m_vRelativePos.z = transform.p.z;
+
+		matRot = Matrix::CreateFromQuaternion({ transform.q.x, transform.q.y, transform.q.z, transform.q.w });
+		m_vRelativeRot.x = atan2f(matRot._32, matRot._33);
+		m_vRelativeRot.y = atan2f(-matRot._31, sqrtf(matRot._32 * matRot._32 + matRot._33 * matRot._33));
+		m_vRelativeRot.z = atan2f(matRot._21, matRot._11);
+		
+		//auto quat = Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(m_vRelativeRot.y), XMConvertToRadians(m_vRelativeRot.x), XMConvertToRadians(m_vRelativeRot.z));
+		//matRot = Matrix::CreateFromQuaternion(quat);
+
+		m_matWorld = m_matWorldScale * matRot * matTranslation;
+	}
+	else
+	{
+		m_matWorldScale = XMMatrixIdentity();
+		m_matWorldScale = XMMatrixScaling(m_vRelativeScale.x, m_vRelativeScale.y, m_vRelativeScale.z);
+
+		matRot = XMMatrixIdentity();
+		matRot = XMMatrixRotationX(m_vRelativeRot.x);
+		matRot *= XMMatrixRotationY(m_vRelativeRot.y);
+		matRot *= XMMatrixRotationZ(m_vRelativeRot.z);
+
+		Matrix matTranslation = XMMatrixTranslation(m_vRelativePos.x, m_vRelativePos.y, m_vRelativePos.z);
 
 
-	m_matWorld = m_matWorldScale * matRot * matTranslation;
+		m_matWorld = m_matWorldScale * matRot * matTranslation;
+	}
 
 	Vec3 vDefaultDir[3] = {
 		  Vec3(1.f, 0.f, 0.f)
@@ -159,4 +188,39 @@ physx::PxVec3 CTransform::GetPhysicsPosition()
 	physx::PxTransform transform = rigidBody->GetPhysicsTransform();
 	physx::PxVec3 physxPos = transform.p;
 	return physxPos;
+}
+
+void CTransform::SetRelativePos(Vec3 _vPos)
+{
+	m_vRelativePos = _vPos;
+
+	if (IsPhysicsObject())
+	{
+		PxTransform tr = GetOwner()->RigidBody()->GetPhysicsTransform();
+		tr.p.x = m_vRelativePos.x;
+		tr.p.y = m_vRelativePos.y;
+		tr.p.z = m_vRelativePos.z;
+
+		GetOwner()->RigidBody()->SetPhysicsTransform(tr);
+	}
+}
+
+void CTransform::SetRelativeRot(Vec3 _vRot)
+{
+	m_vRelativeRot = _vRot;
+
+	auto quat = Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(m_vRelativeRot.y)
+												 , XMConvertToRadians(m_vRelativeRot.x)
+										         , XMConvertToRadians(m_vRelativeRot.z));
+
+	if (IsPhysicsObject())
+	{
+		PxTransform tr = GetOwner()->RigidBody()->GetPhysicsTransform();
+		tr.q.x = quat.x;
+		tr.q.y = quat.y;
+		tr.q.z = quat.z;
+		tr.q.w = quat.w;
+
+		GetOwner()->RigidBody()->SetPhysicsTransform(tr);
+	}
 }

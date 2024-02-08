@@ -25,13 +25,17 @@
 #include <DirectXPackedVector.h>
 #include <DirectXCollision.h>
 
-#ifndef XM_CONSTEXPR
-#define XM_CONSTEXPR
-#endif
+
 
 #ifdef PX_PHYSICS_API_H
 #include <PhysX/PxPhysicsAPI.h>
 #endif
+
+#ifndef XM_CONSTEXPR
+#define XM_CONSTEXPR
+#endif
+
+
 
 struct ImVec2;
 struct ImVec4;
