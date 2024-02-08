@@ -150,7 +150,7 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
 
 		iFrameCount = max(iFrameCount, (UINT)bone.vecKeyFrame.size());
 
-		pMesh->m_vecBones.push_back(bone);
+		pMesh->m_pVecBones.push_back(bone);
 	}
 
 	vector<tAnimClip*>& vecAnimClip = _loader.GetMTAnimClips();
@@ -169,7 +169,7 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
 		tClip.iFrameLength = tClip.iEndFrame - tClip.iStartFrame;
 		tClip.eMode = vecAnimClip[i]->eMode;
 
-		pMesh->m_vecAnimClip.push_back(tClip);
+		pMesh->m_pVecClip.push_back(tClip);
 	}
 
 	// Animation 이 있는 Mesh 경우 structuredbuffer 만들어두기
@@ -178,18 +178,19 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
 		// BoneOffet 행렬
 		vector<Matrix> vecOffset;
 		vector<tFrameTrans> vecFrameTrans;
-		vecFrameTrans.resize((UINT)pMesh->m_vecBones.size() * iFrameCount);
+		vecFrameTrans.resize((UINT)pMesh->m_pVecBones.size() * iFrameCount);
 
-		for (size_t i = 0; i < pMesh->m_vecBones.size(); ++i)
+		for (size_t boneIdx = 0; boneIdx < pMesh->m_pVecBones.size(); ++boneIdx)
 		{
-			vecOffset.push_back(pMesh->m_vecBones[i].matOffset);
+			vecOffset.push_back(pMesh->m_pVecBones[boneIdx].matOffset);
 
-			for (size_t j = 0; j < pMesh->m_vecBones[i].vecKeyFrame.size(); ++j)
+			for (size_t keyIdx = 0; keyIdx < pMesh->m_pVecBones[boneIdx].vecKeyFrame.size(); ++keyIdx)
 			{
-				vecFrameTrans[(UINT)pMesh->m_vecBones.size() * j + i]
-					= tFrameTrans{ Vec4(pMesh->m_vecBones[i].vecKeyFrame[j].vTranslate, 0.f)
-					, Vec4(pMesh->m_vecBones[i].vecKeyFrame[j].vScale, 0.f)
-					, pMesh->m_vecBones[i].vecKeyFrame[j].qRot };
+				vecFrameTrans[(UINT)pMesh->m_pVecBones.size() * keyIdx + boneIdx]
+					= tFrameTrans{
+					  Vec4(pMesh->m_pVecBones[boneIdx].vecKeyFrame[keyIdx].vTranslate, 0.f)
+					, Vec4(pMesh->m_pVecBones[boneIdx].vecKeyFrame[keyIdx].vScale, 0.f)
+					, pMesh->m_pVecBones[boneIdx].vecKeyFrame[keyIdx].qRot };
 			}
 		}
 
@@ -325,7 +326,7 @@ int CMesh::Save(const wstring& _strRelativePath)
 	SaveWString(GetKey(), pFile);
 	SaveWString(GetRelativePath(), pFile);
 
-	// 정점 데이터 저장				
+	// 정점 데이터 저장
 	int iByteSize = m_tVBDesc.ByteWidth;
 	fwrite(&iByteSize, sizeof(int), 1, pFile);
 	fwrite(m_pVtxSys, iByteSize, 1, pFile);
@@ -344,38 +345,38 @@ int CMesh::Save(const wstring& _strRelativePath)
 	}
 
 	// Animation3D 정보
-	UINT iCount = (UINT)m_vecAnimClip.size();
+	UINT iCount = (UINT)m_pVecClip.size();
 	fwrite(&iCount, sizeof(int), 1, pFile);
 	for (UINT i = 0; i < iCount; ++i)
 	{
-		SaveWString(m_vecAnimClip[i].strAnimName, pFile);
-		fwrite(&m_vecAnimClip[i].dStartTime, sizeof(double), 1, pFile);
-		fwrite(&m_vecAnimClip[i].dEndTime, sizeof(double), 1, pFile);
-		fwrite(&m_vecAnimClip[i].dTimeLength, sizeof(double), 1, pFile);
-		fwrite(&m_vecAnimClip[i].eMode, sizeof(int), 1, pFile);
-		fwrite(&m_vecAnimClip[i].fUpdateTime, sizeof(float), 1, pFile);
-		fwrite(&m_vecAnimClip[i].iStartFrame, sizeof(int), 1, pFile);
-		fwrite(&m_vecAnimClip[i].iEndFrame, sizeof(int), 1, pFile);
-		fwrite(&m_vecAnimClip[i].iFrameLength, sizeof(int), 1, pFile);
+		SaveWString(m_pVecClip[i].strAnimName, pFile);
+		fwrite(&m_pVecClip[i].dStartTime, sizeof(double), 1, pFile);
+		fwrite(&m_pVecClip[i].dEndTime, sizeof(double), 1, pFile);
+		fwrite(&m_pVecClip[i].dTimeLength, sizeof(double), 1, pFile);
+		fwrite(&m_pVecClip[i].eMode, sizeof(int), 1, pFile);
+		fwrite(&m_pVecClip[i].fUpdateTime, sizeof(float), 1, pFile);
+		fwrite(&m_pVecClip[i].iStartFrame, sizeof(int), 1, pFile);
+		fwrite(&m_pVecClip[i].iEndFrame, sizeof(int), 1, pFile);
+		fwrite(&m_pVecClip[i].iFrameLength, sizeof(int), 1, pFile);
 	}
 
-	iCount = (UINT)m_vecBones.size();
+	iCount = (UINT)m_pVecBones.size();
 	fwrite(&iCount, sizeof(int), 1, pFile);
 
 	for (UINT i = 0; i < iCount; ++i)
 	{
-		SaveWString(m_vecBones[i].strBoneName, pFile);
-		fwrite(&m_vecBones[i].iDepth, sizeof(int), 1, pFile);
-		fwrite(&m_vecBones[i].iParentIndx, sizeof(int), 1, pFile);
-		fwrite(&m_vecBones[i].matBone, sizeof(Matrix), 1, pFile);
-		fwrite(&m_vecBones[i].matOffset, sizeof(Matrix), 1, pFile);
+		SaveWString(m_pVecBones[i].strBoneName, pFile);
+		fwrite(&m_pVecBones[i].iDepth, sizeof(int), 1, pFile);
+		fwrite(&m_pVecBones[i].iParentIndx, sizeof(int), 1, pFile);
+		fwrite(&m_pVecBones[i].matBone, sizeof(Matrix), 1, pFile);
+		fwrite(&m_pVecBones[i].matOffset, sizeof(Matrix), 1, pFile);
 
-		int iFrameCount = (int)m_vecBones[i].vecKeyFrame.size();
+		int iFrameCount = (int)m_pVecBones[i].vecKeyFrame.size();
 		fwrite(&iFrameCount, sizeof(int), 1, pFile);
 
-		for (int j = 0; j < m_vecBones[i].vecKeyFrame.size(); ++j)
+		for (int j = 0; j < m_pVecBones[i].vecKeyFrame.size(); ++j)
 		{
-			fwrite(&m_vecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
+			fwrite(&m_pVecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
 		}
 	}
 
@@ -462,52 +463,52 @@ int CMesh::Load(const wstring& _strFilePath)
 		fread(&tClip.iEndFrame, sizeof(int), 1, pFile);
 		fread(&tClip.iFrameLength, sizeof(int), 1, pFile);
 
-		m_vecAnimClip.push_back(tClip);
+		m_pVecClip.push_back(tClip);
 	}
 
 	iCount = 0;
 	fread(&iCount, sizeof(int), 1, pFile);
-	m_vecBones.resize(iCount);
+	m_pVecBones.resize(iCount);
 
 	UINT _iFrameCount = 0;
 	for (int i = 0; i < iCount; ++i)
 	{
-		LoadWString(m_vecBones[i].strBoneName, pFile);
-		fread(&m_vecBones[i].iDepth, sizeof(int), 1, pFile);
-		fread(&m_vecBones[i].iParentIndx, sizeof(int), 1, pFile);
-		fread(&m_vecBones[i].matBone, sizeof(Matrix), 1, pFile);
-		fread(&m_vecBones[i].matOffset, sizeof(Matrix), 1, pFile);
+		LoadWString(m_pVecBones[i].strBoneName, pFile);
+		fread(&m_pVecBones[i].iDepth, sizeof(int), 1, pFile);
+		fread(&m_pVecBones[i].iParentIndx, sizeof(int), 1, pFile);
+		fread(&m_pVecBones[i].matBone, sizeof(Matrix), 1, pFile);
+		fread(&m_pVecBones[i].matOffset, sizeof(Matrix), 1, pFile);
 
 		UINT iFrameCount = 0;
 		fread(&iFrameCount, sizeof(int), 1, pFile);
-		m_vecBones[i].vecKeyFrame.resize(iFrameCount);
+		m_pVecBones[i].vecKeyFrame.resize(iFrameCount);
 		_iFrameCount = max(_iFrameCount, iFrameCount);
 		for (UINT j = 0; j < iFrameCount; ++j)
 		{
-			fread(&m_vecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
+			fread(&m_pVecBones[i].vecKeyFrame[j], sizeof(tMTKeyFrame), 1, pFile);
 		}
 	}
 
 	// Animation 이 있는 Mesh 경우 Bone StructuredBuffer 만들기
-	if (m_vecAnimClip.size() > 0 && m_vecBones.size() > 0)
+	if (m_pVecClip.size() > 0 && m_pVecBones.size() > 0)
 	{
 		wstring strBone = GetName();
 
 		// BoneOffet 행렬
 		vector<Matrix> vecOffset;
 		vector<tFrameTrans> vecFrameTrans;
-		vecFrameTrans.resize((UINT)m_vecBones.size() * _iFrameCount);
+		vecFrameTrans.resize((UINT)m_pVecBones.size() * _iFrameCount);
 
-		for (size_t i = 0; i < m_vecBones.size(); ++i)
+		for (size_t i = 0; i < m_pVecBones.size(); ++i)
 		{
-			vecOffset.push_back(m_vecBones[i].matOffset);
+			vecOffset.push_back(m_pVecBones[i].matOffset);
 
-			for (size_t j = 0; j < m_vecBones[i].vecKeyFrame.size(); ++j)
+			for (size_t j = 0; j < m_pVecBones[i].vecKeyFrame.size(); ++j)
 			{
-				vecFrameTrans[(UINT)m_vecBones.size() * j + i]
-					= tFrameTrans{ Vec4(m_vecBones[i].vecKeyFrame[j].vTranslate, 0.f)
-					, Vec4(m_vecBones[i].vecKeyFrame[j].vScale, 0.f)
-					, Vec4(m_vecBones[i].vecKeyFrame[j].qRot) };
+				vecFrameTrans[(UINT)m_pVecBones.size() * j + i]
+					= tFrameTrans{ Vec4(m_pVecBones[i].vecKeyFrame[j].vTranslate, 0.f)
+					, Vec4(m_pVecBones[i].vecKeyFrame[j].vScale, 0.f)
+					, Vec4(m_pVecBones[i].vecKeyFrame[j].qRot) };
 			}
 		}
 

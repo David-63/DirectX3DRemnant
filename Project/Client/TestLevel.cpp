@@ -42,7 +42,7 @@ void CreateTestLevel()
 	CCollisionMgr::GetInst()->SetColLayer(5, 5);
 
 	// camera
-	{
+	
 		// Main Camera Object 생성
 		CGameObject* pMainCam = new CGameObject;
 		pMainCam->SetName(L"MainCamera");
@@ -50,7 +50,11 @@ void CreateTestLevel()
 		pMainCam->AddComponent(new CTransform);
 		pMainCam->AddComponent(new CCamera);
 		pMainCam->AddComponent(new CCameraMoveScript);
-
+		
+		/*
+		// 숄더뷰용
+		pMainCam->AddComponent(new CShoulderViewScript);
+		CShoulderViewScript* pCamMoveScript = pMainCam->GetScript<CShoulderViewScript>(); */
 
 		pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 		pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
@@ -70,7 +74,11 @@ void CreateTestLevel()
 		pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 		pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
 		SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
-	}
+
+
+	
+
+
 	// SkyBox 추가
 	{
 		CGameObject* pSkyBox = new CGameObject;
@@ -111,7 +119,7 @@ void CreateTestLevel()
 		
 		// 인스턴싱 테스트
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
-
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		pObj = pMeshData->Instantiate();
 		pObj->AddComponent(new CTestScript());
@@ -139,6 +147,9 @@ void CreateTestLevel()
 
 		SpawnGameObject(pObj, Vec3(0.f, 100.f, 0.f), 2);
 
+		// pCamMoveScript->SetCamTarget(pObj); //숄더뷰 용
+
+		
 		//for (int i = 0; i < 10; ++i)
 		//{
 		//	pObj = pMeshData->Instantiate();

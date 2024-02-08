@@ -10,11 +10,14 @@
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{78d2676d-e9d6-47ca-8d90-52e8d457d264}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Cam">
+      <UniqueIdentifier>{fd09dc36-c00e-45bb-8be0-75c286d9a8bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Test">
+      <UniqueIdentifier>{ea948113-95ce-4848-908a-1852e7aa190c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CCameraMoveScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="CMissileScript.h">
       <Filter>Script</Filter>
     </ClInclude>
@@ -36,17 +39,23 @@
     <ClInclude Include="CGravityScript.h">
       <Filter>Script</Filter>
     </ClInclude>
-    <ClInclude Include="CTestScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="CPlanetScript.h">
       <Filter>Script</Filter>
     </ClInclude>
+    <ClInclude Include="CCameraMoveScript.h">
+      <Filter>Script\Cam</Filter>
+    </ClInclude>
+    <ClInclude Include="CShoulderViewScript.h">
+      <Filter>Script\Cam</Filter>
+    </ClInclude>
+    <ClInclude Include="CCharacterMoveScript.h">
+      <Filter>Script\Test</Filter>
+    </ClInclude>
+    <ClInclude Include="CTestScript.h">
+      <Filter>Script\Test</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CCameraMoveScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="CMissileScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
@@ -68,11 +77,20 @@
     <ClCompile Include="CGravityScript.cpp">
       <Filter>Script</Filter>
     </ClCompile>
-    <ClCompile Include="CTestScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="CPlanetScript.cpp">
       <Filter>Script</Filter>
+    </ClCompile>
+    <ClCompile Include="CCameraMoveScript.cpp">
+      <Filter>Script\Cam</Filter>
+    </ClCompile>
+    <ClCompile Include="CShoulderViewScript.cpp">
+      <Filter>Script\Cam</Filter>
+    </ClCompile>
+    <ClCompile Include="CCharacterMoveScript.cpp">
+      <Filter>Script\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="CTestScript.cpp">
+      <Filter>Script\Test</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
