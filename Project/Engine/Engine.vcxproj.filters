@@ -175,14 +175,8 @@
     <ClInclude Include="CAnimation3DShader.h">
       <Filter>Default\Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
     </ClInclude>
-    <ClInclude Include="CAnim3D.h">
-      <Filter>Default\Source\06. Component\7. Animator3D</Filter>
-    </ClInclude>
     <ClInclude Include="CComponent.h">
       <Filter>Default\Source\06. Component</Filter>
-    </ClInclude>
-    <ClInclude Include="CAnimation.h">
-      <Filter>Default\Source\07. Resource\8. Animation</Filter>
     </ClInclude>
     <ClInclude Include="CLandScape.h">
       <Filter>Default\Source\06. Component\RenderComponent\6. Landscape</Filter>
@@ -216,6 +210,9 @@
     </ClInclude>
     <ClInclude Include="CCollider3D.h">
       <Filter>Default\Source\06. Component\9. Collider3D</Filter>
+    </ClInclude>
+    <ClInclude Include="CAnimClip.h">
+      <Filter>Default\Source\07. Resource\8. AnimClip</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -384,12 +381,6 @@
     <ClCompile Include="CAnimation3DShader.cpp">
       <Filter>Default\Source\08. ShaderCode\Compute\AnimationUpdate</Filter>
     </ClCompile>
-    <ClCompile Include="CAnim3D.cpp">
-      <Filter>Default\Source\06. Component\7. Animator3D</Filter>
-    </ClCompile>
-    <ClCompile Include="CAnimation.cpp">
-      <Filter>Default\Source\07. Resource\8. Animation</Filter>
-    </ClCompile>
     <ClCompile Include="CLandScape.cpp">
       <Filter>Default\Source\06. Component\RenderComponent\6. Landscape</Filter>
     </ClCompile>
@@ -422,6 +413,9 @@
     </ClCompile>
     <ClCompile Include="CCollider3D.cpp">
       <Filter>Default\Source\06. Component\9. Collider3D</Filter>
+    </ClCompile>
+    <ClCompile Include="CAnimClip.cpp">
+      <Filter>Default\Source\07. Resource\8. AnimClip</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -632,7 +626,7 @@
     <Filter Include="Default\Source\07. Resource\7. MeshData">
       <UniqueIdentifier>{f46fc02d-bcf0-41ed-b987-fb864663f43f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Default\Source\07. Resource\8. Animation">
+    <Filter Include="Default\Source\07. Resource\8. AnimClip">
       <UniqueIdentifier>{31f1874e-bc67-4112-a438-a1ec4cc0945d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
