@@ -26,16 +26,6 @@ class CAnimClip : public CRes
 private:
     CAnimator3D*                m_Owner;
     Ptr<CMesh>                  m_originMesh;
-    // mesh로부터 가져온 boneData
-    //vector<tMTAnimClip>         m_pVecClip;
-    //vector<tMTBone>             m_pVecBones;
-    //CStructuredBuffer*          m_BoneOffsetBuffer;     // 뼈 기본 위치              // mesh 로부터 가져와서 사용중
-    //CStructuredBuffer*          m_FrameDataBuffer;      // 프레임별 뼈 이동위치       // mesh 로부터 가져와서 사용중
-
-    bool						m_bFinalMatUpdate;      // 업데이트 체크용
-    CStructuredBuffer*          m_pBoneFinalMatBuffer;  // CS에서 업데이트 되는 최종 뼈 행렬
-
-
 
     // 애니메이션 정보
     string                      m_AnimName;             // Gui에 출력하는 용도
@@ -52,13 +42,9 @@ private:
     bool                        m_isRun;
     bool                        m_Finish;
 
-    vector<Matrix>				m_vecFinalBoneMat;      // 안쓰지만, 혹시 몰라서 냅둠
 
 public:
     int finaltick();
-    void UpdateData();
-    void ClearData();
-    void check_mesh(Ptr<CMesh> _pMesh);
 
     // 애니메이터에서 사용하는 함수
 public:
@@ -100,13 +86,8 @@ public:
     const float& GetCurTime() { return m_AnimUpdateTime[m_AnimData.AnimClipIdx]; }
 
 public:
-    CStructuredBuffer* GetFinalBoneMat() { return m_pBoneFinalMatBuffer; }
-public:
     int Save(const wstring& _strRelativePath);
     int Load(const wstring& _strFilePath);
-
-    void SaveToLevelFile(FILE* _File);
-    void LoadFromLevelFile(FILE* _File);
 
 
     CLONE(CAnimClip);

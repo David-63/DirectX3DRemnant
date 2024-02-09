@@ -93,37 +93,23 @@ void CreateTestLevel()
 	// ============
 	// FBX Loading
 	// ============	
+	vector<CGameObject*> debugObj;
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
 		
 		// 인스턴싱 테스트
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		pObj = pMeshData->Instantiate();
-		pObj->AddComponent(new CTestScript());
-		
-		pObj->SetName(L"Monster");
-		pObj->Transform()->SetDebugSphereUse(true);
-		SpawnGameObject(pObj, Vec3(50.f, 200.f, 500.f), 0);
-		
-		//for (int i = 0; i < 10; ++i)
-		//{
-		//	pObj = pMeshData->Instantiate();
-		//	pObj->SetName(L"Monster");
-		//	pObj->Transform()->SetDebugSphereUse(true);
-		//	SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
-		//}
-		//
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		//pObj = pMeshData->Instantiate();
-		//pObj->SetName(L"Monster");
-		//pObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
-
-		//SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
+		for (int i = 0; i < 10; ++i)
+		{
+			pObj = pMeshData->Instantiate();
+			pObj->SetName(L"FBXobj");
+			pObj->Transform()->SetDebugSphereUse(true);
+			SpawnGameObject(pObj, Vec3((i + 1) * 275.f, 200.f, 500.f), 0);
+			debugObj.push_back(pObj);
+		}
 	}
 
 	// LandScape Object
