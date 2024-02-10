@@ -313,5 +313,82 @@ struct tGlobal
 
 extern tGlobal GlobalData;
 
+struct tMassProperties
+{
+	tMassProperties(float _staticFriction = 0.f, float _dynamicFriction = 0.f, float _restitution = 0.603f)
+		: staticFriction(_staticFriction)
+		, dynamicFriction(_dynamicFriction)
+		, restitution(_restitution)
+	{ }
 
+	float staticFriction;
+	float dynamicFriction;
+	float restitution;
+};
+
+struct Geometries
+{
+	Geometries(GEOMETRY_TYPE _geometryType, Vector3 vBoxHalfSize)
+		: eGeomType(GEOMETRY_TYPE::Box)
+	{
+		if (GEOMETRY_TYPE::Box == _geometryType)
+		{
+			boxGeom = physx::PxBoxGeometry(physx::PxVec3(vBoxHalfSize.x, vBoxHalfSize.y, vBoxHalfSize.z));
+		}
+	}
+
+	Geometries(GEOMETRY_TYPE _geometryType, float fRadius, float fHalfHeight)
+		: eGeomType(GEOMETRY_TYPE::Capsule)
+	{
+		if (GEOMETRY_TYPE::Capsule == _geometryType)
+		{
+			capsuleGeom = physx::PxCapsuleGeometry(fRadius, fHalfHeight);
+		}
+	}
+
+	Geometries(GEOMETRY_TYPE _geometryType, float fRadius)
+		: eGeomType(GEOMETRY_TYPE::Sphere)
+	{
+		if (GEOMETRY_TYPE::Sphere == _geometryType)
+		{
+			sphereGeom = physx::PxSphereGeometry(fRadius);
+		}
+	}
+
+	Geometries(GEOMETRY_TYPE _geometryType)
+		: eGeomType(GEOMETRY_TYPE::Plane)
+	{
+		// RigidStatic¿œ ãö,
+		if (GEOMETRY_TYPE::Plane == _geometryType)
+		{
+			planeGeom = physx::PxPlaneGeometry();
+		}
+	}
+
+	physx::PxBoxGeometry boxGeom;
+	physx::PxCapsuleGeometry capsuleGeom;
+	physx::PxPlaneGeometry planeGeom;
+	physx::PxSphereGeometry sphereGeom;
+	GEOMETRY_TYPE eGeomType;
+};
+
+struct tPhysicsInfo
+{
+	tPhysicsInfo()
+		: eActorType(ACTOR_TYPE::Static)
+		, eGeomType(GEOMETRY_TYPE::Box)
+		, size(1.f, 1.f, 1.f)
+		, massProperties(tMassProperties())
+		, pGeometries(nullptr)
+		, filterData{}
+	{
+	}
+
+	ACTOR_TYPE eActorType;
+	GEOMETRY_TYPE eGeomType;
+	Vector3 size;
+	tMassProperties massProperties;
+	Geometries* pGeometries;
+	physx::PxFilterData filterData;
+};
 

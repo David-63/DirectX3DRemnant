@@ -14,7 +14,7 @@ private:
     bool                    m_LevelChanged;
 
 public:
-    void AddEvent(const tEvent& _evn) { m_vecEvent.push_back(_evn); }
+    void AddEvent(const tEvent& _evn); //{ m_vecEvent.push_back(_evn); }
     bool IsLevelChanged() { return m_LevelChanged; }
 
 private:
@@ -24,3 +24,7 @@ public:
     void tick();
 };
 
+struct less_than_value
+{
+    bool operator() (const tEvent& s1, const tEvent& s2) { return (s1.Type < s2.Type); }
+};

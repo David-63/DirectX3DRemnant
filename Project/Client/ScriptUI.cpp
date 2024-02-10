@@ -41,24 +41,25 @@ int ScriptUI::render_update()
 	
 	ImGui::Text("Parameter");
 
+
 	for (size_t i = 0; i < vecScriptParam.size(); ++i)
 	{
 		switch (vecScriptParam[i].eParam)
 		{
 		case SCRIPT_PARAM::INT:
-			ParamUI::Param_Int(vecScriptParam[i].strDesc, (int*)vecScriptParam[i].pData);
+			ParamUI::Param_Int(vecScriptParam[i].strDesc, (int*)vecScriptParam[i].pData, true);
 			break;
 		case SCRIPT_PARAM::FLOAT:
-			ParamUI::Param_Float(vecScriptParam[i].strDesc, (float*)vecScriptParam[i].pData);
+			ParamUI::Param_Float(vecScriptParam[i].strDesc, (float*)vecScriptParam[i].pData, true);
 			break;
 		case SCRIPT_PARAM::VEC2:
-			ParamUI::Param_Vec2(vecScriptParam[i].strDesc, (Vec2*)vecScriptParam[i].pData);
+			ParamUI::Param_Vec2(vecScriptParam[i].strDesc, (Vec2*)vecScriptParam[i].pData, true);
 			break;
 		case SCRIPT_PARAM::VEC3:
-			ParamUI::Param_Vec3(vecScriptParam[i].strDesc, (Vec3*)vecScriptParam[i].pData);
+			ParamUI::Param_Vec3(vecScriptParam[i].strDesc, (Vec3*)vecScriptParam[i].pData, true);
 			break;
 		case SCRIPT_PARAM::VEC4:
-			ParamUI::Param_Vec4(vecScriptParam[i].strDesc, (Vec4*)vecScriptParam[i].pData);
+			ParamUI::Param_Vec4(vecScriptParam[i].strDesc, (Vec4*)vecScriptParam[i].pData, true);
 			break;
 		default:
 			break;

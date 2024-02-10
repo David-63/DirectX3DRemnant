@@ -23,7 +23,6 @@ using namespace std::experimental;
 using namespace std::experimental::filesystem;
 
 
-
 #include <wrl.h>
 using namespace Microsoft::WRL;
 
@@ -98,3 +97,4 @@ static void AssertEx(bool _expression, const std::wstring& _message)
 	MessageBoxW(NULL, _message.c_str(), L"Assert", MB_OK);
 	assert(_expression);
 }
+

@@ -3,8 +3,8 @@
 #include "global.h"
 #include "define.h"
 #include "CGameObject.h"
-//#include "ContactCallback.h"
-//#include "Com_RigidBody.h"
+#include "CColCallBack.h"
+#include "CRigidBody.h"
 #include "CTimeMgr.h"
 
 
@@ -34,7 +34,7 @@ Physics::~Physics()
 	mTransfort->release();
 	mFoundation->release();
 }
-void Physics::Initialize()
+void Physics::init()
 {
 	mFoundation = PxCreateFoundation(PX_PHYSICS_VERSION, mAllocCallback, mErrorCallback);
 
@@ -45,16 +45,17 @@ void Physics::Initialize()
 	mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation, PxTolerancesScale(), false, mPvd);
 
 	mCpuDispatcher = PxDefaultCpuDispatcherCreate(1);
-	//mCallback = new ContactCallback;
+	mCallback = new CColCallBack;
 
 	PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
-	sceneDesc.gravity = mGravity;
+	sceneDesc.gravity = PxVec3(mGravity.x, mGravity.y, mGravity.z);
 	sceneDesc.cpuDispatcher = mCpuDispatcher;
 	sceneDesc.filterShader = PlayerFilterShader;
-	//sceneDesc.simulationEventCallback = mCallback;
+	sceneDesc.simulationEventCallback = mCallback;
 
 	mScene = mPhysics->createScene(sceneDesc);
 	mSceneClient = mScene->getScenePvdClient();
+	
 
 	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
 	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
@@ -62,29 +63,29 @@ void Physics::Initialize()
 
 
 }
-void Physics::Update()
+void Physics::tick()
 {
 	mScene->simulate(CTimeMgr::GetInst()->GetDeltaTime());
 	mScene->fetchResults(true);
 
 
 }
-void Physics::Render()
+void Physics::render()
 {
 }
-void Physics::AddActor(GameObject* _gameObject)
+void Physics::AddActor(CGameObject* _gameObject)
 {
 	AssertEx(_gameObject, L"Physics::AddActor() - GameObject is nullptr");
-	//AssertEx(_gameObject->GetComponent<Com_RigidBody>(), L"Physics::AddActor() - RigidBody is nullptr");
-	//AssertEx(_gameObject->GetComponent<Com_RigidBody>()->IsAppliedPhysics(), L"Physics::AddActor() - Is not applied physics");
-	//mScene->addActor(*_gameObject->GetComponent<Com_RigidBody>()->GetActor());
+	AssertEx(_gameObject->RigidBody(), L"Physics::AddActor() - RigidBody is nullptr");
+	AssertEx(_gameObject->RigidBody()->IsAppliedPhysics(), L"Physics::AddActor() - Is not applied physics");
+	mScene->addActor(*_gameObject->RigidBody()->GetActor());
 }
-void Physics::RemoveActor(GameObject* _gameObject)
+void Physics::RemoveActor(CGameObject* _gameObject)
 {
 	AssertEx(_gameObject, L"Physics::RemoveActor() - GameObject is nullptr");
-	//AssertEx(_gameObject->GetComponent<Com_RigidBody>(), L"Physics::RemoveActor() - RigidBody is nullptr");
-	//AssertEx(_gameObject->GetComponent<Com_RigidBody>()->IsAppliedPhysics(), L"Physics::RemoveActor() - Is not applied physics");
-	//mScene->removeActor(*_gameObject->GetComponent<Com_RigidBody>()->GetActor());
+	AssertEx(_gameObject->RigidBody(), L"Physics::RemoveActor() - RigidBody is nullptr");
+	AssertEx(_gameObject->RigidBody()->IsAppliedPhysics(), L"Physics::RemoveActor() - Is not applied physics");
+	mScene->removeActor(*_gameObject->RigidBody()->GetActor());
 }
 PxFilterFlags Physics::PlayerFilterShader(PxFilterObjectAttributes _attributes0, PxFilterData _filterData0, PxFilterObjectAttributes _attributes1, PxFilterData _filterData1, PxPairFlags& _pairFlags, const void* _constantBlock, PxU32 _constantBlockSize)
 {

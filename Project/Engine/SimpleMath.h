@@ -25,13 +25,17 @@
 #include <DirectXPackedVector.h>
 #include <DirectXCollision.h>
 
-#ifndef XM_CONSTEXPR
-#define XM_CONSTEXPR
-#endif
+
 
 #ifdef PX_PHYSICS_API_H
 #include <PhysX/PxPhysicsAPI.h>
 #endif
+
+#ifndef XM_CONSTEXPR
+#define XM_CONSTEXPR
+#endif
+
+
 
 struct ImVec2;
 struct ImVec4;
@@ -293,6 +297,14 @@ namespace DirectX
             {
                 return physx::PxVec3(x, y, z);
             }
+
+            physx::PxVec3& operator=(const Vector3& other)
+            {
+                x = other.x;
+                y = other.y;
+                z = other.z;
+            }
+
 #endif
 
             // Unary operators

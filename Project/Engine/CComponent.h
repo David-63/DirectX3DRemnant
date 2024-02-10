@@ -26,6 +26,7 @@ public:
     virtual void finaltick() = 0;
     virtual CComponent* Clone() = 0;
 
+    bool IsPhysicsObject();
 public:
     virtual void SaveToLevelFile(FILE* _File) = 0;
     virtual void LoadFromLevelFile(FILE* _FILE) = 0;
@@ -41,6 +42,8 @@ public:
     GET_OTHER_COMPONENT(Animator2D);
     GET_OTHER_COMPONENT(Animator3D);
     GET_OTHER_COMPONENT(LandScape);
+    GET_OTHER_COMPONENT(RigidBody);
+    GET_OTHER_COMPONENT(Collider3D);
 
 public:
     CComponent(COMPONENT_TYPE _Type);
