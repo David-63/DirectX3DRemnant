@@ -31,7 +31,7 @@ enum class COMPONENT_TYPE
 	// update
 	TRANSFORM,		// 위치, 크기, 회전
 	COLLIDER2D,		// 2차원 충돌
-	//COLLIDER3D,		// 3차원 충돌
+	COLLIDER3D,		// 3차원 충돌
 	ANIMATOR2D,		// Sprite Animation
 	ANIMATOR3D,		// Bone Sknning Animation
 	LIGHT2D,		// 2차원 광원
