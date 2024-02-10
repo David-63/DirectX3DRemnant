@@ -93,7 +93,7 @@ private:
 	// Animation
 	vector<tBone*>					m_vecBone;
 	FbxArray<FbxString*>			m_arrAnimName;
-	vector<tAnimClip*>				m_pVecClip;
+	vector<tAnimClip*>				m_vecAnimClip;
 
 
 public:
@@ -104,7 +104,7 @@ public:
 	int GetContainerCount() { return (int)m_vecContainer.size(); }
 	const tContainer& GetContainer(int _iIdx) { return m_vecContainer[_iIdx]; }
 	vector<tBone*>& GetMTBones() { return m_vecBone; }
-	vector<tAnimClip*>& GetMTAnimClips() { return m_pVecClip; }
+	vector<tAnimClip*>& GetMTAnimClips() { return m_vecAnimClip; }
 
 private:
 	void LoadMeshDataFromNode(FbxNode* _pRoot);

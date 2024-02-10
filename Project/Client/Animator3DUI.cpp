@@ -229,8 +229,7 @@ int Animator3DUI::render_update()
 	ImGui::SameLine();
 	if (ImGui::Button("Stop"))
 	{
-		if (curAnim)
-			curAnim->Stop();
+		GetTarget()->Animator3D()->Stop();
 	}
 	ImGui::SameLine();
 	ImGui::Checkbox("Is Repeat?", &repeat);
