@@ -39,7 +39,6 @@ private:
     float						m_Ratio;                // 두 프레임간 진행도 비율
 
     // 애니메이션 제어 변수
-    bool                        m_isRun;
     bool                        m_Finish;
 
 
@@ -52,11 +51,8 @@ public:
     void Edit(float _begin, float _end);
 
 public: 
-    bool IsRun() { return m_isRun; }
     bool IsFinish() { return m_Finish; }
 
-    void Play() { m_isRun = true; }
-    void Stop() { m_isRun = false; }
     // 리셋은 애니메이션을 초기상태로 돌리지만, 실행시키진 않음
     void Reset() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; m_Finish = false; }
     void TimeClear() { m_AnimUpdateTime[m_AnimData.AnimClipIdx] = 0.f; }

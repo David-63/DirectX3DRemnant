@@ -47,10 +47,68 @@ void CAnimator3D::finaltick()
 {
 	if (nullptr == m_pCurrentAnim)
 		return;
-	animaTick();
 
-	if (m_isBlend)
-		blendTick();
+	if (m_isRun)
+	{
+		animaTick();
+		if (m_isBlend)
+			blendTick();
+	}	
+}
+
+void CAnimator3D::animaTick()
+{
+	// 애니메이션에 있는 이벤트 가져오기
+	Events* events = FindEvents(m_pCurrentAnim->GetKey());
+
+	// 종료 조건
+	if (m_pCurrentAnim->IsFinish())
+	{
+		if (events)
+			events->CompleteEvent();
+		if (m_bRepeat)
+			m_pCurrentAnim->Reset();
+		else
+		{
+			m_pCurrentAnim->TimeClear();
+			m_isRun = false;
+		}
+			
+	}
+
+	// 임의의 클립을 Start / End Time을 0 ~ end로 보정하기
+	// 초 -> Frame 변환 기능
+	UINT frameIndex = m_pCurrentAnim->finaltick();
+	m_isFinalMatUpdate = false;
+
+	if (events)
+	{
+		if (frameIndex >= events->ActionEvents.size())
+			return;
+		// Complete가 아니고, 프레임 중간에 ActionEvent가 있다면 그것을 실행
+		if (frameIndex != -1 && events->ActionEvents[frameIndex].mEvent)
+		{
+			events->ActionEvents[frameIndex].mEvent();
+		}
+	}
+}
+
+void CAnimator3D::blendTick()
+{
+	m_blendUpdateTime += ScaleDT;
+
+	if (m_blendUpdateTime >= m_blendFinishTime)
+	{
+		m_blendUpdateTime = 0.f;
+		m_isBlend = false;
+
+		Events* events;
+		events = FindEvents(m_pCurrentAnim->GetKey());
+		if (events)
+			events->StartEvent();
+	}
+
+	m_blendRatio = m_blendUpdateTime / m_blendFinishTime;
 }
 
 void CAnimator3D::UpdateData()
@@ -140,56 +198,7 @@ void CAnimator3D::ClearData()
 	}
 }
 
-void CAnimator3D::animaTick()
-{
-	// 애니메이션에 있는 이벤트 가져오기
-	Events* events = FindEvents(m_pCurrentAnim->GetKey());
 
-	if (m_pCurrentAnim->IsFinish())
-	{
-		if (events)
-			events->CompleteEvent();
-		if (m_bRepeat)
-			m_pCurrentAnim->Reset();
-		else
-			m_pCurrentAnim->TimeClear();
-	}
-
-	// 임의의 클립을 Start / End Time을 0 ~ end로 보정하기
-	// 초 -> Frame 변환 기능
-	UINT frameIndex = m_pCurrentAnim->finaltick();
-	m_isFinalMatUpdate = false;
-
-
-	if (events)
-	{
-		if (frameIndex >= events->ActionEvents.size())
-			return;
-		// Complete가 아니고, 프레임 중간에 ActionEvent가 있다면 그것을 실행
-		if (frameIndex != -1 && events->ActionEvents[frameIndex].mEvent)
-		{
-			events->ActionEvents[frameIndex].mEvent();
-		}
-	}
-}
-
-void CAnimator3D::blendTick()
-{
-	m_blendUpdateTime += ScaleDT;
-	
-	if (m_blendUpdateTime >= m_blendFinishTime)
-	{
-		m_blendUpdateTime = 0.f;
-		m_isBlend = false;
-
-		Events* events;
-		events = FindEvents(m_pCurrentAnim->GetKey());
-		if (events)
-			events->StartEvent();
-	}
-
-	m_blendRatio = m_blendUpdateTime / m_blendFinishTime;
-}
 
 void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)
 {
@@ -207,7 +216,7 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	_clip->m_Owner = this;
 	m_mapAnim.insert(make_pair(_clip->GetKey(), _clip.Get()));
 	m_pCurrentAnim = _clip.Get();
-	m_pCurrentAnim->Stop();
+	//m_pCurrentAnim->Stop();
 
 	Events* events = FindEvents(_clip->GetKey());
 	if (events)
@@ -237,7 +246,7 @@ void CAnimator3D::CreateAnimClip(wstring _strAnimName, int _clipIdx, float _star
 	pAnim->m_Owner = this;
 	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
 	m_pCurrentAnim = pAnim.Get();
-	m_pCurrentAnim->Stop();
+	//m_pCurrentAnim->Stop();
 
 	Events* events = FindEvents(_strAnimName);
 	if (events)
@@ -272,7 +281,7 @@ void CAnimator3D::NewAnimClip(string _strAnimName, int _clipIdx, float _startTim
 	pAnim->m_Owner = this;
 	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
 	m_pCurrentAnim = pAnim.Get();
-	m_pCurrentAnim->Stop();
+	//m_pCurrentAnim->Stop();
 
 	Events* events = FindEvents(strPath);
 	if (events)
@@ -287,31 +296,41 @@ void CAnimator3D::NewAnimClip(string _strAnimName, int _clipIdx, float _startTim
 
 void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 {
+	m_isRun = true;
+
+	Events* events;
 	// 현재 애님과 이후에 들어올 애님을 비교
 	m_pPrevAnim = m_pCurrentAnim;
 	m_pCurrentAnim = FindAnim(_strName).Get();
-	Events* events;
 
 	// 키값을 비교
 	if (m_pPrevAnim->GetKey() != m_pCurrentAnim->GetKey())
 	{
-		//Blend 진행
+		// =============
+		//Blend 진행 로직
+		// =============
+
+		// 1. 방금까지 재생중인 애님의 현재 프레임을 기록
 		m_prevFrameIdx = m_pPrevAnim->GetCurFrame();
+		// 2. 블렌드 조건 수락
 		m_isBlend = true;
 
-		// 현재 애니메이션의 종료 이벤트 호출 및 초기화
+		// 3. 현재 애니메이션의 종료 이벤트 호출 및 초기화
 		events = FindEvents(m_pPrevAnim->GetKey());
 		if (events)
 			events->EndEvent();
+		// 4. 이전 애님은 초기화 해주기
 		m_pPrevAnim->Reset();
+		//m_pPrevAnim->Stop();
 
-		// 다음 애니메이션을 현재 애니메이션으로 교체
-		m_pCurrentAnim->Play();
+		// 5. 다음 애니메이션 진행
+		
+		//m_pCurrentAnim->Play();
 
-		// 애니메이션 시작... 조건은 나중에 하는거로
-		events = FindEvents(m_pCurrentAnim->GetKey());
-		if (events)
-			events->StartEvent();
+		// 6. 애니메이션 시작 이벤트 호출
+		// events = FindEvents(m_pCurrentAnim->GetKey());
+		// if (events)
+		// 	events->StartEvent();
 	}
 	else
 	{
@@ -319,10 +338,10 @@ void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 		if (m_pCurrentAnim->IsFinish())
 		{
 			m_pCurrentAnim->Reset();
-			m_pCurrentAnim->Play();
+			//m_pCurrentAnim->Play();
 		}
-		else
-			m_pCurrentAnim->Play();
+		//else
+		//	m_pCurrentAnim->Play();
 	}
 
 	m_bRepeat = _bRepeat;

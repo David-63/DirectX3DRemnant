@@ -38,6 +38,7 @@ private:
 	map<wstring, Ptr<CAnimClip>>m_mapAnim;  // Animation 목록
 
 	// local value
+	bool                        m_isRun;		// 애님 제어
 	bool						m_bRepeat;		// 반복 체크
 	CAnimClip*					m_pPrevAnim;	// 이전 애님
 	CAnimClip*					m_pCurrentAnim; // 현재 재생중인 애님
@@ -84,6 +85,7 @@ public:
 
 
 	void Play(const wstring& _strName, bool _bRepeat);
+	void Stop() { m_isRun = false; }
 
 	void SetRepeat(bool _isRepeat) { m_bRepeat = _isRepeat; }
 	bool IsRepeat() { return m_bRepeat; }

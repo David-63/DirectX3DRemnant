@@ -41,7 +41,7 @@ void CMeshRender::render()
 			if (nullptr == GetMaterial(idx))
 				continue;
 
-			GetMaterial(idx)->SetAnim3D(true);			
+			GetMaterial(idx)->SetAnim3D(true);
 		}
 	}
 

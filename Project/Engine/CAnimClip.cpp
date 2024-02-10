@@ -8,10 +8,9 @@
 #include "CMeshRender.h"
 
 CAnimClip::CAnimClip(bool _bEngine) : CRes(RES_TYPE::ANIMCLIP, _bEngine)
-	, m_Owner(nullptr)
+	, m_Owner(nullptr), m_Finish(false)
 	, m_iFrameCount(30), m_AnimUpdateTime()
 	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_Ratio(0.f)
-	, m_isRun(false), m_Finish(false)
 { }
 
 CAnimClip::~CAnimClip() { }
@@ -20,9 +19,6 @@ int CAnimClip::finaltick()
 {
 	// Animator가 사라졌으면 멈추기?
 	if (nullptr == m_Owner)
-		return -1;
-	// run 상태가 아니면 멈추기
-	if (!m_isRun)
 		return -1;
 	// 끝난 상태면 멈추기
 	if (m_Finish)
@@ -179,7 +175,6 @@ int CAnimClip::Load(const wstring& _strFilePath)
 
 
 	// 제어 변수
-	m_isRun = false;
 	m_Finish = false;
 	m_iFrameCount = 30;
 	fclose(pFile);
