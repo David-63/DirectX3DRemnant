@@ -5,6 +5,7 @@ class CTestScript :
     public CScript
 {
 private:
+    Vec3 pivot;
 
 public:
     virtual void begin() override;

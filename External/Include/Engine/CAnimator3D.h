@@ -38,12 +38,14 @@ private:
 	map<wstring, Ptr<CAnimClip>>m_mapAnim;  // Animation 목록
 
 	// local value
+	bool                        m_isRun;		// 애님 제어
 	bool						m_bRepeat;		// 반복 체크
 	CAnimClip*					m_pPrevAnim;	// 이전 애님
 	CAnimClip*					m_pCurrentAnim; // 현재 재생중인 애님
 
-	bool						m_isFinalMatUpdate;      // 업데이트 체크용
-	CStructuredBuffer*			m_BoneFinalMatBuffer;  // CS에서 업데이트 되는 최종 뼈 행렬
+	bool						m_isFinalMatUpdate;     // 업데이트 체크용
+	CStructuredBuffer*			m_BoneFinalMatBuffer;	// CS에서 업데이트 되는 최종 뼈 행렬
+	vector<Matrix>				m_vecFinalBoneMat;      // 본 소켓
 
 
 
@@ -63,13 +65,6 @@ public:
 public:
 	void animaTick();
 	void blendTick();
-
-	void animaUpdateData();
-	void blendUpdateData();
-
-	void animaClearData();
-	void blendClearData();
-
 	void check_mesh(Ptr<CMesh> _pMesh);
 
 public:
@@ -90,6 +85,7 @@ public:
 
 
 	void Play(const wstring& _strName, bool _bRepeat);
+	void Stop() { m_isRun = false; }
 
 	void SetRepeat(bool _isRepeat) { m_bRepeat = _isRepeat; }
 	bool IsRepeat() { return m_bRepeat; }
@@ -119,11 +115,7 @@ public:
 	
 
 	// 이거 아마 안쓰는듯?
-	CStructuredBuffer* GetFinalBoneMat()
-	{
-		if (nullptr != m_pCurrentAnim)
-			return m_pCurrentAnim->GetFinalBoneMat();
-	}
+	CStructuredBuffer* GetFinalBoneMat() { return m_BoneFinalMatBuffer; }
 
 	// Anim func
 public:

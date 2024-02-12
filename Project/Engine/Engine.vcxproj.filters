@@ -214,6 +214,9 @@
     <ClInclude Include="CAnimClip.h">
       <Filter>Default\Source\07. Resource\8. AnimClip</Filter>
     </ClInclude>
+    <ClInclude Include="..\Client\TestLevel.h">
+      <Filter>Default</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">

@@ -8,7 +8,7 @@
 CShoulderViewScript::CShoulderViewScript()
 	: CScript((UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT)
 	, m_Target(nullptr)
-	, m_fMouseSensitivity(0.005f)
+	, m_fMouseSensitivity(0.13f)
 	, m_vPitchMinMax(Vec2(-20.f, 40.f)) // y값 원래는 2 
 	, m_vCamPivot{ -51.f, 37.f, 18.f }
 	, m_firstTick(true)
@@ -23,7 +23,6 @@ CShoulderViewScript::CShoulderViewScript()
 	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_vCamPivot.z, "Pivot_X");
 
 	AddScriptParam(SCRIPT_PARAM::VEC2, &m_vPitchMinMax, "PitchMinMax");
-	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_fMouseSensitivity, "MouseSesitivity");
 
 }
 
@@ -86,6 +85,7 @@ void CShoulderViewScript::tick()
 		if (m_bIsMouseRock)
 		{
 
+			CameraPos();
 
 			CameraRot();
 			CharacterRot();
@@ -103,7 +103,7 @@ void CShoulderViewScript::tick()
 
 	// ================
 	ChangeStateFov();
-	CameraPos();
+
 
 
 
@@ -172,50 +172,24 @@ void CShoulderViewScript::MouseCenterLock()
 void CShoulderViewScript::CameraRot()
 {
 
-	// 상대적 이동량을 사용하여 게임 내에서 필요한 처리 수행
-	// 예: 카메라 회전, 캐릭터 이동 등
+	tInt2 mouseDelta = CalcMouseMovement(); // 마우스 움직임의 변화량을 얻습니다.
 
+	// 현재 카메라의 회전 각도를 오일러 각도로 얻습니다.
+	Vec3 currentEuler = Transform()->GetRelativeRot();
 
-	// 회전각 적용한 내 코드
-	Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
-
-	tInt2 tMouseMovement = CalcMouseMovement();
-
-	Vector3 vRot = Vec3(Transform()->GetRelativeRot());
-	vRot.y += tMouseMovement.x * m_fMouseSensitivity; // 유니티기준 yaw
-	vRot.x += tMouseMovement.y * m_fMouseSensitivity;
+	// 마우스 움직임에 따른 회전 각도 변화를 계산합니다.
+	float deltaYaw = XMConvertToRadians(mouseDelta.x * m_fMouseSensitivity);
+	float deltaPitch = XMConvertToRadians(mouseDelta.y * m_fMouseSensitivity); // Y축 반전 처리
 
 	float RadianPitchLimitX = XMConvertToRadians(m_vPitchMinMax.x);
 	float RadianPitchLimitY = XMConvertToRadians(m_vPitchMinMax.y);
-	vRot.x = max(RadianPitchLimitX, min(vRot.x, RadianPitchLimitY));
 
-	Transform()->SetRelativeRot(vRot);
+	// 현재 회전 각도에 마우스 움직임을 반영합니다.
+	Vec3 targetEuler = Vec3(currentEuler.x + deltaPitch, currentEuler.y + deltaYaw, (int)0);
 
+	targetEuler.x = max(RadianPitchLimitX, min(targetEuler.x, RadianPitchLimitY));
 
-
-
-	//// ======== 테스트 중 
-/* 에임 상태일 때 카메라의 이동에 따라 캐릭터 회전
-	// 마우스 움직임을 회전 각도로 변환
-	float yawChange = deltaX * m_fMouseSensitivity;
-	float pitchChange = -deltaY * m_fMouseSensitivity; // DirectX는 Y축이 반대이므로 -를 사용
-
-
-	// 현재 캐릭터의 회전 값 얻기
-	Vec3 currentRotation = m_Target->Transform()->GetRelativeRot();
-
-	// 수평 회전(Yaw) 갱신
-	Vec3 newRotation = currentRotation;
-
-	newRotation.y += yawChange; // 좌우로 캐릭터 움직임
-	newRotation.z += pitchChange; // 상하로 캐릭터 움직임(각도 제한 걸어야할듯)
-	newRotation.x = 0;
-
-	// 캐릭터의 회전 갱신
-	m_Target->Transform()->SetRelativeRot(newRotation); */
-
-
-
+	Transform()->SetRelativeRot(targetEuler);
 
 }
 
@@ -305,7 +279,7 @@ void CShoulderViewScript::ChangeStateFov()
 	float targetFov = (m_eViewState == VIEW_STATE::AIMING) ? m_ModifiedFov : m_OriginFov;
 
 	// 
-	float Transition = 1;
+	float Transition = 80;
 
 	// 현재 FOV를 목표 FOV로 점진적으로 변경
 	m_CurrentFov = Lerp(m_CurrentFov, targetFov, DT * Transition);
