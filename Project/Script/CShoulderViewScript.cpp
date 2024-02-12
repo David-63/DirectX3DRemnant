@@ -86,10 +86,11 @@ void CShoulderViewScript::tick()
 		if (m_bIsMouseRock)
 		{
 
-
+			CameraPos();
 			CameraRot();
 			CharacterRot();
 
+			ChangeStateFov();
 			MouseCenterLock();
 
 		}
@@ -102,8 +103,6 @@ void CShoulderViewScript::tick()
 	// =======================
 
 	// ================
-	ChangeStateFov();
-	CameraPos();
 
 
 
@@ -183,7 +182,7 @@ void CShoulderViewScript::CameraRot()
 
 	Vector3 vRot = Vec3(Transform()->GetRelativeRot());
 	vRot.y += tMouseMovement.x * m_fMouseSensitivity; // 유니티기준 yaw
-	vRot.x += tMouseMovement.y * m_fMouseSensitivity;
+	//vRot.x += tMouseMovement.y * m_fMouseSensitivity;
 
 	float RadianPitchLimitX = XMConvertToRadians(m_vPitchMinMax.x);
 	float RadianPitchLimitY = XMConvertToRadians(m_vPitchMinMax.y);

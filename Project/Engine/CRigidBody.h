@@ -88,6 +88,7 @@ public:
 	void SetMass(float _mass) { if (mRigidBody) mRigidBody->setMass(_mass); }
 	void SetRestitution(float _val) { if (mMaterial) mMaterial->setRestitution(_val); }
 	void Test();
+	physx::PxRigidBody* GetRigidBody() { mActor->is<physx::PxRigidBody>(); }
 
 private:
 	void CreateBoxGeometry();
