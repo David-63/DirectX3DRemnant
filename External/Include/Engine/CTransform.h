@@ -48,6 +48,10 @@ public:
 
     void SetDebugSphereUse(bool _use) { m_DebugSphereUse = _use; }
     float GetSphereRadius() { return m_SphereRadius; }
+
+    XMFLOAT4 EulerToQuat(float x, float y, float z);
+    Vec3 QuatToEuler(const XMFLOAT4& quaternion, Vec3& euler);
+
     void Move(const Vector3& _velocity);
     physx::PxVec3 GetPhysicsPosition();
 

@@ -13,10 +13,7 @@ CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
 	, m_vRelativeScale(Vec3(1.f, 1.f, 1.f))
 	, m_bAbsolute(false)
-	, m_vRelativeDir{
-		  Vec3(1.f, 0.f, 0.f)
-		, Vec3(0.f, 1.f, 0.f)
-		, Vec3(0.f, 0.f, 1.f) }
+	, m_vRelativeDir{ Vec3(1.f, 0.f, 0.f) , Vec3(0.f, 1.f, 0.f) , Vec3(0.f, 0.f, 1.f) }
 	, m_DebugSphereUse(false)
 	, m_SphereRadius(50.f)
 {
@@ -151,6 +148,43 @@ void CTransform::LoadFromLevelFile(FILE* _FILE)
 	fread(&m_bAbsolute, sizeof(bool), 1, _FILE);
 	fread(&m_DebugSphereUse, sizeof(bool), 1, _FILE);
 	fread(&m_SphereRadius, sizeof(float), 1, _FILE);
+}
+
+XMFLOAT4 CTransform::EulerToQuat(float x, float y, float z)
+{
+	// 오일러 각도를 라디안으로 변환합니다 (만약 x, y, z가 이미 라디안 단위라면 이 단계는 생략합니다).
+	float pitch = XMConvertToRadians(x); // X 축 회전 (상하 회전)
+	float yaw = XMConvertToRadians(y);   // Y 축 회전 (좌우 회전)
+	float roll = XMConvertToRadians(z);  // Z 축 회전 (틸트 회전)
+
+	// 쿼터니언 생성
+	XMVECTOR quaternion = XMQuaternionRotationRollPitchYaw(pitch, yaw, roll);
+
+	// 쿼터니언을 XMVECTOR 타입에서 XMFLOAT4 타입으로 변환하여 사용할 수 있습니다.
+	XMFLOAT4 quaternionFloat4;
+	XMStoreFloat4(&quaternionFloat4, quaternion);
+
+	return quaternionFloat4;
+}
+
+Vec3 CTransform::QuatToEuler(const XMFLOAT4& quaternion, Vec3& euler)
+{
+	// 쿼터니언을 XMVECTOR로 변환
+	XMVECTOR quat = XMLoadFloat4(&quaternion);
+
+	// Yaw (Y 축), Pitch (X 축), Roll (Z 축) 계산
+	float yaw, pitch, roll;
+	pitch = atan2(2.0f * (quaternion.w * quaternion.x + quaternion.y * quaternion.z), 1.0f - 2.0f * (quaternion.x * quaternion.x + quaternion.y * quaternion.y));
+	yaw = asin(2.0f * (quaternion.w * quaternion.y - quaternion.z * quaternion.x));
+	roll = atan2(2.0f * (quaternion.w * quaternion.z + quaternion.x * quaternion.y), 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
+
+	// 라디안을 도(degree)로 변환
+	euler.x = XMConvertToDegrees(pitch);
+	euler.y = XMConvertToDegrees(yaw);
+	euler.z = XMConvertToDegrees(roll);
+
+
+	return euler;
 }
 
 void CTransform::Move(const Vector3& _velocity)
