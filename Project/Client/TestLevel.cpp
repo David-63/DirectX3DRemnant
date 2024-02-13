@@ -107,9 +107,9 @@ void CreateTestLevel()
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}
 
-	// ============
-	// FBX Loading
-	// ============	
+	//============
+	//FBX Loading
+	//============	
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;		
@@ -238,21 +238,21 @@ void CreateTestLevel()
 	}*/
 
 	// LandScape Object
-	{
-		CGameObject* pLandScape = new CGameObject;
-		pLandScape->SetName(L"LandScape");
+	//{
+	//	CGameObject* pLandScape = new CGameObject;
+	//	pLandScape->SetName(L"LandScape");
 
-		pLandScape->AddComponent(new CTransform);
-		pLandScape->AddComponent(new CLandScape);
+	//	pLandScape->AddComponent(new CTransform);
+	//	pLandScape->AddComponent(new CLandScape);
 
-		pLandScape->Transform()->SetRelativeScale(Vec3(1000.f, 4000.f, 1000.f));
-		pLandScape->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	//	pLandScape->Transform()->SetRelativeScale(Vec3(1000.f, 4000.f, 1000.f));
+	//	pLandScape->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
 
-		pLandScape->LandScape()->SetFace(64, 64);
-		pLandScape->LandScape()->SetFrustumCheck(false);
-		//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));		
-		SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 4);
-	}
+	//	pLandScape->LandScape()->SetFace(64, 64);
+	//	pLandScape->LandScape()->SetFrustumCheck(false);
+	//	//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));		
+	//	SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 4);
+	//}
 
 	//{
 	//	CGameObject* pGround = new CGameObject;
