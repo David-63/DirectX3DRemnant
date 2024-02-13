@@ -27,7 +27,7 @@ public:
     virtual void render() = 0;
     virtual void render(UINT _iSubset) = 0;
     virtual void render_shadowmap();
-
+    virtual void render_shadowmap(UINT _iSubset);
 public:
     void SetMesh(Ptr<CMesh> _Mesh);
     void SetMaterial(Ptr<CMaterial> _Mtrl, UINT _idx);

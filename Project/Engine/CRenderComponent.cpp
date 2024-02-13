@@ -27,6 +27,19 @@ void CRenderComponent::render_shadowmap()
 	GetMesh()->render(0);
 }
 
+void CRenderComponent::render_shadowmap(UINT _iSubset)
+{
+	// 머티리얼이 여러개인 경우에는 어떻게 그림자 처리를 해줘야하지?
+	if (nullptr == GetMaterial(0) || nullptr == GetMesh())
+		return;
+	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+	Transform()->UpdateData();
+
+	pShadowMapMtrl->UpdateData();
+
+	GetMesh()->render(0);
+}
+
 
 void CRenderComponent::SetMesh(Ptr<CMesh> _Mesh)
 {
