@@ -8,8 +8,10 @@
 #include <Engine\CGameObject.h>
 #include <Engine\components.h>
 #include <Engine\CScript.h>
+#include <Engine\CRigidBody.h>
 
 #include <Script\CScriptMgr.h>
+
 
 
 
@@ -185,8 +187,8 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::COLLIDER2D:
 			Component = new CCollider2D;
 			break;
-		//case COMPONENT_TYPE::COLLIDER3D:
-			//Component = new CCollider2D;
+		case COMPONENT_TYPE::COLLIDER3D:
+			Component = new CCollider3D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR2D:
 			Component = new CAnimator2D;
@@ -202,6 +204,9 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 			break;
 		case COMPONENT_TYPE::CAMERA:
 			Component = new CCamera;
+			break;
+		case COMPONENT_TYPE::RIGIDBODY:
+			Component = new CRigidBody;
 			break;
 		case COMPONENT_TYPE::MESHRENDER:
 			Component = new CMeshRender;
