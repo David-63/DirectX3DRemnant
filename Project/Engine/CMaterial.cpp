@@ -65,7 +65,6 @@ void CMaterial::UpdateData_Inst()
 			CTexture::Clear(i);
 			continue;
 		}
-
 		else
 		{
 			m_Const.arrTex[i] = 1;

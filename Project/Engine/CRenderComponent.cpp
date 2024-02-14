@@ -3,6 +3,7 @@
 
 #include "CResMgr.h"
 #include "CTransform.h"
+#include "CAnimator3D.h"
 
 CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 	: CComponent(_type)
@@ -32,12 +33,29 @@ void CRenderComponent::render_shadowmap(UINT _iSubset)
 	// 머티리얼이 여러개인 경우에는 어떻게 그림자 처리를 해줘야하지?
 	if (nullptr == GetMaterial(0) || nullptr == GetMesh())
 		return;
-	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+
+	
+	// 행렬 정보 가져오기
 	Transform()->UpdateData();
 
-	pShadowMapMtrl->UpdateData();
+	// Animator3D 업데이트
+	if (Animator3D())
+	{
+		Animator3D()->UpdateData();
+		GetMaterial(_iSubset)->SetAnim3D(true); // Animation Mesh 알리기
+	}
 
-	GetMesh()->render(0);
+	// Mtrl 업데이트
+	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+	pShadowMapMtrl->UpdateData_Inst();
+	//GetMaterial(_iSubset)->UpdateData();
+
+	// 사용할 메쉬 업데이트 및 렌더링
+	GetMesh()->render(_iSubset);
+
+	// Animation 관련 정보 제거
+	if (Animator3D())
+		Animator3D()->ClearData();
 }
 
 
