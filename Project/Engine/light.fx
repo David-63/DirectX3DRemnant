@@ -110,11 +110,11 @@ PS_OUT PS_DirLightShader(VS_OUT _in)
         float fDepth = vLightProj.z / vLightProj.w;
         float fLightDepth = ShadowMapTargetTex.Sample(g_sam_1, vShadowMapUV);
     
-        //if (fLightDepth + 0.002f <= fDepth)
-        //{
-        //    // 그림자
-        //    fShadowPow = 0.9f;
-        //}
+        if (fLightDepth + 0.002f <= fDepth)
+        {
+            // 그림자
+            fShadowPow = 0.9f;
+        }
     }
     
     

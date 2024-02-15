@@ -106,10 +106,10 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 		// 광원을 렌더링 할 때, 광원의 영향범위를 형상화 할 수 있는 메쉬(볼륨메쉬) 를 선택
 		m_Mesh = CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh");
 		m_Mtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"DirLightMtrl");
-		m_CamObj->Camera()->SetFar(100000.f);
+		m_CamObj->Camera()->SetFar(200000.f);
 		m_CamObj->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		m_CamObj->Camera()->SetOrthoWidth(6000.f);
-		m_CamObj->Camera()->SetOrthoHeight(6000.f);
+		m_CamObj->Camera()->SetOrthoWidth(10000.f);
+		m_CamObj->Camera()->SetOrthoHeight(10000.f);
 
 	}
 

@@ -12,7 +12,7 @@
 CLandScape::CLandScape() : CRenderComponent(COMPONENT_TYPE::LANDSCAPE)
 	, m_iFaceX(1), m_iFaceZ(1), m_vBrushScale(0.2f, 0.2f), m_eMod(LANDSCAPE_MOD::NONE)
 {
-	SetDynamicShadow(false);
+	//SetDynamicShadow(false);
 	SetFrustumCheck(false);
 	init();
 }
