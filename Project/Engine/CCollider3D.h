@@ -9,6 +9,7 @@ class CCollider3D :
 private:
 	COLLIDER3D_TYPE mType;
 	int mCollisionCount;
+	Vec3 mOtherNormal;
 
 	Ptr<CMesh> mMesh;
 	Ptr<CMaterial> mMaterial;
@@ -36,10 +37,13 @@ public:
 	void OnTriggerStay(CCollider3D* _otherCollider);
 	void OnTriggerExit(CCollider3D* _otherCollider);
 
+	void SetOhterNormal(Vec3 _normal) { mOtherNormal = _normal; }
+	Vec3 GetOtherNormal() { return mOtherNormal; }
+
 	bool IsCollision() { return mCollisionCount; }
 	void ClearCollisionCount() { mCollisionCount = 0; }
 
 	void SetType(COLLIDER3D_TYPE _type) { mType = _type; }
-	
+	COLLIDER3D_TYPE GetType() { return mType; }
 };
 

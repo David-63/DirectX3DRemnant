@@ -124,33 +124,43 @@ void CreateTestLevel()
 		pObj = pMeshData->Instantiate();
 		pObj->AddComponent(new CTestScript());
 		
-		pObj->SetName(L"Monster");
+		pObj->SetName(L"Player");
 		pObj->Transform()->SetDebugSphereUse(true);
 		pObj->SetLayerIdx(2);
-		pObj->Transform()->SetRelativePos(Vec3(0.f, 100.f, 0.f));
-
-		tPhysicsInfo info = {};
-		info.eActorType = ACTOR_TYPE::Kinematic;
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(50.f, 50.f, 50.f);
-		info.massProperties.restitution = 0.1f;
-
+		pObj->Transform()->SetRelativePos(Vec3(40.f, 100.f, 40.f));
 		pObj->AddComponent(new CRigidBody);
-		pObj->RigidBody()->SetPhysical(info);
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(25.f, 25.f, 25.f);
+		info.massProperties.restitution = 0.01f;
+		pObj->RigidBody()->PushBackShapeInfo(info);
+
+		tShapeInfo info2 = {};
+		info2.eGeomType = GEOMETRY_TYPE::Sphere;
+		info2.size = Vector3(25.f, 25.f, 25.f);
+		info2.massProperties.restitution = 0.01f;
+		pObj->RigidBody()->PushBackShapeInfo(info2);
+
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
 		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		pObj->RigidBody()->SetMass(10.f);
-		//pObj->RigidBody()->GetRigidBody()->setMinCCDAdvanceCoefficient(0.f);
-		
-		
+		pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
 
+		int num = pObj->RigidBody()->GetRigidActor()->getNbShapes();
+		pObj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 25.f, 0.f));
+		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(0.f, 0.f, 0.f));
+		pObj->RigidBody()->AttachShape(1);
+
+		
 		pObj->AddComponent(new CCollider3D);
+		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 		pObj->RigidBody()->AddActorToLevel();
 		
 
-		SpawnGameObject(pObj, Vec3(0.f, 100.f, 0.f), 2);
+		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 
 		//pCamMoveScript->SetCamTarget(pObj); //¼ñ´õºä ¿ë
 
@@ -172,40 +182,42 @@ void CreateTestLevel()
 
 		//SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
 	}
-	//{
-	//	Ptr<CMeshData> pMeshData = nullptr;
-	//	CGameObject* pObj = nullptr;
+	{
+		Ptr<CMeshData> pMeshData = nullptr;
+		CGameObject* pObj = nullptr;
 
-	//	// ÀÎ½ºÅÏ½Ì Å×½ºÆ®
-	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		// ÀÎ½ºÅÏ½Ì Å×½ºÆ®
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 
-	//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-	//	pObj = pMeshData->Instantiate();
-	//	//pObj->AddComponent(new CTestScript());
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		pObj = pMeshData->Instantiate();
+		//pObj->AddComponent(new CTestScript());
 
-	//	pObj->SetName(L"Monster2");
-	//	pObj->Transform()->SetDebugSphereUse(true);
-	//	pObj->SetLayerIdx(2);
-	//	pObj->Transform()->SetRelativePos(Vec3(100.f, 600.f, 0.f));
+		pObj->SetName(L"Monster2");
+		pObj->Transform()->SetDebugSphereUse(true);
+		pObj->SetLayerIdx(2);
+		pObj->Transform()->SetRelativePos(Vec3(100.f, 100.f, 0.f));
 
-	//	tPhysicsInfo info = {};
-	//	info.eActorType = ACTOR_TYPE::Dynamic;
-	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info.size = Vector3(100.f, 100.f, 100.f);
-	//	info.massProperties.restitution = 0.1f;
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(100.f, 100.f, 100.f);
+		info.massProperties.restitution = 0.01f;
+		
 
-	//	pObj->AddComponent(new CRigidBody);
-	//	pObj->RigidBody()->SetPhysical(info);
+		pObj->AddComponent(new CRigidBody);
+		pObj->RigidBody()->PushBackShapeInfo(info);
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		
 
-	//	pObj->AddComponent(new CCollider3D);
-	//	pObj->RigidBody()->AddActorToLevel();
+		pObj->AddComponent(new CCollider3D);
+		pObj->RigidBody()->AddActorToLevel();
 
-	//	pObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 180.f));
+		pObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 180.f));
 
-	//	SpawnGameObject(pObj, Vec3(200.f, 600.f, 0.f), 2);
+		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
 
-	//	
-	//}
+		
+	}
 	{
 		CGameObject* pObj = new CGameObject;
 		pObj->AddComponent(new CTransform);
@@ -218,17 +230,16 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(500.f, 100.f, 0.f));
 		pObj->Transform()->SetRelativeScale(200.f, 200.f, 200.f);
 
-		tPhysicsInfo info = {};
-		info.eActorType = ACTOR_TYPE::Static;
+		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Box;
 		info.size = Vector3(200.f, 200.f, 200.f);
-		//info.massProperties.restitution = 0.1f;
 
 		pObj->AddComponent(new CRigidBody);
-		pObj->RigidBody()->SetPhysical(info);
-		
+		pObj->RigidBody()->PushBackShapeInfo(info);
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
 
 		pObj->AddComponent(new CCollider3D);
+		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Wall);
 		pObj->RigidBody()->AddActorToLevel();
 
 		SpawnGameObject(pObj, Vec3(500.f, 100.f, 0.f), 5);
@@ -245,11 +256,10 @@ void CreateTestLevel()
 
 		pObj->SetName(L"DynamicSphere");
 		pObj->SetLayerIdx(5);
-		pObj->Transform()->SetRelativePos(Vec3(-200.f, 400.f, 0.f));
+		pObj->Transform()->SetRelativePos(Vec3(-200.f, 700.f, 0.f));
 		pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
 
-		tPhysicsInfo info = {};
-		info.eActorType = ACTOR_TYPE::Dynamic;
+		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(100.f, 100.f, 100.f);
 		info.massProperties.restitution = 0.f;
@@ -257,18 +267,14 @@ void CreateTestLevel()
 		info.massProperties.staticFriction = 0.6f;
 
 		pObj->AddComponent(new CRigidBody);
-		pObj->RigidBody()->SetPhysical(info);
+		pObj->RigidBody()->PushBackShapeInfo(info);
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 
-		pObj->RigidBody()->SetMass(20.f);
-		pObj->RigidBody()->SetRestitution(0.f);
-		pObj->RigidBody()->GetRigidBody()->setMaxContactImpulse(2000.f);
-		pObj->RigidBody()->GetRigidBody()->setLinearDamping(0.2f);
-		pObj->RigidBody()->GetRigidBody()->setAngularDamping(0.2f);
 
 		pObj->AddComponent(new CCollider3D);
 		pObj->RigidBody()->AddActorToLevel();
 
-		SpawnGameObject(pObj, Vec3(-200.f, 400.f, 0.f), 5);
+		SpawnGameObject(pObj, Vec3(-200.f, 700.f, 0.f), 5);
 
 
 	}
@@ -287,11 +293,6 @@ void CreateTestLevel()
 		pLandScape->LandScape()->SetFrustumCheck(false);
 		//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));
 		
-		//pLandScape->SetLayerIdx(4);
-		//pLandScape->AddComponent(new CRigidBody);
-		//pLandScape->RigidBody()->CreatePlane();
-		//pLandScape->RigidBody()->AddActorToLevel();
-
 
 		SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 4);
 	}
@@ -307,15 +308,15 @@ void CreateTestLevel()
 
 		pGround->AddComponent(new CCollider3D);
 		pGround->AddComponent(new CRigidBody);
-		//pGround->RigidBody()->CreatePlane();
-		tPhysicsInfo info = {};
-		info.eActorType = ACTOR_TYPE::Static;
+		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Box;
 		info.size = Vector3(10000.f, 15.f, 10000.f);
 		info.massProperties.restitution = 0.2f;
 		info.massProperties.dynamicFriction = 0.3f;
 		info.massProperties.staticFriction = 0.3f;
-		pGround->RigidBody()->SetPhysical(info);
+		pGround->RigidBody()->PushBackShapeInfo(info);
+
+		pGround->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
 		pGround->RigidBody()->AddActorToLevel();
 
 		pGround->AddComponent(new CMeshRender);
@@ -329,4 +330,6 @@ void CreateTestLevel()
 		SpawnGameObject(pGround, Vec3(0.f, 0.f, 0.f), 4);
 	}
 	
+	bool hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
+
 }

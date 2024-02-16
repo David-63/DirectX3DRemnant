@@ -34,11 +34,11 @@ public:
 	virtual CComponent* CloneFromObj(CGameObject* _pGameObject);
 
 	void Destroy();
-	void SetPhysical(const tPhysicsInfo& _physicsInfo = tPhysicsInfo());
+	void SetPhysical(ACTOR_TYPE _eActorType);
+	void PushBackShapeInfo(const tShapeInfo _info) { mShapeInfos.push_back(_info); }
 	bool IsAppliedPhysics();
 
 	physx::PxActor* GetActor() { return mActor; }
-	physx::PxRigidActor* GetRigidActor() { return mRigidActor; }
 
 	template<typename T>
 	inline T* GetActor() const
@@ -56,11 +56,10 @@ public:
 	physx::PxTransform GetPhysicsTransform();
 	void			   SetPhysicsTransform(physx::PxTransform _transform);
 
-	ACTOR_TYPE GetActorType() { return mPhysicsInfo.eActorType; }
-	GEOMETRY_TYPE GetGeometryType() { return mPhysicsInfo.eGeomType; }
-	Vector3 GetGeometrySize() { return mPhysicsInfo.size * 2.f; }
-	const physx::PxFilterData& GetFilterData() { return mPhysicsInfo.filterData; }
-	void SetOtherLayerInFilterData(int _eOtherLayerIDX) { mPhysicsInfo.filterData.word1 |= 1 << _eOtherLayerIDX; }
+	//for clone
+	void SetActorType(ACTOR_TYPE _type) { mActorType = _type; }
+	ACTOR_TYPE GetActorType() { return mActorType; }
+	void SetShapeVector(const std::vector<physx::PxShape*>& _vector, const std::vector<tShapeInfo>& _vectorInfo) { mShapes = _vector; mShapeInfos = _vectorInfo; }
 
 	void SetVelocity(const Vector3& _velocity);
 	void SetVelocity(AXIS3D_TYPE _eAxis, float _velocity);
@@ -85,16 +84,14 @@ public:
 
 	void AddForce(const Vector3& _force);
 
-	void SetMass(float _mass) { if (mRigidBody) mRigidBody->setMass(_mass); }
-	void SetRestitution(float _val) { if (mMaterial) mMaterial->setRestitution(_val); }
-	void Test();
+	
 	physx::PxRigidBody* GetRigidBody() { return mActor->is<physx::PxRigidBody>(); }
+	physx::PxRigidActor* GetRigidActor() { return GetActor<physx::PxRigidActor>(); }
+	void SetShapeLocalPos(int _idx, CTransform* _transform);
+	void SetShapeLocalPos(int _idx, Vec3 _localPos);
+	void AttachShape(int _idx);
+	Vec3 GetShapePosition(int _shapeIdx);
 
-private:
-	void CreateBoxGeometry();
-	void CreateCapsuleGeometry();
-	void CreatePlaneGeometry();
-	void CreateSphereGeometry();
 
 private:
 	void CreateGeometry();
@@ -103,14 +100,17 @@ private:
 	void CreateMaterial();
 	void InitializeActor();
 
+	void DrawDebugMesh();
+
 private:
 	EnumFlags<FreezeRotationFlag, uint16_t> mFreezeRotationFlag;
-	tPhysicsInfo mPhysicsInfo;
+	
+	ACTOR_TYPE mActorType;
+	std::vector<tShapeInfo> mShapeInfos;
 
-	physx::PxRigidBody* mRigidBody;
 	physx::PxRigidActor* mRigidActor;
 	physx::PxActor* mActor;
-	physx::PxShape* mShape;
+	std::vector<physx::PxShape*> mShapes;
 	physx::PxMaterial* mMaterial;
 
 	Vector3 mVelocity;

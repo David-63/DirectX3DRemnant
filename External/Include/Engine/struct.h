@@ -315,7 +315,7 @@ extern tGlobal GlobalData;
 
 struct tMassProperties
 {
-	tMassProperties(float _staticFriction = 0.f, float _dynamicFriction = 0.f, float _restitution = 0.603f)
+	tMassProperties(float _staticFriction = 0.f, float _dynamicFriction = 0.f, float _restitution = 0.01f)
 		: staticFriction(_staticFriction)
 		, dynamicFriction(_dynamicFriction)
 		, restitution(_restitution)
@@ -372,23 +372,49 @@ struct Geometries
 	GEOMETRY_TYPE eGeomType;
 };
 
-struct tPhysicsInfo
+//struct tPhysicsInfo
+//{
+//	tPhysicsInfo()
+//		: eActorType(ACTOR_TYPE::Static)
+//		, eGeomType(GEOMETRY_TYPE::Box)
+//		, size(1.f, 1.f, 1.f)
+//		, massProperties(tMassProperties())
+//		, pGeometries(nullptr)
+//		, filterData{}
+//	{
+//	}
+//
+//	ACTOR_TYPE eActorType;
+//	GEOMETRY_TYPE eGeomType;
+//	Vector3 size;
+//	tMassProperties massProperties;
+//	Geometries* pGeometries;
+//	physx::PxFilterData filterData;
+//};
+
+struct tShapeInfo
 {
-	tPhysicsInfo()
-		: eActorType(ACTOR_TYPE::Static)
-		, eGeomType(GEOMETRY_TYPE::Box)
-		, size(1.f, 1.f, 1.f)
+	tShapeInfo()
+		: eGeomType(GEOMETRY_TYPE::Sphere)
+		, size(1.f,1.f,1.f)
 		, massProperties(tMassProperties())
 		, pGeometries(nullptr)
 		, filterData{}
-	{
-	}
+	{}
 
-	ACTOR_TYPE eActorType;
 	GEOMETRY_TYPE eGeomType;
 	Vector3 size;
 	tMassProperties massProperties;
 	Geometries* pGeometries;
 	physx::PxFilterData filterData;
+};
+
+struct tRayCastInfo
+{
+	physx::PxRigidActor* hitActor;
+	Vec3 hitPos;
+	Vec3 hitNormal;
+	bool hit;
+	float dist;
 };
 
