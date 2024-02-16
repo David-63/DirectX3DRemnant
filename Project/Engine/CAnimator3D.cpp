@@ -15,7 +15,7 @@
 CAnimator3D::CAnimator3D()
 	: m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(false)
 
-	, m_isBlend(false), m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr)
+	, m_isBlend(false), m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr), m_isRun(false)
 	, m_blendUpdateTime(0.f), m_blendFinishTime(0.32f), m_blendRatio(0.f), m_prevFrameIdx(0)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
@@ -121,17 +121,15 @@ void CAnimator3D::UpdateData()
 		// Animation3D Update Compute Shader
 		CAnimation3DShader* pUpdateShader = (CAnimation3DShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"Animation3DUpdateCS").Get();
 
+		Ptr<CMesh> pCurMesh = m_pCurrentAnim->GetOriginMesh();
+		check_mesh(pCurMesh);
+		UINT iBoneCount = (UINT)pCurMesh.Get()->GetMTBoneCount();
 		// 블렌드를 해야하면
 		if (m_isBlend)
 		{
 			// mesh를 두개 받아야함
 			Ptr<CMesh> pPrevMesh = m_pPrevAnim->GetOriginMesh();
 			check_mesh(pPrevMesh);
-
-			Ptr<CMesh> pCurMesh = m_pCurrentAnim->GetOriginMesh();
-			check_mesh(pCurMesh);
-
-
 
 			// 쉐이더에 등록하는 버퍼는 메쉬로부터 가져오지만
 			// 내부적으로는 각 애니메이터마다 계산되는 프레임 정보가 다르기 때문에
@@ -142,7 +140,6 @@ void CAnimator3D::UpdateData()
 			pUpdateShader->SetOutputBuffer(m_BoneFinalMatBuffer);
 
 			// m_Const 변수에 담기는 데이터
-			UINT iBoneCount = (UINT)pCurMesh.Get()->GetMTBoneCount();
 			pUpdateShader->SetBoneCount(iBoneCount);
 			pUpdateShader->SetFrameIndex(m_prevFrameIdx);
 			pUpdateShader->SetNextFrameIdx(m_pCurrentAnim->GetNextFrame());
@@ -150,11 +147,6 @@ void CAnimator3D::UpdateData()
 		}
 		else
 		{
-			Ptr<CMesh> pCurMesh = m_pCurrentAnim->GetOriginMesh();
-			check_mesh(pCurMesh);
-
-
-
 			// 쉐이더에 등록하는 버퍼는 메쉬로부터 가져오지만
 			// 내부적으로는 각 애니메이터마다 계산되는 프레임 정보가 다르기 때문에
 			// 동일한 애니메이션 클립을 사용해도 개별로 동작함
@@ -164,7 +156,6 @@ void CAnimator3D::UpdateData()
 			pUpdateShader->SetOutputBuffer(m_BoneFinalMatBuffer);
 
 			// m_Const 변수에 담기는 데이터
-			UINT iBoneCount = (UINT)pCurMesh.Get()->GetMTBoneCount();
 			pUpdateShader->SetBoneCount(iBoneCount);
 			pUpdateShader->SetFrameIndex(m_pCurrentAnim->GetCurFrame());
 			pUpdateShader->SetNextFrameIdx(m_pCurrentAnim->GetNextFrame());
@@ -179,6 +170,8 @@ void CAnimator3D::UpdateData()
 
 	// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
 	m_BoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
+
+	m_BoneFinalMatBuffer->GetData(m_vecFinalBoneMat);
 }
 
 void CAnimator3D::ClearData()
@@ -206,7 +199,7 @@ void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)
 
 	if (m_BoneFinalMatBuffer->GetElementCount() != iBoneCount)
 	{
-		m_BoneFinalMatBuffer->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, false, nullptr);
+		m_BoneFinalMatBuffer->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, true, nullptr);
 	}
 }
 
@@ -217,6 +210,9 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	m_mapAnim.insert(make_pair(_clip->GetKey(), _clip.Get()));
 	m_pCurrentAnim = _clip.Get();
 	//m_pCurrentAnim->Stop();
+
+	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
+	m_vecFinalBoneMat.resize(iBoneCount);
 
 	Events* events = FindEvents(_clip->GetKey());
 	if (events)
