@@ -272,6 +272,7 @@ VS_SHADOW_OUT VS_ShadowMap(VS_IN _in)
 {
     VS_SHADOW_OUT output = (VS_SHADOW_OUT) 0.f;
     
+    // Mtrl->AnimSet(true) ÀÎ °æ¿ì g_iAnim = 1
     if (g_iAnim)
     {
         Skinning(_in.vPos, _in.vWeights, _in.vIndices, 0);

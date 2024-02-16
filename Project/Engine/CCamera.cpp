@@ -337,7 +337,7 @@ void CCamera::render_shadowmap()
 	for (size_t shadowIdx = 0; shadowIdx < m_vecShadow.size(); ++shadowIdx)
 	{
 		m_vecShadow[shadowIdx]->render_shadowmap();
-	}	
+	}
 }
 
 void CCamera::clear()

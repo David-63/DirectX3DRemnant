@@ -19,13 +19,25 @@ CRenderComponent::~CRenderComponent()
 
 void CRenderComponent::render_shadowmap()
 {
+	Transform()->UpdateData();
+
 	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
 
-	Transform()->UpdateData();
+	if (Animator3D())
+	{
+		Animator3D()->UpdateData();			// t30 버퍼 세팅
+		pShadowMapMtrl->SetAnim3D(true);	// g_iAnimSet true 세팅
+	}
 
 	pShadowMapMtrl->UpdateData();
 
 	GetMesh()->render(0);
+
+	if (Animator3D())
+	{
+		Animator3D()->ClearData();
+		pShadowMapMtrl->SetAnim3D(false);	// g_iAnimSet true 세팅
+	}
 }
 
 void CRenderComponent::render_shadowmap(UINT _iSubset)
@@ -37,6 +49,8 @@ void CRenderComponent::render_shadowmap(UINT _iSubset)
 	
 	// 행렬 정보 가져오기
 	Transform()->UpdateData();
+
+	
 
 	// Animator3D 업데이트
 	if (Animator3D())

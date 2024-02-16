@@ -85,7 +85,7 @@ void CLandScape::CreateComputeShader()
 	// 높이 수정 컴퓨트 쉐이더
 	// ======================
 	m_pCSHeightMap = (CHeightMapShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"HeightMapShader").Get();
-	if (nullptr == m_HeightMap)
+	if (nullptr == m_pCSHeightMap)
 	{
 		m_pCSHeightMap = new CHeightMapShader(32, 32, 1);
 		m_pCSHeightMap->CreateComputeShader(L"shader\\heightmap.fx", "CS_HeightMap");
@@ -118,12 +118,16 @@ void CLandScape::CreateComputeShader()
 void CLandScape::CreateTexture()
 {
 	// 높이맵 텍스쳐		
-	m_HeightMap = CResMgr::GetInst()->CreateTexture(L"HeightMap"
-		, 2048, 2048
-		, DXGI_FORMAT_R32_FLOAT
-		, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS
-		, D3D11_USAGE_DEFAULT);
-
+	m_HeightMap = CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap");
+	if (nullptr == m_HeightMap)
+	{
+		m_HeightMap = CResMgr::GetInst()->CreateTexture(L"HeightMap"
+			, 2048, 2048
+			, DXGI_FORMAT_R32_FLOAT
+			, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS
+			, D3D11_USAGE_DEFAULT);
+	}
+	
 	m_pBrushTex = CResMgr::GetInst()->FindRes<CTexture>(L"texture\\brush\\Brush_01.png");
 
 
