@@ -15,6 +15,7 @@ CRigidBody::CRigidBody()
 	, mbdrawCollider(true)
 	, mShapeInfos{}
 	, mShapes{}
+	, mOffset(0.f, 0.f, 0.f)
 {
 }
 CRigidBody::~CRigidBody()
@@ -464,14 +465,15 @@ void CRigidBody::CreateShape()
 }
 void CRigidBody::CreateActor()
 {
-	float _x = GetOwner()->Transform()->GetRelativePos().x;
-	float _y = GetOwner()->Transform()->GetRelativePos().y;
-	float _z = GetOwner()->Transform()->GetRelativePos().z;
+	Vec3 playerPos = GetOwner()->Transform()->GetRelativePos();
+	float _x = playerPos.x;
+	float _y = playerPos.y;
+	float _z = playerPos.z;
 	switch (mActorType)
 	{
 	case ACTOR_TYPE::Dynamic:
 		mActor = Physics::GetInst()->GetPhysics()->
-			createRigidDynamic(physx::PxTransform(PxVec3(_x, _y, _z )));
+			createRigidDynamic(physx::PxTransform(PxVec3(_x, _y, _z)));
 		break;
 
 	case ACTOR_TYPE::Static:

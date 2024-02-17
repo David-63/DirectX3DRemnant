@@ -132,15 +132,21 @@ void CreateTestLevel()
 
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(25.f, 25.f, 25.f);
-		info.massProperties.restitution = 0.01f;
+		info.size = Vector3(15.f, 15.f, 15.f);
+		info.massProperties.restitution = 0.99f;
 		pObj->RigidBody()->PushBackShapeInfo(info);
 
 		tShapeInfo info2 = {};
 		info2.eGeomType = GEOMETRY_TYPE::Sphere;
-		info2.size = Vector3(25.f, 25.f, 25.f);
-		info2.massProperties.restitution = 0.01f;
+		info2.size = Vector3(15.f, 15.f, 15.f);
+		info2.massProperties.restitution = 0.99f;
 		pObj->RigidBody()->PushBackShapeInfo(info2);
+
+		tShapeInfo info3 = {};
+		info3.eGeomType = GEOMETRY_TYPE::Sphere;
+		info3.size = Vector3(8.f, 8.f, 8.f);
+		info3.massProperties.restitution = 0.99f;
+		pObj->RigidBody()->PushBackShapeInfo(info3);
 
 		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
@@ -150,9 +156,9 @@ void CreateTestLevel()
 
 
 		int num = pObj->RigidBody()->GetRigidActor()->getNbShapes();
-		pObj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 25.f, 0.f));
-		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(0.f, 0.f, 0.f));
-		pObj->RigidBody()->AttachShape(1);
+		pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+		pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
 
 		
 		pObj->AddComponent(new CCollider3D);
@@ -301,16 +307,16 @@ void CreateTestLevel()
 		CGameObject* pGround = new CGameObject;
 		pGround->SetName(L"Ground");
 		pGround->AddComponent(new CTransform);
-		pGround->Transform()->SetRelativeScale(10000.f, 15.f, 10000.f);
+		pGround->Transform()->SetRelativeScale(10000.f, 10.f, 10000.f);
 		pGround->SetLayerIdx(5);
-		pGround->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+		pGround->Transform()->SetRelativePos(Vec3(0.f, -5.f, 0.f));
 		
 
 		pGround->AddComponent(new CCollider3D);
 		pGround->AddComponent(new CRigidBody);
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Box;
-		info.size = Vector3(10000.f, 15.f, 10000.f);
+		info.size = Vector3(10000.f, 10.f, 10000.f);
 		info.massProperties.restitution = 0.2f;
 		info.massProperties.dynamicFriction = 0.3f;
 		info.massProperties.staticFriction = 0.3f;
@@ -327,7 +333,7 @@ void CreateTestLevel()
 
 		PxVec3 pos = pGround->Transform()->GetPhysicsPosition();
 		
-		SpawnGameObject(pGround, Vec3(0.f, 0.f, 0.f), 4);
+		SpawnGameObject(pGround, Vec3(0.f, -5.f, 0.f), 4);
 	}
 	
 	bool hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);

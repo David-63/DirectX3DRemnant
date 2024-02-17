@@ -115,6 +115,7 @@ private:
 
 	Vector3 mVelocity;
 	float mMaxVelocity;
+	Vec3 mOffset;
 
 	bool mbAppliedPhysics;
 	bool mbAppliedGravity;
