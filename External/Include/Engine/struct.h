@@ -315,7 +315,7 @@ extern tGlobal GlobalData;
 
 struct tMassProperties
 {
-	tMassProperties(float _staticFriction = 0.f, float _dynamicFriction = 0.f, float _restitution = 0.01f)
+	tMassProperties(float _staticFriction = 0.f, float _dynamicFriction = 0.f, float _restitution = 0.9f)
 		: staticFriction(_staticFriction)
 		, dynamicFriction(_dynamicFriction)
 		, restitution(_restitution)

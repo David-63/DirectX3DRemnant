@@ -224,6 +224,23 @@ bool CGameObject::IsAncestor(CGameObject* _Target)
 	return false;
 }
 
+std::vector<int> CGameObject::GetIsComponentArr()
+{
+	std::vector<int> arr;
+
+	for (int i = 0; i< (int)COMPONENT_TYPE::END; ++i)
+	{
+		if (m_arrCom[i])
+			arr.push_back(1);
+		else
+			arr.push_back(0);
+	}
+
+	AssertEx(arr.size() == (int)COMPONENT_TYPE::END, L"GetIsComponentArr()");
+
+	return arr;
+}
+
 void CGameObject::DisconnectFromParent()
 {
 	if (!m_Parent)

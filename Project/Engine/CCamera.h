@@ -83,6 +83,9 @@ public:
     virtual void begin() override;
     virtual void finaltick() override;
 
+    virtual void SaveToLevelFile(FILE* _File) override;
+    virtual void LoadFromLevelFile(FILE* _File) override;
+
 protected:
     void CalRay();  // 마우스 방향으로 광선 연산
 
@@ -109,8 +112,7 @@ private:
     void CalcProjMat();
     void updateMatrix();
 
-    virtual void SaveToLevelFile(FILE* _File) override;
-    virtual void LoadFromLevelFile(FILE* _File) override;
+    
 
     CLONE(CCamera);
 public:    

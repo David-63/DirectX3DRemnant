@@ -12,6 +12,7 @@
 #include <Engine/CCollisionMgr.h>
 #include <Engine/CRigidBody.h>
 #include <Engine/Physics.h>
+#include <Engine/CPrefab.h>
 
 // Scripts
 #include <Script/CCameraMoveScript.h>
@@ -170,23 +171,16 @@ void CreateTestLevel()
 
 		//pCamMoveScript->SetCamTarget(pObj); //¼ñ´õºä ¿ë
 
-		
-		//for (int i = 0; i < 10; ++i)
-		//{
-		//	pObj = pMeshData->Instantiate();
-		//	pObj->SetName(L"Monster");
-		//	pObj->Transform()->SetDebugSphereUse(true);
-		//	SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
-		//}
-		//
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		//pObj = pMeshData->Instantiate();
-		//pObj->SetName(L"Monster");
-		//pObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
+		CPrefab* Prefab = new CPrefab;
+		/*Prefab->RegisterProtoObject(pObj);
+		Prefab->Save(L"prefab\\prefab02");*/
 
-		//SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
+		Prefab->Load(L"prefab\\prefab02");
+		CGameObject* prefabObj = Prefab->Instantiate();
+		prefabObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+
+		SpawnGameObject(prefabObj, Vec3(40.f, 100.f, 240.f), 2);
+		
 	}
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
@@ -284,7 +278,8 @@ void CreateTestLevel()
 
 
 	}
-	// LandScape Object
+
+	// LandScape Object 
 	{
 		CGameObject* pLandScape = new CGameObject;
 		pLandScape->SetName(L"LandScape");
@@ -298,7 +293,7 @@ void CreateTestLevel()
 		pLandScape->LandScape()->SetFace(64, 64);
 		pLandScape->LandScape()->SetFrustumCheck(false);
 		//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));
-		
+
 
 		SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 4);
 	}

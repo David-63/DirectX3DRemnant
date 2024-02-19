@@ -14,8 +14,6 @@ CCollider3D::CCollider3D(const CCollider3D& _collider)
 	: CComponent(COMPONENT_TYPE::COLLIDER3D)
 	  , mType(_collider.mType)
 {
-	mMesh = CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh");
-	mMaterial = CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl");
 }
 
 CCollider3D::~CCollider3D()
@@ -24,10 +22,12 @@ CCollider3D::~CCollider3D()
 
 void CCollider3D::SaveToLevelFile(FILE* _File)
 {
+	fwrite(&mType, sizeof(COLLIDER3D_TYPE), 1, _File);
 }
 
-void CCollider3D::LoadFromLevelFile(FILE* _FILE)
+void CCollider3D::LoadFromLevelFile(FILE* _File)
 {
+	fread(&mType, sizeof(COLLIDER3D_TYPE), 1, _File);
 }
 
 void CCollider3D::begin()

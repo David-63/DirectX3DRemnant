@@ -12,10 +12,9 @@ private:
 public:
 	CGameObject* Instantiate();
 
-private:
-	virtual int Load(const wstring& _strFilePath) { return S_OK; }
 public:
-	virtual int Save(const wstring& _strRelativePath) { return S_OK; }
+	virtual int Load(const wstring& _strFilePath);
+	virtual int Save(const wstring& _strRelativePath);
 
 private:
 	virtual void UpdateData() override {}
