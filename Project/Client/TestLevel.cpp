@@ -118,13 +118,24 @@ void CreateTestLevel()
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");		
 
-		for (int i = 0; i < 5; ++i)
+		for (int i = 0; i < 1; ++i)
 		{
 			pObj = pMeshData->Instantiate();
-			pObj->SetName(L"Monster");
+			pObj->SetName(L"MonsterA");
 			pObj->Transform()->SetDebugSphereUse(true);
 			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
 			SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
+		}
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
+
+		for (int i = 0; i < 1; ++i)
+		{
+			pObj = pMeshData->Instantiate();
+			pObj->SetName(L"MonsterB");
+			pObj->Transform()->SetDebugSphereUse(true);
+			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
+			SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 100.f), 0);
 		}
 	}
 

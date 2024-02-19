@@ -314,6 +314,9 @@ void CCamera::SortObject_Shadow()
 					&& false == m_Frustum.FrustumCheckBound(objPos, radius))
 					continue;
 
+				if (!pRenderCom->IsDynamicShadow())
+					continue;
+
 				UINT iMtrlCount = pRenderCom->GetMtrlCount();
 				for (UINT iMtrl = 0; iMtrl < iMtrlCount; ++iMtrl)
 				{
@@ -484,11 +487,6 @@ void CCamera::render_shadowmap()
 			else
 				instObj.pObj->render_shadowmap(instObj.iMtrlIdx);
 
-		}
-
-		if (pair.second[0].pObj->Animator3D())
-		{
-			pair.second[0].pObj->Animator3D()->ClearData();
 		}
 	}
 }

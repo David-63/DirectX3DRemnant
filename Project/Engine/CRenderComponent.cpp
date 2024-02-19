@@ -19,8 +19,10 @@ CRenderComponent::~CRenderComponent()
 
 void CRenderComponent::render_shadowmap()
 {
-	Transform()->UpdateData();
+	if (nullptr == GetMaterial(0) || nullptr == GetMesh())
+		return;
 
+	Transform()->UpdateData();
 	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
 
 	if (Animator3D())
@@ -30,7 +32,6 @@ void CRenderComponent::render_shadowmap()
 	}
 
 	pShadowMapMtrl->UpdateData();
-
 	GetMesh()->render(0);
 
 	if (Animator3D())
@@ -42,32 +43,21 @@ void CRenderComponent::render_shadowmap()
 
 void CRenderComponent::render_shadowmap(UINT _iSubset)
 {
-	// 머티리얼이 여러개인 경우에는 어떻게 그림자 처리를 해줘야하지?
 	if (nullptr == GetMaterial(0) || nullptr == GetMesh())
 		return;
-
 	
-	// 행렬 정보 가져오기
 	Transform()->UpdateData();
 	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
-
 	
-
-	// Animator3D 업데이트
 	if (Animator3D())
 	{
 		Animator3D()->UpdateData();
-		pShadowMapMtrl->SetAnim3D(true); // Animation Mesh 알리기
+		pShadowMapMtrl->SetAnim3D(true);
 	}
 
-	// Mtrl 업데이트
-	pShadowMapMtrl->UpdateData_Inst();
-	//GetMaterial(_iSubset)->UpdateData();
+	pShadowMapMtrl->UpdateData();
+	GetMesh()->render(_iSubset);
 
-	// 사용할 메쉬 업데이트 및 렌더링
-	GetMesh()->render_instancing(_iSubset);
-
-	// Animation 관련 정보 제거
 	if (Animator3D())
 	{
 		Animator3D()->ClearData();
