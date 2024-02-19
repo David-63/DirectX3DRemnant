@@ -23,22 +23,21 @@ private:
     Matrix                  m_matProj;
     Matrix                  m_matProjInv;
 
-    //vector<CGameObject*>              m_vecDeferred;
-    //vector<CGameObject*>              m_vecDeferredDecal;
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D;	    // Deferred
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_F;	    // Foward ( Opaque, Mask )	
     map<INT_PTR, vector<tInstObj>>		m_mapSingleObj;		    // Single Object
 
-    vector<CGameObject*>                m_vecOpaque;
-    vector<CGameObject*>                m_vecMask;
-    vector<CGameObject*>                m_vecDecal;
-    vector<CGameObject*>                m_vecTransparent;    
-    vector<CGameObject*>                m_vecUI;
-    vector<CGameObject*>                m_vecPost;
+    //vector<CGameObject*>    m_vecDeferred;
+    //vector<CGameObject*>    m_vecDeferredDecal;
 
-    vector<CGameObject*>                m_vecShadow;            // 이건 안쓸듯
-    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_S;	    // Deferred
-    map<INT_PTR, vector<tInstObj>>		m_mapSingleObj_S;		// Single Object
+    vector<CGameObject*>    m_vecOpaque;
+    vector<CGameObject*>    m_vecMask;
+    vector<CGameObject*>    m_vecDecal;
+    vector<CGameObject*>    m_vecTransparent;    
+    vector<CGameObject*>    m_vecUI;
+    vector<CGameObject*>    m_vecPost;
+
+    vector<CGameObject*>    m_vecShadow;
 
 public:
     void SetProjType(PROJ_TYPE _Type) { m_ProjType = _Type; }
@@ -84,9 +83,6 @@ public:
     virtual void begin() override;
     virtual void finaltick() override;
 
-    virtual void SaveToLevelFile(FILE* _File) override;
-    virtual void LoadFromLevelFile(FILE* _File) override;
-
 protected:
     void CalRay();  // 마우스 방향으로 광선 연산
 
@@ -113,7 +109,8 @@ private:
     void CalcProjMat();
     void updateMatrix();
 
-    
+    virtual void SaveToLevelFile(FILE* _File) override;
+    virtual void LoadFromLevelFile(FILE* _File) override;
 
     CLONE(CCamera);
 public:    

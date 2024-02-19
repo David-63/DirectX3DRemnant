@@ -11,6 +11,8 @@ private:
 	int mCollisionCount;
 	Vec3 mOtherNormal;
 
+	Ptr<CMesh> mMesh;
+	Ptr<CMaterial> mMaterial;
 
 public:
 	CCollider3D();

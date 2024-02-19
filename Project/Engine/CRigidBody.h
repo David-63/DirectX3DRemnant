@@ -105,16 +105,17 @@ private:
 private:
 	EnumFlags<FreezeRotationFlag, uint16_t> mFreezeRotationFlag;
 	
-	std::vector<tShapeInfo> mShapeInfos;
-	std::vector<physx::PxShape*> mShapes;
-
 	ACTOR_TYPE mActorType;
+	std::vector<tShapeInfo> mShapeInfos;
+
 	physx::PxRigidActor* mRigidActor;
 	physx::PxActor* mActor;
+	std::vector<physx::PxShape*> mShapes;
 	physx::PxMaterial* mMaterial;
 
 	Vector3 mVelocity;
 	float mMaxVelocity;
+	Vec3 mOffset;
 
 	bool mbAppliedPhysics;
 	bool mbAppliedGravity;

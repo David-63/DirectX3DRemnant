@@ -27,19 +27,6 @@ void CRenderComponent::render_shadowmap()
 	GetMesh()->render(0);
 }
 
-void CRenderComponent::render_shadowmap(UINT _iSubset)
-{
-	// 머티리얼이 여러개인 경우에는 어떻게 그림자 처리를 해줘야하지?
-	if (nullptr == GetMaterial(0) || nullptr == GetMesh())
-		return;
-	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
-	Transform()->UpdateData();
-
-	pShadowMapMtrl->UpdateData();
-
-	GetMesh()->render(0);
-}
-
 
 void CRenderComponent::SetMesh(Ptr<CMesh> _Mesh)
 {
@@ -116,6 +103,10 @@ ULONG64 CRenderComponent::GetInstID(UINT _iMtrlIdx)
 
 void CRenderComponent::SaveToLevelFile(FILE* _File)
 {
+	COMPONENT_TYPE type = GetType();
+	fwrite(&type, sizeof(UINT), 1, _File);
+
+
 	SaveResRef(m_pMesh.Get(), _File);
 
 	UINT iMtrlCount = GetMtrlCount();
@@ -138,7 +129,6 @@ void CRenderComponent::LoadFromLevelFile(FILE* _File)
 	UINT iMtrlCount = GetMtrlCount();
 	fread(&iMtrlCount, sizeof(UINT), 1, _File);
 
-	SetMtrlCount(iMtrlCount);
 	for (UINT i = 0; i < iMtrlCount; ++i)
 	{
 		Ptr<CMaterial> pMtrl;

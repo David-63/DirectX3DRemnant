@@ -54,7 +54,6 @@ public:
     virtual void render() override;
     virtual void render(UINT _iSubset) override;
 
-
 private:
     void init();
     void CreateMesh();

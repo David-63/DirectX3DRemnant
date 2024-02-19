@@ -56,7 +56,7 @@ public:
     void AddComponent(CComponent* _Component);
     void AddChild(CGameObject* _Object);
 
-    CComponent* GetComponent(COMPONENT_TYPE _ComType) { return m_arrCom[0]; }
+    CComponent* GetComponent(COMPONENT_TYPE _ComType) { return m_arrCom[(UINT)_ComType]; }
     const vector<CGameObject*>& GetChild() { return m_vecChild; }
 
     CGameObject* GetParent() const { return m_Parent; }
@@ -102,12 +102,11 @@ public:
 	bool IsAncestor(CGameObject* _Target);
     void SetLayerIdx(int _idx) { m_iLayerIdx = _idx; }
 
-    std::vector<int> GetIsComponentArr();
-
 private:
     void DisconnectFromParent();
     void ChangeToChildType();
     void AddParentList();
+
 
     CLONE(CGameObject)    
 public:

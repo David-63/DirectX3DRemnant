@@ -281,12 +281,10 @@ void SaveWString(const wstring& _str, FILE* _File)
 void LoadWString(wstring& _str, FILE* _File)
 {
 	wchar_t szBuffer[256] = {};
-	
+
 	UINT iLen = 0;
 	fread(&iLen, sizeof(UINT), 1, _File);
-	if (1 == iLen)
-		int a = 0;
-	fread(szBuffer, sizeof(wchar_t), iLen, _File);
+	fread(szBuffer, sizeof(wchar_t), iLen, _File);	
 
 	_str = szBuffer;
 }
