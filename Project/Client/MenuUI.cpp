@@ -7,6 +7,7 @@
 #include <Engine\components.h>
 #include <Engine\CScript.h>
 #include <Engine/CLevelMgr.h>
+#include <Engine\CRigidBody.h>
 
 #include <Script\CScriptMgr.h>
 
@@ -219,7 +220,7 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
     case COMPONENT_TYPE::COLLIDER2D:
         pSelectedObject->AddComponent(new CCollider2D);
         break;
-    //case COMPONENT_TYPE::COLLIDER3D:
+    case COMPONENT_TYPE::COLLIDER3D:
         //pSelectedObject->AddComponent(new CCollider3D);
         break;
     case COMPONENT_TYPE::ANIMATOR2D:
@@ -236,6 +237,9 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
         break;
     case COMPONENT_TYPE::CAMERA:
         pSelectedObject->AddComponent(new CCamera);
+        break;
+    case COMPONENT_TYPE::RIGIDBODY:
+        pSelectedObject->AddComponent(new CRigidBody);
         break;
     case COMPONENT_TYPE::MESHRENDER:
         pSelectedObject->AddComponent(new CMeshRender);

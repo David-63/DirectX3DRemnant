@@ -6,8 +6,27 @@
 
 struct VS_IN
 {
-    float3 vPos : POSITION;    
+    float3 vPos : POSITION;
+    
+    float4 vWeights : BLENDWEIGHT;
+    float4 vIndices : BLENDINDICES;
 };
+
+
+struct VTX_IN_INST
+{
+    float3 vPos : POSITION;
+
+    float4 vWeights : BLENDWEIGHT;
+    float4 vIndices : BLENDINDICES;
+
+    // Per Instance Data
+    row_major matrix matWorld : WORLD;
+    row_major matrix matWV : WV;
+    row_major matrix matWVP : WVP;
+    uint iRowIndex : ROWINDEX;
+};
+
 
 struct VS_OUT
 {
@@ -252,8 +271,31 @@ struct VS_SHADOW_OUT
 VS_SHADOW_OUT VS_ShadowMap(VS_IN _in)
 {
     VS_SHADOW_OUT output = (VS_SHADOW_OUT) 0.f;
+    
+    if (g_iAnim)
+    {
+        Skinning(_in.vPos, _in.vWeights, _in.vIndices, 0);
+    }
+    
     // 화면 전체에 호출되어야함
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
+    output.vProjPos = output.vPosition;
+    output.vProjPos.xyz /= output.vProjPos.w;
+            
+    return output;
+}
+
+VS_SHADOW_OUT VS_ShadowMap_Inst(VTX_IN_INST _in)
+{
+    VS_SHADOW_OUT output = (VS_SHADOW_OUT) 0.f;
+    // 화면 전체에 호출되어야함
+    
+    if (g_iAnim)
+    {
+        Skinning(_in.vPos, _in.vWeights, _in.vIndices, _in.iRowIndex);
+    }
+    
+    output.vPosition = mul(float4(_in.vPos, 1.f), _in.matWVP);
     output.vProjPos = output.vPosition;
     output.vProjPos.xyz /= output.vProjPos.w;
     

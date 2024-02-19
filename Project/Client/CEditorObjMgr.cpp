@@ -67,7 +67,7 @@ void CEditorObjMgr::init()
 	pEditorCamObj->Camera()->SetLayerMaskAll(true);
 	pEditorCamObj->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 
-	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, -1500.f));
+	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 500.f, -750.f));
 	m_vecEditorObj.push_back(pEditorCamObj);
 	CRenderMgr::GetInst()->RegisterEditorCamera(pEditorCamObj->Camera());
 }
