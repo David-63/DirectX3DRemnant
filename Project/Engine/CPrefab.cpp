@@ -17,7 +17,7 @@ CPrefab::~CPrefab()
 
 CGameObject* CPrefab::Instantiate()
 {
-	return m_ProtoObj->Clone();	
+	return m_ProtoObj->Clone();
 }
 
 void CPrefab::RegisterProtoObject(CGameObject* _Proto)

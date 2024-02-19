@@ -51,6 +51,7 @@ public:
     void finaltick_module();
     void render();
     void render_shadowmap();
+    void render_shadowmap(UINT _sub);
 
 public:
     void AddComponent(CComponent* _Component);

@@ -49,6 +49,7 @@ void CRenderComponent::render_shadowmap(UINT _iSubset)
 	
 	// 행렬 정보 가져오기
 	Transform()->UpdateData();
+	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
 
 	
 
@@ -56,20 +57,22 @@ void CRenderComponent::render_shadowmap(UINT _iSubset)
 	if (Animator3D())
 	{
 		Animator3D()->UpdateData();
-		GetMaterial(_iSubset)->SetAnim3D(true); // Animation Mesh 알리기
+		pShadowMapMtrl->SetAnim3D(true); // Animation Mesh 알리기
 	}
 
 	// Mtrl 업데이트
-	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
 	pShadowMapMtrl->UpdateData_Inst();
 	//GetMaterial(_iSubset)->UpdateData();
 
 	// 사용할 메쉬 업데이트 및 렌더링
-	GetMesh()->render(_iSubset);
+	GetMesh()->render_instancing(_iSubset);
 
 	// Animation 관련 정보 제거
 	if (Animator3D())
+	{
 		Animator3D()->ClearData();
+		pShadowMapMtrl->SetAnim3D(false);
+	}
 }
 
 
@@ -167,7 +170,7 @@ void CRenderComponent::LoadFromLevelFile(FILE* _File)
 {
 	LoadResRef(m_pMesh, _File);
 
-	UINT iMtrlCount = GetMtrlCount();
+	UINT iMtrlCount = 0;
 	fread(&iMtrlCount, sizeof(UINT), 1, _File);
 
 	SetMtrlCount(iMtrlCount);

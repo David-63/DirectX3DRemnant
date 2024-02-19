@@ -114,11 +114,11 @@ void CreateTestLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;		
 		// 인스턴싱 테스트
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_WalkF.fbx");
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");		
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");		
 
-		for (int i = 0; i < 1; ++i)
+		for (int i = 0; i < 5; ++i)
 		{
 			pObj = pMeshData->Instantiate();
 			pObj->SetName(L"Monster");

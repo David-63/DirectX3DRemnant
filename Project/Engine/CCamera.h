@@ -37,7 +37,8 @@ private:
     vector<CGameObject*>                m_vecPost;
 
     vector<CGameObject*>                m_vecShadow;
-
+    map<ULONG64, vector<tInstObj>>		m_mapInstGroup_S;	    // Foward ( Opaque, Mask )	
+    map<INT_PTR, vector<tInstObj>>		m_mapSingleObj_S;		    // Single Object
 public:
     void SetProjType(PROJ_TYPE _Type) { m_ProjType = _Type; }
     PROJ_TYPE GetProjType() { return m_ProjType; }
