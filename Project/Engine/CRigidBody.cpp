@@ -28,9 +28,17 @@ CRigidBody::~CRigidBody()
 }
 void CRigidBody::SaveToLevelFile(FILE* _File)
 {
+	fwrite(&mFreezeRotationFlag, sizeof(EnumFlags<FreezeRotationFlag, uint16_t>), 1, _File);
+	fwrite(&mActorType, sizeof(ACTOR_TYPE), 1, _File);
+	fwrite(&mShapeInfos, sizeof(std::vector<tShapeInfo>), 1, _File);
+	fwrite(&mShapes, sizeof(std::vector<physx::PxShape*>), 1, _File);
 }
 void CRigidBody::LoadFromLevelFile(FILE* _File)
 {
+	fread(&mFreezeRotationFlag, sizeof(EnumFlags<FreezeRotationFlag, uint16_t>), 1, _File);
+	fread(&mActorType, sizeof(ACTOR_TYPE), 1, _File);
+	fread(&mShapeInfos, sizeof(std::vector<tShapeInfo>), 1, _File);
+	fread(&mShapes, sizeof(std::vector<physx::PxShape*>), 1, _File);
 }
 void CRigidBody::begin()
 {

@@ -24,10 +24,12 @@ CCollider3D::~CCollider3D()
 
 void CCollider3D::SaveToLevelFile(FILE* _File)
 {
+	fwrite(&mType, sizeof(COLLIDER3D_TYPE), 1, _File);
 }
 
-void CCollider3D::LoadFromLevelFile(FILE* _FILE)
+void CCollider3D::LoadFromLevelFile(FILE* _File)
 {
+	fread(&mType, sizeof(COLLIDER3D_TYPE), 1, _File);
 }
 
 void CCollider3D::begin()

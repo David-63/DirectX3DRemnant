@@ -21,7 +21,7 @@ public:
 	virtual ~CCollider3D();
 
 	virtual void SaveToLevelFile(FILE* _File) override;
-	virtual void LoadFromLevelFile(FILE* _FILE) override;
+	virtual void LoadFromLevelFile(FILE* _File) override;
 
 public:
 	virtual void begin() override;
