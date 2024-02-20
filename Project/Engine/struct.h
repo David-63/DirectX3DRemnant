@@ -398,15 +398,16 @@ struct tShapeInfo
 		: eGeomType(GEOMETRY_TYPE::Sphere)
 		, size(1.f,1.f,1.f)
 		, massProperties(tMassProperties())
-		, pGeometries(nullptr)
 		, filterData{}
+		, offset(0.f,0.f,0.f)
 	{}
 
 	GEOMETRY_TYPE eGeomType;
 	Vector3 size;
 	tMassProperties massProperties;
-	Geometries* pGeometries;
 	physx::PxFilterData filterData;
+	Vector3 offset;
+	//Geometries* pGeometries;
 };
 
 struct tRayCastInfo

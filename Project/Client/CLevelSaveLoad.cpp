@@ -189,8 +189,8 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::COLLIDER2D:
 			Component = new CCollider2D;
 			break;
-		//case COMPONENT_TYPE::COLLIDER3D:
-			//Component = new CCollider2D;
+		case COMPONENT_TYPE::COLLIDER3D:
+			Component = new CCollider3D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR2D:
 			Component = new CAnimator2D;
@@ -225,7 +225,9 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::DECAL:
 			Component = new CDecal;
 			break;
-
+		case COMPONENT_TYPE::RIGIDBODY:
+			Component = new CRigidBody;
+			break;
 		}
 
 		Component->LoadFromLevelFile(_File);

@@ -19,6 +19,7 @@ class CRigidBody :
 {
 public:
 	CRigidBody();
+	CRigidBody(const CRigidBody& _Other);
 	virtual ~CRigidBody();
 
 	CLONE(CRigidBody);
@@ -107,10 +108,11 @@ private:
 	
 	ACTOR_TYPE mActorType;
 	std::vector<tShapeInfo> mShapeInfos;
+	std::vector<Geometries*> mGeometries;
 
+	std::vector<physx::PxShape*> mShapes;
 	physx::PxRigidActor* mRigidActor;
 	physx::PxActor* mActor;
-	std::vector<physx::PxShape*> mShapes;
 	physx::PxMaterial* mMaterial;
 
 	Vector3 mVelocity;

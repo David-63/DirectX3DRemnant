@@ -18,27 +18,52 @@ CRigidBody::CRigidBody()
 	, mOffset(0.f, 0.f, 0.f)
 {
 }
+CRigidBody::CRigidBody(const CRigidBody& _Other)
+	: CComponent(COMPONENT_TYPE::RIGIDBODY)
+	, mMaxVelocity(_Other.mMaxVelocity)
+	, mActorType(_Other.mActorType)
+	, mbdrawCollider(_Other.mbdrawCollider)
+	, mShapeInfos(_Other.mShapeInfos.size())
+	, mOffset(_Other.mOffset)
+{
+	mShapeInfos.reserve(_Other.mShapeInfos.size());
+	for (const auto& shapeInfo : _Other.mShapeInfos) 
+	{
+		mShapeInfos.push_back(shapeInfo); 
+	}
+}
 CRigidBody::~CRigidBody()
 {
-	for (int i = 0; i < mShapeInfos.size(); ++i)
+	for (int i = 0; i < mGeometries.size(); ++i)
 	{
-		delete mShapeInfos[i].pGeometries;
-		mShapeInfos[i].pGeometries = nullptr;
+		delete mGeometries[i];
+		mGeometries[i] = nullptr;
 	}
 }
 void CRigidBody::SaveToLevelFile(FILE* _File)
 {
 	fwrite(&mFreezeRotationFlag, sizeof(EnumFlags<FreezeRotationFlag, uint16_t>), 1, _File);
 	fwrite(&mActorType, sizeof(ACTOR_TYPE), 1, _File);
-	fwrite(&mShapeInfos, sizeof(std::vector<tShapeInfo>), 1, _File);
-	fwrite(&mShapes, sizeof(std::vector<physx::PxShape*>), 1, _File);
+	int VecSize = mShapeInfos.size();
+	fwrite(&VecSize, sizeof(int), 1, _File);
+	for (int i = 0; i < VecSize; ++i)
+	{
+		fwrite(&mShapeInfos[i], sizeof(tShapeInfo), 1, _File);
+	}
 }
 void CRigidBody::LoadFromLevelFile(FILE* _File)
 {
 	fread(&mFreezeRotationFlag, sizeof(EnumFlags<FreezeRotationFlag, uint16_t>), 1, _File);
 	fread(&mActorType, sizeof(ACTOR_TYPE), 1, _File);
-	fread(&mShapeInfos, sizeof(std::vector<tShapeInfo>), 1, _File);
-	fread(&mShapes, sizeof(std::vector<physx::PxShape*>), 1, _File);
+	int VecSize = 0;
+	fread(&VecSize, sizeof(int), 1, _File);
+	tShapeInfo temp;
+	for (int i = 0; i < VecSize; ++i)
+	{
+		fread(&temp, sizeof(tShapeInfo), 1, _File);
+		mShapeInfos.push_back(temp);
+	}
+	
 }
 void CRigidBody::begin()
 {
@@ -105,13 +130,14 @@ void CRigidBody::SetPhysical(ACTOR_TYPE _eActorType)
 	AssertEx(mShapeInfos.size() != 0, L"ShapeInfo가 설정되지 않음.");
 
 	mActorType = _eActorType;
+	mbAppliedPhysics = true;
 
 	CreateMaterial();
 	CreateGeometry();
 	CreateActor();
 	CreateShape();
+	
 
-	mbAppliedPhysics = true;
 	InitializeActor();
 }
 bool CRigidBody::IsAppliedPhysics()
@@ -395,6 +421,7 @@ void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos)
 	localpose.q = GetPhysicsTransform().q;
 
 	mShapes[_idx]->setLocalPose(localpose);
+	mShapeInfos[_idx].offset = _localPos;
 }
 
 void CRigidBody::AttachShape(int _idx)
@@ -419,56 +446,61 @@ void CRigidBody::CreateGeometry()
 {
 	for (int i = 0; i < mShapeInfos.size(); ++i)
 	{
-		mShapeInfos[i].size /= 2.f;
+		mGeometries.resize(mShapeInfos.size());
+
 		switch (mShapeInfos[i].eGeomType)
 		{
 		case GEOMETRY_TYPE::Box:
 		{
-			mShapeInfos[i].pGeometries = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size);
-			GetOwner()->Transform()->SetRelativeScale(mShapeInfos[i].size * 2);
+			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size / 2.f);
+			GetOwner()->Transform()->SetRelativeScale(mShapeInfos[i].size);
 		}
 		break;
 
 		case GEOMETRY_TYPE::Capsule:
-			mShapeInfos[i].pGeometries = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x, mShapeInfos[i].size.y);
+			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x/2.f, mShapeInfos[i].size.y/2.f);
 			break;
 
 		case GEOMETRY_TYPE::Sphere:
-			mShapeInfos[i].pGeometries = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x);
+			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x/2.f);
 			break;
 
 		case GEOMETRY_TYPE::Plane:
-			mShapeInfos[i].pGeometries = new Geometries(mShapeInfos[i].eGeomType);
+			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType);
 			break;
 		}
 
-		AssertEx(mShapeInfos[i].pGeometries, L"RigidBody::CreateGeometry() - Geometry 생성 실패");
+		AssertEx(mGeometries[i], L"RigidBody::CreateGeometry() - Geometry 생성 실패");
 	}
 }
 void CRigidBody::CreateShape()
 {
-	for(tShapeInfo& info : mShapeInfos)
+	mShapes = {};
+
+	for(int i = 0; i < mShapeInfos.size(); ++i)
 	{
 		PxShape* shape = {};
-		switch (info.eGeomType)
+		switch (mShapeInfos[i].eGeomType)
 		{
 		case GEOMETRY_TYPE::Box:
-			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), info.pGeometries->boxGeom, *mMaterial);
+			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->boxGeom, *mMaterial);
 			break;
 		case GEOMETRY_TYPE::Capsule:
-			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), info.pGeometries->capsuleGeom, *mMaterial);
+			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->capsuleGeom, *mMaterial);
 			break;
 		case GEOMETRY_TYPE::Sphere:
-			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), info.pGeometries->sphereGeom, *mMaterial);
+			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->sphereGeom, *mMaterial);
 			break;
 		case GEOMETRY_TYPE::Plane:
-			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), info.pGeometries->planeGeom, *mMaterial);
+			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->planeGeom, *mMaterial);
 			break;
 		}
-
+		
 
 		AssertEx(shape, L"RigidBody::CreateShape() - Shape 생성 실패");
 		mShapes.push_back(shape);
+
+		SetShapeLocalPos(i, mShapeInfos[i].offset);
 	}
 }
 void CRigidBody::CreateActor()
@@ -558,11 +590,11 @@ void CRigidBody::DrawDebugMesh()
 		{
 			if (mShapeInfos[i].eGeomType == GEOMETRY_TYPE::Box)
 			{
-				DrawDebugCube(GetShapePosition(i), mShapeInfos[i].size * 2, Vec4(0.7f, 0.0f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+				DrawDebugCube(GetShapePosition(i), mShapeInfos[i].size, Vec4(0.7f, 0.0f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
 			}
 			else if (mShapeInfos[0].eGeomType == GEOMETRY_TYPE::Sphere)
 			{
-				DrawDebugSphere(GetShapePosition(i), mShapeInfos[i].size.x, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+				DrawDebugSphere(GetShapePosition(i), mShapeInfos[i].size.x/2.f, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
 			}
 
 		}

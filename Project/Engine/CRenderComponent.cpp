@@ -103,9 +103,8 @@ ULONG64 CRenderComponent::GetInstID(UINT _iMtrlIdx)
 
 void CRenderComponent::SaveToLevelFile(FILE* _File)
 {
-	COMPONENT_TYPE type = GetType();
-	fwrite(&type, sizeof(UINT), 1, _File);
-
+	//COMPONENT_TYPE type = GetType();
+	//fwrite(&type, sizeof(UINT), 1, _File);
 
 	SaveResRef(m_pMesh.Get(), _File);
 
@@ -128,6 +127,7 @@ void CRenderComponent::LoadFromLevelFile(FILE* _File)
 
 	UINT iMtrlCount = GetMtrlCount();
 	fread(&iMtrlCount, sizeof(UINT), 1, _File);
+	m_vecMtrls.resize(iMtrlCount);
 
 	for (UINT i = 0; i < iMtrlCount; ++i)
 	{
