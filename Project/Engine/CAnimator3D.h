@@ -30,6 +30,21 @@ struct Events
 	Event CompleteEvent;
 	Event EndEvent;
 	std::vector<Event> ActionEvents;
+
+	void Save(FILE* _pFile)
+	{
+		fwrite(&StartEvent, sizeof(Event), 1, _pFile);
+		fwrite(&CompleteEvent, sizeof(Event), 1, _pFile);
+		fwrite(&EndEvent, sizeof(Event), 1, _pFile);
+	}
+
+	Events* Load(FILE* _pFile)
+	{
+		fread(&StartEvent, sizeof(Event), 1, _pFile);
+		fread(&CompleteEvent, sizeof(Event), 1, _pFile);
+		fread(&EndEvent, sizeof(Event), 1, _pFile);
+		return this;
+	}
 };
 
 class CStructuredBuffer;

@@ -406,7 +406,7 @@ void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 		// key
 		SaveWString(animEvent.first, _pFile);		
 		// value
-		fwrite(animEvent.second, sizeof(Events*), 1, _pFile);
+		animEvent.second->Save(_pFile);
 	}
 	
 	UINT iClipCount = (UINT)m_mapAnim.size();
@@ -430,12 +430,11 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 	UINT iEventsCount;
 	fread(&iEventsCount, sizeof(int), 1, _pFile);
 	wstring eventKey;
-	Events* eventValue = nullptr;
+	Events* eventValue = new Events();
 	for (int curEvent = 0; curEvent < iEventsCount; ++curEvent)
 	{
-		LoadWString(eventKey, _pFile);
-		fread(&eventValue, sizeof(Events*), 1, _pFile);
-		m_Events.insert(make_pair(eventKey, eventValue));
+		LoadWString(eventKey, _pFile);		
+		m_Events.insert(make_pair(eventKey, eventValue->Load(_pFile)));
 	}
 
 	m_mapAnim.clear();
