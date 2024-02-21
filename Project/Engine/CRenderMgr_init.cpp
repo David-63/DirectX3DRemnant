@@ -116,7 +116,7 @@ void CRenderMgr::CreateMRT()
     // ===================
     {
         m_MRT[(UINT)MRT_TYPE::SHADOWMAP] = new CMRT();
-        Vec2 vResol = Vec2(2048, 2048);
+        Vec2 vResol = Vec2(4096, 4096);
         Ptr<CTexture> arrRTTex[8] = {};
         arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"DynamicShadowMapTex", vResol.x, vResol.y
                                 , DXGI_FORMAT_R32_FLOAT

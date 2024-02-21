@@ -21,6 +21,11 @@ private:
 	Vec3 m_arrProj[8];
 	Vec4 m_arrFace[FT_END];
 
+	Vec4 m_arrFace_Near[FT_END];
+	Vec4 m_arrFace_Middle[FT_END];
+	Vec4 m_arrFace_Far[FT_END];
+
+
 public:
 	void finaltick();
 

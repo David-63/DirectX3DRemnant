@@ -342,6 +342,9 @@ int CMesh::Save(const wstring& _strRelativePath)
 			, 1, pFile);
 	}
 
+	// mtrl 정보 기입
+	fwrite(&m_mtrlCount, sizeof(UINT), 1, pFile);
+
 	// Animation3D 정보
 	UINT iCount = (UINT)m_vecAnimClip.size();
 	fwrite(&iCount, sizeof(int), 1, pFile);
@@ -442,6 +445,9 @@ int CMesh::Load(const wstring& _strFilePath)
 
 		m_vecIdxInfo.push_back(info);
 	}
+
+	// mtrl 정보 기입
+	fread(&m_mtrlCount, sizeof(UINT), 1, pFile);
 
 	// Animation3D 정보 읽기
 	int iCount = 0;

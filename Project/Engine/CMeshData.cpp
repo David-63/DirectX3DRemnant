@@ -53,7 +53,8 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 	// 메쉬 가져오기
 	CMesh* pMesh = nullptr;
 	pMesh = CMesh::CreateFromContainer(loader);
-
+	// pMesh->SetMtrlCount(); 이런식으로 함수 구현
+	
 	// ResMgr 에 메쉬 등록
 	if (nullptr != pMesh)
 	{
@@ -82,6 +83,8 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 	CMeshData* pMeshData = new CMeshData(true);
 	pMeshData->m_pMesh = pMesh;
 	pMeshData->m_vecMtrl = vecMtrl;
+
+	pMeshData->m_pMesh->SetMtrlCount(pMeshData->m_vecMtrl.size());
 
 	return pMeshData;
 }

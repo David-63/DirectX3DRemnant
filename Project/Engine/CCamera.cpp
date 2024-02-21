@@ -292,6 +292,25 @@ void CCamera::SortObject_Shadow()
 {
 	clear_shadow();
 
+	/*CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+	for (UINT layerIdx = 0; layerIdx < MAX_LAYER; ++layerIdx)
+	{
+		if (m_iLayerMask & (1 << layerIdx))
+		{
+			CLayer* pLayer = pCurLevel->GetLayer(layerIdx);
+			const vector<CGameObject*>& vecObject = pLayer->GetObjects();
+			for (size_t objIdx = 0; objIdx < vecObject.size(); ++objIdx)
+			{
+				CRenderComponent* pRenderCom = vecObject[objIdx]->GetRenderComponent();
+
+				if (nullptr == pRenderCom)
+					continue;
+				m_vecShadow.push_back(vecObject[objIdx]);
+			}
+		}
+	}*/
+
+	///////////////////////////////////////////////////////////////
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 	for (UINT layerIdx = 0; layerIdx < MAX_LAYER; ++layerIdx)
 	{
@@ -380,11 +399,11 @@ void CCamera::SortObject_Shadow()
 
 void CCamera::render()
 {
-	geometryRender();
-	lightRender();
-	mergeRender();
+	geometryRender();	// deferred render	| MRT::DEFERRED rendering
+	lightRender();		// light render		| MRT::LIGHT	rendering
+	mergeRender();		//					| MRT::SWAPCHAINrendering
 
-	render_forward();
+	render_forward();	
 	render_decal();
 	render_transparent();
 
@@ -396,6 +415,8 @@ void CCamera::render_shadowmap()
 	updateMatrix();
 
 	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+
+	// Mtrl 내부에 Shader + ConstBuffer
 
 	for (auto& pair : m_mapSingleObj_S)
 	{
@@ -429,8 +450,7 @@ void CCamera::render_shadowmap()
 
 		// 인스턴싱 객체로부터 Obj, Mesh, Mtrl 가져옴
 		CGameObject* pObj = pair.second[0].pObj;
-		Ptr<CMesh> pMesh = pObj->GetRenderComponent()->GetMesh();
-		//Ptr<CMaterial> pMtrl = pObj->GetRenderComponent()->GetMaterial(pair.second[0].iMtrlIdx);
+		Ptr<CMesh> pMesh = pObj->GetRenderComponent()->GetMesh();		
 		CInstancingBuffer::GetInst()->Clear();
 
 		// 인스턴싱에 필요한 데이터 입력

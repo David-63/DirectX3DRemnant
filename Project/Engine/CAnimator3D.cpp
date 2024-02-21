@@ -16,7 +16,7 @@ CAnimator3D::CAnimator3D()
 	: m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(false)
 
 	, m_isBlend(false), m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr), m_isRun(false)
-	, m_blendUpdateTime(0.f), m_blendFinishTime(0.32f), m_blendRatio(0.f), m_prevFrameIdx(0)
+	, m_blendUpdateTime(0.f), m_blendFinishTime(BlendEndTime), m_blendRatio(0.f), m_prevFrameIdx(0)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_BoneFinalMatBuffer = new CStructuredBuffer();
@@ -172,6 +172,8 @@ void CAnimator3D::UpdateData()
 	m_BoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
 
 	m_BoneFinalMatBuffer->GetData(m_vecFinalBoneMat);
+
+	// 내 오브젝트 * 본소켓의 pos
 }
 
 void CAnimator3D::ClearData()
@@ -394,9 +396,74 @@ std::function<void()>& CAnimator3D::ActionEvent(const std::wstring& name, UINT i
 
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {
+	// map 객체 저장
+	// vector 방식이라면 size 부터 저장해서 순회하며 SaveResRef 함수로 저장하는데
 	
+	UINT iEventsCount = (UINT)m_Events.size();
+	fwrite(&iEventsCount, sizeof(int), 1, _pFile);
+	for (auto& animEvent : m_Events)
+	{
+		// key
+		SaveWString(animEvent.first, _pFile);		
+		// value
+		fwrite(animEvent.second, sizeof(Events*), 1, _pFile);
+	}
+	
+	UINT iClipCount = (UINT)m_mapAnim.size();
+	fwrite(&iEventsCount, sizeof(int), 1, _pFile);
+	for (auto& animClip : m_mapAnim)
+	{
+		// key
+		SaveWString(animClip.first, _pFile);
+		// value
+		SaveResRef(animClip.second.Get(), _pFile);		
+	}
+
+	// 현 클립 정보 저장
+	SaveResRef(m_pCurrentAnim, _pFile);
 }
 
 void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 {
+	// map 객체 로드
+	m_Events.clear();
+	UINT iEventsCount;
+	fread(&iEventsCount, sizeof(int), 1, _pFile);
+	wstring eventKey;
+	Events* eventValue = nullptr;
+	for (int curEvent = 0; curEvent < iEventsCount; ++curEvent)
+	{
+		LoadWString(eventKey, _pFile);
+		fread(&eventValue, sizeof(Events*), 1, _pFile);
+		m_Events.insert(make_pair(eventKey, eventValue));
+	}
+
+	m_mapAnim.clear();
+	UINT iClipCount;
+	fread(&iClipCount, sizeof(int), 1, _pFile);
+	wstring clipKey;
+	Ptr<CAnimClip> clipVlaue;
+	for (int curClip = 0; curClip < iClipCount; ++curClip)
+	{
+		LoadWString(clipKey, _pFile);
+		LoadResRef(clipVlaue, _pFile);
+		m_mapAnim.insert(make_pair(clipKey, clipVlaue));
+	}
+
+	// 현 클립 정보 로드
+	Ptr<CAnimClip> pAnim;
+	LoadResRef(pAnim, _pFile);
+	m_pCurrentAnim = pAnim.Get();
+	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
+	m_vecFinalBoneMat.resize(iBoneCount);
+	m_BoneFinalMatBuffer = new CStructuredBuffer();
+
+	// 제어 변수 세팅
+	m_isRun = false;
+	m_bRepeat = false;
+	m_isBlend = false;
+	m_blendUpdateTime = 0.f;
+	m_blendFinishTime = BlendEndTime;
+	m_blendRatio = 0.f;
+	m_prevFrameIdx = -1;
 }

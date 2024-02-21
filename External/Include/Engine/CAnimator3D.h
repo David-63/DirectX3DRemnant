@@ -8,6 +8,9 @@
 #include "CAnimClip.h"
 
 
+#define BlendEndTime 0.32f
+
+
 struct Event
 {
 	void operator=(std::function<void()> func)
@@ -122,10 +125,6 @@ public:
 	const map<wstring, Ptr<CAnimClip>>& GetAnims() { return m_mapAnim; }
 	CAnimClip* GetCurAnim() { return m_pCurrentAnim; }
 	
-public:
-	void SaveAnimClip() {}
-	void LoadAnimClip() {}
-
 	virtual void SaveToLevelFile(FILE* _pFile) override;
 	virtual void LoadFromLevelFile(FILE* _pFile) override;
 	CLONE(CAnimator3D);

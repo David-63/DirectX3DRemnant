@@ -123,7 +123,7 @@ void CreateTestLevel()
 			pObj = pMeshData->Instantiate();
 			pObj->SetName(L"MonsterA");
 			pObj->Transform()->SetDebugSphereUse(true);
-			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
+			pObj->Transform()->SetRelativeScale(2.f, 2.f, 2.f);
 			SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
 		}
 
@@ -134,7 +134,7 @@ void CreateTestLevel()
 			pObj = pMeshData->Instantiate();
 			pObj->SetName(L"MonsterB");
 			pObj->Transform()->SetDebugSphereUse(true);
-			pObj->Transform()->SetRelativeScale(5.f, 5.f, 5.f);
+			pObj->Transform()->SetRelativeScale(10.f, 10.f, 10.f);
 			SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 100.f), 0);
 		}
 	}

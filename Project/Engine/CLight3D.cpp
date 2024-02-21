@@ -84,7 +84,7 @@ void CLight3D::render()
 void CLight3D::render_shadowmap()
 {
 	m_CamObj->Camera()->SortObject_Shadow();
-	m_CamObj->Camera()->render_shadowmap();
+	m_CamObj->Camera()->render_shadowmap();	// dynamicShadowmap Tex에 자기 자신의 거리(깊이) 남기기
 }
 
 
