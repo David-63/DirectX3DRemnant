@@ -602,7 +602,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 
 	// ============================
-	// ParticleRender
+	// ParticleRender 파티클(일반적)
 	// 
 	// RS_TYPE : CULL_NONE
 	// DS_TYPE : NO_WRITE
@@ -620,7 +620,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->CreatePixelShader(L"shader\\particle_render.fx", "PS_ParticleRender");
 
 	pShader->SetRSType(RS_TYPE::CULL_NONE);
-	//pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+
 	pShader->SetDSType(DS_TYPE::NO_WRITE);
 	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
@@ -628,6 +628,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_TRANSPARENT);
 
 	AddRes(pShader->GetKey(), pShader);
+
 
 
 
@@ -910,6 +911,7 @@ void CResMgr::CreateDefaultComputeShader()
 	pCS = new CParticleUpdateShader(128, 1, 1);
 	pCS->SetKey(L"ParticleUpdateCS");
 	pCS->CreateComputeShader(L"shader\\particle_update.fx", "CS_ParticleUpdate");
+	
 	AddRes(pCS->GetKey(), pCS);
 
 	// Animation Matrix Update 쉐이더

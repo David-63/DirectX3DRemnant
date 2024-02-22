@@ -6,6 +6,7 @@ class CTestScript :
 {
 private:
     Vec3 pivot;
+    CGameObject* m_pTarget;
 
 public:
     virtual void begin() override;
@@ -29,6 +30,12 @@ public:
     {
         int a = 0;
     }
+
+
+    void SetTarget(CGameObject* _Target)
+    {
+		m_pTarget = _Target;
+	}
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

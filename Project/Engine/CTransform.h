@@ -31,6 +31,7 @@ public:
 
     // 상대 이동, 크기를 절대값으로 지정  
     void SetAbsolute(bool _Set) { m_bAbsolute = _Set; }
+    bool GetAbsolute() { return m_bAbsolute; }
 
     Vec3 GetRelativePos() const { return m_vRelativePos; }
     Vec3 GetRelativeScale() const { return m_vRelativeScale; }

@@ -108,7 +108,7 @@ struct tParticle
 
 struct tRWParticleBuffer
 {
-	int		SpawnCount;			// 스폰 시킬 파티클 개수
+	int		iSpawnCount;			// 스폰 시킬 파티클 개수
 	int		padding[3];
 };
 
@@ -118,19 +118,26 @@ struct tParticleModule
 	// 스폰 모듈
 	Vec4    vSpawnColor;
 	Vec4	vSpawnScaleMin;
-	Vec4	vSpawnScaleMax;
+	Vec4	vSpawnScaleMax;	
 	Vec3	vBoxShapeScale;
-	float	fSphereShapeRadius;
+	
+	float	fSphereShapeRadius;	
+	float   fSphereOffset;
 	int		SpawnShapeType;		// 0 : BOX, 1 : Sphere
+	int     BoxPad[2];
+
+	float   fSpawnAreaOffsetFactor;
 	int		SpawnRate;			// 초당 생성 개수
-	int		Space;				// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)
-	float   MinLifeTime;		// 최소 수명
+	int		Space;				// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)	
+	
+	float   MinLifeTime;		// 최소 수명	
 	float   MaxLifeTime;		// 최대 수명
-	int     spawnpad[3];
+	int     spawnpad[2];
 
 	// Color Change 모듈
 	Vec4	vStartColor;		// 초기 색상
 	Vec4	vEndColor;			// 최종 색상
+	bool    bStrongColor;		// 1 : 강한 색상, 0 : 약한 색상
 
 	// Scale Change 모듈
 	float	StartScale;			// 초기 배율
@@ -138,10 +145,10 @@ struct tParticleModule
 
 	// 버퍼 최대크기
 	int		iMaxParticleCount;
-	int		ipad;
+	int		ipad[2];
 
 	// Add Velocity 모듈
-	Vec4	vVelocityDir;
+	Vec4	vVelocityDir;	
 	int     AddVelocityType;	// 0 : From Center, 1: To Center, 2 : Fixed Direction	
 	float	OffsetAngle;
 	float	Speed;
@@ -151,6 +158,9 @@ struct tParticleModule
 	float	StartDrag;
 	float	EndDrag;
 
+	// Gravity  - 중력
+	float	fGravityForce;
+
 	// NoiseForce 모듈 - 랜덤 힘 적용	
 	float	fNoiseTerm;		// 랜덤 힘 변경 간격
 	float	fNoiseForce;	// 랜덤 힘 크기
@@ -159,8 +169,10 @@ struct tParticleModule
 	int		VelocityAlignment;	// 1 : 속도정렬 사용(이동 방향으로 회전) 0 : 사용 안함
 	int		VelocityScale;		// 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함	
 	float   vMaxSpeed;			// 최대 크기에 도달하는 속력
-	Vec4	vMaxVelocityScale;	// 속력에 따른 크기 변화량 최대치
-	int		renderpad;
+	Vec4	vMaxVelocityScale;	// 속력에 따른 크기 변화량 최대치	
+	float   fRotAngle;
+	float   fRotSpeed;
+	int     bRot;				// 1 : 회전 사용, 0: 사용 안함
 
 	// Module Check
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];

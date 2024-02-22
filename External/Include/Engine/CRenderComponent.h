@@ -55,6 +55,6 @@ public:
 
 public:
     CRenderComponent(COMPONENT_TYPE _type);
-    ~CRenderComponent();
+    virtual ~CRenderComponent();
 };
 

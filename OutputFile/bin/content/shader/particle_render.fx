@@ -123,7 +123,37 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
             {
                 NewPos[i] = mul(NewPos[i], matRotZ);
             }
-        }        
+        }  
+        
+        if (ModuleData.bRot)
+        {
+            float fAngle = 0.f;
+            
+            if (ModuleData.fRotSpeed == 0)
+            {
+                fAngle = ModuleData.fRotAngle;
+
+            }
+            else
+            {
+                fAngle = ModuleData.fRotAngle + g_AccTime * ModuleData.fRotSpeed;
+            }
+            
+             // 구한 각도로 Z 축 회전 행렬을 만든다.
+            float3x3 matRotZ =
+            {
+                cos(fAngle),  sin(fAngle),  0,
+                -sin(fAngle), cos(fAngle),  0,
+                0,            0,           1.f,
+            };
+            
+            // 4개의 정점을 회전시킨다.
+            for (int i = 0; i < 4; ++i)
+            {
+                NewPos[i] = mul(NewPos[i], matRotZ);
+            }
+            
+        }
     }
     
     
@@ -166,7 +196,7 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
     if(g_btex_0)
     {
         vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);        
-        vOutColor.rgb *= ParticleBuffer[_in.iInstID].vColor.rgb;
+        vOutColor.rgba *= ParticleBuffer[_in.iInstID].vColor.rgba;
     }
     
     return vOutColor;

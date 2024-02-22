@@ -13,7 +13,10 @@ private:
     CStructuredBuffer*  m_ParticleBuffer;
     CStructuredBuffer*  m_RWBuffer;
     CStructuredBuffer*  m_ModuleData;
+
     Ptr<CTexture>       m_NoiseTex;
+
+
 
 
 public:
@@ -27,6 +30,7 @@ public:
     }
 
     void SetParticleObjectPos(Vec3 _vPos) { m_Const.arrV4[0] = _vPos; }
+
 
 public:
     virtual void UpdateData() override;
