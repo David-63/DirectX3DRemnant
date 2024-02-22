@@ -128,7 +128,7 @@ void CreateTestLevel()
 		pObj->SetName(L"Player");
 		pObj->Transform()->SetDebugSphereUse(true);
 		pObj->SetLayerIdx(2);
-		pObj->Transform()->SetRelativePos(Vec3(40.f, 100.f, 40.f));
+		pObj->Transform()->SetRelativePos(Vec3(40.f, 50.f, 40.f));
 		pObj->AddComponent(new CRigidBody);
 
 		tShapeInfo info = {};
@@ -167,7 +167,7 @@ void CreateTestLevel()
 		pObj->RigidBody()->AddActorToLevel();
 		
 
-		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
+		SpawnGameObject(pObj, Vec3(40.f, 50.f, 40.f), 2);
 
 		//Ptr<CPrefab> fab = CResMgr::GetInst()->SavePrefab(L"prefab\\prefab01.pref", pObj);
 		//CGameObject* cloneObj = fab->Instantiate();
@@ -251,9 +251,13 @@ void CreateTestLevel()
 		//CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
 		
 		Ptr<CPrefab> fab = CResMgr::GetInst()->LoadPrefab(L"prefab\\prefab01.pref");
-		CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+		CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 50.f, 400.f), 2);
+		CGameObject* cloneObj2 = fab->Instantiate(Vec3(100.f, 50.f, 400.f), 2);
+		CGameObject* cloneObj3 = fab->Instantiate(Vec3(200.f, 50.f, 400.f), 2);
 
-		SpawnGameObject(cloneObj, Vec3(300.f, 0.f, 400.f), L"Player");
+		SpawnGameObject(cloneObj, Vec3(300.f, 50.f, 400.f), L"Player");
+		SpawnGameObject(cloneObj2, Vec3(100.f, 50.f, 400.f), L"Player");
+		SpawnGameObject(cloneObj3, Vec3(200.f, 50.f, 400.f), L"Player");
 	}
 
 	//monster

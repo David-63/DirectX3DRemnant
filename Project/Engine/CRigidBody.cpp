@@ -23,10 +23,9 @@ CRigidBody::CRigidBody(const CRigidBody& _Other)
 	, mMaxVelocity(_Other.mMaxVelocity)
 	, mActorType(_Other.mActorType)
 	, mbdrawCollider(_Other.mbdrawCollider)
-	, mShapeInfos(_Other.mShapeInfos.size())
 	, mOffset(_Other.mOffset)
 {
-	mShapeInfos.reserve(_Other.mShapeInfos.size());
+	mShapeInfos.clear();
 	for (const auto& shapeInfo : _Other.mShapeInfos) 
 	{
 		mShapeInfos.push_back(shapeInfo); 
@@ -86,7 +85,7 @@ void CRigidBody::finaltick()
 
 	if (true == mbAppliedPhysics && ACTOR_TYPE::Static == mActorType)
 		return;
-	else
+	else 
 	{
 		GetOwner()->Transform()->Move(mVelocity);
 	}

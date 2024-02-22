@@ -25,12 +25,15 @@ CGameObject* CPrefab::Instantiate(Vec3 _pos, int _layerIdx)
 
 	clone->Transform()->SetRelativePos(_pos);
 	clone->SetLayerIdx(_layerIdx);
-	ACTOR_TYPE type = clone->RigidBody()->GetActorType();
-	clone->RigidBody()->SetPhysical(type);
-	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-	clone->RigidBody()->AddActorToLevel();
+	if (clone->RigidBody())
+	{
+		ACTOR_TYPE type = clone->RigidBody()->GetActorType();
+		clone->RigidBody()->SetPhysical(type);
+		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		clone->RigidBody()->AddActorToLevel();
+	}
 
 	return clone;
 }
@@ -231,3 +234,5 @@ CGameObject* CPrefab::LoadGameObject(FILE* _File)
 
 	return pObject;
 }
+
+

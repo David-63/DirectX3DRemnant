@@ -104,6 +104,9 @@ void CTestScript::tick()
 	if (mWallCol)
 		return;
 
+	if (vPos.y < 0.f)
+		vPos.y = 0.f;
+
 	Transform()->SetRelativePos(vPos);
 
 }
@@ -132,6 +135,7 @@ void CTestScript::OnOverlap(CCollider3D* _Other)
 		else
 			mWallCol = false;
 	}
+	
 }
 
 void CTestScript::EndOverlap(CCollider3D* _Other)
