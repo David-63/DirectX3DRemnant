@@ -170,6 +170,37 @@ void DrawDebugSphere(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool D
 	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
 }
 
+void DrawDebugCapsule(Vec3 _vWorldPos, Vec3 _vSize, Vec4 _vColor, Vec3 _vRotation, float _fTime, bool DepthTest)
+{
+	tDebugShapeInfo info = {};
+
+	info.matWorld = XMMatrixIdentity();
+	info.eShape = SHAPE_TYPE::CAPSULE;
+	info.fMaxTime = _fTime;
+	info.vWorldPos = _vWorldPos;
+	info.vWorldScale = Vec3(_vSize.x, _vSize.y, _vSize.z);
+	info.vWorldRotation = _vRotation;
+	info.vColor = _vColor;
+	info.bDepthTest = DepthTest;
+
+	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
+}
+
+void DrawDebugCapsule(const Matrix& _matWorld, Vec4 _vColor, float _fTime, bool DepthTest)
+{
+	tDebugShapeInfo info = {};
+
+	info.matWorld = _matWorld;
+	info.eShape = SHAPE_TYPE::CAPSULE;
+	info.fMaxTime = _fTime;
+	info.vColor = _vColor;
+	info.bDepthTest = DepthTest;
+
+	CRenderMgr::GetInst()->AddDebugShapeInfo(info);
+}
+
+
+
 
 bool IsValidObj(CGameObject*& _Target)
 {
@@ -250,12 +281,10 @@ void SaveWString(const wstring& _str, FILE* _File)
 void LoadWString(wstring& _str, FILE* _File)
 {
 	wchar_t szBuffer[256] = {};
-	
+
 	UINT iLen = 0;
 	fread(&iLen, sizeof(UINT), 1, _File);
-	if (1 == iLen)
-		int a = 0;
-	fread(szBuffer, sizeof(wchar_t), iLen, _File);
+	fread(szBuffer, sizeof(wchar_t), iLen, _File);	
 
 	_str = szBuffer;
 }

@@ -6,11 +6,16 @@ class CTestScript :
 {
 private:
     Vec3 pivot;
-    CGameObject* m_pTarget;
+    Vec3 mDir;
+    bool mWallCol;
 
 public:
     virtual void begin() override;
     virtual void tick() override;
+
+    virtual void BeginOverlap(CCollider3D* _Other) override;
+    virtual void OnOverlap(CCollider3D* _Other) override;
+    virtual void EndOverlap(CCollider3D* _Other) override;
 
 public:
     void Start()
@@ -30,12 +35,6 @@ public:
     {
         int a = 0;
     }
-
-
-    void SetTarget(CGameObject* _Target)
-    {
-		m_pTarget = _Target;
-	}
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

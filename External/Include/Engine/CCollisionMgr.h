@@ -38,6 +38,7 @@ public:
 	}
 
 	std::array<UINT, MAX_LAYER> GetMat() { return m_matrix; }
+	bool IsAgainstWall(Vec3 _PlayerPos, Vec3 _PlayerDir, CCollider3D* _Wall);
 
 public:
 	void tick();

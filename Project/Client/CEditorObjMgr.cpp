@@ -51,6 +51,12 @@ void CEditorObjMgr::init()
 	m_DebugShape[(UINT)SHAPE_TYPE::SPHERE]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	m_DebugShape[(UINT)SHAPE_TYPE::SPHERE]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugSphereShapeMtrl"), 0);
 
+	m_DebugShape[(UINT)SHAPE_TYPE::CAPSULE] = new CGameObjectEx;
+	m_DebugShape[(UINT)SHAPE_TYPE::CAPSULE]->AddComponent(new CTransform);
+	m_DebugShape[(UINT)SHAPE_TYPE::CAPSULE]->AddComponent(new CMeshRender);
+	m_DebugShape[(UINT)SHAPE_TYPE::CAPSULE]->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CapsuleMesh"));
+	m_DebugShape[(UINT)SHAPE_TYPE::CAPSULE]->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugSphereShapeMtrl"), 0);
+
 	// EditorObject »ý¼º
 	CGameObjectEx* pEditorCamObj = new CGameObjectEx;
 	pEditorCamObj->AddComponent(new CTransform);
@@ -61,7 +67,7 @@ void CEditorObjMgr::init()
 	pEditorCamObj->Camera()->SetLayerMaskAll(true);
 	pEditorCamObj->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 
-	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 500.f, -750.f));
+	pEditorCamObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, -1500.f));
 	m_vecEditorObj.push_back(pEditorCamObj);
 	CRenderMgr::GetInst()->RegisterEditorCamera(pEditorCamObj->Camera());
 }
@@ -126,6 +132,9 @@ void CEditorObjMgr::render()
 				break;
 			case SHAPE_TYPE::SPHERE:
 				pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::SPHERE];
+				break;
+			case SHAPE_TYPE::CAPSULE:
+				pShapeObj = m_DebugShape[(UINT)SHAPE_TYPE::CAPSULE];
 				break;
 			}
 		}

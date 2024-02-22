@@ -8,10 +8,8 @@
 #include <Engine\CGameObject.h>
 #include <Engine\components.h>
 #include <Engine\CScript.h>
-#include <Engine\CRigidBody.h>
 
 #include <Script\CScriptMgr.h>
-
 
 
 
@@ -20,22 +18,26 @@ int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 	if (_Level->GetState() != LEVEL_STATE::STOP)
 		return E_FAIL;
 
-	// 파일 경로
 	wstring strPath = CPathMgr::GetInst()->GetContentPath();
 	strPath += _LevelPath;
+
 	FILE* pFile = nullptr;
+
 	_wfopen_s(&pFile, strPath.c_str(), L"wb");
-	if (nullptr == pFile)
+
+	if (nullptr == pFile)	
 		return E_FAIL;
 
 	// 레벨 이름 저장
 	SaveWString(_Level->GetName(), pFile);
 
+
 	// 레벨의 레이어들을 저장
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
-		// 레이어 이름 저장
 		CLayer* pLayer = _Level->GetLayer(i);
+
+		// 레이어 이름 저장
 		SaveWString(pLayer->GetName(), pFile);
 
 		// 레이어의 게임오브젝트들 저장
@@ -54,6 +56,7 @@ int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 
 	fclose(pFile);
 
+
 	return S_OK;
 }
 
@@ -64,8 +67,7 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 	
 	// 컴포넌트
 	for (UINT i = 0; i <= (UINT)COMPONENT_TYPE::END; ++i)
-	{
-		COMPONENT_TYPE type = (COMPONENT_TYPE)i;
+	{		
 		if (i == (UINT)COMPONENT_TYPE::END)
 		{
 			// 컴포넌트 타입 저장
@@ -112,7 +114,6 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 
 CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 {
-	// 파일 경로
 	wstring strPath = CPathMgr::GetInst()->GetContentPath();
 	strPath += _LevelPath;
 
@@ -123,7 +124,6 @@ CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 	if (nullptr == pFile)
 		return nullptr;
 
-	// 레벨 이름 저장
 	CLevel* NewLevel = new CLevel;
 
 	// 레벨 이름
@@ -136,14 +136,16 @@ CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 	{
 		CLayer* pLayer = NewLevel->GetLayer(i);
 
+		// 레이어 이름
 		wstring LayerName;
 		LoadWString(LayerName, pFile);
 		pLayer->SetName(LayerName);
 
-
+		// 게임 오브젝트 개수
 		size_t objCount = 0;
 		fread(&objCount, sizeof(size_t), 1, pFile);
 
+		// 각 게임오브젝트
 		for (size_t j = 0; j < objCount; ++j)
 		{
 			CGameObject* pNewObj = LoadGameObject(pFile);
@@ -205,9 +207,6 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::CAMERA:
 			Component = new CCamera;
 			break;
-		case COMPONENT_TYPE::RIGIDBODY:
-			Component = new CRigidBody;
-			break;
 		case COMPONENT_TYPE::MESHRENDER:
 			Component = new CMeshRender;
 			break;
@@ -226,7 +225,9 @@ CGameObject* CLevelSaveLoad::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::DECAL:
 			Component = new CDecal;
 			break;
-
+		case COMPONENT_TYPE::RIGIDBODY:
+			Component = new CRigidBody;
+			break;
 		}
 
 		Component->LoadFromLevelFile(_File);

@@ -37,7 +37,6 @@ enum class COMPONENT_TYPE
 	LIGHT2D,		// 2차원 광원
 	LIGHT3D,		// 3차원 광원
 	CAMERA,			// Camera
-	RIGIDBODY,
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링
@@ -46,6 +45,7 @@ enum class COMPONENT_TYPE
 	LANDSCAPE,		// 3차원 지형
 	SKYBOX,			// SkyBox
 	DECAL,			// 내부 렌더링
+	RIGIDBODY,
 	
 	END,
 
@@ -238,6 +238,7 @@ enum class SHAPE_TYPE
 	CIRCLE,
 	CUBE,
 	SPHERE,
+	CAPSULE,
 	END,
 };
 
@@ -251,6 +252,8 @@ enum class COLLIDER2D_TYPE
 enum class COLLIDER3D_TYPE
 {
 	NONE,
+	Player,
+	Wall,
 	RECT,
 	CIRCLE,
 	BOX,

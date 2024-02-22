@@ -6,6 +6,7 @@
 CResMgr::CResMgr()
 	: m_Changed(false)
 {
+	mPrefab = new CPrefab;
 }
 
 CResMgr::~CResMgr()
@@ -98,6 +99,26 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	pMeshData->Save(strName);
 
 	return pMeshData;
+}
+
+Ptr<CPrefab> CResMgr::SavePrefab(const wstring& _strPath, CGameObject* _obj)
+{
+	wstring strName = _strPath;
+
+	mPrefab->RegisterProtoObject(_obj);
+	mPrefab->Save(_strPath);
+	
+	m_arrRes[(UINT)RES_TYPE::PREFAB].insert(make_pair(strName, mPrefab.Get()));
+
+	return mPrefab;
+}
+
+Ptr<CPrefab> CResMgr::LoadPrefab(const wstring& _strPath)
+{
+	mPrefab->Load(_strPath);
+
+
+	return mPrefab;
 }
 
 void CResMgr::DeleteRes(RES_TYPE _type, const wstring& _strKey)
