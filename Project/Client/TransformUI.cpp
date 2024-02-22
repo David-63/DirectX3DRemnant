@@ -24,6 +24,8 @@ int TransformUI::render_update()
 	Vec3 vRotation = GetTarget()->Transform()->GetRelativeRot();
 	vRotation = (vRotation / XM_PI) * 180.f;
 
+	bool bAbsoulte = GetTarget()->Transform()->GetAbsolute();
+
 	ImGui::Text("Position");
 	ImGui::SameLine();
 	ImGui::DragFloat3("##Relative Position", vPos);
@@ -35,6 +37,14 @@ int TransformUI::render_update()
 	ImGui::Text("Rotation");
 	ImGui::SameLine();
 	ImGui::DragFloat3("##Relative Rotation", vRotation);
+
+	ImGui::Text("Absoulute");
+	ImGui::SameLine();
+
+	if (ImGui::Checkbox("##Absoulute", &bAbsoulte))
+	{
+		GetTarget()->Transform()->SetAbsolute(bAbsoulte);
+	}
 
 	GetTarget()->Transform()->SetRelativePos(vPos);
 	GetTarget()->Transform()->SetRelativeScale(vScale);

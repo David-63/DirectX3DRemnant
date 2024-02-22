@@ -208,9 +208,6 @@
     <ClInclude Include="ListUI.h">
       <Filter>UI\Module\ListUI</Filter>
     </ClInclude>
-    <ClInclude Include="ContentUI.h">
-      <Filter>UI\ContentUI</Filter>
-    </ClInclude>
     <ClInclude Include="TreeUI.h">
       <Filter>UI\Module\TreeUI</Filter>
     </ClInclude>
@@ -279,6 +276,9 @@
     </ClInclude>
     <ClInclude Include="LandScapeUI.h">
       <Filter>UI\InspectorUI\ComponentUI\RenderCompUI\6. LandscapeUI</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentUI.h">
+      <Filter>UI\ContentUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,6 +13,7 @@ private:
 	float			m_fTime;
 	float			m_fDeltaTime_Scaled;
 	float			m_fTimeScale;
+
 public:
 	void init();
 	void tick();

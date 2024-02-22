@@ -122,6 +122,7 @@ void CMaterial::SetScalarParam(SCALAR_PARAM _Param, const void* _Src)
 void CMaterial::SetTexParam(TEX_PARAM _Param, const Ptr<CTexture>& _Tex)
 {
 	m_arrTex[_Param] = _Tex;
+
 }
 
 void CMaterial::GetScalarParam(SCALAR_PARAM _param, void* _pData)
