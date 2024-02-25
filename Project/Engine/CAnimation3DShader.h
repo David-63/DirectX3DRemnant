@@ -16,15 +16,19 @@ private:
 
 
 public:
+	void SetFrameDataBuffer(CStructuredBuffer* _buffer) { m_pFrameDataBuffer = _buffer; }
+	void SetOffsetMatBuffer(CStructuredBuffer* _buffer) { m_pOffsetMatBuffer = _buffer; }
+	void SetFrameDataBuffer_next(CStructuredBuffer* _buffer) { m_pFrameDataBuffer_next = _buffer; }
+	void SetOutputBuffer(CStructuredBuffer* _buffer) { m_pOutputBuffer = _buffer; }
 	// g_int_0 : BonCount, g_int_1 : Frame Index
 	void SetBoneCount(int _iBoneCount) { m_Const.arrInt[0] = _iBoneCount; }
 	void SetFrameIndex(int _iFrameIdx) { m_Const.arrInt[1] = _iFrameIdx; }
 	void SetNextFrameIdx(int _iFrameIdx) { m_Const.arrInt[2] = _iFrameIdx; }
 	void SetFrameRatio(float _fFrameRatio) { m_Const.arrFloat[0] = _fFrameRatio; }
-	void SetFrameDataBuffer(CStructuredBuffer* _buffer) { m_pFrameDataBuffer = _buffer; }
-	void SetOffsetMatBuffer(CStructuredBuffer* _buffer) { m_pOffsetMatBuffer = _buffer; }
-	void SetFrameDataBuffer_next(CStructuredBuffer* _buffer) { m_pFrameDataBuffer_next = _buffer; }
-	void SetOutputBuffer(CStructuredBuffer* _buffer) { m_pOutputBuffer = _buffer; }
+
+	void SetModifyUse(bool _use) { m_Const.arrAnimData[2] = _use; }
+	void SetModifyIdx(bool _idx) { m_Const.arrAnimData[3] = _idx; }
+	void SetModifyRotScalar(float _scalar) { m_Const.arrFloat[1] = _scalar; }
 
 public:
 	virtual void UpdateData() override;

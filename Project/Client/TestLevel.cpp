@@ -51,11 +51,6 @@ void CreateTestLevel()
 		pMainCam->AddComponent(new CCamera);
 		pMainCam->AddComponent(new CCameraMoveScript);
 
-		/*
-		// 숄더뷰용
-		pMainCam->AddComponent(new CShoulderViewScript);
-		CShoulderViewScript* pCamMoveScript = pMainCam->GetScript<CShoulderViewScript>(); */
-
 		pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 		pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 		pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
@@ -139,116 +134,6 @@ void CreateTestLevel()
 		}
 	}
 
-	//{
-	//	Ptr<CMeshData> pMeshData = nullptr;
-	//	CGameObject* pObj = nullptr;
-	//	// 인스턴싱 테스트
-	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
-	//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-	//	pObj = pMeshData->Instantiate();
-	//	//pObj->AddComponent(new CTestScript());
-	//	pObj->SetName(L"Monster2");
-	//	pObj->Transform()->SetDebugSphereUse(true);
-	//	pObj->SetLayerIdx(2);
-	//	pObj->Transform()->SetRelativePos(Vec3(100.f, 600.f, 0.f));
-	//	tPhysicsInfo info = {};
-	//	info.eActorType = ACTOR_TYPE::Dynamic;
-	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info.size = Vector3(100.f, 100.f, 100.f);
-	//	info.massProperties.restitution = 0.1f;
-	//	pObj->AddComponent(new CRigidBody);
-	//	pObj->RigidBody()->SetPhysical(info);
-	//	pObj->AddComponent(new CCollider3D);
-	//	pObj->RigidBody()->AddActorToLevel();
-	//	pObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 180.f));
-	//	SpawnGameObject(pObj, Vec3(200.f, 600.f, 0.f), 2);		
-	//}
-	//{
-	//	CGameObject* pObj = new CGameObject;
-	//	pObj->AddComponent(new CTransform);
-	//	pObj->AddComponent(new CMeshRender);
-	//	pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug"));
-	//	pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
-	//	pObj->SetName(L"staticBox");
-	//	pObj->SetLayerIdx(5);
-	//	pObj->Transform()->SetRelativePos(Vec3(500.f, 100.f, 0.f));
-	//	pObj->Transform()->SetRelativeScale(200.f, 200.f, 200.f);
-	//	tPhysicsInfo info = {};
-	//	info.eActorType = ACTOR_TYPE::Static;
-	//	info.eGeomType = GEOMETRY_TYPE::Box;
-	//	info.size = Vector3(200.f, 200.f, 200.f);
-	//	//info.massProperties.restitution = 0.1f;
-	//	pObj->AddComponent(new CRigidBody);
-	//	pObj->RigidBody()->SetPhysical(info);
-	//	pObj->AddComponent(new CCollider3D);
-	//	pObj->RigidBody()->AddActorToLevel();
-	//	SpawnGameObject(pObj, Vec3(500.f, 100.f, 0.f), 5);
-	//}
-	/*{
-		CGameObject* pObj = new CGameObject;
-		pObj->AddComponent(new CTransform);
-		pObj->AddComponent(new CMeshRender);
-		pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug"));
-		pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
-
-		pObj->SetName(L"DynamicBox");
-		pObj->SetLayerIdx(5);
-		pObj->Transform()->SetRelativePos(Vec3(200.f, 100.f, 300.f));
-		pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
-
-		tPhysicsInfo info = {};
-		info.eActorType = ACTOR_TYPE::Dynamic;
-		info.eGeomType = GEOMETRY_TYPE::Box;
-		info.size = Vector3(100.f, 100.f, 100.f);
-		info.massProperties.restitution = 0.f;
-		info.massProperties.dynamicFriction = 0.6f;
-		info.massProperties.staticFriction = 0.6f;
-
-		pObj->AddComponent(new CRigidBody);
-		pObj->RigidBody()->SetPhysical(info);
-		
-		pObj->RigidBody()->SetMass(20.f);
-		pObj->RigidBody()->SetRestitution(0.f);
-
-		pObj->AddComponent(new CCollider3D);
-		pObj->RigidBody()->AddActorToLevel();
-
-		SpawnGameObject(pObj, Vec3(200.f, 500.f, 300.f), 5);
-	}*/
-	/*{
-		CGameObject* pObj = new CGameObject;
-		pObj->AddComponent(new CTransform);
-		pObj->AddComponent(new CMeshRender);
-		pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-		pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
-
-		pObj->SetName(L"DynamicSphere");
-		pObj->SetLayerIdx(5);
-		pObj->Transform()->SetRelativePos(Vec3(-200.f, 400.f, 0.f));
-		pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
-
-		tPhysicsInfo info = {};
-		info.eActorType = ACTOR_TYPE::Dynamic;
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(100.f, 100.f, 100.f);
-		info.massProperties.restitution = 0.f;
-		info.massProperties.dynamicFriction = 0.6f;
-		info.massProperties.staticFriction = 0.6f;
-
-		pObj->AddComponent(new CRigidBody);
-		pObj->RigidBody()->SetPhysical(info);
-
-		pObj->RigidBody()->SetMass(20.f);
-		pObj->RigidBody()->SetRestitution(0.f);
-
-		pObj->AddComponent(new CCollider3D);
-		pObj->RigidBody()->AddActorToLevel();
-
-		SpawnGameObject(pObj, Vec3(-200.f, 400.f, 0.f), 5);
-
-
-	}*/
-
 	// LandScape Object
 	{
 		CGameObject* pLandScape = new CGameObject;
@@ -265,38 +150,5 @@ void CreateTestLevel()
 		//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));		
 		SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 4);
 	}
-
-	//{
-	//	CGameObject* pGround = new CGameObject;
-	//	pGround->SetName(L"Ground");
-	//	pGround->AddComponent(new CTransform);
-	//	pGround->Transform()->SetRelativeScale(10000.f, 15.f, 10000.f);
-	//	pGround->SetLayerIdx(5);
-	//	pGround->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
-	//	
-
-	//	pGround->AddComponent(new CCollider3D);
-	//	pGround->AddComponent(new CRigidBody);
-	//	//pGround->RigidBody()->CreatePlane();
-	//	tPhysicsInfo info = {};
-	//	info.eActorType = ACTOR_TYPE::Static;
-	//	info.eGeomType = GEOMETRY_TYPE::Box;
-	//	info.size = Vector3(10000.f, 15.f, 10000.f);
-	//	info.massProperties.restitution = 0.2f;
-	//	info.massProperties.dynamicFriction = 0.3f;
-	//	info.massProperties.staticFriction = 0.3f;
-	//	pGround->RigidBody()->SetPhysical(info);
-	//	pGround->RigidBody()->AddActorToLevel();
-
-	//	pGround->AddComponent(new CMeshRender);
-	//	Ptr<CMesh> mesh = CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug");
-	//	pGround->MeshRender()->SetMesh(mesh);
-	//	Ptr<CMaterial> mater = CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl");
-	//	pGround->MeshRender()->SetMaterial(mater, 0);
-
-	//	PxVec3 pos = pGround->Transform()->GetPhysicsPosition();
-	//	
-	//	SpawnGameObject(pGround, Vec3(0.f, 0.f, 0.f), 4);
-	//}
-	
+		
 }

@@ -66,7 +66,9 @@ cbuffer MATERIAL : register(b1)
     // 3D Animation Á¤º¸
     int g_iAnim;
     int g_iBoneCount;
-    int2 padding;
+    int g_iModifyUse;   // 0 : false | 1 : true
+    int g_iModifyIndex;
+    
 };
 
 cbuffer GLOBAL : register(b2)

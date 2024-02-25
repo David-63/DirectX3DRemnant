@@ -212,6 +212,24 @@ float4 QuternionLerp(in float4 _vQ1, in float4 _vQ2, float _fRatio)
     return Result;
 }
 
+float4 EulerToQuaternion(float3 euler)
+{
+    float c1 = cos(euler.z / 2);
+    float s1 = sin(euler.z / 2);
+    float c2 = cos(euler.y / 2);
+    float s2 = sin(euler.y / 2);
+    float c3 = cos(euler.x / 2);
+    float s3 = sin(euler.x / 2);
+    float c1c2 = c1 * c2;
+    float s1s2 = s1 * s2;
+    float4 q;
+    q.x = c1c2 * s3 + s1s2 * c3;
+    q.y = s1 * c2 * c3 + c1 * s2 * s3;
+    q.z = c1 * s2 * c3 - s1 * c2 * s3;
+    q.w = c1c2 * c3 - s1s2 * s3;
+    return q;
+}
+
 struct tFrameTrans
 {
     float4 vTranslate;
@@ -231,6 +249,9 @@ RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 #define CurFrame    g_int_1
 #define NextFrame   g_int_2
 #define Ratio       g_float_0
+#define ModifyUse   g_iModifyUse
+#define ModifyIdx   g_iModifyIndex
+#define RotScalar   g_float_1
 // ===========================
 [numthreads(256, 1, 1)]
 void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
@@ -240,28 +261,24 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
 
     // _iThreadIdx.x : 1차원 배열 형태의 스레드를 통해서 각 스레드마다 한개의 뼈를 담당하여 연산
     
-    // 오프셋 행렬을 곱하여 최종 본행렬을 만들어낸다.
     float4 vQZero = float4(0.f, 0.f, 0.f, 1.f);
     matrix matBone = (matrix) 0.f;
 
     // Frame Data Index == Bone Count * Frame Count + _iThreadIdx.x
     uint iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
-    uint iNextFrameDataIdx = BoneCount * NextFrame + _iThreadIdx.x;
-
-    // 여기서 구하는 프레임 인덱스는
-    // 뼈의 애니메이션 정보를 배열로 가진 버퍼에 접근하기 위한 인덱스임
-    // 0 프레임부터 시작하는 경우
-    // 0 프레임 + 스레드가 담당하는 뼈 = 애니메이션 인덱스
-    // 1 프레임인 경우 뼈가 132개인 경우 132 + 스레드가 담당하는 뼈 = 1프레임 애니메이션 인덱스값
+    uint iNextFrameDataIdx = BoneCount * NextFrame + _iThreadIdx.x;    
     
-    
-    
-    // 여기에서 블렌딩
-    // 각 프레임 인덱스에 해당하는 프레임 행렬값을 비율로 가져옴
     float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans_next[iNextFrameDataIdx].vScale, Ratio);
     float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans_next[iNextFrameDataIdx].vTranslate, Ratio);
     float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans_next[iNextFrameDataIdx].qRot, Ratio);
-
+    
+    if (ModifyIdx == _iThreadIdx.x)
+    {
+        float3 eulerRot = float3(radians(RotScalar), 0.f, 0.f);
+        float4 addqRot = EulerToQuaternion(eulerRot);
+        qRot += addqRot;
+    }
+    
     // 최종 본행렬 연산 (lerp)
     MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
 

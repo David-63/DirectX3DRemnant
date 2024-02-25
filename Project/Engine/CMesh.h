@@ -36,9 +36,9 @@ public:
 	Vtx* GetVtxSysMem() { return (Vtx*)m_pVtxSys; }
 	UINT GetSubsetCount() { return (UINT)m_vecIdxInfo.size(); }
 
-	vector<tMTBone> GetMTBones() { return m_pVecBones; }
+	const vector<tMTBone>& GetMTBones() { return m_pVecBones; }
 	UINT GetMTBoneCount() { return (UINT)m_pVecBones.size(); }
-	vector<tMTAnimClip> GetMTAnimClips() { return m_vecAnimClip; }
+	const vector<tMTAnimClip>& GetMTAnimClips() { return m_vecAnimClip; }
 	bool IsAnimMesh() { return !m_vecAnimClip.empty(); }
 
 	CStructuredBuffer* GetBoneFrameDataBuffer() { return m_pBoneFrameData; }

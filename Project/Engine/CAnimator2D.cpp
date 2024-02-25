@@ -62,14 +62,14 @@ void CAnimator2D::Clear()
 
 void CAnimator2D::Play(const wstring& _strName, bool _bRepeat)
 {
-	CAnim2D* pAnim = FindAnim(_strName);
+	CAnim2D* pAnim = findAnim(_strName);
 	assert(pAnim);
 
 	m_pCurAnim = pAnim;
 	m_bRepeat = _bRepeat;
 }
 
-CAnim2D* CAnimator2D::FindAnim(const wstring& _strName)
+CAnim2D* CAnimator2D::findAnim(const wstring& _strName)
 {
 	map<wstring, CAnim2D*>::iterator iter = m_mapAnim.find(_strName);
 
@@ -131,5 +131,5 @@ void CAnimator2D::LoadFromLevelFile(FILE* _File)
 	wstring strCurAnimName;
 	LoadWString(strCurAnimName, _File);
 
-	m_pCurAnim = FindAnim(strCurAnimName);		
+	m_pCurAnim = findAnim(strCurAnimName);		
 }

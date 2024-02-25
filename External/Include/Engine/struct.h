@@ -1,5 +1,23 @@
 #pragma once
 
+struct tTimeCtrl
+{
+	float curTime;
+	float maxTime;
+	bool active;
+
+	tTimeCtrl() : curTime(0.f), maxTime(1.f), active(false) {}
+	tTimeCtrl(float _value) : curTime(0.f), maxTime(_value), active(false) {}
+	
+	bool IsFinish() { return (curTime >= maxTime); }
+	bool IsActivate() { return active; }
+
+	void SetFinishTime(float _value) { maxTime = _value; }
+	void Activate() { active = true; }
+	void ResetTime() { curTime = 0; active = false; }
+
+};
+
 
 
 struct tVertex
@@ -297,7 +315,7 @@ struct tMtrlConst
 	int arrTex[(UINT)TEX_PARAM::TEX_END];
 
 	// 3D Animation Á¤º¸
-	int	arrAnimData[4];
+	int	arrAnimData[4];	// 0 SetAnim | 1 : BoneCount | 2 : SetModify | 3 : ModifyIdx
 };
 
 
