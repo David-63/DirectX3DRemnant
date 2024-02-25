@@ -10,6 +10,7 @@ private:
 	CStructuredBuffer* m_pOffsetMatBuffer;			// t17
 
 	CStructuredBuffer* m_pFrameDataBuffer_next;		// t18
+	CStructuredBuffer* m_pModifyIndicesBuffer;		// t19
 	
 	CStructuredBuffer* m_pOutputBuffer;				// u0
 
@@ -20,6 +21,8 @@ public:
 	void SetOffsetMatBuffer(CStructuredBuffer* _buffer) { m_pOffsetMatBuffer = _buffer; }
 	void SetFrameDataBuffer_next(CStructuredBuffer* _buffer) { m_pFrameDataBuffer_next = _buffer; }
 	void SetOutputBuffer(CStructuredBuffer* _buffer) { m_pOutputBuffer = _buffer; }
+	void SetModifyIdxBuffer(CStructuredBuffer* _buffer) { m_pModifyIndicesBuffer = _buffer; }
+
 	// g_int_0 : BonCount, g_int_1 : Frame Index
 	void SetBoneCount(int _iBoneCount) { m_Const.arrInt[0] = _iBoneCount; }
 	void SetFrameIndex(int _iFrameIdx) { m_Const.arrInt[1] = _iFrameIdx; }
@@ -27,7 +30,6 @@ public:
 	void SetFrameRatio(float _fFrameRatio) { m_Const.arrFloat[0] = _fFrameRatio; }
 
 	void SetModifyUse(bool _use) { m_Const.arrAnimData[2] = _use; }
-	void SetModifyIdx(bool _idx) { m_Const.arrAnimData[3] = _idx; }
 	void SetModifyRotScalar(float _scalar) { m_Const.arrFloat[1] = _scalar; }
 
 public:

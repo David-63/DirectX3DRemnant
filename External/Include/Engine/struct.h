@@ -222,7 +222,7 @@ struct tMTBone
 {
 	wstring				strBoneName;
 	int					iDepth;
-	int					iParentIndx;
+	int					iParentIdx;
 	Matrix				matOffset;
 	Matrix				matBone;
 	vector<tMTKeyFrame>	vecKeyFrame;

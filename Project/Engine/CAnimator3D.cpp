@@ -20,6 +20,7 @@ CAnimator3D::CAnimator3D()
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_BoneFinalMatBuffer = new CStructuredBuffer();
+	m_modifyIndicesBuffer = new CStructuredBuffer();
 }
 
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
@@ -28,16 +29,21 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
 {
 	m_BoneFinalMatBuffer = new CStructuredBuffer;
+	m_modifyIndicesBuffer = new CStructuredBuffer();
 }
 
 CAnimator3D::~CAnimator3D()
 {
 	Safe_Del_Map(m_Events);
-
 	if (nullptr != m_BoneFinalMatBuffer)
 	{
 		delete m_BoneFinalMatBuffer;
 		m_BoneFinalMatBuffer = nullptr;
+	}
+	if (nullptr != m_modifyIndicesBuffer)
+	{
+		delete m_modifyIndicesBuffer;
+		m_modifyIndicesBuffer = nullptr;
 	}
 }
 
@@ -144,13 +150,17 @@ void CAnimator3D::UpdateData()
 			pUpdateShader->SetNextFrameIdx(m_pCurrentAnim->GetNextFrame());
 			pUpdateShader->SetFrameRatio(m_pCurrentAnim->GetFrameRatio());
 		}		
-
+		
 		if (m_isModifyUse)
 		{
 			pUpdateShader->SetModifyUse(m_isModifyUse);
-			pUpdateShader->SetModifyIdx(m_modifyIdx);
+			pUpdateShader->SetModifyCount(m_modifyIndices.size());
 			pUpdateShader->SetModifyRotScalar(m_modifyRotScalar);
+			pUpdateShader->SetModifyIdxBuffer(m_modifyIndicesBuffer);
 		}
+		else
+			pUpdateShader->SetModifyUse(m_isModifyUse);
+
 		// 업데이트 쉐이더 실행
 		pUpdateShader->Execute();
 
@@ -203,6 +213,13 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
 	m_vecFinalBoneMat.resize(iBoneCount);
 
+	m_curBones = m_pCurrentAnim->GetOriginMesh()->GetMTBones();
+	CollectChildrenIndices(36);
+	if (m_modifyIndicesBuffer->GetElementCount() != m_modifyIndices.size())
+	{
+		m_modifyIndicesBuffer->Create(sizeof(UINT), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, nullptr);
+	}
+
 	Events* events = FindEvents(_clip->GetKey());
 	if (events)
 		return;
@@ -212,6 +229,19 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	int maxFrame = (m_pCurrentAnim->GetEndTime() - m_pCurrentAnim->GetBeginTime()) * 30 + 1;
 	events->ActionEvents.resize(maxFrame);
 	m_Events.insert(std::make_pair(_clip->GetKey(), events));
+}
+
+void CAnimator3D::CollectChildrenIndices(int current_index)
+{
+	// 뼈 개수만큼 순회 (260개)
+	for (int i = 0; i < m_curBones.size(); ++i)
+	{
+		if (current_index == m_curBones[i].iParentIdx)
+		{
+			m_modifyIndices.push_back(i); // 자식 뼈의 인덱스 추가
+			CollectChildrenIndices(i); // 재귀 호출
+		}
+	}
 }
 
 void CAnimator3D::Remove(const wstring& _key)
@@ -361,6 +391,7 @@ std::function<void()>& CAnimator3D::ActionEvent(const std::wstring& name, UINT i
 	Events* events = FindEvents(name);
 	return events->ActionEvents[index].mEvent;
 }
+
 
 
 

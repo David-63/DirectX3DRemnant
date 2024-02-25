@@ -240,6 +240,7 @@ struct tFrameTrans
 StructuredBuffer<tFrameTrans> g_arrFrameTrans : register(t16);
 StructuredBuffer<matrix> g_arrOffset : register(t17);
 StructuredBuffer<tFrameTrans> g_arrFrameTrans_next : register(t18);
+StructuredBuffer<uint> g_modifyIndices : register(t19);
 
 RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 
@@ -249,9 +250,9 @@ RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 #define CurFrame    g_int_1
 #define NextFrame   g_int_2
 #define Ratio       g_float_0
-#define ModifyUse   g_iModifyUse
-#define ModifyIdx   g_iModifyIndex
 #define RotScalar   g_float_1
+#define ModifyUse   g_iModifyUse
+#define ModifyCnt   g_iModifyCount
 // ===========================
 [numthreads(256, 1, 1)]
 void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
@@ -272,15 +273,37 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans_next[iNextFrameDataIdx].vTranslate, Ratio);
     float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans_next[iNextFrameDataIdx].qRot, Ratio);
     
-    if (ModifyIdx == _iThreadIdx.x)
+    // modify를 사용할때만
+    if (ModifyUse)
     {
-        float3 eulerRot = float3(radians(RotScalar), 0.f, 0.f);
-        float4 addqRot = EulerToQuaternion(eulerRot);
-        qRot += addqRot;
+        
+        float cosTheta = cos(radians(RotScalar));
+        float sinTheta = sin(radians(RotScalar));
+
+        float4x4 rotationMatrix = float4x4
+        (1, 0, 0, 0,
+        0, cosTheta, sinTheta, 0,
+        0, -sinTheta, cosTheta, 0,
+        0, 0, 0, 1);
+        
+        // 영향 받는 뼈 찾기
+        for (int idx = 0; idx < ModifyCnt; ++ idx)
+        {
+            // 현재 스레드의 뼈가 배열내에 있는 경우
+            if (_iThreadIdx.x == g_modifyIndices[idx.x])
+            {
+                // 여기에 적용시키기
+                qRot += 10;
+                
+                break;
+            }
+
+        }
     }
     
     // 최종 본행렬 연산 (lerp)
-    MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
+    MatrixAffineTransformation
+        (vScale, vQZero, qRot, vTrans, matBone);
 
     // 최종 본행렬 연산    
     //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);

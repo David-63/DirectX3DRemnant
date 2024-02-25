@@ -27,7 +27,10 @@ void CAnimation3DShader::UpdateData()
 	m_pOffsetMatBuffer->UpdateData_CS(17, true); // t17
 	
 	m_pFrameDataBuffer_next->UpdateData_CS(18, true); // t18
-
+	if (m_pModifyIndicesBuffer)
+	{
+		m_pModifyIndicesBuffer->UpdateData_CS(19, true);
+	}
 	m_pOutputBuffer->UpdateData_CS(0, false);   // u0
 
 	// m_Const.arrInt[0] = 뼈 개수만큼 스레드 돌림

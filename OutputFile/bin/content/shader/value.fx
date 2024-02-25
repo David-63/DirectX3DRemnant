@@ -68,7 +68,6 @@ cbuffer MATERIAL : register(b1)
     int g_iBoneCount;
     int g_iModifyUse;   // 0 : false | 1 : true
     int g_iModifyIndex;
-    
 };
 
 cbuffer GLOBAL : register(b2)

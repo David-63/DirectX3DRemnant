@@ -222,7 +222,7 @@ struct tMTBone
 {
 	wstring				strBoneName;
 	int					iDepth;
-	int					iParentIndx;
+	int					iParentIdx;
 	Matrix				matOffset;
 	Matrix				matBone;
 	vector<tMTKeyFrame>	vecKeyFrame;
@@ -315,7 +315,7 @@ struct tMtrlConst
 	int arrTex[(UINT)TEX_PARAM::TEX_END];
 
 	// 3D Animation Á¤º¸
-	int	arrAnimData[4];	// 0 SetAnim | 1 : BoneCount | 2 : SetModify | 3 : ModifyIdx
+	int	arrAnimData[4];	// 0 SetAnim | 1 : BoneCount | 2 : SetModify | 3 : ModifyCount
 };
 
 

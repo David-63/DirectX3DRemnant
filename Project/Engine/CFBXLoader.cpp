@@ -548,7 +548,7 @@ void CFBXLoader::LoadSkeleton_Re(FbxNode* _pNode, int _iDepth, int _iIdx, int _i
 
 		pBone->strBoneName = wstring(strBoneName.begin(), strBoneName.end());
 		pBone->iDepth = _iDepth++;
-		pBone->iParentIndx = _iParentIdx;
+		pBone->iParentIdx = _iParentIdx;
 
 		m_vecBone.push_back(pBone);
 	}

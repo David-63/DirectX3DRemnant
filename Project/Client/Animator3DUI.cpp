@@ -97,10 +97,10 @@ int Animator3DUI::render_update()
 	}
 	ImGui::Separator();
 
-
-	ImGui::Separator();
+	// ===================================================================================================
 	ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "ModifyBone");
-	
+	ImGui::Separator();
+
 	int maxBone = GetTarget()->Animator3D()->GetCurMTBoneCount();
 	bool modifyUse =  GetTarget()->Animator3D()->GetModifyUse();
 	int modifyIdx = GetTarget()->Animator3D()->GetModifyIdx();
@@ -123,11 +123,12 @@ int Animator3DUI::render_update()
 	}
 
 	ImGui::Separator();
+	
 
 
+	// ===================================================================================================
 	ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "AnimClip");
 	ImGui::Separator();
-	// ===================================================================================================
 
 	// Mesh 선택
 	Ptr<CMesh> pMesh = GetTarget()->MeshRender()->GetMesh();	// 초기에 보여주는 용도 외로는 안쓰는건가?

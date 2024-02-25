@@ -74,6 +74,9 @@ private:
 	bool						m_isModifyUse;
 	int							m_modifyIdx;
 	float						m_modifyRotScalar;
+	CStructuredBuffer*			m_modifyIndicesBuffer;	// CS에서 업데이트 되는 최종 뼈 행렬
+	vector<UINT>				m_modifyIndices;
+	vector<tMTBone>				m_curBones;
 
 public:
 	virtual void finaltick() override;
@@ -143,6 +146,8 @@ public:
 	float GetBlendUpdateTime() { return m_blendTime.curTime; }
 	float GetBlendRatio() { return m_blendRatio; }
 	int GetPrevFrameIdx() { return m_prevFrameIdx; }
+
+	void CollectChildrenIndices(int current_index);
 
 public:
 	virtual void SaveToLevelFile(FILE* _pFile) override;

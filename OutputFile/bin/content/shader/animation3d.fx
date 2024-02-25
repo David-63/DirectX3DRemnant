@@ -272,7 +272,7 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans_next[iNextFrameDataIdx].vTranslate, Ratio);
     float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans_next[iNextFrameDataIdx].qRot, Ratio);
     
-    if (ModifyIdx == _iThreadIdx.x)
+    if (ModifyIdx <= _iThreadIdx.x)
     {
         float3 eulerRot = float3(radians(RotScalar), 0.f, 0.f);
         float4 addqRot = EulerToQuaternion(eulerRot);

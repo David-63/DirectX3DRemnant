@@ -122,7 +122,7 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
 	{
 		tMTBone bone = {};
 		bone.iDepth = vecBone[i]->iDepth;
-		bone.iParentIndx = vecBone[i]->iParentIndx;
+		bone.iParentIdx = vecBone[i]->iParentIdx;
 		bone.matBone = GetMatrixFromFbxMatrix(vecBone[i]->matBone);
 		bone.matOffset = GetMatrixFromFbxMatrix(vecBone[i]->matOffset);
 		bone.strBoneName = vecBone[i]->strBoneName;
@@ -368,7 +368,7 @@ int CMesh::Save(const wstring& _strRelativePath)
 	{
 		SaveWString(m_pVecBones[i].strBoneName, pFile);
 		fwrite(&m_pVecBones[i].iDepth, sizeof(int), 1, pFile);
-		fwrite(&m_pVecBones[i].iParentIndx, sizeof(int), 1, pFile);
+		fwrite(&m_pVecBones[i].iParentIdx, sizeof(int), 1, pFile);
 		fwrite(&m_pVecBones[i].matBone, sizeof(Matrix), 1, pFile);
 		fwrite(&m_pVecBones[i].matOffset, sizeof(Matrix), 1, pFile);
 
@@ -478,7 +478,7 @@ int CMesh::Load(const wstring& _strFilePath)
 	{
 		LoadWString(m_pVecBones[i].strBoneName, pFile);
 		fread(&m_pVecBones[i].iDepth, sizeof(int), 1, pFile);
-		fread(&m_pVecBones[i].iParentIndx, sizeof(int), 1, pFile);
+		fread(&m_pVecBones[i].iParentIdx, sizeof(int), 1, pFile);
 		fread(&m_pVecBones[i].matBone, sizeof(Matrix), 1, pFile);
 		fread(&m_pVecBones[i].matOffset, sizeof(Matrix), 1, pFile);
 
