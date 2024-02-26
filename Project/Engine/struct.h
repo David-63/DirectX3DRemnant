@@ -115,6 +115,8 @@ struct tRWParticleBuffer
 
 struct tParticleModule
 {
+	Vec3    vRandomSpark;
+
 	// 스폰 모듈
 	Vec4    vSpawnColor;
 	Vec4	vSpawnScaleMin;
@@ -124,7 +126,7 @@ struct tParticleModule
 	float	fSphereShapeRadius;	
 	float   fSphereOffset;
 	int		SpawnShapeType;		// 0 : BOX, 1 : Sphere
-	int     BoxPad[2];
+	int     BoxPad[4];
 
 	float   fSpawnAreaOffsetFactor;
 	int		SpawnRate;			// 초당 생성 개수
@@ -132,7 +134,7 @@ struct tParticleModule
 	
 	float   MinLifeTime;		// 최소 수명	
 	float   MaxLifeTime;		// 최대 수명
-	int     spawnpad[2];
+	int     spawnpad;
 
 	// Color Change 모듈
 	Vec4	vStartColor;		// 초기 색상

@@ -29,6 +29,7 @@ private:
     bool                        m_bOnceExcute;
     bool                        m_bBursts;
     bool                        m_bLoop;
+
     
 
 
@@ -51,8 +52,12 @@ public:
     //// 초당 생성 개수 설정
     //void SetSpawnRate(int _SpawnRate) { m_ModuleData.SpawnRate = _SpawnRate; }
 
-    //// 생성 시 초기 색상 설정
+    //// 생성 시 초기 색상 설정1
     //void SetSpawnInitialColor(Vec3 _vInitialColor) { m_ModuleData.vSpawnColor = _vInitialColor; }
+
+  //  Vec3 CreateRandomDirection(const Vector3& normal, float openAngle);
+
+    float RandomFloat(float min, float max);
 
     void SetParticleTex(Ptr<CTexture> _Tex)
     {
@@ -101,6 +106,8 @@ public:
 
     void SetLoop(bool _bLoop) { m_bLoop = _bLoop; }
     bool GetLoop() const { return m_bLoop; }
+    Vec3 CreateRandomDirection(const Vector3& normal, float openAngle);
+
 
 
 

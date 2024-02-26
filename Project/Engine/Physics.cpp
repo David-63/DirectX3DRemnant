@@ -107,6 +107,7 @@ tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLe
 		info.dist = result.distance;
 		info.hit = true;
 	}
+
 	else
 	{
 		info.hit = false;

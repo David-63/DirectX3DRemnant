@@ -447,12 +447,13 @@ if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
 				if (0 == tParticleData.SpawnShapeType)
 				{
 					// BoxShapeScale
-					float Scale[2] = { tParticleData.vBoxShapeScale.x, tParticleData.vBoxShapeScale.y };
+					float Scale[3] = { tParticleData.vBoxShapeScale.x, tParticleData.vBoxShapeScale.y, tParticleData.vBoxShapeScale.z };
 					ImGui::SetNextItemWidth(110);
 					if (ImGui::DragFloat2("##Scale", Scale, 0.25f, 0.0f, 3000.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
 					{
 						tParticleData.vBoxShapeScale.x = Scale[0];
 						tParticleData.vBoxShapeScale.y = Scale[1];
+						tParticleData.vBoxShapeScale.z = Scale[2];
 
 					}
 
@@ -885,7 +886,7 @@ if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
 					tParticleData.vMaxVelocityScale.y = Scale[1];
 				}
 			}
-
+			 
 
 
 			// ========== È¸Àü

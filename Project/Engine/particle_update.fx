@@ -25,6 +25,9 @@ Texture2D                           NoiseTexture : register(t21);
 #define ScaleChangeModule   ParticleModuleData[0].ScaleChange
 #define StrongColor         ParticleModuleData[0].bStrongColor
 
+#define RandomSpark         ParticleModuleData[0].vRandomSpark
+
+
 
 // 스레드의 성능을 위해서라도 32의 배수로  설정하는 것이 좋음.
 [numthreads(128, 1, 1)]
@@ -36,6 +39,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
         return;
         
     tParticle particle = ParticleBuffer[_ID.x];
+
 
            
     if (SpawnModule)
@@ -56,33 +60,41 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
             
                 if (orgvalue == outvalue)            
                 {
-                  
+                                    
                     particle.Active = 1;
                     
-                    
-                                                                                
-                    // 랜덤 결과를 받을 변수
-                    float3 vOut1 = (float3) 0.f;
-                    float3 vOut2 = (float3) 0.f;
-                    float3 vOut3 = (float3) 0.f;
-                    
-                    // 전체 유효 스레드의 아이디를 0 ~ 1 로 정규화
+                     //// 랜덤 결과를 받을 변수
+                     float3 vOut1 = (float3) 0.f;
+                     float3 vOut2 = (float3) 0.f;
+                     float3 vOut3 = (float3) 0.f;
+                     
+                     // 전체 유효 스레드의 아이디를 0 ~ 1 로 정규화
                     float fNormalizeThreadID = (float) _ID.x / (float) ParticleMaxCount;
                     GaussianSample(NoiseTexture, NoiseTexResolution, fNormalizeThreadID, vOut1);
-                    GaussianSample(NoiseTexture, NoiseTexResolution, fNormalizeThreadID + 0.1f, vOut2);
+                    GaussianSample(NoiseTexture, NoiseTexResolution, fNormalizeThreadID + 0.1f, vOut2); // 0.1
                     GaussianSample(NoiseTexture, NoiseTexResolution, fNormalizeThreadID + 0.2f, vOut3);
-                    
+     
                     // Box 스폰
-                    if (ModuleData.SpawnShapeType == 0)
+                    if (ModuleData.SpawnShapeType == 0) 
                     {
+                        //particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
+                        //                              , ModuleData.vBoxShapeScale.y * vOut2.r  - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
+                        //                              , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\
+
+
+                        //particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * RandomSpark.x
+                        //                              , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * RandomSpark.y
+                        //                              , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * RandomSpark.z); // 0.f;\        
+                        
                         particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
-                                                      , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
-                                                      , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;
+                                                     , ModuleData.vBoxShapeScale.y  * vOut2.r - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor 
+                                                     , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
+                        
                         particle.vWorldPos.xyz = particle.vLocalPos.xyz + ObjectPos.xyz;
                         
                         
                         // 스폰 크기 범위내에서 랜덤 크기로 지정 (Min, Max 가 일치하면 고정크기)
-                        float4 vSpawnScale = ModuleData.vSpawnScaleMin + (ModuleData.vSpawnScaleMax - ModuleData.vSpawnScaleMin) * vOut3.x;
+                        float4 vSpawnScale = ModuleData.vSpawnScaleMin + (ModuleData.vSpawnScaleMax - ModuleData.vSpawnScaleMin);
                         particle.vWorldScale.xyz = vSpawnScale.xyz;
                     }
                     
@@ -107,19 +119,21 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         //particle.vWorldPos.xyz = particle.vLocalPos.xyz + ObjectPos.xyz;
                         
                     }
+                   
                     
                     // 파티클 질량 설정
                     particle.Mass = 1.f;
                     
                     
-                    // AddVelocity 모듈
+                    // AddVelocity 모듈 (*********************************)
                     if (ModuleData.AddVelocity)
                     {
                         // From Center
                         if (ModuleData.AddVelocityType == 0)
                         {
+                           
                             float3 vVelocity = normalize(particle.vLocalPos.xyz);
-                            particle.vVelocity.xyz = vVelocity * ModuleData.Speed;
+                            particle.vVelocity.xyz = vVelocity * ModuleData.Speed * RandomSpark; // 원래는 랜덤Spark 안곱해짐
                         }
                         
                         // To Center
@@ -132,21 +146,21 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         // Fixed Direction
                         else
                         {
-                            float fAngle =
-                            (vOut1.r * radians(ModuleData.OffsetAngle)) - radians(ModuleData.OffsetAngle) / 2.f;
+                            //float fAngle =
+                            //(vOut1.r * radians(ModuleData.OffsetAngle)) - radians(ModuleData.OffsetAngle) / 2.f;
                            
-                            float3 fVelocity = normalize(ModuleData.vVelocityDir.xyz);
+                            //float3 fVelocity = normalize(ModuleData.vVelocityDir.xyz);
                            
-                            float4x4 rotMat =
-                            {
-                                cos(fAngle), -sin(fAngle), 0, 0,
-                                sin(fAngle), cos(fAngle), 0, 0,
-                                0, 0, 1, 0,
-                                0, 0, 0, 1
-                            };
+                            //float4x4 rotMat =
+                            //{
+                            //    cos(fAngle), -sin(fAngle), 0, 0,
+                            //    sin(fAngle), cos(fAngle), 0, 0,
+                            //    0, 0, 1, 0,
+                            //    0, 0, 0, 1
+                            //};
                             
-                            float4 rotVelocity = mul(rotMat, float4(fVelocity, 1.f));
-                            particle.vVelocity.xyz = rotVelocity.xyz * ModuleData.Speed;
+                            //float4 rotVelocity = mul(rotMat, float4(fVelocity, 1.f));
+                            //particle.vVelocity.xyz = rotVelocity.xyz * ModuleData.Speed;
                         }
                     }
                                      
@@ -156,8 +170,9 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                     else
                       particle.vColor = ModuleData.vSpawnColor * 2.0f;
 
+                    
                     particle.Age = 0.f;
-                    particle.LifeTime = ModuleData.MinLifeTime + (ModuleData.MaxLifeTime - ModuleData.MinLifeTime) * vOut2.r;
+                    particle.LifeTime = ModuleData.MinLifeTime + (ModuleData.MaxLifeTime - ModuleData.MinLifeTime) * vOut2.r; // * RandomSpark; // * vOut2.r;
                    
                     
                     break;
@@ -294,6 +309,8 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
 
     
     ParticleBuffer[_ID.x] = particle;
+   // ParticleBuffer[_id.x].vLocalPos += ParticleBuffer[_ID.x].vDir * fSpeed * fDT;
+
 }
 
 #endif

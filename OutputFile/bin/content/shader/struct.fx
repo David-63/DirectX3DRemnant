@@ -53,6 +53,8 @@ struct tRWParticleBuffer
 
 struct tParticleModule
 {
+    float3  vRandomSpark;
+    
 	// 스폰 모듈
     float4  vSpawnColor;
     float4  vSpawnScaleMin;
@@ -62,7 +64,7 @@ struct tParticleModule
     float   fSphereShapeRadius;
     float   fSphereOffset;
     int     SpawnShapeType; // Sphere , Box
-    int2    BoxPad;
+    int4    BoxPad;
     
     float   fSpawnAreaOffsetFactor;
     int     SpawnRate;
@@ -70,7 +72,7 @@ struct tParticleModule
   
     float   MinLifeTime;
     float   MaxLifeTime;
-    int2    spawnpad;
+    int    spawnpad;
 
 	// Color Change 모듈
     float4  vStartColor; // 초기 색상
