@@ -20,10 +20,13 @@ int MeshDataUI::render_update()
 
     Ptr<CMeshData> pMeshData = (CMeshData*)GetTargetRes().Get();
 
+    ImGui::InputText("##Name", mName, sizeof(mName));
+    wstring wstr(mName, mName + strlen(mName));
+    
     if (ImGui::Button("Instantiate"))
     {
         CGameObject* obj = pMeshData->Instantiate();
-        obj->SetName(L"New Object");
+        obj->SetName(wstr);
         SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), L"Default");
     }
 

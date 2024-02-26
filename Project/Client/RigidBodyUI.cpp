@@ -122,8 +122,6 @@ int RigidBodyUI::render_update()
 
 			ImGui::Separator();
 		}
-
-
 	}
 
 

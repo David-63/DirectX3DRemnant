@@ -137,7 +137,7 @@
     <Filter Include="UI\InspectorUI\ComponentUI\09. Collider3DUI">
       <UniqueIdentifier>{8f037829-9d16-4eec-9ceb-459dc85aebe1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="UI\InspectorUI\ComponentUI\10. RIgidBody">
+    <Filter Include="UI\InspectorUI\ComponentUI\10. RIgidBodyUI">
       <UniqueIdentifier>{f1f2ed21-0cce-4b39-9a5d-ead1b638332e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -290,7 +290,7 @@
       <Filter>UI\InspectorUI\ComponentUI\09. Collider3DUI</Filter>
     </ClInclude>
     <ClInclude Include="RigidBodyUI.h">
-      <Filter>UI\InspectorUI\ComponentUI\10. RIgidBody</Filter>
+      <Filter>UI\InspectorUI\ComponentUI\10. RIgidBodyUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -451,7 +451,7 @@
       <Filter>UI\InspectorUI\ComponentUI\09. Collider3DUI</Filter>
     </ClCompile>
     <ClCompile Include="RigidBodyUI.cpp">
-      <Filter>UI\InspectorUI\ComponentUI\10. RIgidBody</Filter>
+      <Filter>UI\InspectorUI\ComponentUI\10. RIgidBodyUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
