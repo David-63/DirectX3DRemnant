@@ -117,8 +117,12 @@ Ptr<CPrefab> CResMgr::LoadPrefab(const wstring& _strPath)
 {
 	mPrefab->Load(_strPath);
 
-
 	return mPrefab;
+}
+
+void CResMgr::LoadPrefabOnUI(const wstring& _strPath)
+{
+	mPrefab->LoadOnUI(_strPath);
 }
 
 void CResMgr::DeleteRes(RES_TYPE _type, const wstring& _strKey)

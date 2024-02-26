@@ -76,7 +76,7 @@ void ContentUI::Reload()
 			CResMgr::GetInst()->Load<CMaterial>(m_vecResPath[i], m_vecResPath[i]);
 			break;
 		case RES_TYPE::PREFAB:
-
+			CResMgr::GetInst()->LoadPrefabOnUI(m_vecResPath[i]);
 			break;
 		case RES_TYPE::MESH:
 			CResMgr::GetInst()->Load<CMesh>(m_vecResPath[i], m_vecResPath[i]);
@@ -139,8 +139,7 @@ void ContentUI::ResetContent()
 
 		for (const auto& pair : mapRes)
 		{
-			string filename = GetFilenameWithoutPath(string(pair.first.begin(), pair.first.end()));
-			m_Tree->AddItem(filename, (DWORD_PTR)pair.second.Get(), pCategory);
+			m_Tree->AddItem(string(pair.first.begin(), pair.first.end()), (DWORD_PTR)pair.second.Get(), pCategory);
 		}
 	}
 }
@@ -156,18 +155,6 @@ void ContentUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 	// Inspector 에 선택된 Resource 를 알려준다.	
 	InspectorUI* pInspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
 	pInspector->SetTargetResource(pSelectObject);
-}
-
-string ContentUI::GetFilenameWithoutPath(const string& filepath)
-{
-	size_t lastSlashPos = filepath.find_last_of("/\\");
-
-		if (lastSlashPos == string::npos)
-		{
-			return filepath;
-		}
-
-	return filepath.substr(lastSlashPos + 1);
 }
 
 
@@ -208,27 +195,21 @@ RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath)
 	_wsplitpath_s(_relativepath.c_str(), 0, 0, 0, 0, 0, 0, szExt, 50);	
 	wstring strExt = szExt;
 		
-
-	if (L".mdat" == strExt || L".MDAT" == strExt)
+	if (L".mdat" == strExt)
 		return RES_TYPE::MESHDATA;
-	else if (L".pref" == strExt || L".PREF" == strExt)
+	else if (L".pref" == strExt)
 		return RES_TYPE::PREFAB;
-	else if (L".mesh" == strExt || L".MESH" == strExt)
+	else if (L".mesh" == strExt)
 		return RES_TYPE::MESH;
-	else if (L".mtrl" == strExt || L".MTRL" == strExt)
+	else if (L".mtrl" == strExt)
 		return RES_TYPE::MATERIAL;
-	else if (L".png" == strExt || L".PNG" == strExt
-		|| L".jpg" == strExt || L".JPG" == strExt
-		|| L".jpeg" == strExt || L".JPEG" == strExt
-		|| L".bmp" == strExt || L".BMP" == strExt
-		|| L".tga" == strExt || L".TGA" == strExt
-		|| L".dds" == strExt || L".DDS" == strExt)
+	else if (L".png" == strExt || L".jpg" == strExt
+		|| L".jpeg" == strExt || L".bmp" == strExt
+		|| L".tga" == strExt || L".dds" == strExt)
 		return RES_TYPE::TEXTURE;
 	else if (L".animclip" == strExt)
 		return RES_TYPE::ANIMCLIP;
-	else if (L".mp3" == strExt || L".MP3" == strExt
-		|| L".wav" == strExt || L".WAV" == strExt
-		|| L".oga" == strExt || L".OGA" == strExt)
+	else if (L".mp3" == strExt || L".wav" == strExt || L".oga" == strExt)
 		return RES_TYPE::SOUND;
 	else
 		return RES_TYPE::END;

@@ -55,6 +55,7 @@ public:
 
     Ptr<CPrefab> SavePrefab(const wstring& _strPath, CGameObject* _obj);
     Ptr<CPrefab> LoadPrefab(const wstring& _strPath);
+    void LoadPrefabOnUI(const wstring& _strPath);
     
     const vector<D3D11_INPUT_ELEMENT_DESC>& GetInputLayoutInfo() { return m_vecLayoutInfo; }
 

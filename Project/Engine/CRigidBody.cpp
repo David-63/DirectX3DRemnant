@@ -15,7 +15,6 @@ CRigidBody::CRigidBody()
 	, mbdrawCollider(true)
 	, mShapeInfos{}
 	, mShapes{}
-	, mOffset(0.f, 0.f, 0.f)
 {
 }
 CRigidBody::CRigidBody(const CRigidBody& _Other)
@@ -23,12 +22,11 @@ CRigidBody::CRigidBody(const CRigidBody& _Other)
 	, mMaxVelocity(_Other.mMaxVelocity)
 	, mActorType(_Other.mActorType)
 	, mbdrawCollider(_Other.mbdrawCollider)
-	, mOffset(_Other.mOffset)
 {
 	mShapeInfos.clear();
-	for (const auto& shapeInfo : _Other.mShapeInfos) 
+	for (const auto& shapeInfo : _Other.mShapeInfos)
 	{
-		mShapeInfos.push_back(shapeInfo); 
+		mShapeInfos.push_back(shapeInfo);
 	}
 }
 CRigidBody::~CRigidBody()
@@ -62,7 +60,7 @@ void CRigidBody::LoadFromLevelFile(FILE* _File)
 		fread(&temp, sizeof(tShapeInfo), 1, _File);
 		mShapeInfos.push_back(temp);
 	}
-	
+
 }
 void CRigidBody::begin()
 {
@@ -85,7 +83,7 @@ void CRigidBody::finaltick()
 
 	if (true == mbAppliedPhysics && ACTOR_TYPE::Static == mActorType)
 		return;
-	else 
+	else
 	{
 		GetOwner()->Transform()->Move(mVelocity);
 	}
@@ -135,7 +133,7 @@ void CRigidBody::SetPhysical(ACTOR_TYPE _eActorType)
 	CreateGeometry();
 	CreateActor();
 	CreateShape();
-	
+
 
 	InitializeActor();
 }
@@ -147,7 +145,7 @@ void CRigidBody::AddActorToLevel()
 {
 	AssertEx(mbAppliedPhysics, L"RigidBody::AddActorToLevel() - 물리가 들어가지 않은 오브젝트에 대한 AddActorToScene 호출");
 	AssertEx(mActor, L"RigidBody::AddActorToLevel() - mpActor가 생성되지 않음");
-
+	//PxRigidBodyExt::setMassAndUpdateInertia(*mActor->is<PxRigidActor>(), 0.1f);
 	Physics::GetInst()->AddActor(GetOwner());
 	mbIsActorInLevel = true;
 }
@@ -162,7 +160,7 @@ void CRigidBody::SetPhysicsTransform(physx::PxTransform _transform)
 	AssertEx(mbAppliedPhysics, L"RigidBody::SetPhysicsTransform() - 물리가 들어가지 않은 오브젝트에 대한 SetPhysicsTransform 호출");
 	GetActor<physx::PxRigidActor>()->setGlobalPose(_transform);
 }
-void CRigidBody::SetVelocity(const Vector3& _velocity)
+void CRigidBody::SetVelocity(const Vector3 _velocity)
 {
 	if (true == mbAppliedPhysics)
 	{
@@ -317,7 +315,7 @@ void CRigidBody::RemoveGravity()
 }
 void CRigidBody::SetFreezeRotation(FreezeRotationFlag flag, bool enable)
 {
-	for (int i = 0; i <mShapes.size(); ++i)
+	for (int i = 0; i < mShapes.size(); ++i)
 	{
 		physx::PxActor* actor = mShapes[i]->getActor();
 		assert(actor);
@@ -457,11 +455,11 @@ void CRigidBody::CreateGeometry()
 		break;
 
 		case GEOMETRY_TYPE::Capsule:
-			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x/2.f, mShapeInfos[i].size.y/2.f);
+			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x / 2.f, mShapeInfos[i].size.y / 2.f);
 			break;
 
 		case GEOMETRY_TYPE::Sphere:
-			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x/2.f);
+			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x / 2.f);
 			break;
 
 		case GEOMETRY_TYPE::Plane:
@@ -476,7 +474,7 @@ void CRigidBody::CreateShape()
 {
 	mShapes = {};
 
-	for(int i = 0; i < mShapeInfos.size(); ++i)
+	for (int i = 0; i < mShapeInfos.size(); ++i)
 	{
 		PxShape* shape = {};
 		switch (mShapeInfos[i].eGeomType)
@@ -494,7 +492,7 @@ void CRigidBody::CreateShape()
 			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->planeGeom, *mMaterial);
 			break;
 		}
-		
+
 
 		AssertEx(shape, L"RigidBody::CreateShape() - Shape 생성 실패");
 		mShapes.push_back(shape);
@@ -559,8 +557,9 @@ void CRigidBody::InitializeActor()
 	for (int i = 0; i < mShapes.size(); ++i)
 	{
 		mShapes[i]->setSimulationFilterData(mShapeInfos[i].filterData);
+		//mShapes[i]->setQueryFilterData()
 	}
-	
+
 
 	Vector3 trPos = GetOwner()->Transform()->GetRelativePos();
 	physx::PxVec3 myPos = physx::PxVec3(trPos.x, trPos.y, trPos.z);
@@ -593,7 +592,7 @@ void CRigidBody::DrawDebugMesh()
 			}
 			else if (mShapeInfos[0].eGeomType == GEOMETRY_TYPE::Sphere)
 			{
-				DrawDebugSphere(GetShapePosition(i), mShapeInfos[i].size.x/2.f, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+				DrawDebugSphere(GetShapePosition(i), mShapeInfos[i].size.x / 2.f, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
 			}
 
 		}

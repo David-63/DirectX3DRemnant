@@ -19,6 +19,7 @@ private:
 public:
 	virtual int Save(const wstring& _strRelativePath);
 	virtual int Load(const wstring& _strFilePath);
+	int LoadOnUI(const wstring& _strRelativePath);
 
 private:
 	virtual void UpdateData() override {}

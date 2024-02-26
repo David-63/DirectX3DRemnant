@@ -77,7 +77,7 @@ int MenuUI::render_update()
             {
                 for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
                 {
-                    if (ImGui::MenuItem(ToString((COMPONENT_TYPE)i)))
+                    if (ImGui::MenuItem(COMPONENT_TYPE_STR[i]))
                     {
                         AddComponent(COMPONENT_TYPE(i));
                     }
@@ -219,8 +219,8 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
     case COMPONENT_TYPE::COLLIDER2D:
         pSelectedObject->AddComponent(new CCollider2D);
         break;
-    //case COMPONENT_TYPE::COLLIDER3D:
-        //pSelectedObject->AddComponent(new CCollider3D);
+    case COMPONENT_TYPE::COLLIDER3D:
+        pSelectedObject->AddComponent(new CCollider3D);
         break;
     case COMPONENT_TYPE::ANIMATOR2D:
         pSelectedObject->AddComponent(new CAnimator2D);
@@ -236,6 +236,9 @@ void MenuUI::AddComponent(COMPONENT_TYPE _type)
         break;
     case COMPONENT_TYPE::CAMERA:
         pSelectedObject->AddComponent(new CCamera);
+        break;
+    case COMPONENT_TYPE::RIGIDBODY:
+        pSelectedObject->AddComponent(new CRigidBody);
         break;
     case COMPONENT_TYPE::MESHRENDER:
         pSelectedObject->AddComponent(new CMeshRender);

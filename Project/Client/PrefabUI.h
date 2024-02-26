@@ -3,6 +3,9 @@
 class PrefabUI :
     public ResUI
 {
+private:
+    Vec3 mPosition;
+    int mLayerIdx;
 
 public:
     virtual int render_update() override;

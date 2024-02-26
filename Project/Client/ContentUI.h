@@ -20,8 +20,6 @@ public:
     void ResetContent();
     void SetTargetToInspector(DWORD_PTR _SelectedNode);
 
-    string GetFilenameWithoutPath(const string& filepath);
-
 
 private:
     void FindFileName(const wstring& _FolderPath);

@@ -3,6 +3,7 @@
 
 #include <Engine\CGameObject.h>
 #include <Engine\CTransform.h>
+#include <Engine\CResMgr.h>
 
 TransformUI::TransformUI()
 	: ComponentUI("##TransformUI", COMPONENT_TYPE::TRANSFORM)	
@@ -24,8 +25,6 @@ int TransformUI::render_update()
 	Vec3 vRotation = GetTarget()->Transform()->GetRelativeRot();
 	vRotation = (vRotation / XM_PI) * 180.f;
 
-	bool bAbsoulte = GetTarget()->Transform()->GetAbsolute();
-
 	ImGui::Text("Position");
 	ImGui::SameLine();
 	ImGui::DragFloat3("##Relative Position", vPos);
@@ -38,19 +37,27 @@ int TransformUI::render_update()
 	ImGui::SameLine();
 	ImGui::DragFloat3("##Relative Rotation", vRotation);
 
-	ImGui::Text("Absoulute");
-	ImGui::SameLine();
-
-	if (ImGui::Checkbox("##Absoulute", &bAbsoulte))
-	{
-		GetTarget()->Transform()->SetAbsolute(bAbsoulte);
-	}
-
 	GetTarget()->Transform()->SetRelativePos(vPos);
 	GetTarget()->Transform()->SetRelativeScale(vScale);
 
 	vRotation = (vRotation / 180.f) * XM_PI;
 	GetTarget()->Transform()->SetRelativeRot(vRotation);
+
+	if (ImGui::TreeNode("Create Prefab"))
+	{
+		ImGui::InputText("##Name", mName, sizeof(mName));
+
+		wstring wstr(mName, mName + strlen(mName));
+
+		const wstring& strPath = L"prefab\\" + wstr + L".pref";
+
+		if (ImGui::Button("Create Prefab This"))
+		{
+			CResMgr::GetInst()->SavePrefab(strPath, GetTarget());
+		}
+
+		ImGui::TreePop();
+	}
 
 	return TRUE;
 }

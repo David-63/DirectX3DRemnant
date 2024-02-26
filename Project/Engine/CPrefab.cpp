@@ -6,6 +6,7 @@
 #include "CComponent.h"
 #include "CScript.h"
 #include "Script\CScriptMgr.h"
+#include "CResMgr.h"
 
 CPrefab::CPrefab()
 	: CRes(RES_TYPE::PREFAB)
@@ -25,15 +26,12 @@ CGameObject* CPrefab::Instantiate(Vec3 _pos, int _layerIdx)
 
 	clone->Transform()->SetRelativePos(_pos);
 	clone->SetLayerIdx(_layerIdx);
-	if (clone->RigidBody())
-	{
-		ACTOR_TYPE type = clone->RigidBody()->GetActorType();
-		clone->RigidBody()->SetPhysical(type);
-		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		clone->RigidBody()->AddActorToLevel();
-	}
+	ACTOR_TYPE type = clone->RigidBody()->GetActorType();
+	clone->RigidBody()->SetPhysical(type);
+	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+	clone->RigidBody()->AddActorToLevel();
 
 	return clone;
 }
@@ -81,6 +79,20 @@ int CPrefab::Load(const wstring& _strFilePath)
 	m_ProtoObj = LoadGameObject(pFile);
 
 	fclose(pFile);
+
+	return S_OK;
+}
+
+int CPrefab::LoadOnUI(const wstring& _strRelativePath)
+{
+	assert(!CResMgr::GetInst()->FindRes<CPrefab>(_strRelativePath).Get());
+
+	Ptr<CPrefab> prefab = new CPrefab;
+	prefab->SetKey(_strRelativePath);
+	prefab->SetRelativePath(_strRelativePath);
+	CResMgr::GetInst()->AddRes(_strRelativePath, prefab);
+
+	return S_OK;
 }
 
 void CPrefab::SaveGameObject(CGameObject* _Object, FILE* _File)
@@ -163,8 +175,8 @@ CGameObject* CPrefab::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::COLLIDER2D:
 			Component = new CCollider2D;
 			break;
-			case COMPONENT_TYPE::COLLIDER3D:
-				Component = new CCollider3D;
+		case COMPONENT_TYPE::COLLIDER3D:
+			Component = new CCollider3D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR2D:
 			Component = new CAnimator2D;
@@ -234,5 +246,3 @@ CGameObject* CPrefab::LoadGameObject(FILE* _File)
 
 	return pObject;
 }
-
-
