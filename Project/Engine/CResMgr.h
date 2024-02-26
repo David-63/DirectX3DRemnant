@@ -26,7 +26,7 @@ private:
     UINT								m_iLayoutOffset_0;
     UINT								m_iLayoutOffset_1;
 
-    Ptr<CPrefab> mPrefab;
+    CPrefab* mPrefab;
 
 public:
     void init();
@@ -53,10 +53,6 @@ public:
 
     Ptr<CMeshData> LoadFBX(const wstring& _strPath);
 
-    Ptr<CPrefab> SavePrefab(const wstring& _strPath, CGameObject* _obj);
-    Ptr<CPrefab> LoadPrefab(const wstring& _strPath);
-    void LoadPrefabOnUI(const wstring& _strPath);
-    
     const vector<D3D11_INPUT_ELEMENT_DESC>& GetInputLayoutInfo() { return m_vecLayoutInfo; }
 
     bool IsResourceChanged() { return m_Changed; }
@@ -72,6 +68,7 @@ public:
     template<typename T>
     Ptr<T> Load(const wstring& _strKey, const wstring& _strRelativePath);
 
+    void SavePrefab(CGameObject* _obj, const wstring& _strRelativePath);
 
     friend class CEventMgr;
 };

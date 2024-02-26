@@ -169,9 +169,6 @@ void CreateTestLevel()
 
 		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 
-		//Ptr<CPrefab> fab = CResMgr::GetInst()->SavePrefab(L"prefab\\prefab01.pref", pObj);
-		//CGameObject* cloneObj = fab->Instantiate();
-
 
 		//pCamMoveScript->SetCamTarget(pObj); //¼ñ´õºä ¿ë
 
@@ -245,15 +242,17 @@ void CreateTestLevel()
 		pObj->RigidBody()->AddActorToLevel();
 
 
-		//SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
+		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 
-		Ptr<CPrefab> fab = CResMgr::GetInst()->SavePrefab(L"prefab\\prefab01.pref", pObj);
-		CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+		CResMgr::GetInst()->SavePrefab(pObj, L"prefab\\prefab01.pref");
 		
-		//Ptr<CPrefab> fab = CResMgr::GetInst()->LoadPrefab(L"prefab\\prefab01.pref");
-		//CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+		Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\prefab01.pref");
+		CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+		CGameObject* cloneObj2 = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+		
 
 		SpawnGameObject(cloneObj, Vec3(300.f, 0.f, 400.f), L"Player");
+		SpawnGameObject(cloneObj2, Vec3(300.f, 0.f, 400.f), L"Player");
 	}
 
 	//monster
