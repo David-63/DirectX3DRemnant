@@ -406,4 +406,17 @@ void CreateTestLevel()
 	
 	bool hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
 
+
+	//ÆÄÆ¼Å¬
+	{
+		CGameObject* pParticleObj = new CGameObject;
+		pParticleObj->SetName(L"Particle");
+
+		pParticleObj->AddComponent(new CTransform);
+		pParticleObj->AddComponent(new CParticleSystem);
+
+		SpawnGameObject(pParticleObj, Vec3(0.f, 0.f, 0.f), 0);
+	}
+
+
 }
