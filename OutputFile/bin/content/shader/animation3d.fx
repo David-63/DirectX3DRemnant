@@ -288,15 +288,23 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     // _iThreadIdx.x : 1차원 배열 형태의 스레드를 통해서 각 스레드마다 한개의 뼈를 담당하여 연산    
     float4 vQZero = float4(0.f, 0.f, 0.f, 1.f);
     matrix matBone = (matrix) 0.f;
+    
+    
+    
     // Frame Data Index == Bone Count * Frame Count + _iThreadIdx.x
     uint iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
-    uint iNextFrameDataIdx = BoneCount * NextFrame + _iThreadIdx.x;    
+    uint iNextFrameDataIdx = BoneCount * NextFrame + _iThreadIdx.x;
+    
+    
+    
     float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans_next[iNextFrameDataIdx].vScale, Ratio);
     float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans_next[iNextFrameDataIdx].vTranslate, Ratio);
     float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans_next[iNextFrameDataIdx].qRot, Ratio);
     
     bool modiIdx = false;
     matrix addRotMatrix = (matrix) 0.f;
+    
+    // 회전시킬 뼈의 위치를 찾으면서, 회전량도 구함
     if (ModifyUse)
     {        
         float4 quaternion = { cos(radians(RotScalar) / 2), 0, 0, sin(radians(RotScalar) / 2) };

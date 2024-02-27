@@ -143,8 +143,7 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
     if (IsNormalTex)
     {
         float3 vNormal = NormalTex.Sample(g_sam_0, _in.vUV).xyz;
-        
-        // 0 ~ 1 범위의 값을 -1 ~ 1 로 확장        
+          
         vNormal = vNormal * 2.f - 1.f;
         
         float3x3 vRotateMat =
@@ -155,7 +154,7 @@ PS_OUT PS_Std3D_Deferred(VS_OUT _in)
         };
         
         vViewNormal = normalize(mul(vNormal, vRotateMat));
-    }   
+    }
     
     output.vNormal = float4(vViewNormal, 1.f);
     output.vPosition = float4(_in.vViewPos, 1.f);

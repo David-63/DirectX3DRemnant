@@ -217,12 +217,14 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	//m_modifyIndices.push_back(33);	// Çã¸®
 	//m_modifyIndices.push_back(34);	// º¹ºÎ
 	//m_modifyIndices.push_back(35);	// ¸íÄ¡
-	//m_modifyIndices.push_back(36);	// °¡½¿
+	m_modifyIndices.push_back(36);	// °¡½¿
 	//m_modifyIndices.push_back(37);	// ¸ñ
 	//m_modifyIndices.push_back(38);	// ¸Ó¸®
 	//m_modifyIndices.push_back(39);	// ÅÎ
 	//m_modifyIndices.push_back(40);	// ÅÎ
-	m_modifyIndices.push_back(136);	// 
+	//m_modifyIndices.push_back(136);	// ¾î±ú
+	//m_modifyIndices.push_back(168);	// ¼Õ¸ñ
+	
 	//CollectChildrenIndices(33);
 	//CollectChildrenIndices(34);
 	//CollectChildrenIndices(35);
@@ -230,7 +232,10 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	//CollectChildrenIndices(37);
 	//CollectChildrenIndices(38);
 	//CollectChildrenIndices(39);
-	m_modifyIndices.push_back(136);	// 
+	//CollectChildrenIndices(136);
+	//CollectChildrenIndices(168);
+
+	//m_modifyIndices.push_back(136);	// 
 
 
 	std::sort(m_modifyIndices.begin(), m_modifyIndices.end());
