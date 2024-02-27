@@ -26,8 +26,6 @@ private:
     UINT								m_iLayoutOffset_0;
     UINT								m_iLayoutOffset_1;
 
-    CPrefab* mPrefab;
-
 public:
     void init();
     void tick();
@@ -52,7 +50,7 @@ public:
     Ptr<CTexture> CreateTexture(const wstring& _strKey, ComPtr<ID3D11Texture2D> _Tex2D);
 
     Ptr<CMeshData> LoadFBX(const wstring& _strPath);
-
+    
     const vector<D3D11_INPUT_ELEMENT_DESC>& GetInputLayoutInfo() { return m_vecLayoutInfo; }
 
     bool IsResourceChanged() { return m_Changed; }
@@ -68,7 +66,6 @@ public:
     template<typename T>
     Ptr<T> Load(const wstring& _strKey, const wstring& _strRelativePath);
 
-    void SavePrefab(CGameObject* _obj, const wstring& _strRelativePath);
 
     friend class CEventMgr;
 };

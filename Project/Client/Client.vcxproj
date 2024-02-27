@@ -159,7 +159,6 @@
     <ClInclude Include="CLevelSaveLoad.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="Collider2DUI.h" />
-    <ClInclude Include="Collider3DUI.h" />
     <ClInclude Include="ComponentUI.h" />
     <ClInclude Include="ComputeShaderUI.h" />
     <ClInclude Include="ContentUI.h" />
@@ -189,7 +188,6 @@
     <ClInclude Include="PrefabUI.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="ResUI.h" />
-    <ClInclude Include="RigidBodyUI.h" />
     <ClInclude Include="ScriptUI.h" />
     <ClInclude Include="SkyBoxUI.h" />
     <ClInclude Include="SoundUI.h" />
@@ -210,7 +208,6 @@
     <ClCompile Include="CGameObjectEx.cpp" />
     <ClCompile Include="CLevelSaveLoad.cpp" />
     <ClCompile Include="Collider2DUI.cpp" />
-    <ClCompile Include="Collider3DUI.cpp" />
     <ClCompile Include="ComponentUI.cpp" />
     <ClCompile Include="ComputeShaderUI.cpp" />
     <ClCompile Include="ContentUI.cpp" />
@@ -244,7 +241,6 @@
     </ClCompile>
     <ClCompile Include="PrefabUI.cpp" />
     <ClCompile Include="ResUI.cpp" />
-    <ClCompile Include="RigidBodyUI.cpp" />
     <ClCompile Include="ScriptUI.cpp" />
     <ClCompile Include="SkyBoxUI.cpp" />
     <ClCompile Include="SoundUI.cpp" />

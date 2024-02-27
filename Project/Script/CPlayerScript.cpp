@@ -83,10 +83,10 @@ void CPlayerScript::Shoot()
 	// 미사일 프리팹 참조
 	Ptr<CPrefab> pMissilePrefab = CResMgr::GetInst()->FindRes<CPrefab>(L"MissilePrefab");
 	Vec3 vMissilePos = Transform()->GetRelativePos() + Vec3(0.f, 0.5f, 0.f) * Transform()->GetRelativeScale();
-	//CGameObject* pCloneMissile = pMissilePrefab->Instantiate();
+	CGameObject* pCloneMissile = pMissilePrefab->Instantiate();
 
 	// 레벨에 추가
-	//SpawnGameObject(pCloneMissile, vMissilePos, L"PlayerProjectile");
+	SpawnGameObject(pCloneMissile, vMissilePos, L"PlayerProjectile");
 }
 
 void CPlayerScript::BeginOverlap(CCollider2D* _Other)

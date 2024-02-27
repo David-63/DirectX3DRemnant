@@ -10,15 +10,12 @@ private:
 	CGameObject*	m_ProtoObj;
 
 public:
-	CGameObject* Instantiate(Vec3 _pos, int _layerIdx);
+	CGameObject* Instantiate();
 
 private:
-	void SaveGameObject(CGameObject* _Object, FILE* _File);
-	CGameObject* LoadGameObject(FILE* _File);
-
+	virtual int Load(const wstring& _strFilePath) { return S_OK; }
 public:
-	virtual int Save(const wstring& _strRelativePath);
-	virtual int Load(const wstring& _strFilePath);
+	virtual int Save(const wstring& _strRelativePath) { return S_OK; }
 
 private:
 	virtual void UpdateData() override {}

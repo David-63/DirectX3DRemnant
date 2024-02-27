@@ -14,7 +14,7 @@ Physics::Physics()
 	, mTransfort(nullptr)
 	, mPvd(nullptr)
 	, mSceneClient(nullptr)
-	, mCurScene(nullptr)
+	, mScene(nullptr)
 	, mControllerMgr(nullptr)
 	, mCpuDispatcher(nullptr)
 	, mCallback(nullptr)
@@ -28,7 +28,7 @@ Physics::~Physics()
 	delete mCallback;
 	mCallback = nullptr;
 
-	mCurScene->release();
+	mScene->release();
 	mPhysics->release();
 	mPvd->release();
 	mTransfort->release();
@@ -52,21 +52,21 @@ void Physics::init()
 	sceneDesc.cpuDispatcher = mCpuDispatcher;
 	sceneDesc.filterShader = PlayerFilterShader;
 	sceneDesc.simulationEventCallback = mCallback;
-	sceneDesc.flags = PxSceneFlag::eENABLE_CCD;
 
-	mCurScene = mPhysics->createScene(sceneDesc);
-
-	mSceneClient = mCurScene->getScenePvdClient();
+	mScene = mPhysics->createScene(sceneDesc);
+	mSceneClient = mScene->getScenePvdClient();
+	
 
 	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
 	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
 	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
 
+
 }
 void Physics::tick()
 {
-	mCurScene->simulate(CTimeMgr::GetInst()->GetDeltaTime());
-	mCurScene->fetchResults(true);
+	mScene->simulate(CTimeMgr::GetInst()->GetDeltaTime());
+	mScene->fetchResults(true);
 
 
 }
@@ -78,43 +78,14 @@ void Physics::AddActor(CGameObject* _gameObject)
 	AssertEx(_gameObject, L"Physics::AddActor() - GameObject is nullptr");
 	AssertEx(_gameObject->RigidBody(), L"Physics::AddActor() - RigidBody is nullptr");
 	AssertEx(_gameObject->RigidBody()->IsAppliedPhysics(), L"Physics::AddActor() - Is not applied physics");
-	mCurScene->addActor(*_gameObject->RigidBody()->GetActor());
+	mScene->addActor(*_gameObject->RigidBody()->GetActor());
 }
 void Physics::RemoveActor(CGameObject* _gameObject)
 {
 	AssertEx(_gameObject, L"Physics::RemoveActor() - GameObject is nullptr");
 	AssertEx(_gameObject->RigidBody(), L"Physics::RemoveActor() - RigidBody is nullptr");
 	AssertEx(_gameObject->RigidBody()->IsAppliedPhysics(), L"Physics::RemoveActor() - Is not applied physics");
-	mCurScene->removeActor(*_gameObject->RigidBody()->GetActor());
-}
-tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLength)
-{
-	tRayCastInfo info = {};
-	PxVec3 rayOrigin = { _rayOrigin.x, _rayOrigin.y, _rayOrigin.z };
-	PxVec3 rayDir = { _rayDirection.x, _rayDirection.y, _rayDirection.z };
-	
-	PxRaycastBuffer hitBuffer;
-	PxQueryFilterData data;
-	//data.data.word0 = 0x01;
-	
-	bool hit = mCurScene->raycast(rayOrigin, rayDir, _rayLength, hitBuffer);
-
-	if (hit)
-	{
-		PxRaycastHit result = hitBuffer.getAnyHit(0);
-		info.hitActor = result.actor;
-		info.hitPos = { result.position.x, result.position.y, result.position.z };
-		info.hitNormal = { result.normal.x, result.normal.y, result.normal.z };
-		info.dist = result.distance;
-		info.hit = true;
-	}
-
-	else
-	{
-		info.hit = false;
-	}
-
-	return &info;
+	mScene->removeActor(*_gameObject->RigidBody()->GetActor());
 }
 PxFilterFlags Physics::PlayerFilterShader(PxFilterObjectAttributes _attributes0, PxFilterData _filterData0, PxFilterObjectAttributes _attributes1, PxFilterData _filterData1, PxPairFlags& _pairFlags, const void* _constantBlock, PxU32 _constantBlockSize)
 {
@@ -130,12 +101,12 @@ PxFilterFlags Physics::PlayerFilterShader(PxFilterObjectAttributes _attributes0,
 	}
 
 	// 충돌하는 물체의 경우 충돌 플래그만 생성합니다.
-	_pairFlags |= PxPairFlag::eCONTACT_DEFAULT | PxPairFlag::eNOTIFY_CONTACT_POINTS;
+	_pairFlags = PxPairFlag::eCONTACT_DEFAULT;
 
 	// 두 필터가 서로 충돌플래그가 세워져 있을 경우
 	if ((_filterData0.word0 & _filterData1.word1) || (_filterData1.word0 & _filterData0.word1))
 	{
-		_pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_PERSISTS | PxPairFlag::eNOTIFY_TOUCH_LOST;
+		_pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND | PxPairFlag::eNOTIFY_TOUCH_LOST;
 		return PxFilterFlag::eDEFAULT;
 	}
 

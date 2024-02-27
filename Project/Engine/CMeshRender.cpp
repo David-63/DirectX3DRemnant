@@ -101,13 +101,3 @@ void CMeshRender::render(UINT _iSubset)
 	if (Animator3D())
 		Animator3D()->ClearData();
 }
-
-void CMeshRender::SaveToLevelFile(FILE* _File)
-{
-	CRenderComponent::SaveToLevelFile(_File);
-}
-
-void CMeshRender::LoadFromLevelFile(FILE* _File)
-{
-	CRenderComponent::LoadFromLevelFile(_File);
-}

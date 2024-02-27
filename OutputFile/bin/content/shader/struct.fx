@@ -45,51 +45,36 @@ struct tParticle
     int     pad;
 };
 
-struct tRWParticleBuffer
-{
-    int  iSpawnCount; // 스폰 시킬 파티클 개수
-    int3  padding;
-};
 
 struct tParticleModule
 {
-    float3  vRandomSpark;
-    
 	// 스폰 모듈
     float4  vSpawnColor;
     float4  vSpawnScaleMin;
     float4  vSpawnScaleMax;
     float3  vBoxShapeScale;    
-  
     float   fSphereShapeRadius;
-    float   fSphereOffset;
     int     SpawnShapeType; // Sphere , Box
-    int4    BoxPad;
-    
-    float   fSpawnAreaOffsetFactor;
     int     SpawnRate;
     int     Space;          // 0 World, 1 Local    
-  
     float   MinLifeTime;
     float   MaxLifeTime;
-    int    spawnpad;
+    int3    spawnpad;
 
 	// Color Change 모듈
     float4  vStartColor; // 초기 색상
     float4  vEndColor; // 최종 색상
-    bool    bStrongColor;
 
 	// Scale Change 모듈
     float   StartScale; // 초기 크기
     float   EndScale; // 최종 크기	
 
-    // 버퍼 최대크기
     int     iMaxParticleCount;
-    int2    ipad;
+    int     ipad;
     
     // Add Velocity 모듈
     float4  vVelocityDir;
-    int     AddVelocityType; // 0 : From Center, 2 : Fixed Direction	
+    int     AddVelocityType; // 0 : From Center, 1 : Fixed Direction	
     float   OffsetAngle;
     float   Speed;
     int     addvpad;
@@ -98,21 +83,16 @@ struct tParticleModule
     float StartDrag;
     float EndDrag;
     
-    // Gravity 모듈
-    float fGravityForce;
-    
     // NoiseForce 모듈
     float fNoiseTerm;
     float fNoiseForce;
-           
+        
     // Render 모듈
     int     VelocityAlignment;  // 1 : 속도정렬 사용(이동 방향으로 회전) 0 : 사용 안함
     int     VelocityScale;      // 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함	
     float   vMaxSpeed;          // 최대 크기에 도달하는 속력
     float4  vMaxVelocityScale;  // 속력에 따른 크기 변화량 최대치
-    float   fRotAngle;
-    float   fRotSpeed;
-    int     bRot;   // 1 : 회전 사용, 0: 사용x
+    int     renderpad;
 
     
     // Module Check
@@ -124,7 +104,7 @@ struct tParticleModule
     int Drag;
     int NoiseForce;
     int Render;
-    int Gravity;    
+    int modulepad;    
 };
 
 struct tSkinningInfo

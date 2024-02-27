@@ -8,13 +8,11 @@
 
 #include "TransformUI.h"
 #include "Collider2DUI.h"
-#include "Collider3DUI.h"
 #include "CameraUI.h"
 #include "Animator2DUI.h"
 #include "Animator3DUI.h"
 #include "Light2DUI.h"
 #include "Light3DUI.h"
-#include "RigidBodyUI.h"
 
 #include "MeshRenderUI.h"
 #include "TileMapUI.h"
@@ -39,13 +37,13 @@
 InspectorUI::InspectorUI()
 	: UI("##Inspector")
 	, m_pTargetObj(nullptr)
-	, m_arrComUI{}
+	, m_arrComUI{}	
 	, m_arrResUI{}
 {
 	SetName("Inspector");
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM] = new TransformUI;
-	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]->SetSize(0.f, 170.f);
+	m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]->SetSize(0.f, 150.f);	
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::TRANSFORM]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::MESHRENDER] = new MeshRenderUI;
@@ -59,10 +57,6 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D] = new Collider2DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER2D]);
-
-	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D] = new Collider3DUI;
-	m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D]->SetSize(0.f, 150.f);
-	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::COLLIDER3D]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D] = new Animator2DUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::ANIMATOR2D]->SetSize(0.f, 150.f);
@@ -80,16 +74,12 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::LIGHT3D]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::LIGHT3D]);
 
-	m_arrComUI[(UINT)COMPONENT_TYPE::RIGIDBODY] = new RigidBodyUI;
-	m_arrComUI[(UINT)COMPONENT_TYPE::RIGIDBODY]->SetSize(0.f, 600.f);
-	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::RIGIDBODY]);
-
 	m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP] = new TileMapUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::TILEMAP]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::PARTICLESYSTEM] = new ParticleSystemUI;
-	m_arrComUI[(UINT)COMPONENT_TYPE::PARTICLESYSTEM]->SetSize(0.f, 600.f);
+	m_arrComUI[(UINT)COMPONENT_TYPE::PARTICLESYSTEM]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::PARTICLESYSTEM]);
 
 	m_arrComUI[(UINT)COMPONENT_TYPE::SKYBOX] = new SkyBoxUI;
@@ -103,7 +93,7 @@ InspectorUI::InspectorUI()
 	m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE] = new LandScapeUI;
 	m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE]->SetSize(0.f, 150.f);
 	AddChildUI(m_arrComUI[(UINT)COMPONENT_TYPE::LANDSCAPE]);
-
+	
 
 	// ResUI
 	m_arrResUI[(UINT)RES_TYPE::MESHDATA] = new MeshDataUI;
@@ -146,7 +136,7 @@ InspectorUI::InspectorUI()
 
 InspectorUI::~InspectorUI()
 {
-
+	
 }
 
 void InspectorUI::init()
@@ -156,12 +146,12 @@ void InspectorUI::init()
 
 void InspectorUI::tick()
 {
-
+	
 }
 
 int InspectorUI::render_update()
 {
-
+	
 	return TRUE;
 }
 
@@ -188,11 +178,11 @@ void InspectorUI::SetTargetObject(CGameObject* _Target)
 		{
 			m_vecScriptUI[i]->SetActive(false);
 		}
-		return;
+		return ;
 	}
 
 	// 오브젝트의 스크립트 목록을 받아온다.
-	const vector<CScript*>& vecScript = m_pTargetObj->GetScripts();
+	const vector<CScript*> & vecScript = m_pTargetObj->GetScripts();
 
 	// 스크립트UI 가 스크립트 수 보다 적으면 그만큼 추가해준다.
 	if (m_vecScriptUI.size() < vecScript.size())
@@ -204,7 +194,7 @@ void InspectorUI::SetTargetObject(CGameObject* _Target)
 
 			m_vecScriptUI.push_back(UI);
 			AddChildUI(UI);
-			UI->SetActive(true);
+			UI->SetActive(true);			
 		}
 	}
 
@@ -234,14 +224,14 @@ void InspectorUI::SetTargetResource(Ptr<CRes> _Res)
 	}
 
 	m_pTargetRes = _Res;
-
+		
 	if (nullptr == m_pTargetRes)
 		return;
 
 	RES_TYPE type = _Res->GetType();
 
 	m_arrResUI[(UINT)type]->SetActive(true);
-	m_arrResUI[(UINT)type]->SetTargetRes(_Res);
+	m_arrResUI[(UINT)type]->SetTargetRes(_Res);	
 }
 
 void InspectorUI::ClearTargetObject()
@@ -268,6 +258,6 @@ void InspectorUI::ClearTargetResource()
 		{
 			m_arrResUI[i]->SetTargetRes(nullptr);
 			m_arrResUI[i]->SetActive(false);
-		}
+		}		
 	}
 }

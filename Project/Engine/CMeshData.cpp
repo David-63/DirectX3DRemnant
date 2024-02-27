@@ -36,7 +36,6 @@ CGameObject* CMeshData::Instantiate()
 
 	CAnimator3D* pAnimator = new CAnimator3D;
 	pNewObj->AddComponent(pAnimator);
-	pAnimator->CreateAnimClip(L"temp", 0, 0.1f, 0.2f, m_pMesh);
 
 	return pNewObj;
 }

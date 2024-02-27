@@ -8,8 +8,6 @@
 #include "CCollider2D.h"
 #include "CCollider3D.h"
 #include "CRigidBody.h"
-//#include "CTransform.h"
-#include "Physics.h"
 
 CCollisionMgr::CCollisionMgr()
     : m_matrix{}
@@ -40,49 +38,6 @@ void CCollisionMgr::tick()
 	//	}
 	//}
 }
-
-bool CCollisionMgr::IsAgainstWall(Vec3 _PlayerPos, Vec3 _PlayerDir, CCollider3D* _Wall)
-{
-	//// 0 -- 1
-	//// |    |
-	//// 3 -- 2
-	//Vec3 arrLocal[8] =
-	//{
-	//	Vec3(-0.5f, 0.5f, 0.5f),
-	//	Vec3(0.5f, 0.5f, 0.5f),
-	//	Vec3(0.5f, 0.5f, -0.5f),
-	//	Vec3(-0.5f, 0.5f, -0.5f),
-	//	Vec3(-0.5f, -0.5f, 0.5f),
-	//	Vec3(0.5f, -0.5f, 0.5f),
-	//	Vec3(0.5f, -0.5f, -0.5f),
-	//	Vec3(-0.5f, -0.5f, -0.5f),
-	//};
-
-	//Matrix mat = _Wall->GetOwner()->Transform()->GetWorldMat();
-	//Vec3 square[4] = {};
-	//square[0] = XMVector3TransformCoord(arrLocal[0], mat);
-	//square[1] = XMVector3TransformCoord(arrLocal[1], mat);
-	//square[2] = XMVector3TransformCoord(arrLocal[2], mat);
-	//square[3] = XMVector3TransformCoord(arrLocal[3], mat);
-	//square[4] = XMVector3TransformCoord(arrLocal[4], mat);
-	//square[5] = XMVector3TransformCoord(arrLocal[5], mat);
-	//square[6] = XMVector3TransformCoord(arrLocal[6], mat);
-	//square[7] = XMVector3TransformCoord(arrLocal[7], mat);
-
-	tRayCastInfo* info = Physics::GetInst()->RayCast(_PlayerPos, _PlayerDir, 1000.f);
-	if (info->hit)
-	{
-		PxRigidActor* actor = info->hitActor;
-		const char* name = actor->getName();
-		
-	}
-	else
-	{
-		return true;
-	}
-}
-
-
 
 //void CCollisionMgr::CollisionBtwLayer(CLayer* _Left, CLayer* _Right)
 //{

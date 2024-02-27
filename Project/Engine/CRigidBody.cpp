@@ -9,58 +9,24 @@ CRigidBody::CRigidBody()
 	: CComponent(COMPONENT_TYPE::RIGIDBODY)
 	, mMaxVelocity(10.f)
 	, mActor(nullptr)
+	, mShape(nullptr)
+	, mMaterial(nullptr)
 	, mbAppliedPhysics(false)
 	, mbAppliedGravity(false)
 	, mbIsActorInLevel(false)
 	, mbdrawCollider(true)
-	, mShapeInfos{}
-	, mShapes{}
 {
-}
-CRigidBody::CRigidBody(const CRigidBody& _Other)
-	: CComponent(COMPONENT_TYPE::RIGIDBODY)
-	, mMaxVelocity(_Other.mMaxVelocity)
-	, mActorType(_Other.mActorType)
-	, mbdrawCollider(_Other.mbdrawCollider)
-{
-	mShapeInfos.clear();
-	for (const auto& shapeInfo : _Other.mShapeInfos)
-	{
-		mShapeInfos.push_back(shapeInfo);
-	}
 }
 CRigidBody::~CRigidBody()
 {
-	for (int i = 0; i < mGeometries.size(); ++i)
-	{
-		delete mGeometries[i];
-		mGeometries[i] = nullptr;
-	}
+	delete mPhysicsInfo.pGeometries;
+	mPhysicsInfo.pGeometries = nullptr;
 }
 void CRigidBody::SaveToLevelFile(FILE* _File)
 {
-	fwrite(&mFreezeRotationFlag, sizeof(EnumFlags<FreezeRotationFlag, uint16_t>), 1, _File);
-	fwrite(&mActorType, sizeof(ACTOR_TYPE), 1, _File);
-	int VecSize = mShapeInfos.size();
-	fwrite(&VecSize, sizeof(int), 1, _File);
-	for (int i = 0; i < VecSize; ++i)
-	{
-		fwrite(&mShapeInfos[i], sizeof(tShapeInfo), 1, _File);
-	}
 }
 void CRigidBody::LoadFromLevelFile(FILE* _File)
 {
-	fread(&mFreezeRotationFlag, sizeof(EnumFlags<FreezeRotationFlag, uint16_t>), 1, _File);
-	fread(&mActorType, sizeof(ACTOR_TYPE), 1, _File);
-	int VecSize = 0;
-	fread(&VecSize, sizeof(int), 1, _File);
-	tShapeInfo temp;
-	for (int i = 0; i < VecSize; ++i)
-	{
-		fread(&temp, sizeof(tShapeInfo), 1, _File);
-		mShapeInfos.push_back(temp);
-	}
-
 }
 void CRigidBody::begin()
 {
@@ -79,14 +45,30 @@ void CRigidBody::finaltick()
 		AddGravity();
 	}
 
-	DrawDebugMesh();
+	if (mbAppliedPhysics && mbdrawCollider)
+	{
+		if (mPhysicsInfo.eGeomType == GEOMETRY_TYPE::Box)
+		{
+			DrawDebugCube(GetOwner()->Transform()->GetWorldPos(), mPhysicsInfo.size*2, Vec4(0.7f, 0.0f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+		}
+		else if (mPhysicsInfo.eGeomType == GEOMETRY_TYPE::Sphere)
+		{
+			DrawDebugSphere(GetOwner()->Transform()->GetWorldPos(), mPhysicsInfo.size.x, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+		}
+	}
 
-	if (true == mbAppliedPhysics && ACTOR_TYPE::Static == mActorType)
+	if (true == mbAppliedPhysics && ACTOR_TYPE::Static == mPhysicsInfo.eActorType)
 		return;
 	else
 	{
-		GetOwner()->Transform()->Move(mVelocity);
+		CTransform* tr = (CTransform*)GetOwner()->GetComponent(COMPONENT_TYPE::TRANSFORM);
+		tr->Move(mVelocity);
 	}
+
+	GetOwner()->Transform()->Move(mVelocity);
+
+	
+
 
 }
 void CRigidBody::Destroy()
@@ -97,23 +79,25 @@ void CRigidBody::Destroy()
 		pActor->userData = nullptr;
 	}
 }
-
 CComponent* CRigidBody::CloneFromObj(CGameObject* _pGameObject)
 {
 	CRigidBody* rigidBody = _pGameObject->RigidBody();
 
 	if (true == mbAppliedPhysics)
 	{
-		rigidBody->SetActorType(mActorType);
-		rigidBody->SetShapeVector(mShapes, mShapeInfos);
+		tPhysicsInfo info = {};
+		info.size = GetGeometrySize();
+		info.eActorType = mPhysicsInfo.eActorType;
+		info.eGeomType = mPhysicsInfo.eGeomType;
+		info.massProperties = mPhysicsInfo.massProperties;
 
-		rigidBody->SetPhysical(mActorType);
+		rigidBody->SetPhysical(info);
 		_pGameObject->Transform()->SetRelativePos(GetOwner()->Transform()->GetRelativePos());
 		_pGameObject->Transform()->SetRelativeRot(GetOwner()->Transform()->GetRelativeRot());
 		_pGameObject->Transform()->SetRelativeScale(GetOwner()->Transform()->GetRelativeScale());
 	}
 
-	if (ACTOR_TYPE::Static != mActorType)
+	if (ACTOR_TYPE::Static != mPhysicsInfo.eActorType)
 	{
 		rigidBody->SetVelocity(mVelocity);
 		rigidBody->SetMaxVelocity(mMaxVelocity);
@@ -121,20 +105,16 @@ CComponent* CRigidBody::CloneFromObj(CGameObject* _pGameObject)
 
 	return rigidBody;
 }
-
-void CRigidBody::SetPhysical(ACTOR_TYPE _eActorType)
+void CRigidBody::SetPhysical(const tPhysicsInfo& _physicsInfo)
 {
-	AssertEx(mShapeInfos.size() != 0, L"ShapeInfo가 설정되지 않음.");
-
-	mActorType = _eActorType;
-	mbAppliedPhysics = true;
+	mPhysicsInfo = _physicsInfo;
 
 	CreateMaterial();
 	CreateGeometry();
 	CreateActor();
 	CreateShape();
 
-
+	mbAppliedPhysics = true;
 	InitializeActor();
 }
 bool CRigidBody::IsAppliedPhysics()
@@ -146,9 +126,6 @@ void CRigidBody::AddActorToLevel()
 	AssertEx(mbAppliedPhysics, L"RigidBody::AddActorToLevel() - 물리가 들어가지 않은 오브젝트에 대한 AddActorToScene 호출");
 	AssertEx(mActor, L"RigidBody::AddActorToLevel() - mpActor가 생성되지 않음");
 
-	if(mActorType == ACTOR_TYPE::Dynamic)
-		PxRigidBodyExt::setMassAndUpdateInertia(*GetDynamicActor(), 200.f);
-	
 	Physics::GetInst()->AddActor(GetOwner());
 	mbIsActorInLevel = true;
 }
@@ -163,11 +140,11 @@ void CRigidBody::SetPhysicsTransform(physx::PxTransform _transform)
 	AssertEx(mbAppliedPhysics, L"RigidBody::SetPhysicsTransform() - 물리가 들어가지 않은 오브젝트에 대한 SetPhysicsTransform 호출");
 	GetActor<physx::PxRigidActor>()->setGlobalPose(_transform);
 }
-void CRigidBody::SetVelocity(const Vector3 _velocity)
+void CRigidBody::SetVelocity(const Vector3& _velocity)
 {
 	if (true == mbAppliedPhysics)
 	{
-		AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::SetVelocity() - Dynamic Actor가 아닌 물체에 대한 SetVelocity() 호출 시도");
+		AssertEx(ACTOR_TYPE::Dynamic == mPhysicsInfo.eActorType, L"RigidBody::SetVelocity() - Dynamic Actor가 아닌 물체에 대한 SetVelocity() 호출 시도");
 		physx::PxVec3 pxVelocity = physx::PxVec3(_velocity.x, _velocity.y, _velocity.z);
 		GetDynamicActor()->setLinearVelocity(pxVelocity);
 	}
@@ -182,7 +159,7 @@ void CRigidBody::SetVelocity(AXIS3D_TYPE _eAxis, float _velocity)
 {
 	if (true == mbAppliedPhysics)
 	{
-		AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::SetVelocity() - Dynamic Actor가 아닌 물체에 대한 SetVelocity() 호출 시도");
+		AssertEx(ACTOR_TYPE::Dynamic == mPhysicsInfo.eActorType, L"RigidBody::SetVelocity() - Dynamic Actor가 아닌 물체에 대한 SetVelocity() 호출 시도");
 		PxVec3 velocity = GetDynamicActor()->getLinearVelocity();
 		switch (_eAxis)
 		{
@@ -224,11 +201,12 @@ void CRigidBody::AddVelocity(const Vector3& _velocity)
 {
 	if (true == mbAppliedPhysics)
 	{
-		AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::AddVelocity() - Dynamic Actor가 아닌 물체에 대한 SetVelocity() 호출 시도");
+		AssertEx(ACTOR_TYPE::Dynamic == mPhysicsInfo.eActorType, L"RigidBody::AddVelocity() - Dynamic Actor가 아닌 물체에 대한 SetVelocity() 호출 시도");
 		PxVec3 velocity = GetDynamicActor()->getLinearVelocity();
 		velocity.x += _velocity.x;
 		velocity.y += _velocity.y;
 		velocity.z += _velocity.z;
+
 
 		GetDynamicActor()->setLinearVelocity(velocity);
 	}
@@ -243,7 +221,7 @@ void CRigidBody::AddVelocity(AXIS3D_TYPE _eAxis, float _velocity)
 {
 	if (true == mbAppliedPhysics)
 	{
-		AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::AddVelocity() - Dynamic Actor가 아닌 물체에 대한 SetVelocity() 호출 시도");
+		AssertEx(ACTOR_TYPE::Dynamic == mPhysicsInfo.eActorType, L"RigidBody::AddVelocity() - Dynamic Actor가 아닌 물체에 대한 SetVelocity() 호출 시도");
 		PxVec3 velocity = GetDynamicActor()->getLinearVelocity();
 		switch (_eAxis)
 		{
@@ -284,7 +262,7 @@ void CRigidBody::SetMaxVelocity(float _maxVelocity)
 {
 	if (true == mbAppliedPhysics)
 	{
-		AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::SetMaxVelocity() - Dynamic Actor가 아닌 물체에 대한 SetMaxVelocity() 호출 시도");
+		AssertEx(ACTOR_TYPE::Dynamic == mPhysicsInfo.eActorType, L"RigidBody::SetMaxVelocity() - Dynamic Actor가 아닌 물체에 대한 SetMaxVelocity() 호출 시도");
 		GetDynamicActor()->setMaxLinearVelocity(_maxVelocity);
 	}
 
@@ -300,7 +278,7 @@ void CRigidBody::ApplyGravity()
 {
 	if (true == mbAppliedPhysics)
 	{
-		AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::ApplyGravity() - Dynamic Actor가 아닌 물체에 대한 ApplyGravity() 호출 시도");
+		AssertEx(ACTOR_TYPE::Dynamic == mPhysicsInfo.eActorType, L"RigidBody::ApplyGravity() - Dynamic Actor가 아닌 물체에 대한 ApplyGravity() 호출 시도");
 		GetDynamicActor()->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, false);
 	}
 
@@ -310,7 +288,7 @@ void CRigidBody::RemoveGravity()
 {
 	if (true == mbAppliedPhysics)
 	{
-		AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::RemoveGravity() - Dynamic Actor가 아닌 물체에 대한 RemoveGravity() 호출 시도");
+		AssertEx(ACTOR_TYPE::Dynamic == mPhysicsInfo.eActorType, L"RigidBody::RemoveGravity() - Dynamic Actor가 아닌 물체에 대한 RemoveGravity() 호출 시도");
 		GetDynamicActor()->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
 	}
 
@@ -318,63 +296,54 @@ void CRigidBody::RemoveGravity()
 }
 void CRigidBody::SetFreezeRotation(FreezeRotationFlag flag, bool enable)
 {
-	for (int i = 0; i < mShapes.size(); ++i)
+	physx::PxActor* actor = mShape->getActor();
+	assert(actor);
+
+	physx::PxRigidDynamic* rigidActor = actor->is<physx::PxRigidDynamic>();
+	if (rigidActor == nullptr)
+		return;
+
+	EnumFlags<FreezeRotationFlag, uint16_t> enumFlag{ flag };
+
+	if (enable)
 	{
-		physx::PxActor* actor = mShapes[i]->getActor();
-		assert(actor);
-
-		physx::PxRigidDynamic* rigidActor = actor->is<physx::PxRigidDynamic>();
-		if (rigidActor == nullptr)
-			return;
-
-		EnumFlags<FreezeRotationFlag, uint16_t> enumFlag{ flag };
-
-		if (enable)
-		{
-			mFreezeRotationFlag |= enumFlag;
-			if (enumFlag & FreezeRotationFlag::ROTATION_X)
-				rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
-			if (enumFlag & FreezeRotationFlag::ROTATION_Y)
-				rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, true);
-			if (enumFlag & FreezeRotationFlag::ROTATION_Z)
-				rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
-		}
-		else
-		{
-			mFreezeRotationFlag &= ~enumFlag;
-			if (enumFlag & FreezeRotationFlag::ROTATION_X)
-				rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, false);
-			if (enumFlag & FreezeRotationFlag::ROTATION_Y)
-				rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, false);
-			if (enumFlag & FreezeRotationFlag::ROTATION_Z)
-				rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, false);
-		}
-
-		rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X, true);
-		rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, true);
+		mFreezeRotationFlag |= enumFlag;
+		if (enumFlag & FreezeRotationFlag::ROTATION_X)
+			rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, true);
+		if (enumFlag & FreezeRotationFlag::ROTATION_Y)
+			rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, true);
+		if (enumFlag & FreezeRotationFlag::ROTATION_Z)
+			rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, true);
 	}
+	else
+	{
+		mFreezeRotationFlag &= ~enumFlag;
+		if (enumFlag & FreezeRotationFlag::ROTATION_X)
+			rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_X, false);
+		if (enumFlag & FreezeRotationFlag::ROTATION_Y)
+			rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Y, false);
+		if (enumFlag & FreezeRotationFlag::ROTATION_Z)
+			rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, false);
+	}
+
+	rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X, true);
+	rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, true);
 }
 
 void CRigidBody::SetLinearDamping(float _damping)
 {
-	AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::SetLinearDamping() - Dynamic Actor가 아닌 물체에 대한 SetLinearDamping() 호출 시도");
+	AssertEx(ACTOR_TYPE::Dynamic == mPhysicsInfo.eActorType, L"RigidBody::SetLinearDamping() - Dynamic Actor가 아닌 물체에 대한 SetLinearDamping() 호출 시도");
 	GetActor<physx::PxRigidDynamic>()->setLinearDamping(_damping);
 }
 void CRigidBody::SetSimulationShapeFlag(bool _bFlag)
 {
 	AssertEx(mbAppliedPhysics, L"RigidBody::SetSimulationShapeFlag() - 물리가 들어가지 않은 오브젝트에 대한 SetSimulationShapeFlag 호출");
-	for (auto shape : mShapes)
-	{
-		shape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, _bFlag);
-	}
+	mShape->setFlag(physx::PxShapeFlag::eSIMULATION_SHAPE, _bFlag);
 }
 void CRigidBody::SetTriggerShapeFlag(bool _bFlag)
 {
 	AssertEx(mbAppliedPhysics, L"RigidBody::SetTriggerShapeFlag() - 물리가 들어가지 않은 오브젝트에 대한 SetTriggerShapeFlag 호출");
-	for (auto shape : mShapes)
-	{
-		shape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, _bFlag);
-	}
+	mShape->setFlag(physx::PxShapeFlag::eTRIGGER_SHAPE, _bFlag);
 }
 void CRigidBody::SetActorInLevelFlag(bool _bFlag)
 {
@@ -383,7 +352,7 @@ void CRigidBody::SetActorInLevelFlag(bool _bFlag)
 void CRigidBody::AddForce(const Vector3& _force)
 {
 	AssertEx(mbAppliedPhysics, L"RigidBody::AddForce() - 물리가 들어가지 않은 오브젝트에 대한 AddForce 호출");
-	AssertEx(ACTOR_TYPE::Static != mActorType, L"RigidBody::AddForce() - Static 객체에 대해 힘 적용");
+	AssertEx(ACTOR_TYPE::Static != mPhysicsInfo.eActorType, L"RigidBody::AddForce() - Static 객체에 대해 힘 적용");
 
 	PxVec3 pxForce = PxVec3(_force.x, _force.y, _force.z);
 
@@ -395,125 +364,87 @@ void CRigidBody::AddForce(const Vector3& _force)
 	);
 }
 
-
-void CRigidBody::SetShapeLocalPos(int _idx, CTransform* _transform)
+void CRigidBody::Test()
 {
-	Vec3 vecPos = _transform->GetRelativePos();
-	Vec3 vecRot = _transform->GetRelativeRot();
-	XMFLOAT4 quat = Transform()->EulerToQuat(vecRot.x, vecRot.y, vecRot.z);
-
-	PxTransform pxTransform;
-	pxTransform.p.x = vecPos.x;
-	pxTransform.p.y = vecPos.y;
-	pxTransform.p.z = vecPos.z;
-
-	pxTransform.q.x = quat.x;
-	pxTransform.q.y = quat.y;
-	pxTransform.q.z = quat.z;
-	pxTransform.q.w = quat.w;
-
-	mShapes[_idx]->setLocalPose(pxTransform);
+	//mRigidActor->
+	//mActor->
 }
 
-void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos)
+void CRigidBody::CreateBoxGeometry()
 {
-	PxTransform localpose(PxVec3(_localPos.x, _localPos.y, _localPos.z));
-	localpose.q = GetPhysicsTransform().q;
-
-	mShapes[_idx]->setLocalPose(localpose);
-	mShapeInfos[_idx].offset = _localPos;
+	mPhysicsInfo.pGeometries = new Geometries(mPhysicsInfo.eGeomType, mPhysicsInfo.size);
 }
-
-void CRigidBody::AttachShape(int _idx)
+void CRigidBody::CreateCapsuleGeometry()
 {
-	GetRigidActor()->attachShape(*mShapes[_idx]);
+	mPhysicsInfo.pGeometries = new Geometries(mPhysicsInfo.eGeomType, mPhysicsInfo.size.x, mPhysicsInfo.size.y);
 }
-
-Vec3 CRigidBody::GetShapePosition(int _shapeIdx)
+void CRigidBody::CreatePlaneGeometry()
 {
-	PxTransform localTr = mShapes[_shapeIdx]->getLocalPose();
-	PxTransform worldTr = GetPhysicsTransform();
-	Vec3 pos = {};
-	pos.x = worldTr.p.x + localTr.p.x;
-	pos.y = worldTr.p.y + localTr.p.y;
-	pos.z = worldTr.p.z + localTr.p.z;
-
-	return pos;
+	mPhysicsInfo.pGeometries = new Geometries(mPhysicsInfo.eGeomType);
 }
-
-
+void CRigidBody::CreateSphereGeometry()
+{
+	mPhysicsInfo.pGeometries = new Geometries(mPhysicsInfo.eGeomType, mPhysicsInfo.size.x);
+}
 void CRigidBody::CreateGeometry()
 {
-	for (int i = 0; i < mShapeInfos.size(); ++i)
+	mPhysicsInfo.size /= 2.f;
+	switch (mPhysicsInfo.eGeomType)
 	{
-		mGeometries.resize(mShapeInfos.size());
-
-		switch (mShapeInfos[i].eGeomType)
-		{
-		case GEOMETRY_TYPE::Box:
-		{
-			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size / 2.f);
-			GetOwner()->Transform()->SetRelativeScale(mShapeInfos[i].size);
-		}
+	case GEOMETRY_TYPE::Box:
+	{
+		CreateBoxGeometry();
+	}
 		break;
 
-		case GEOMETRY_TYPE::Capsule:
-			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x / 2.f, mShapeInfos[i].size.y / 2.f);
-			break;
+	case GEOMETRY_TYPE::Capsule:
+		CreateCapsuleGeometry();
+		break;
 
-		case GEOMETRY_TYPE::Sphere:
-			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size.x / 2.f);
-			break;
-
-		case GEOMETRY_TYPE::Plane:
-			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType);
-			break;
-		}
-
-		AssertEx(mGeometries[i], L"RigidBody::CreateGeometry() - Geometry 생성 실패");
+	case GEOMETRY_TYPE::Sphere:
+	{
+		CreateSphereGeometry();
 	}
+		break;
+
+	case GEOMETRY_TYPE::Plane:
+		CreatePlaneGeometry();
+		break;
+	}
+
+	AssertEx(mPhysicsInfo.pGeometries, L"RigidBody::CreateGeometry() - Geometry 생성 실패");
 }
 void CRigidBody::CreateShape()
 {
-	mShapes = {};
-
-	for (int i = 0; i < mShapeInfos.size(); ++i)
+	switch (mPhysicsInfo.eGeomType)
 	{
-		PxShape* shape = {};
-		switch (mShapeInfos[i].eGeomType)
-		{
-		case GEOMETRY_TYPE::Box:
-			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->boxGeom, *mMaterial);
-			break;
-		case GEOMETRY_TYPE::Capsule:
-			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->capsuleGeom, *mMaterial);
-			break;
-		case GEOMETRY_TYPE::Sphere:
-			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->sphereGeom, *mMaterial);
-			break;
-		case GEOMETRY_TYPE::Plane:
-			shape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mGeometries[i]->planeGeom, *mMaterial);
-			break;
-		}
-
-
-		AssertEx(shape, L"RigidBody::CreateShape() - Shape 생성 실패");
-		mShapes.push_back(shape);
-
-		SetShapeLocalPos(i, mShapeInfos[i].offset);
+	case GEOMETRY_TYPE::Box:
+		mShape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mPhysicsInfo.pGeometries->boxGeom, *mMaterial);
+		break;
+	case GEOMETRY_TYPE::Capsule:
+		mShape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mPhysicsInfo.pGeometries->capsuleGeom, *mMaterial);
+		break;
+	case GEOMETRY_TYPE::Sphere:
+		mShape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mPhysicsInfo.pGeometries->sphereGeom, *mMaterial);
+		break;
+	case GEOMETRY_TYPE::Plane:
+		mShape = physx::PxRigidActorExt::createExclusiveShape(*mActor->is<physx::PxRigidActor>(), mPhysicsInfo.pGeometries->planeGeom, *mMaterial);
+		break;
 	}
+
+	AssertEx(mShape, L"RigidBody::CreateShape() - Shape 생성 실패");
 }
 void CRigidBody::CreateActor()
 {
-	Vec3 playerPos = GetOwner()->Transform()->GetRelativePos();
-	float _x = playerPos.x;
-	float _y = playerPos.y;
-	float _z = playerPos.z;
-	switch (mActorType)
+	float _x = GetOwner()->Transform()->GetRelativePos().x;
+	float _y = GetOwner()->Transform()->GetRelativePos().y;
+	float _z = GetOwner()->Transform()->GetRelativePos().z;
+	switch (mPhysicsInfo.eActorType)
 	{
 	case ACTOR_TYPE::Dynamic:
-		mActor = Physics::GetInst()->GetPhysics()->
-			createRigidDynamic(physx::PxTransform(PxVec3(_x, _y, _z)));
+		mRigidBody = Physics::GetInst()->GetPhysics()->
+			createRigidDynamic(physx::PxTransform(PxVec3(_x, _y, _z )));
+		mActor = mRigidBody;
 		break;
 
 	case ACTOR_TYPE::Static:
@@ -529,12 +460,16 @@ void CRigidBody::CreateActor()
 	}
 
 	AssertEx(mActor, L"RigidBody::CreateActor() - Actor 생성 실패");
+
+	
+
 }
 void CRigidBody::CreateMaterial()
 {
-	mMaterial = Physics::GetInst()->GetPhysics()->createMaterial(mShapeInfos[0].massProperties.staticFriction,
-		mShapeInfos[0].massProperties.dynamicFriction,
-		mShapeInfos[0].massProperties.restitution);
+	mMaterial = Physics::GetInst()->GetPhysics()->createMaterial(mPhysicsInfo.massProperties.staticFriction,
+		mPhysicsInfo.massProperties.dynamicFriction,
+		mPhysicsInfo.massProperties.restitution);
+	mMaterial->setRestitution(0.f);
 }
 void CRigidBody::InitializeActor()
 {
@@ -542,34 +477,24 @@ void CRigidBody::InitializeActor()
 	pActor->userData = GetOwner();
 
 	int layerIdx = GetOwner()->GetLayerIndex();
+	mPhysicsInfo.filterData.word0 = 1 << layerIdx;
+
 	std::array<UINT, MAX_LAYER> collisionGroup = CCollisionMgr::GetInst()->GetMat();
 
-	for (int j = 0; j < mShapeInfos.size(); ++j)
+	for (int i = 0; i < MAX_LAYER; ++i)
 	{
-		mShapeInfos[j].filterData.word0 = 1 << layerIdx;
-
-		for (int i = 0; i < MAX_LAYER; ++i)
-		{
-			int mask = 0;
-			mask = 1 << i;
-			if ((collisionGroup[layerIdx] & mask) != 0)
-				mShapeInfos[j].filterData.word1 |= 1 << i;
-		}
+		int mask = 0;
+		mask = 1 << i;
+		if((collisionGroup[layerIdx] & mask) != 0)
+			mPhysicsInfo.filterData.word1 |= 1 << i;
 	}
 
-	for (int i = 0; i < mShapes.size(); ++i)
-	{
-		mShapes[i]->setSimulationFilterData(mShapeInfos[i].filterData);
-		//mShapes[i]->setQueryFilterData()
-	}
-
-
+	mShape->setSimulationFilterData(mPhysicsInfo.filterData);
 	Vector3 trPos = GetOwner()->Transform()->GetRelativePos();
 	physx::PxVec3 myPos = physx::PxVec3(trPos.x, trPos.y, trPos.z);
 	pActor->setGlobalPose(physx::PxTransform(myPos));
 
-
-	switch (mActorType)
+	switch (mPhysicsInfo.eActorType)
 	{
 	case ACTOR_TYPE::Static:
 		break;
@@ -580,24 +505,5 @@ void CRigidBody::InitializeActor()
 		SetSimulationShapeFlag(false);
 		SetTriggerShapeFlag(true);
 		break;
-	}
-}
-
-void CRigidBody::DrawDebugMesh()
-{
-	if (mbAppliedPhysics && mbdrawCollider)
-	{
-		for (int i = 0; i < mShapes.size(); ++i)
-		{
-			if (mShapeInfos[i].eGeomType == GEOMETRY_TYPE::Box)
-			{
-				DrawDebugCube(GetShapePosition(i), mShapeInfos[i].size, Vec4(0.7f, 0.0f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
-			}
-			else if (mShapeInfos[0].eGeomType == GEOMETRY_TYPE::Sphere)
-			{
-				DrawDebugSphere(GetShapePosition(i), mShapeInfos[i].size.x / 2.f, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
-			}
-
-		}
 	}
 }

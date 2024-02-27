@@ -27,7 +27,7 @@ public:
     virtual void render() = 0;
     virtual void render(UINT _iSubset) = 0;
     virtual void render_shadowmap();
-
+    virtual void render_shadowmap(UINT _iSubset);
 public:
     void SetMesh(Ptr<CMesh> _Mesh);
     void SetMaterial(Ptr<CMaterial> _Mtrl, UINT _idx);
@@ -38,6 +38,7 @@ public:
     Ptr<CMaterial> GetSharedMaterial(UINT _idx);
     Ptr<CMaterial> GetDynamicMaterial(UINT _idx);
 
+    void SetMtrlCount(UINT _mtrlCount) { m_vecMtrls.resize(_mtrlCount); }
     UINT GetMtrlCount() { return (UINT)m_vecMtrls.size(); }
     ULONG64 GetInstID(UINT _iMtrlIdx);
 
