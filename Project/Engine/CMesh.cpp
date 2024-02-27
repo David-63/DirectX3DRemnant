@@ -310,8 +310,10 @@ void CMesh::render_instancing(UINT _isubset)
 
 int CMesh::Save(const wstring& _strRelativePath)
 {
-	// 파일 경로 만들기
+	// 상대경로 저장
 	SetRelativePath(_strRelativePath);
+
+	// 파일 경로 만들기
 	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + _strRelativePath;
 
 	// 파일 쓰기모드로 열기
@@ -407,6 +409,7 @@ int CMesh::Load(const wstring& _strFilePath)
 
 	m_pVtxSys = (Vtx*)malloc(iByteSize);
 	fread(m_pVtxSys, 1, iByteSize, pFile);
+
 
 	D3D11_BUFFER_DESC tDesc = {};
 	tDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;

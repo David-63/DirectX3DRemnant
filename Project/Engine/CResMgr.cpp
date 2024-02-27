@@ -6,10 +6,16 @@
 CResMgr::CResMgr()
 	: m_Changed(false)
 {
+	mPrefab = new CPrefab;
 }
 
 CResMgr::~CResMgr()
 {
+	if (nullptr != mPrefab)
+	{
+		delete mPrefab;
+		mPrefab = nullptr;
+	}
 }
 
 void CResMgr::init()
@@ -145,6 +151,19 @@ void CResMgr::DeleteMaterial(const wstring& _strKey)
 			}
 		}
 	}
+}
+
+void CResMgr::SavePrefab(CGameObject* _obj, const wstring& _strRelativePath)
+{
+	Ptr<CPrefab> pref = new CPrefab;
+
+	pref->RegisterProtoObject(_obj);
+
+	wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	strPath += _strRelativePath;
+	pref->Save(strPath);
+
+	pref->RegisterProtoObject(nullptr);
 }
 
 

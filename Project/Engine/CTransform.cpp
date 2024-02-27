@@ -13,7 +13,7 @@ CTransform::CTransform()
 	: CComponent(COMPONENT_TYPE::TRANSFORM)
 	, m_vRelativeScale(Vec3(1.f, 1.f, 1.f))
 	, m_bAbsolute(false)
-	, m_vRelativeDir{ Vec3(1.f, 0.f, 0.f) , Vec3(0.f, 1.f, 0.f) , Vec3(0.f, 0.f, 1.f) }
+	, m_vRelativeDir{ Vec3(1.f, 0.f, 0.f) , Vec3(0.f, 1.f, 0.f) , Vec3(0.f, 0.f, 1.f) } // R, U, F
 	, m_DebugSphereUse(false)
 	, m_SphereRadius(50.f)
 {

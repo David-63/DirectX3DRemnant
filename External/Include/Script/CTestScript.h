@@ -6,10 +6,16 @@ class CTestScript :
 {
 private:
     Vec3 pivot;
+    Vec3 mDir;
+    bool mWallCol;
 
 public:
     virtual void begin() override;
     virtual void tick() override;
+
+    virtual void BeginOverlap(CCollider3D* _Other) override;
+    virtual void OnOverlap(CCollider3D* _Other) override;
+    virtual void EndOverlap(CCollider3D* _Other) override;
 
 public:
     void Start()

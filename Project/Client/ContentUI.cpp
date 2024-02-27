@@ -76,7 +76,7 @@ void ContentUI::Reload()
 			CResMgr::GetInst()->Load<CMaterial>(m_vecResPath[i], m_vecResPath[i]);
 			break;
 		case RES_TYPE::PREFAB:
-
+			CResMgr::GetInst()->Load<CPrefab>(m_vecResPath[i], m_vecResPath[i]);
 			break;
 		case RES_TYPE::MESH:
 			CResMgr::GetInst()->Load<CMesh>(m_vecResPath[i], m_vecResPath[i]);

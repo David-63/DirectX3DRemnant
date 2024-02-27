@@ -14,11 +14,12 @@ enum class FreezeRotationFlag : uint8_t
 	END
 };
 
-class CRigidBody : 
+class CRigidBody :
 	public CComponent
 {
 public:
 	CRigidBody();
+	CRigidBody(const CRigidBody& _Other);
 	virtual ~CRigidBody();
 
 	CLONE(CRigidBody);
@@ -34,11 +35,11 @@ public:
 	virtual CComponent* CloneFromObj(CGameObject* _pGameObject);
 
 	void Destroy();
-	void SetPhysical(const tPhysicsInfo& _physicsInfo = tPhysicsInfo());
+	void SetPhysical(ACTOR_TYPE _eActorType);
+	void PushBackShapeInfo(const tShapeInfo _info) { mShapeInfos.push_back(_info); }
 	bool IsAppliedPhysics();
 
 	physx::PxActor* GetActor() { return mActor; }
-	physx::PxRigidActor* GetRigidActor() { return mRigidActor; }
 
 	template<typename T>
 	inline T* GetActor() const
@@ -56,13 +57,12 @@ public:
 	physx::PxTransform GetPhysicsTransform();
 	void			   SetPhysicsTransform(physx::PxTransform _transform);
 
-	ACTOR_TYPE GetActorType() { return mPhysicsInfo.eActorType; }
-	GEOMETRY_TYPE GetGeometryType() { return mPhysicsInfo.eGeomType; }
-	Vector3 GetGeometrySize() { return mPhysicsInfo.size * 2.f; }
-	const physx::PxFilterData& GetFilterData() { return mPhysicsInfo.filterData; }
-	void SetOtherLayerInFilterData(int _eOtherLayerIDX) { mPhysicsInfo.filterData.word1 |= 1 << _eOtherLayerIDX; }
+	//for clone
+	void SetActorType(ACTOR_TYPE _type) { mActorType = _type; }
+	ACTOR_TYPE GetActorType() { return mActorType; }
+	void SetShapeVector(const std::vector<physx::PxShape*>& _vector, const std::vector<tShapeInfo>& _vectorInfo) { mShapes = _vector; mShapeInfos = _vectorInfo; }
 
-	void SetVelocity(const Vector3& _velocity);
+	void SetVelocity(const Vector3 _velocity);
 	void SetVelocity(AXIS3D_TYPE _eAxis, float _velocity);
 	void AddVelocity(const Vector3& _velocity);
 	void AddVelocity(AXIS3D_TYPE _eAxis, float _velocity);
@@ -85,15 +85,22 @@ public:
 
 	void AddForce(const Vector3& _force);
 
-	void SetMass(float _mass) { if (mRigidBody) mRigidBody->setMass(_mass); }
-	void SetRestitution(float _val) { if (mMaterial) mMaterial->setRestitution(_val); }
-	void Test();
 
-private:
-	void CreateBoxGeometry();
-	void CreateCapsuleGeometry();
-	void CreatePlaneGeometry();
-	void CreateSphereGeometry();
+	physx::PxRigidBody* GetRigidBody() { return mActor->is<physx::PxRigidBody>(); }
+	physx::PxRigidActor* GetRigidActor() { return GetActor<physx::PxRigidActor>(); }
+	void SetShapeLocalPos(int _idx, CTransform* _transform);
+	void SetShapeLocalPos(int _idx, Vec3 _localPos);
+	void AttachShape(int _idx);
+	Vec3 GetShapePosition(int _shapeIdx);
+
+	//IMGUI¿ë
+	std::vector<tShapeInfo>* GetShapeInfos() { return &mShapeInfos; }
+	Vec3 GetTempSize() { return mTempSize; }
+	Vec3 GetTempOffset() { return mTempOffset; }
+	void SetTempSize(Vec3 _size) { mTempSize = _size; }
+	void SetTempOffset(Vec3 _offset) { mTempOffset = _offset; }
+	bool GetTempGeomType() { return mTempGeomType; }
+	void SetTempGeomType(bool _is) { mTempGeomType = _is; }
 
 private:
 	void CreateGeometry();
@@ -102,14 +109,18 @@ private:
 	void CreateMaterial();
 	void InitializeActor();
 
+	void DrawDebugMesh();
+
 private:
 	EnumFlags<FreezeRotationFlag, uint16_t> mFreezeRotationFlag;
-	tPhysicsInfo mPhysicsInfo;
 
-	physx::PxRigidBody* mRigidBody;
+	ACTOR_TYPE mActorType;
+	std::vector<tShapeInfo> mShapeInfos;
+	std::vector<Geometries*> mGeometries;
+
+	std::vector<physx::PxShape*> mShapes;
 	physx::PxRigidActor* mRigidActor;
 	physx::PxActor* mActor;
-	physx::PxShape* mShape;
 	physx::PxMaterial* mMaterial;
 
 	Vector3 mVelocity;
@@ -119,5 +130,9 @@ private:
 	bool mbAppliedGravity;
 	bool mbIsActorInLevel;
 	bool mbdrawCollider;
+
+	Vec3 mTempSize;
+	Vec3 mTempOffset;
+	bool mTempGeomType; //true: Sphere, false: Box
 };
 

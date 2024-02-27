@@ -57,6 +57,8 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
     
     if (0 == ParticleBuffer[id].Active)
         return;
+    
+    
 
     float3 vParticleViewPos = mul(float4(ParticleBuffer[id].vWorldPos.xyz, 1.f), g_matView).xyz;
     float2 vParticleScale = ParticleBuffer[id].vWorldScale.xy * ParticleBuffer[id].ScaleFactor;
