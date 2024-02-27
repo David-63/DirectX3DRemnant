@@ -147,7 +147,7 @@ void CRigidBody::AddActorToLevel()
 	AssertEx(mActor, L"RigidBody::AddActorToLevel() - mpActor가 생성되지 않음");
 
 	if(mActorType == ACTOR_TYPE::Dynamic)
-		PxRigidBodyExt::setMassAndUpdateInertia(*GetDynamicActor(), 200.f);
+		PxRigidBodyExt::setMassAndUpdateInertia(*GetDynamicActor(), 1.f);
 	
 	Physics::GetInst()->AddActor(GetOwner());
 	mbIsActorInLevel = true;
