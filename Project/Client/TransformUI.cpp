@@ -53,7 +53,7 @@ int TransformUI::render_update()
 
 		if (ImGui::Button("Create Prefab This"))
 		{
-			//CResMgr::GetInst()->SavePrefab(strPath, GetTarget());
+			CResMgr::GetInst()->SavePrefab(GetTarget(), strPath);
 		}
 
 		ImGui::TreePop();
