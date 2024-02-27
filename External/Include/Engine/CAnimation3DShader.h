@@ -29,8 +29,9 @@ public:
 	void SetNextFrameIdx(int _iFrameIdx) { m_Const.arrInt[2] = _iFrameIdx; }
 	void SetFrameRatio(float _fFrameRatio) { m_Const.arrFloat[0] = _fFrameRatio; }
 
-	void SetModifyUse(bool _use) { m_Const.arrAnimData[2] = _use; }
 	void SetModifyRotScalar(float _scalar) { m_Const.arrFloat[1] = _scalar; }
+	void SetModifyUse(bool _use) { m_Const.arrAnimData[2] = _use; }
+	void SetModifyCount(bool _use) { m_Const.arrAnimData[3] = _use; }
 
 public:
 	virtual void UpdateData() override;

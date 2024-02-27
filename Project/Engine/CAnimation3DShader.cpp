@@ -60,7 +60,11 @@ void CAnimation3DShader::Clear()
 		m_pFrameDataBuffer_next->Clear_CS(true);
 		m_pFrameDataBuffer_next = nullptr;
 	}
-
+	if (nullptr != m_pModifyIndicesBuffer)
+	{
+		m_pModifyIndicesBuffer->Clear_CS(true);
+		m_pModifyIndicesBuffer = nullptr;
+	}	
 	if (nullptr != m_pOutputBuffer)
 	{
 		m_pOutputBuffer->Clear_CS(false);

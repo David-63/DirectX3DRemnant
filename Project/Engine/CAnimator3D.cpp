@@ -214,10 +214,38 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	m_vecFinalBoneMat.resize(iBoneCount);
 
 	m_curBones = m_pCurrentAnim->GetOriginMesh()->GetMTBones();
+	//m_modifyIndices.push_back(33);	// Çã¸®
+	//m_modifyIndices.push_back(34);	// º¹ºÎ
+	//m_modifyIndices.push_back(35);	// ¸íÄ¡
+	//m_modifyIndices.push_back(36);	// °¡½¿
+	//m_modifyIndices.push_back(37);	// ¸ñ
+	//m_modifyIndices.push_back(38);	// ¸Ó¸®
+	//m_modifyIndices.push_back(39);	// ÅÎ
+	//m_modifyIndices.push_back(40);	// ÅÎ
+	m_modifyIndices.push_back(136);	// 
+	//CollectChildrenIndices(33);
+	//CollectChildrenIndices(34);
+	//CollectChildrenIndices(35);
 	CollectChildrenIndices(36);
+	//CollectChildrenIndices(37);
+	//CollectChildrenIndices(38);
+	//CollectChildrenIndices(39);
+	m_modifyIndices.push_back(136);	// 
+
+
+	std::sort(m_modifyIndices.begin(), m_modifyIndices.end());
+	int bufferPadding = m_modifyIndices.size() % 16;
+	if (0 != bufferPadding)
+	{
+		for (int i = 0; i < 16 - bufferPadding; ++i)
+		{
+			m_modifyIndices.push_back(999 + i);
+		}
+	}
+
 	if (m_modifyIndicesBuffer->GetElementCount() != m_modifyIndices.size())
 	{
-		m_modifyIndicesBuffer->Create(sizeof(UINT), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, nullptr);
+		m_modifyIndicesBuffer->Create(sizeof(UINT), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, m_modifyIndices.data());
 	}
 
 	Events* events = FindEvents(_clip->GetKey());
@@ -238,7 +266,9 @@ void CAnimator3D::CollectChildrenIndices(int current_index)
 	{
 		if (current_index == m_curBones[i].iParentIdx)
 		{
-			m_modifyIndices.push_back(i); // ÀÚ½Ä »ÀÀÇ ÀÎµ¦½º Ãß°¡
+			auto iter = find(m_modifyIndices.begin(), m_modifyIndices.end(), i);
+			if (iter == m_modifyIndices.end())			
+				m_modifyIndices.push_back(i); // ÀÚ½Ä »ÀÀÇ ÀÎµ¦½º Ãß°¡
 			CollectChildrenIndices(i); // Àç±Í È£Ãâ
 		}
 	}

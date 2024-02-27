@@ -161,6 +161,31 @@ void MatrixAffineTransformation(in float4 Scaling
     _outMat = M;
 }
 
+void MatrixAffineTransformation(in float4 Scaling
+    , in float4 RotationOrigin
+    , in float4 RotationQuaternion
+    , in matrix AdditionalRotation
+    , in float4 Translation
+    , out matrix _outMat)
+{
+    matrix MScaling = (matrix) 0.f;
+    MScaling._11_22_33 = Scaling.xyz;
+
+    float4 VRotationOrigin = float4(RotationOrigin.xyz, 0.f);
+    float4 VTranslation = float4(Translation.xyz, 0.f);
+
+    matrix MRotation = (matrix) 0.f;
+    MatrixRotationQuaternion(RotationQuaternion, MRotation);
+
+    MRotation = mul(MRotation, AdditionalRotation);
+    
+    matrix M = MScaling;
+    M._41_42_43_44 = M._41_42_43_44 - VRotationOrigin;
+    M = mul(M, MRotation);
+    M._41_42_43_44 = M._41_42_43_44 + VRotationOrigin;
+    M._41_42_43_44 = M._41_42_43_44 + VTranslation;
+    _outMat = M;
+}
 
 float4 QuternionLerp(in float4 _vQ1, in float4 _vQ2, float _fRatio)
 {
@@ -240,6 +265,7 @@ struct tFrameTrans
 StructuredBuffer<tFrameTrans> g_arrFrameTrans : register(t16);
 StructuredBuffer<matrix> g_arrOffset : register(t17);
 StructuredBuffer<tFrameTrans> g_arrFrameTrans_next : register(t18);
+StructuredBuffer<uint> g_modifyIndices : register(t19);
 
 RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 
@@ -249,9 +275,9 @@ RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 #define CurFrame    g_int_1
 #define NextFrame   g_int_2
 #define Ratio       g_float_0
-#define ModifyUse   g_iModifyUse
-#define ModifyIdx   g_iModifyIndex
 #define RotScalar   g_float_1
+#define ModifyUse   g_iModifyUse
+#define ModifyCnt   g_iModifyCount
 // ===========================
 [numthreads(256, 1, 1)]
 void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
@@ -259,29 +285,44 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     if (BoneCount <= _iThreadIdx.x)
         return;
 
-    // _iThreadIdx.x : 1차원 배열 형태의 스레드를 통해서 각 스레드마다 한개의 뼈를 담당하여 연산
-    
+    // _iThreadIdx.x : 1차원 배열 형태의 스레드를 통해서 각 스레드마다 한개의 뼈를 담당하여 연산    
     float4 vQZero = float4(0.f, 0.f, 0.f, 1.f);
     matrix matBone = (matrix) 0.f;
-
     // Frame Data Index == Bone Count * Frame Count + _iThreadIdx.x
     uint iFrameDataIndex = BoneCount * CurFrame + _iThreadIdx.x;
     uint iNextFrameDataIdx = BoneCount * NextFrame + _iThreadIdx.x;    
-    
     float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans_next[iNextFrameDataIdx].vScale, Ratio);
     float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans_next[iNextFrameDataIdx].vTranslate, Ratio);
     float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans_next[iNextFrameDataIdx].qRot, Ratio);
     
-    if (ModifyIdx <= _iThreadIdx.x)
-    {
-        float3 eulerRot = float3(radians(RotScalar), 0.f, 0.f);
-        float4 addqRot = EulerToQuaternion(eulerRot);
-        qRot += addqRot;
-    }
+    bool modiIdx = false;
+    matrix addRotMatrix = (matrix) 0.f;
+    if (ModifyUse)
+    {        
+        float4 quaternion = { cos(radians(RotScalar) / 2), 0, 0, sin(radians(RotScalar) / 2) };
+        MatrixRotationQuaternion(quaternion, addRotMatrix);
+        
+        // 영향 받는 뼈 찾기
+        for (int idx = 0; idx < ModifyCnt; ++idx)
+        {
+            if (_iThreadIdx.x == g_modifyIndices[idx])
+            {
+                modiIdx = true;
+                break;
+            }
+        }
+    }    
     
     // 최종 본행렬 연산 (lerp)
-    MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);
-
+    if (modiIdx)
+    {
+        MatrixAffineTransformation(vScale, vQZero, qRot, addRotMatrix, vTrans, matBone);
+    }
+    else
+    {
+        MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);        
+    }
+    
     // 최종 본행렬 연산    
     //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
 
