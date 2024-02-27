@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "PrefabUI.h"
+#include <Engine\CPrefab.h>
+#include <Engine\CResMgr.h>
+#include <Engine\CGameObject.h>
 
 PrefabUI::PrefabUI()
     :ResUI(RES_TYPE::PREFAB)
@@ -15,6 +18,31 @@ PrefabUI::~PrefabUI()
 int PrefabUI::render_update()
 {
     ResUI::render_update();
+
+    Ptr<CPrefab> pPrefab = (CPrefab*)GetTargetRes().Get();
+    const wstring path = pPrefab->GetRelativePath();
+
+    ImGui::Text("LayerIndex  ");
+    ImGui::SameLine();
+    ImGui::InputInt("##Index", &mLayerIdx);
+
+    ImGui::Text("Position  ");
+    ImGui::SameLine();
+    ImGui::DragFloat3("##Size", mPosition);
+
+
+    ImGui::Text("Name  ");
+    ImGui::SameLine();
+    ImGui::InputText("##Name", mName, sizeof(mName));
+  
+    wstring wstr(mName, mName + strlen(mName));
+
+    if (ImGui::Button("Instantiate"))
+    {
+       CGameObject* obj = CResMgr::GetInst()->Load<CPrefab>(path, path)->Instantiate(mPosition, mLayerIdx);
+       obj->SetName(wstr);
+       SpawnGameObject(obj, mPosition, mLayerIdx);
+    }
 
     return 0;
 }

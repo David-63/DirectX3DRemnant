@@ -95,6 +95,7 @@ tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLe
 	
 	PxRaycastBuffer hitBuffer;
 	PxQueryFilterData data;
+	//data.data.word0 = 0x01;
 	
 	bool hit = mCurScene->raycast(rayOrigin, rayDir, _rayLength, hitBuffer);
 

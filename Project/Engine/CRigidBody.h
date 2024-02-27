@@ -14,7 +14,7 @@ enum class FreezeRotationFlag : uint8_t
 	END
 };
 
-class CRigidBody : 
+class CRigidBody :
 	public CComponent
 {
 public:
@@ -62,7 +62,7 @@ public:
 	ACTOR_TYPE GetActorType() { return mActorType; }
 	void SetShapeVector(const std::vector<physx::PxShape*>& _vector, const std::vector<tShapeInfo>& _vectorInfo) { mShapes = _vector; mShapeInfos = _vectorInfo; }
 
-	void SetVelocity(const Vector3& _velocity);
+	void SetVelocity(const Vector3 _velocity);
 	void SetVelocity(AXIS3D_TYPE _eAxis, float _velocity);
 	void AddVelocity(const Vector3& _velocity);
 	void AddVelocity(AXIS3D_TYPE _eAxis, float _velocity);
@@ -85,7 +85,7 @@ public:
 
 	void AddForce(const Vector3& _force);
 
-	
+
 	physx::PxRigidBody* GetRigidBody() { return mActor->is<physx::PxRigidBody>(); }
 	physx::PxRigidActor* GetRigidActor() { return GetActor<physx::PxRigidActor>(); }
 	void SetShapeLocalPos(int _idx, CTransform* _transform);
@@ -93,6 +93,14 @@ public:
 	void AttachShape(int _idx);
 	Vec3 GetShapePosition(int _shapeIdx);
 
+	//IMGUI¿ë
+	std::vector<tShapeInfo>* GetShapeInfos() { return &mShapeInfos; }
+	Vec3 GetTempSize() { return mTempSize; }
+	Vec3 GetTempOffset() { return mTempOffset; }
+	void SetTempSize(Vec3 _size) { mTempSize = _size; }
+	void SetTempOffset(Vec3 _offset) { mTempOffset = _offset; }
+	bool GetTempGeomType() { return mTempGeomType; }
+	void SetTempGeomType(bool _is) { mTempGeomType = _is; }
 
 private:
 	void CreateGeometry();
@@ -105,7 +113,7 @@ private:
 
 private:
 	EnumFlags<FreezeRotationFlag, uint16_t> mFreezeRotationFlag;
-	
+
 	ACTOR_TYPE mActorType;
 	std::vector<tShapeInfo> mShapeInfos;
 	std::vector<Geometries*> mGeometries;
@@ -117,11 +125,14 @@ private:
 
 	Vector3 mVelocity;
 	float mMaxVelocity;
-	Vec3 mOffset;
 
 	bool mbAppliedPhysics;
 	bool mbAppliedGravity;
 	bool mbIsActorInLevel;
 	bool mbdrawCollider;
+
+	Vec3 mTempSize;
+	Vec3 mTempOffset;
+	bool mTempGeomType; //true: Sphere, false: Box
 };
 

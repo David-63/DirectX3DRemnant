@@ -16,9 +16,6 @@
     <Filter Include="Script\Test">
       <UniqueIdentifier>{ea948113-95ce-4848-908a-1852e7aa190c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Particle">
-      <UniqueIdentifier>{b2830eff-fb89-42fe-8420-e206262e8087}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMissileScript.h">
@@ -57,9 +54,6 @@
     <ClInclude Include="CTestScript.h">
       <Filter>Script\Test</Filter>
     </ClInclude>
-    <ClInclude Include="CParticleScript.h">
-      <Filter>Script\Particle</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CMissileScript.cpp">
@@ -97,9 +91,6 @@
     </ClCompile>
     <ClCompile Include="CTestScript.cpp">
       <Filter>Script\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="CParticleScript.cpp">
-      <Filter>Script\Particle</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

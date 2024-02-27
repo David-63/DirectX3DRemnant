@@ -85,8 +85,7 @@ void CLandScape::CreateComputeShader()
 	// 높이 수정 컴퓨트 쉐이더
 	// ======================
 	m_pCSHeightMap = (CHeightMapShader*)CResMgr::GetInst()->FindRes<CComputeShader>(L"HeightMapShader").Get();
-	
-	if (nullptr == m_pCSHeightMap)
+	if (nullptr == m_HeightMap)
 	{
 		m_pCSHeightMap = new CHeightMapShader(32, 32, 1);
 		m_pCSHeightMap->CreateComputeShader(L"shader\\heightmap.fx", "CS_HeightMap");

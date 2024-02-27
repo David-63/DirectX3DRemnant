@@ -37,6 +37,7 @@ enum class COMPONENT_TYPE
 	LIGHT2D,		// 2차원 광원
 	LIGHT3D,		// 3차원 광원
 	CAMERA,			// Camera
+	RIGIDBODY,
 
 	// render
 	MESHRENDER,		// 기본적인 렌더링
@@ -45,7 +46,6 @@ enum class COMPONENT_TYPE
 	LANDSCAPE,		// 3차원 지형
 	SKYBOX,			// SkyBox
 	DECAL,			// 내부 렌더링
-	RIGIDBODY,
 	
 	END,
 
@@ -292,7 +292,7 @@ enum class PARTICLE_MODULE
 	DRAG,
 	NOISE_FORCE,
 	RENDER,
-	GRAVITY,
+	DUMMY_3,
 
 	END,
 };

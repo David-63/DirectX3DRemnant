@@ -3,7 +3,6 @@ CCharacterMoveScript
 CGravityScript
 CMissileScript
 CMonsterScript
-CParticleScript
 CPlanetScript
 CPlayerScript
 CShoulderViewScript

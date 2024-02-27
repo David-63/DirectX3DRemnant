@@ -6,6 +6,7 @@
 #include "CComponent.h"
 #include "CScript.h"
 #include "Script\CScriptMgr.h"
+#include "CResMgr.h"
 
 CPrefab::CPrefab()
 	: CRes(RES_TYPE::PREFAB)
@@ -16,7 +17,10 @@ CPrefab::CPrefab()
 CPrefab::~CPrefab()
 {
 	if (nullptr != m_ProtoObj)
+	{
 		delete m_ProtoObj;
+		m_ProtoObj = nullptr;
+	}
 }
 
 CGameObject* CPrefab::Instantiate(Vec3 _pos, int _layerIdx)
@@ -25,35 +29,29 @@ CGameObject* CPrefab::Instantiate(Vec3 _pos, int _layerIdx)
 
 	clone->Transform()->SetRelativePos(_pos);
 	clone->SetLayerIdx(_layerIdx);
-	if (clone->RigidBody())
-	{
-		ACTOR_TYPE type = clone->RigidBody()->GetActorType();
-		clone->RigidBody()->SetPhysical(type);
-		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		clone->RigidBody()->AddActorToLevel();
-	}
+	ACTOR_TYPE type = clone->RigidBody()->GetActorType();
+	clone->RigidBody()->SetPhysical(type);
+	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+	clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+	clone->RigidBody()->AddActorToLevel();
 
 	return clone;
 }
 
 void CPrefab::RegisterProtoObject(CGameObject* _Proto)
 {
-	// 원본 오브젝트는 레벨 소속이 아니여야 한다.
-	//assert(-1 == _Proto->GetLayerIndex());
-
 	m_ProtoObj = _Proto;
 }
 
 int CPrefab::Save(const wstring& _strRelativePath)
 {
-	wstring strPath = CPathMgr::GetInst()->GetContentPath();
-	strPath += _strRelativePath;
+	//wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	//strPath += _strRelativePath;
 
 	FILE* pFile = nullptr;
 
-	_wfopen_s(&pFile, strPath.c_str(), L"wb");
+	_wfopen_s(&pFile, _strRelativePath.c_str(), L"wb");
 
 	if (nullptr == pFile)
 		return E_FAIL;
@@ -67,12 +65,12 @@ int CPrefab::Save(const wstring& _strRelativePath)
 
 int CPrefab::Load(const wstring& _strFilePath)
 {
-	wstring strPath = CPathMgr::GetInst()->GetContentPath();
-	strPath += _strFilePath;
+	//wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	//strPath += _strFilePath;
 
 	FILE* pFile = nullptr;
 
-	_wfopen_s(&pFile, strPath.c_str(), L"rb");
+	_wfopen_s(&pFile, _strFilePath.c_str(), L"rb");
 
 	if (nullptr == pFile)
 		return E_FAIL;
@@ -81,6 +79,8 @@ int CPrefab::Load(const wstring& _strFilePath)
 	m_ProtoObj = LoadGameObject(pFile);
 
 	fclose(pFile);
+
+	return S_OK;
 }
 
 void CPrefab::SaveGameObject(CGameObject* _Object, FILE* _File)
@@ -163,8 +163,8 @@ CGameObject* CPrefab::LoadGameObject(FILE* _File)
 		case COMPONENT_TYPE::COLLIDER2D:
 			Component = new CCollider2D;
 			break;
-			case COMPONENT_TYPE::COLLIDER3D:
-				Component = new CCollider3D;
+		case COMPONENT_TYPE::COLLIDER3D:
+			Component = new CCollider3D;
 			break;
 		case COMPONENT_TYPE::ANIMATOR2D:
 			Component = new CAnimator2D;
@@ -234,5 +234,3 @@ CGameObject* CPrefab::LoadGameObject(FILE* _File)
 
 	return pObject;
 }
-
-

@@ -11,6 +11,11 @@ CResMgr::CResMgr()
 
 CResMgr::~CResMgr()
 {
+	if (nullptr != mPrefab)
+	{
+		delete mPrefab;
+		mPrefab = nullptr;
+	}
 }
 
 void CResMgr::init()
@@ -101,26 +106,6 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	return pMeshData;
 }
 
-Ptr<CPrefab> CResMgr::SavePrefab(const wstring& _strPath, CGameObject* _obj)
-{
-	wstring strName = _strPath;
-
-	mPrefab->RegisterProtoObject(_obj);
-	mPrefab->Save(_strPath);
-	
-	m_arrRes[(UINT)RES_TYPE::PREFAB].insert(make_pair(strName, mPrefab.Get()));
-
-	return mPrefab;
-}
-
-Ptr<CPrefab> CResMgr::LoadPrefab(const wstring& _strPath)
-{
-	mPrefab->Load(_strPath);
-
-
-	return mPrefab;
-}
-
 void CResMgr::DeleteRes(RES_TYPE _type, const wstring& _strKey)
 {
 	map<wstring, Ptr<CRes>>::iterator iter = m_arrRes[(UINT)_type].find(_strKey);
@@ -166,6 +151,19 @@ void CResMgr::DeleteMaterial(const wstring& _strKey)
 			}
 		}
 	}
+}
+
+void CResMgr::SavePrefab(CGameObject* _obj, const wstring& _strRelativePath)
+{
+	Ptr<CPrefab> pref = new CPrefab;
+
+	pref->RegisterProtoObject(_obj);
+
+	wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	strPath += _strRelativePath;
+	pref->Save(strPath);
+
+	pref->RegisterProtoObject(nullptr);
 }
 
 
