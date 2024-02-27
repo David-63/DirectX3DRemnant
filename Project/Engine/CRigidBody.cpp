@@ -145,7 +145,10 @@ void CRigidBody::AddActorToLevel()
 {
 	AssertEx(mbAppliedPhysics, L"RigidBody::AddActorToLevel() - 물리가 들어가지 않은 오브젝트에 대한 AddActorToScene 호출");
 	AssertEx(mActor, L"RigidBody::AddActorToLevel() - mpActor가 생성되지 않음");
-	//PxRigidBodyExt::setMassAndUpdateInertia(*mActor->is<PxRigidActor>(), 0.1f);
+
+	if(mActorType == ACTOR_TYPE::Dynamic)
+		PxRigidBodyExt::setMassAndUpdateInertia(*GetDynamicActor(), 200.f);
+	
 	Physics::GetInst()->AddActor(GetOwner());
 	mbIsActorInLevel = true;
 }
