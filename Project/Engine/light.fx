@@ -6,8 +6,27 @@
 
 struct VS_IN
 {
-    float3 vPos : POSITION;    
+    float3 vPos : POSITION;
+    
+    float4 vWeights : BLENDWEIGHT;
+    float4 vIndices : BLENDINDICES;
 };
+
+
+struct VTX_IN_INST
+{
+    float3 vPos : POSITION;
+
+    float4 vWeights : BLENDWEIGHT;
+    float4 vIndices : BLENDINDICES;
+
+    // Per Instance Data
+    row_major matrix matWorld : WORLD;
+    row_major matrix matWV : WV;
+    row_major matrix matWVP : WVP;
+    uint iRowIndex : ROWINDEX;
+};
+
 
 struct VS_OUT
 {
@@ -30,9 +49,9 @@ struct PS_OUT
 // Blend            : ONE_ONE
 
 // Parameter
-#define NormalTargetTex     g_tex_0
-#define PoisitionTargetTex  g_tex_1
-#define ShadowMapTargetTex  g_tex_2
+#define NormalTargetTex     g_tex_0     // MRT::DEFERRED <- 디퍼드 렌더링에서 기록된 텍스쳐
+#define PoisitionTargetTex  g_tex_1     // MRT::DEFERRED <- 디퍼드 렌더링에서 기록된 텍스쳐
+#define ShadowMapTargetTex  g_tex_2     // MRT::SHADOWMAP <- 깊이가 기록된 텍스쳐
 
 #define LightIdx            g_int_0
 #define LightVP             g_mat_0
@@ -42,8 +61,7 @@ VS_OUT VS_DirLightShader(VS_IN _in)
 {
     VS_OUT output = (VS_OUT) 0.f;
     
-    // 사용하는 메쉬가 RectMesh(로컬 스페이스에서 반지름 0.5 짜리 정사각형)
-    // 따라서 2배로 키워서 화면 전체가 픽셀쉐이더가 호출될 수 있게 한다.
+    // 화면 전체에 픽셀 셰이더 판정을 하기 위해 정점의 로컬좌표를 2배로 늘림
     output.vPosition = float4(_in.vPos.xyz * 2.f, 1.f);
     
     return output;
@@ -54,7 +72,10 @@ PS_OUT PS_DirLightShader(VS_OUT _in)
 {
     PS_OUT output = (PS_OUT) 0.f;
     
-    float2 vScreenUV = _in.vPosition.xy / g_Resolution.xy;    
+    // VS에서 전달받은 화면 전체 좌표로부터 스크린UV를 구한다
+    float2 vScreenUV = _in.vPosition.xy / g_Resolution.xy;
+    
+    // deferred 렌더링 결과물의 pos, normal tex를 가져와서 현재 스크린UV에 해당하는 지점을 가져옴
     float3 vViewPos = PoisitionTargetTex.Sample(g_sam_0, vScreenUV).xyz;
     float3 vViewNormal = NormalTargetTex.Sample(g_sam_0, vScreenUV).xyz;
     
@@ -74,6 +95,9 @@ PS_OUT PS_DirLightShader(VS_OUT _in)
 
     
     // 그림자 판정
+    float bias = 0.005f;
+    //bias = 0.005 * tan(acos(cosTheta)); // cosTheta is dot( n,l ), clamped between 0 and 1
+    
     float fShadowPow = 0.f;
     float3 vWorldPos = mul(float4(vViewPos, 1.f), g_matViewInv).xyz;
     float4 vLightProj = mul(float4(vWorldPos, 1.f), LightVP);
@@ -91,11 +115,11 @@ PS_OUT PS_DirLightShader(VS_OUT _in)
         float fDepth = vLightProj.z / vLightProj.w;
         float fLightDepth = ShadowMapTargetTex.Sample(g_sam_1, vShadowMapUV);
     
-        //if (fLightDepth + 0.002f <= fDepth)
-        //{
-        //    // 그림자
-        //    fShadowPow = 0.9f;
-        //}
+        if (fLightDepth <= fDepth - bias)
+        {
+            // 그림자
+            fShadowPow = 0.6f;
+        }
     }
     
     
@@ -252,8 +276,32 @@ struct VS_SHADOW_OUT
 VS_SHADOW_OUT VS_ShadowMap(VS_IN _in)
 {
     VS_SHADOW_OUT output = (VS_SHADOW_OUT) 0.f;
+    
+    // Mtrl->AnimSet(true) 인 경우 g_iAnim = 1
+    if (g_iAnim)
+    {
+        Skinning(_in.vPos, _in.vWeights, _in.vIndices, 0);
+    }
+    
     // 화면 전체에 호출되어야함
     output.vPosition = mul(float4(_in.vPos, 1.f), g_matWVP);
+    output.vProjPos = output.vPosition;
+    output.vProjPos.xyz /= output.vProjPos.w;
+            
+    return output;
+}
+
+VS_SHADOW_OUT VS_ShadowMap_Inst(VTX_IN_INST _in)
+{
+    VS_SHADOW_OUT output = (VS_SHADOW_OUT) 0.f;
+    // 화면 전체에 호출되어야함
+    
+    if (g_iAnim)
+    {
+        Skinning(_in.vPos, _in.vWeights, _in.vIndices, _in.iRowIndex);
+    }
+    
+    output.vPosition = mul(float4(_in.vPos, 1.f), _in.matWVP);
     output.vProjPos = output.vPosition;
     output.vProjPos.xyz /= output.vProjPos.w;
     

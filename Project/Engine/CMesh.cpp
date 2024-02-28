@@ -122,7 +122,7 @@ CMesh* CMesh::CreateFromContainer(CFBXLoader& _loader)
 	{
 		tMTBone bone = {};
 		bone.iDepth = vecBone[i]->iDepth;
-		bone.iParentIndx = vecBone[i]->iParentIndx;
+		bone.iParentIdx = vecBone[i]->iParentIdx;
 		bone.matBone = GetMatrixFromFbxMatrix(vecBone[i]->matBone);
 		bone.matOffset = GetMatrixFromFbxMatrix(vecBone[i]->matOffset);
 		bone.strBoneName = vecBone[i]->strBoneName;
@@ -310,10 +310,8 @@ void CMesh::render_instancing(UINT _isubset)
 
 int CMesh::Save(const wstring& _strRelativePath)
 {
-	// 상대경로 저장
-	SetRelativePath(_strRelativePath);
-
 	// 파일 경로 만들기
+	SetRelativePath(_strRelativePath);
 	wstring strFilePath = CPathMgr::GetInst()->GetContentPath() + _strRelativePath;
 
 	// 파일 쓰기모드로 열기
@@ -344,6 +342,9 @@ int CMesh::Save(const wstring& _strRelativePath)
 			, 1, pFile);
 	}
 
+	// mtrl 정보 기입
+	fwrite(&m_mtrlCount, sizeof(UINT), 1, pFile);
+
 	// Animation3D 정보
 	UINT iCount = (UINT)m_vecAnimClip.size();
 	fwrite(&iCount, sizeof(int), 1, pFile);
@@ -367,7 +368,7 @@ int CMesh::Save(const wstring& _strRelativePath)
 	{
 		SaveWString(m_pVecBones[i].strBoneName, pFile);
 		fwrite(&m_pVecBones[i].iDepth, sizeof(int), 1, pFile);
-		fwrite(&m_pVecBones[i].iParentIndx, sizeof(int), 1, pFile);
+		fwrite(&m_pVecBones[i].iParentIdx, sizeof(int), 1, pFile);
 		fwrite(&m_pVecBones[i].matBone, sizeof(Matrix), 1, pFile);
 		fwrite(&m_pVecBones[i].matOffset, sizeof(Matrix), 1, pFile);
 
@@ -407,7 +408,6 @@ int CMesh::Load(const wstring& _strFilePath)
 	m_pVtxSys = (Vtx*)malloc(iByteSize);
 	fread(m_pVtxSys, 1, iByteSize, pFile);
 
-
 	D3D11_BUFFER_DESC tDesc = {};
 	tDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	tDesc.ByteWidth = iByteSize;
@@ -446,6 +446,9 @@ int CMesh::Load(const wstring& _strFilePath)
 		m_vecIdxInfo.push_back(info);
 	}
 
+	// mtrl 정보 기입
+	fread(&m_mtrlCount, sizeof(UINT), 1, pFile);
+
 	// Animation3D 정보 읽기
 	int iCount = 0;
 	fread(&iCount, sizeof(int), 1, pFile);
@@ -475,7 +478,7 @@ int CMesh::Load(const wstring& _strFilePath)
 	{
 		LoadWString(m_pVecBones[i].strBoneName, pFile);
 		fread(&m_pVecBones[i].iDepth, sizeof(int), 1, pFile);
-		fread(&m_pVecBones[i].iParentIndx, sizeof(int), 1, pFile);
+		fread(&m_pVecBones[i].iParentIdx, sizeof(int), 1, pFile);
 		fread(&m_pVecBones[i].matBone, sizeof(Matrix), 1, pFile);
 		fread(&m_pVecBones[i].matOffset, sizeof(Matrix), 1, pFile);
 

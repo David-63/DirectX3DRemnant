@@ -29,7 +29,7 @@ void CStructuredBuffer::Create(UINT _iElementSize, UINT _iElementCount
 	m_iElementSize = _iElementSize;
 	m_iElementCount = _iElementCount;
 
-	UINT iBufferSize = m_iElementSize * _iElementCount;
+	UINT iBufferSize = m_iElementSize * m_iElementCount;
 
 	// 16바이트 단위 메모리 정렬
 	assert(!(iBufferSize % 16));

@@ -3,6 +3,7 @@
 
 #include "CResMgr.h"
 #include "CTransform.h"
+#include "CAnimator3D.h"
 
 CRenderComponent::CRenderComponent(COMPONENT_TYPE _type)
 	: CComponent(_type)
@@ -18,13 +19,50 @@ CRenderComponent::~CRenderComponent()
 
 void CRenderComponent::render_shadowmap()
 {
-	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+	if (nullptr == GetMaterial(0) || nullptr == GetMesh())
+		return;
 
 	Transform()->UpdateData();
+	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+
+	if (Animator3D())
+	{
+		Animator3D()->UpdateData();			// t30 버퍼 세팅
+		pShadowMapMtrl->SetAnim3D(true);	// g_iAnimSet true 세팅
+	}
 
 	pShadowMapMtrl->UpdateData();
-
 	GetMesh()->render(0);
+
+	if (Animator3D())
+	{
+		Animator3D()->ClearData();
+		pShadowMapMtrl->SetAnim3D(false);	// g_iAnimSet true 세팅
+	}
+}
+
+void CRenderComponent::render_shadowmap(UINT _iSubset)
+{
+	if (nullptr == GetMaterial(0) || nullptr == GetMesh())
+		return;
+	
+	Transform()->UpdateData();
+	Ptr<CMaterial> pShadowMapMtrl = CResMgr::GetInst()->FindRes<CMaterial>(L"ShadowMapMtrl");
+	
+	if (Animator3D())
+	{
+		Animator3D()->UpdateData();
+		pShadowMapMtrl->SetAnim3D(true);
+	}
+
+	pShadowMapMtrl->UpdateData();
+	GetMesh()->render(_iSubset);
+
+	if (Animator3D())
+	{
+		Animator3D()->ClearData();
+		pShadowMapMtrl->SetAnim3D(false);
+	}
 }
 
 
@@ -103,9 +141,6 @@ ULONG64 CRenderComponent::GetInstID(UINT _iMtrlIdx)
 
 void CRenderComponent::SaveToLevelFile(FILE* _File)
 {
-	//COMPONENT_TYPE type = GetType();
-	//fwrite(&type, sizeof(UINT), 1, _File);
-
 	SaveResRef(m_pMesh.Get(), _File);
 
 	UINT iMtrlCount = GetMtrlCount();
@@ -125,10 +160,10 @@ void CRenderComponent::LoadFromLevelFile(FILE* _File)
 {
 	LoadResRef(m_pMesh, _File);
 
-	UINT iMtrlCount = GetMtrlCount();
+	UINT iMtrlCount = 0;
 	fread(&iMtrlCount, sizeof(UINT), 1, _File);
-	m_vecMtrls.resize(iMtrlCount);
 
+	SetMtrlCount(iMtrlCount);
 	for (UINT i = 0; i < iMtrlCount; ++i)
 	{
 		Ptr<CMaterial> pMtrl;

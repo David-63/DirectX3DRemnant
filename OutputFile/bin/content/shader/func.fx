@@ -209,6 +209,26 @@ void Skinning(inout float3 _vPos, inout float3 _vTangent, inout float3 _vBinorma
     _vBinormal = normalize(info.vBinormal);
     _vNormal = normalize(info.vNormal);
 }
+void Skinning(inout float3 _vPos, inout float4 _vWeight, inout float4 _vIndices, int _iRowIdx)
+{
+    tSkinningInfo info = (tSkinningInfo) 0.f;
+
+    if (_iRowIdx == -1)
+        return;
+
+    for (int i = 0; i < 4; ++i)
+    {
+        if (0.f == _vWeight[i])
+            continue;
+
+        matrix matBone = GetBoneMat((int) _vIndices[i], _iRowIdx);
+
+        info.vPos += (mul(float4(_vPos, 1.f), matBone) * _vWeight[i]).xyz;
+    }
+
+    _vPos = info.vPos;
+}
+
 
 // Ray가 충돌하는지 확인
 int IntersectsLay(float3 _vertices[3], float3 _vStart, float3 _vDir, out float3 _vCrossPoint, out float _fResult)
