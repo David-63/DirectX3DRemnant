@@ -73,7 +73,7 @@ void CRenderMgr::CreateMRT()
     }
 
     // ====================
-    // DECAL MRT 만들기
+    // DEFERRED_DECAL MRT 만들기
     // ====================
     {
         m_MRT[(UINT)MRT_TYPE::DEFERRED_DECAL] = new CMRT;       
@@ -116,7 +116,7 @@ void CRenderMgr::CreateMRT()
     // ===================
     {
         m_MRT[(UINT)MRT_TYPE::SHADOWMAP] = new CMRT();
-        Vec2 vResol = Vec2(4096, 4096);
+        Vec2 vResol = Vec2(8192, 8192);
         Ptr<CTexture> arrRTTex[8] = {};
         arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"DynamicShadowMapTex", vResol.x, vResol.y
                                 , DXGI_FORMAT_R32_FLOAT

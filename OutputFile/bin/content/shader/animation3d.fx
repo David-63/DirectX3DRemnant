@@ -296,7 +296,7 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     uint iNextFrameDataIdx = BoneCount * NextFrame + _iThreadIdx.x;
     
     
-    
+    // 보간
     float4 vScale = lerp(g_arrFrameTrans[iFrameDataIndex].vScale, g_arrFrameTrans_next[iNextFrameDataIdx].vScale, Ratio);
     float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans_next[iNextFrameDataIdx].vTranslate, Ratio);
     float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans_next[iNextFrameDataIdx].qRot, Ratio);
@@ -306,7 +306,7 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     
     // 회전시킬 뼈의 위치를 찾으면서, 회전량도 구함
     if (ModifyUse)
-    {        
+    {
         float4 quaternion = { cos(radians(RotScalar) / 2), 0, 0, sin(radians(RotScalar) / 2) };
         MatrixRotationQuaternion(quaternion, addRotMatrix);
         

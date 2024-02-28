@@ -51,10 +51,10 @@ void CRenderMgr::render()
     ClearMRT();
 
     // 그림자 렌더링
-    render_shadowmap(); // shadowMap Render
+    render_shadowmap();
 
     // 카메라 렌더 함수 호출
-    (this->*RENDER_FUNC)(); // Deferred Render (pos를 남김) 이후에 Light Render에서 그림자 판정
+    (this->*RENDER_FUNC)();
     
     // 광원 해제
     Clear();

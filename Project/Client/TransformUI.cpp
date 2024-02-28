@@ -3,6 +3,7 @@
 
 #include <Engine\CGameObject.h>
 #include <Engine\CTransform.h>
+#include <Engine\CResMgr.h>
 
 TransformUI::TransformUI()
 	: ComponentUI("##TransformUI", COMPONENT_TYPE::TRANSFORM)	
@@ -41,6 +42,22 @@ int TransformUI::render_update()
 
 	vRotation = (vRotation / 180.f) * XM_PI;
 	GetTarget()->Transform()->SetRelativeRot(vRotation);
+
+	if (ImGui::TreeNode("Create Prefab"))
+	{
+		ImGui::InputText("##Name", mName, sizeof(mName));
+
+		wstring wstr(mName, mName + strlen(mName));
+
+		const wstring& strPath = L"prefab\\" + wstr + L".pref";
+
+		if (ImGui::Button("Create Prefab This"))
+		{
+			CResMgr::GetInst()->SavePrefab(GetTarget(), strPath);
+		}
+
+		ImGui::TreePop();
+	}
 
 	return TRUE;
 }

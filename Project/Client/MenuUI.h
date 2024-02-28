@@ -16,7 +16,6 @@ public:
 private:
     void CreateEmptyObject();
     void CreateEmptyMaterial();
-    void MakePrefab();
     void AddComponent(COMPONENT_TYPE _type);
     void AddScript(const wstring& _strScriptName);
 

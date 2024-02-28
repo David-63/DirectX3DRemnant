@@ -1,5 +1,6 @@
 #pragma once
 
+
 struct tTimeCtrl
 {
 	float curTime;
@@ -8,7 +9,7 @@ struct tTimeCtrl
 
 	tTimeCtrl() : curTime(0.f), maxTime(1.f), active(false) {}
 	tTimeCtrl(float _value) : curTime(0.f), maxTime(_value), active(false) {}
-	
+
 	bool IsFinish() { return (curTime >= maxTime); }
 	bool IsActivate() { return active; }
 
@@ -17,8 +18,6 @@ struct tTimeCtrl
 	void ResetTime() { curTime = 0; active = false; }
 
 };
-
-
 
 struct tVertex
 {
@@ -126,29 +125,38 @@ struct tParticle
 
 struct tRWParticleBuffer
 {
-	int		SpawnCount;			// 스폰 시킬 파티클 개수
+	int		iSpawnCount;			// 스폰 시킬 파티클 개수
 	int		padding[3];
 };
 
 
 struct tParticleModule
 {
+	Vec3    vRandomSpark;
+
 	// 스폰 모듈
 	Vec4    vSpawnColor;
 	Vec4	vSpawnScaleMin;
-	Vec4	vSpawnScaleMax;
+	Vec4	vSpawnScaleMax;	
 	Vec3	vBoxShapeScale;
-	float	fSphereShapeRadius;
+	
+	float	fSphereShapeRadius;	
+	float   fSphereOffset;
 	int		SpawnShapeType;		// 0 : BOX, 1 : Sphere
+	int     BoxPad[4];
+
+	float   fSpawnAreaOffsetFactor;
 	int		SpawnRate;			// 초당 생성 개수
-	int		Space;				// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)
-	float   MinLifeTime;		// 최소 수명
+	int		Space;				// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)	
+	
+	float   MinLifeTime;		// 최소 수명	
 	float   MaxLifeTime;		// 최대 수명
-	int     spawnpad[3];
+	int     spawnpad;
 
 	// Color Change 모듈
 	Vec4	vStartColor;		// 초기 색상
 	Vec4	vEndColor;			// 최종 색상
+	bool    bStrongColor;		// 1 : 강한 색상, 0 : 약한 색상
 
 	// Scale Change 모듈
 	float	StartScale;			// 초기 배율
@@ -156,10 +164,10 @@ struct tParticleModule
 
 	// 버퍼 최대크기
 	int		iMaxParticleCount;
-	int		ipad;
+	int		ipad[2];
 
 	// Add Velocity 모듈
-	Vec4	vVelocityDir;
+	Vec4	vVelocityDir;	
 	int     AddVelocityType;	// 0 : From Center, 1: To Center, 2 : Fixed Direction	
 	float	OffsetAngle;
 	float	Speed;
@@ -169,6 +177,9 @@ struct tParticleModule
 	float	StartDrag;
 	float	EndDrag;
 
+	// Gravity  - 중력
+	float	fGravityForce;
+
 	// NoiseForce 모듈 - 랜덤 힘 적용	
 	float	fNoiseTerm;		// 랜덤 힘 변경 간격
 	float	fNoiseForce;	// 랜덤 힘 크기
@@ -177,8 +188,10 @@ struct tParticleModule
 	int		VelocityAlignment;	// 1 : 속도정렬 사용(이동 방향으로 회전) 0 : 사용 안함
 	int		VelocityScale;		// 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함	
 	float   vMaxSpeed;			// 최대 크기에 도달하는 속력
-	Vec4	vMaxVelocityScale;	// 속력에 따른 크기 변화량 최대치
-	int		renderpad;
+	Vec4	vMaxVelocityScale;	// 속력에 따른 크기 변화량 최대치	
+	float   fRotAngle;
+	float   fRotSpeed;
+	int     bRot;				// 1 : 회전 사용, 0: 사용 안함
 
 	// Module Check
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];
@@ -315,7 +328,7 @@ struct tMtrlConst
 	int arrTex[(UINT)TEX_PARAM::TEX_END];
 
 	// 3D Animation 정보
-	int	arrAnimData[4];	// 0 SetAnim | 1 : BoneCount | 2 : SetModify | 3 : ModifyCount
+	int	arrAnimData[4];
 };
 
 
@@ -333,7 +346,7 @@ extern tGlobal GlobalData;
 
 struct tMassProperties
 {
-	tMassProperties(float _staticFriction = 0.f, float _dynamicFriction = 0.f, float _restitution = 0.603f)
+	tMassProperties(float _staticFriction = 0.f, float _dynamicFriction = 0.f, float _restitution = 0.01f)
 		: staticFriction(_staticFriction)
 		, dynamicFriction(_dynamicFriction)
 		, restitution(_restitution)
@@ -390,23 +403,50 @@ struct Geometries
 	GEOMETRY_TYPE eGeomType;
 };
 
-struct tPhysicsInfo
-{
-	tPhysicsInfo()
-		: eActorType(ACTOR_TYPE::Static)
-		, eGeomType(GEOMETRY_TYPE::Box)
-		, size(1.f, 1.f, 1.f)
-		, massProperties(tMassProperties())
-		, pGeometries(nullptr)
-		, filterData{}
-	{
-	}
+//struct tPhysicsInfo
+//{
+//	tPhysicsInfo()
+//		: eActorType(ACTOR_TYPE::Static)
+//		, eGeomType(GEOMETRY_TYPE::Box)
+//		, size(1.f, 1.f, 1.f)
+//		, massProperties(tMassProperties())
+//		, pGeometries(nullptr)
+//		, filterData{}
+//	{
+//	}
+//
+//	ACTOR_TYPE eActorType;
+//	GEOMETRY_TYPE eGeomType;
+//	Vector3 size;
+//	tMassProperties massProperties;
+//	Geometries* pGeometries;
+//	physx::PxFilterData filterData;
+//};
 
-	ACTOR_TYPE eActorType;
+struct tShapeInfo
+{
+	tShapeInfo()
+		: eGeomType(GEOMETRY_TYPE::Sphere)
+		, size(1.f,1.f,1.f)
+		, massProperties(tMassProperties())
+		, filterData{}
+		, offset(0.f,0.f,0.f)
+	{}
+
 	GEOMETRY_TYPE eGeomType;
 	Vector3 size;
 	tMassProperties massProperties;
-	Geometries* pGeometries;
 	physx::PxFilterData filterData;
+	Vector3 offset;
+	//Geometries* pGeometries;
+};
+
+struct tRayCastInfo
+{
+	physx::PxRigidActor* hitActor;
+	Vec3 hitPos;
+	Vec3 hitNormal;
+	bool hit;
+	float dist;
 };
 

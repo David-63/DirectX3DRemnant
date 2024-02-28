@@ -134,6 +134,12 @@
     <Filter Include="UI\InspectorUI\ResUI\AnimClipUI">
       <UniqueIdentifier>{daf151cb-b41d-4c47-823c-579cc5239e2d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\09. Collider3DUI">
+      <UniqueIdentifier>{8f037829-9d16-4eec-9ceb-459dc85aebe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InspectorUI\ComponentUI\10. RIgidBodyUI">
+      <UniqueIdentifier>{f1f2ed21-0cce-4b39-9a5d-ead1b638332e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -279,6 +285,12 @@
     </ClInclude>
     <ClInclude Include="LandScapeUI.h">
       <Filter>UI\InspectorUI\ComponentUI\RenderCompUI\6. LandscapeUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Collider3DUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\09. Collider3DUI</Filter>
+    </ClInclude>
+    <ClInclude Include="RigidBodyUI.h">
+      <Filter>UI\InspectorUI\ComponentUI\10. RIgidBodyUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -434,6 +446,12 @@
     </ClCompile>
     <ClCompile Include="LandScapeUI.cpp">
       <Filter>UI\InspectorUI\ComponentUI\RenderCompUI\6. LandscapeUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Collider3DUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\09. Collider3DUI</Filter>
+    </ClCompile>
+    <ClCompile Include="RigidBodyUI.cpp">
+      <Filter>UI\InspectorUI\ComponentUI\10. RIgidBodyUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

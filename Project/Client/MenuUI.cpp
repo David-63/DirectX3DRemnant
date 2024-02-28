@@ -77,9 +77,7 @@ int MenuUI::render_update()
             {
                 for (UINT i = 0; i < (UINT)COMPONENT_TYPE::END; ++i)
                 {
-
-                    const char* compName = ToString((COMPONENT_TYPE)i);
-                    if (ImGui::MenuItem(compName))
+                    if (ImGui::MenuItem(COMPONENT_TYPE_STR[i]))
                     {
                         AddComponent(COMPONENT_TYPE(i));
                     }

@@ -23,6 +23,7 @@ public:
 
 	const Vector3& GetGravity() { return mGravity; }
 	PxPhysics* GetPhysics() { return mPhysics; }
+	tRayCastInfo* RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLength);
 
 	static PxFilterFlags PlayerFilterShader(
 		PxFilterObjectAttributes _attributes0, PxFilterData _filterData0,
@@ -38,7 +39,7 @@ private:
 	PxPvdTransport* mTransfort;
 	PxPvd* mPvd;
 	PxPvdSceneClient* mSceneClient;
-	PxScene* mScene;
+	PxScene* mCurScene;
 	PxControllerManager* mControllerMgr;
 
 	PxDefaultCpuDispatcher* mCpuDispatcher;

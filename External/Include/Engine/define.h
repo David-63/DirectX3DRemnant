@@ -238,6 +238,7 @@ enum class SHAPE_TYPE
 	CIRCLE,
 	CUBE,
 	SPHERE,
+	CAPSULE,
 	END,
 };
 
@@ -251,6 +252,8 @@ enum class COLLIDER2D_TYPE
 enum class COLLIDER3D_TYPE
 {
 	NONE,
+	Player,
+	Wall,
 	RECT,
 	CIRCLE,
 	BOX,
@@ -289,7 +292,7 @@ enum class PARTICLE_MODULE
 	DRAG,
 	NOISE_FORCE,
 	RENDER,
-	DUMMY_3,
+	GRAVITY,
 
 	END,
 };
