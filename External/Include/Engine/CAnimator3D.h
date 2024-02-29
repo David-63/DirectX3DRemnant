@@ -58,11 +58,11 @@ private:
 	// local value
 	bool                        m_isRun;		// 애님 제어
 	bool						m_bRepeat;		// 반복 체크
-	CAnimClip*					m_pPrevAnim;	// 이전 애님
-	CAnimClip*					m_pCurrentAnim; // 현재 재생중인 애님
+	CAnimClip* m_pPrevAnim;	// 이전 애님
+	CAnimClip* m_pCurrentAnim; // 현재 재생중인 애님
 
 	bool						m_isFinalMatUpdate;     // 업데이트 체크용
-	CStructuredBuffer*			m_BoneFinalMatBuffer;	// CS에서 업데이트 되는 최종 뼈 행렬
+	CStructuredBuffer* m_BoneFinalMatBuffer;	// CS에서 업데이트 되는 최종 뼈 행렬
 	vector<Matrix>				m_vecFinalBoneMat;      // 본 소켓
 
 	// blend value
@@ -74,7 +74,7 @@ private:
 	bool						m_isModifyUse;
 	int							m_modifyIdx;
 	float						m_modifyRotScalar;
-	CStructuredBuffer*			m_modifyIndicesBuffer;	// CS에서 업데이트 되는 최종 뼈 행렬
+	CStructuredBuffer* m_modifyIndicesBuffer;	// CS에서 업데이트 되는 최종 뼈 행렬
 	vector<UINT>				m_modifyIndices;
 	vector<tMTBone>				m_curBones;
 
@@ -89,13 +89,16 @@ public:
 	void check_mesh(Ptr<CMesh> _pMesh);
 	Ptr<CAnimClip> findAnim(const wstring& _strName);
 
+	const vector<Matrix>& GetBonesSocket() { return m_vecFinalBoneMat; }
+	Matrix& GetBoneSocket(UINT _idx) { return m_vecFinalBoneMat[_idx]; }
+
 	// modify func
 public:
 	void SetModifyUse(bool _use) { m_isModifyUse = _use; }
 	void SetModifyIdx(int _idx) { m_modifyIdx = _idx; }
 	void SetModifyRotScalar(float _scalar) { m_modifyRotScalar = _scalar; }
-	bool GetModifyUse() { return m_isModifyUse;}
-	int GetModifyIdx() { return m_modifyIdx;}
+	bool GetModifyUse() { return m_isModifyUse; }
+	int GetModifyIdx() { return m_modifyIdx; }
 	float GetModifyRotScalar() { return m_modifyRotScalar; }
 
 
@@ -111,7 +114,7 @@ public:
 	bool IsRepeat() { return m_bRepeat; }
 
 
-	
+
 	//event func
 public:
 	Events* FindEvents(const std::wstring& name);
@@ -140,7 +143,7 @@ public:
 public:
 	const map<wstring, Ptr<CAnimClip>>& GetAnims() { return m_mapAnim; }
 	CAnimClip* GetCurAnim() { return m_pCurrentAnim; }
-	
+
 	// debugging func
 public:
 	float GetBlendUpdateTime() { return m_blendTime.curTime; }
@@ -160,4 +163,5 @@ public:
 
 	friend class CAnimClip;
 };
+
 

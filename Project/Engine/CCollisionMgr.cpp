@@ -267,3 +267,5 @@ void CCollisionMgr::SetColLayer(const wstring& _strLeftLayer, const wstring& _st
 	SetColLayer(pLeft->GetLayerIndex(), pRight->GetLayerIndex());
 }
 
+
+

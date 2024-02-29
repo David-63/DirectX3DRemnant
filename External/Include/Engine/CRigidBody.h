@@ -89,6 +89,7 @@ public:
 	physx::PxRigidBody* GetRigidBody() { return mActor->is<physx::PxRigidBody>(); }
 	physx::PxRigidActor* GetRigidActor() { return GetActor<physx::PxRigidActor>(); }
 	void SetShapeLocalPos(int _idx, CTransform* _transform);
+	//void SetShapeLocalPos(int _idx, Vec3 _localPos, UINT _boneIdx);
 	void SetShapeLocalPos(int _idx, Vec3 _localPos);
 	void AttachShape(int _idx);
 	Vec3 GetShapePosition(int _shapeIdx);

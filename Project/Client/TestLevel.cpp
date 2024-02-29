@@ -256,38 +256,38 @@ void CreateTestLevel()
 
 	//monster
 	{
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
+		//Ptr<CMeshData> pMeshData = nullptr;
+		//CGameObject* pObj = nullptr;
 
-		// 인스턴싱 테스트
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		//// 인스턴싱 테스트
+		////pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		pObj = pMeshData->Instantiate();
-		//pObj->AddComponent(new CTestScript());
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		//pObj = pMeshData->Instantiate();
+		////pObj->AddComponent(new CTestScript());
 
-		pObj->SetName(L"Monster2");
-		pObj->Transform()->SetDebugSphereUse(true);
-		pObj->SetLayerIdx(2);
-		pObj->Transform()->SetRelativePos(Vec3(100.f, 100.f, 0.f));
+		//pObj->SetName(L"Monster2");
+		//pObj->Transform()->SetDebugSphereUse(true);
+		//pObj->SetLayerIdx(2);
+		//pObj->Transform()->SetRelativePos(Vec3(100.f, 100.f, 0.f));
 
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(100.f, 100.f, 100.f);
-		info.massProperties.restitution = 0.01f;
-		
+		//tShapeInfo info = {};
+		//info.eGeomType = GEOMETRY_TYPE::Sphere;
+		//info.size = Vector3(100.f, 100.f, 100.f);
+		//info.massProperties.restitution = 0.01f;
+		//
 
-		pObj->AddComponent(new CRigidBody);
-		pObj->RigidBody()->PushBackShapeInfo(info);
-		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-		
+		//pObj->AddComponent(new CRigidBody);
+		//pObj->RigidBody()->PushBackShapeInfo(info);
+		//pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		//
 
-		pObj->AddComponent(new CCollider3D);
-		pObj->RigidBody()->AddActorToLevel();
+		//pObj->AddComponent(new CCollider3D);
+		//pObj->RigidBody()->AddActorToLevel();
 
-		pObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 180.f));
+		//pObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 180.f));
 
-		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
+		//SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
 
 		
 	}

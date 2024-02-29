@@ -54,6 +54,7 @@ void Physics::init()
 	sceneDesc.simulationEventCallback = mCallback;
 	sceneDesc.flags = PxSceneFlag::eENABLE_CCD;
 
+
 	mCurScene = mPhysics->createScene(sceneDesc);
 
 	mSceneClient = mCurScene->getScenePvdClient();
@@ -67,7 +68,6 @@ void Physics::tick()
 {
 	mCurScene->simulate(CTimeMgr::GetInst()->GetDeltaTime());
 	mCurScene->fetchResults(true);
-
 
 }
 void Physics::render()
@@ -95,9 +95,8 @@ tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLe
 	
 	PxRaycastBuffer hitBuffer;
 	PxQueryFilterData data;
-	//data.data.word0 = 0x01;
-	
-	bool hit = mCurScene->raycast(rayOrigin, rayDir, _rayLength, hitBuffer);
+	data.data.word0 = 1 << 2;
+	bool hit = mCurScene->raycast(rayOrigin, rayDir, _rayLength, hitBuffer,PxHitFlag::eDEFAULT, data);
 
 	if (hit)
 	{
@@ -116,6 +115,27 @@ tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLe
 
 	return &info;
 }
+void Physics::ReleaseAndCreatePxScene()
+{
+	mCurScene->release();
+	mCurScene = nullptr;
+
+	PxSceneDesc sceneDesc(mPhysics->getTolerancesScale());
+	sceneDesc.gravity = PxVec3(mGravity.x, mGravity.y, mGravity.z);
+	sceneDesc.cpuDispatcher = mCpuDispatcher;
+	sceneDesc.filterShader = PlayerFilterShader;
+	sceneDesc.simulationEventCallback = mCallback;
+	sceneDesc.flags = PxSceneFlag::eENABLE_CCD;
+
+	mCurScene = mPhysics->createScene(sceneDesc);
+
+	mSceneClient = mCurScene->getScenePvdClient();
+
+	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+	mSceneClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+}
+
 PxFilterFlags Physics::PlayerFilterShader(PxFilterObjectAttributes _attributes0, PxFilterData _filterData0, PxFilterObjectAttributes _attributes1, PxFilterData _filterData1, PxPairFlags& _pairFlags, const void* _constantBlock, PxU32 _constantBlockSize)
 {
 	// 트리거와 트리거 또는 트리거와 충돌하는 물체를 구분하여 처리합니다.

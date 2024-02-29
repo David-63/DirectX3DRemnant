@@ -39,7 +39,10 @@ int PrefabUI::render_update()
 
     if (ImGui::Button("Instantiate"))
     {
-       CGameObject* obj = CResMgr::GetInst()->Load<CPrefab>(path, path)->Instantiate(mPosition, mLayerIdx);
+       wstring strPath = CPathMgr::GetInst()->GetContentPath();
+       strPath += path;
+       pPrefab->Load(strPath);
+       CGameObject* obj = pPrefab->Instantiate(mPosition, mLayerIdx);
        obj->SetName(wstr);
        SpawnGameObject(obj, mPosition, mLayerIdx);
     }
