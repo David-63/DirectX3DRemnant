@@ -10,26 +10,42 @@
 #include "CAnimation3DShader.h"
 
 #include "CKeyMgr.h"
-
+#include "Physics.h"
 
 CAnimator3D::CAnimator3D()
-	: m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(false), m_isRun(false)
+	: CComponent(COMPONENT_TYPE::ANIMATOR3D)
+	, m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(false), m_isRun(false)
 	, m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr)
+	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_AnimRatio(0.f)
 	, m_blendTime(BlendEndTime), m_blendRatio(0.f), m_prevFrameIdx(0)
-	, m_isModifyUse(), m_modifyIdx(), m_modifyRotScalar()
-	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
+	, m_isModifyUse(false), m_modifyRotScalar(180.f)
 {
 	m_BoneFinalMatBuffer = new CStructuredBuffer();
 	m_modifyIndicesBuffer = new CStructuredBuffer();
 }
 
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
-	: m_pCurrentAnim(_origin.m_pCurrentAnim)
-	, m_bRepeat(_origin.m_bRepeat)
-	, CComponent(COMPONENT_TYPE::ANIMATOR3D)
+	: CComponent(_origin)
+	, m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(_origin.m_bRepeat), m_isRun(false)
+	, m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr)
+	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_AnimRatio(0.f)
+	, m_blendTime(_origin.m_blendTime), m_blendRatio(0.f), m_prevFrameIdx(0)
+	, m_isModifyUse(_origin.m_isModifyUse), m_modifyRotScalar(180.f)
 {
-	m_BoneFinalMatBuffer = new CStructuredBuffer;
+	m_BoneFinalMatBuffer = new CStructuredBuffer();
 	m_modifyIndicesBuffer = new CStructuredBuffer();
+
+	// 이벤트랑 클립 정보 긁어오기
+	m_Events = _origin.m_Events;
+	m_mapAnim.insert(_origin.m_mapAnim.begin(), _origin.m_mapAnim.end());
+	// 현재 애니메이션 세팅해주기
+	changeAnimClip(_origin.m_pCurrentAnim->GetKey());
+	// 버퍼 생성해주기?
+	m_modifyIndices = _origin.m_modifyIndices;
+	if (m_modifyIndicesBuffer->GetElementCount() != m_modifyIndices.size())
+	{
+		m_modifyIndicesBuffer->Create(sizeof(UINT), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, m_modifyIndices.data());
+	}
 }
 
 CAnimator3D::~CAnimator3D()
@@ -65,23 +81,41 @@ void CAnimator3D::finaltick()
 void CAnimator3D::animaTick()
 {
 	Events* events = FindEvents(m_pCurrentAnim->GetKey());
-
-	if (m_pCurrentAnim->IsFinish())
+	
+	// 애니메이션 제어
+	if (m_CurAnimData.IsFinish)
 	{
 		if (events)
 			events->CompleteEvent();
 		if (m_bRepeat)
-			m_pCurrentAnim->Reset();
+			Reset();
 		else
 		{
-			m_pCurrentAnim->TimeClear();
+			TimeClear();
 			m_isRun = false;
-		}			
+		}
 	}
 
-	UINT frameIndex = m_pCurrentAnim->finaltick();
+	// 애니메이션 진행
+	m_AnimUpdateTime[m_CurAnimData.AnimClipIdx] += ScaleDT;
+	if (m_AnimUpdateTime[m_CurAnimData.AnimClipIdx] >= m_CurAnimData.FinishTime)
+		m_CurAnimData.IsFinish = true;
+
+	double dFrameIdx =
+		(m_AnimUpdateTime[m_CurAnimData.AnimClipIdx] + m_CurAnimData.BeginTime) * (double)30;
+	m_CurFrameIdx = (int)(dFrameIdx);
+
+	if (m_CurFrameIdx >= m_pCurrentAnim->GetMTAnimClips().at(m_CurAnimData.AnimClipIdx).iFrameLength - 1)
+		m_NextFrameIdx = m_CurFrameIdx;
+	else
+		m_NextFrameIdx = m_CurFrameIdx + 1;
+
+	m_AnimRatio = (float)(dFrameIdx - (double)m_NextFrameIdx);
+
+	UINT frameIndex = m_CurFrameIdx - (m_CurAnimData.BeginTime * 30);
 	m_isFinalMatUpdate = false;
 
+	// 이벤트 진행
 	if (events)
 	{
 		if (frameIndex >= events->ActionEvents.size())
@@ -135,7 +169,7 @@ void CAnimator3D::UpdateData()
 
 			pUpdateShader->SetBoneCount(iBoneCount);
 			pUpdateShader->SetFrameIndex(m_prevFrameIdx);
-			pUpdateShader->SetNextFrameIdx(m_pCurrentAnim->GetNextFrame());
+			pUpdateShader->SetNextFrameIdx(m_NextFrameIdx);
 			pUpdateShader->SetFrameRatio(m_blendRatio);
 		}
 		else
@@ -146,9 +180,9 @@ void CAnimator3D::UpdateData()
 			pUpdateShader->SetOutputBuffer(m_BoneFinalMatBuffer);
 
 			pUpdateShader->SetBoneCount(iBoneCount);
-			pUpdateShader->SetFrameIndex(m_pCurrentAnim->GetCurFrame());
-			pUpdateShader->SetNextFrameIdx(m_pCurrentAnim->GetNextFrame());
-			pUpdateShader->SetFrameRatio(m_pCurrentAnim->GetFrameRatio());
+			pUpdateShader->SetFrameIndex(m_CurFrameIdx);
+			pUpdateShader->SetNextFrameIdx(m_NextFrameIdx);
+			pUpdateShader->SetFrameRatio(m_AnimRatio);
 		}		
 		
 		if (m_isModifyUse)
@@ -203,54 +237,97 @@ void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)
 }
 
 
+
+Ptr<CAnimClip> CAnimator3D::findAnim(const wstring& _strName)
+{
+	map<wstring, Ptr<CAnimClip>>::iterator iter = m_mapAnim.find(_strName);
+	if (iter == m_mapAnim.end())
+	{
+		return nullptr;
+	}
+
+	return iter->second;
+}
+
+// Play를 누르거나 Add로 들어온 경우
+void CAnimator3D::changeAnimClip(wstring _strAnimName)
+{
+	// cur Anim 변경
+	m_pCurrentAnim = findAnim(_strAnimName).Get();
+	if (m_pPrevAnim)
+	{
+		if (m_pPrevAnim->GetKey() == m_pCurrentAnim->GetKey())
+		{
+			Events* events;
+
+			m_prevFrameIdx = m_CurFrameIdx;
+			m_blendTime.Activate();
+			events = FindEvents(m_pPrevAnim->GetKey());
+			if (events)
+				events->EndEvent();
+		}
+	}	
+
+	// curAnim을 변경해주고, 변수 복사하기
+	m_CurAnimData = m_pCurrentAnim->GetAnimData();
+	m_AnimUpdateTime.clear();
+	m_AnimUpdateTime.resize(m_pCurrentAnim->GetOriginMesh().Get()->GetMTAnimClips().size());
+	m_AnimUpdateTime[m_CurAnimData.AnimClipIdx] = 0.f;
+	m_CurFrameIdx = 0;
+	m_NextFrameIdx = 0;
+	m_AnimRatio = 0.f;
+	if (m_CurAnimData.IsFinish)
+		Reset();
+}
+
+
+
 void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 {
 	_clip->m_Owner = this;
 	m_mapAnim.insert(make_pair(_clip->GetKey(), _clip.Get()));
-	m_pCurrentAnim = _clip.Get();
-	//m_pCurrentAnim->Stop();
+	changeAnimClip(_clip->GetKey());
 
 	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
 	m_vecFinalBoneMat.resize(iBoneCount);
 
-	m_curBones = m_pCurrentAnim->GetOriginMesh()->GetMTBones();
-	//m_modifyIndices.push_back(33);	// 허리
-	//m_modifyIndices.push_back(34);	// 복부
-	//m_modifyIndices.push_back(35);	// 명치
-	m_modifyIndices.push_back(36);	// 가슴
-	//m_modifyIndices.push_back(37);	// 목
-	//m_modifyIndices.push_back(38);	// 머리
-	//m_modifyIndices.push_back(39);	// 턱
-	//m_modifyIndices.push_back(40);	// 턱
-	//m_modifyIndices.push_back(136);	// 어깨
-	//m_modifyIndices.push_back(168);	// 손목
-	
-	//CollectChildrenIndices(33);
-	//CollectChildrenIndices(34);
-	//CollectChildrenIndices(35);
-	CollectChildrenIndices(36);
-	//CollectChildrenIndices(37);
-	//CollectChildrenIndices(38);
-	//CollectChildrenIndices(39);
-	//CollectChildrenIndices(136);
-	//CollectChildrenIndices(168);
-
-	//m_modifyIndices.push_back(136);	// 
-
-
-	std::sort(m_modifyIndices.begin(), m_modifyIndices.end());
-	int bufferPadding = m_modifyIndices.size() % 16;
-	if (0 != bufferPadding)
 	{
-		for (int i = 0; i < 16 - bufferPadding; ++i)
+		m_curBones = m_pCurrentAnim->GetOriginMesh()->GetMTBones();
+		//m_modifyIndices.push_back(33);	// 허리
+		//m_modifyIndices.push_back(34);	// 복부
+		//m_modifyIndices.push_back(35);	// 명치
+		m_modifyIndices.push_back(36);	// 가슴
+		//m_modifyIndices.push_back(37);	// 목
+		//m_modifyIndices.push_back(38);	// 머리
+		//m_modifyIndices.push_back(39);	// 턱
+		//m_modifyIndices.push_back(40);	// 턱
+		//m_modifyIndices.push_back(136);	// 어깨
+		//m_modifyIndices.push_back(168);	// 손목
+
+		//CollectChildrenIndices(33);
+		//CollectChildrenIndices(34);
+		//CollectChildrenIndices(35);
+		CollectChildrenIndices(36);
+		//CollectChildrenIndices(37);
+		//CollectChildrenIndices(38);
+		//CollectChildrenIndices(39);
+		//CollectChildrenIndices(136);
+		//CollectChildrenIndices(168);
+
+		std::sort(m_modifyIndices.begin(), m_modifyIndices.end());
+		int bufferPadding = m_modifyIndices.size() % 16;
+		if (0 != bufferPadding)
 		{
-			m_modifyIndices.push_back(999 + i);
+			for (int i = 0; i < 16 - bufferPadding; ++i)
+			{
+				m_modifyIndices.push_back(999 + i);
+			}
 		}
-	}
 
-	if (m_modifyIndicesBuffer->GetElementCount() != m_modifyIndices.size())
-	{
-		m_modifyIndicesBuffer->Create(sizeof(UINT), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, m_modifyIndices.data());
+		if (m_modifyIndicesBuffer->GetElementCount() != m_modifyIndices.size())
+		{
+			m_modifyIndicesBuffer->Create(sizeof(UINT), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, m_modifyIndices.data());
+		}
 	}
 
 	Events* events = FindEvents(_clip->GetKey());
@@ -259,7 +336,7 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 
 	events = new Events();
 	// 최대 프레임수만큼
-	int maxFrame = (m_pCurrentAnim->GetEndTime() - m_pCurrentAnim->GetBeginTime()) * 30 + 1;
+	int maxFrame = (m_CurAnimData.EndTime - m_CurAnimData.BeginTime) * 30 + 1;
 	events->ActionEvents.resize(maxFrame);
 	m_Events.insert(std::make_pair(_clip->GetKey(), events));
 }
@@ -285,40 +362,15 @@ void CAnimator3D::Remove(const wstring& _key)
 	m_pCurrentAnim = nullptr;
 }
 
-void CAnimator3D::CreateAnimClip(wstring _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh)
-{	
-	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(_strAnimName);
-	if (nullptr != pAnim)
-		return;
-	pAnim = new CAnimClip(true);
-	pAnim->NewAnimClip(_strAnimName, _clipIdx, _startTime, _endTime, _inMesh);
-	
-	pAnim->m_Owner = this;
-	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
-	m_pCurrentAnim = pAnim.Get();
-	//m_pCurrentAnim->Stop();
-
-	Events* events = FindEvents(_strAnimName);
-	if (events)
-		return;
-	
-	events = new Events();
-	// 최대 프레임수만큼
-	int maxFrame = (_endTime - _startTime) * 30 + 1;
-	events->ActionEvents.resize(maxFrame);
-	m_Events.insert(std::make_pair(_strAnimName, events));
-}
-
-void CAnimator3D::NewAnimClip(string _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh)
+void CAnimator3D::MakeAnimClip(string _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh)
 {
 	wstring strPath = wstring(_strAnimName.begin(), _strAnimName.end());
-
 
 	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(strPath);
 	if (nullptr != pAnim)
 		return;
 	pAnim = new CAnimClip(false);
-	pAnim->NewAnimClip(strPath, _clipIdx, _startTime, _endTime, _inMesh);
+	pAnim->MakeAnimClip(strPath, _clipIdx, _startTime, _endTime, _inMesh);
 
 	pAnim->SetKey(strPath);
 	pAnim->SetRelativePath(strPath);
@@ -330,9 +382,8 @@ void CAnimator3D::NewAnimClip(string _strAnimName, int _clipIdx, float _startTim
 
 	pAnim->m_Owner = this;
 	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
-	m_pCurrentAnim = pAnim.Get();
-	//m_pCurrentAnim->Stop();
 
+	// 이벤트 기초공사?
 	Events* events = FindEvents(strPath);
 	if (events)
 		return;
@@ -342,55 +393,19 @@ void CAnimator3D::NewAnimClip(string _strAnimName, int _clipIdx, float _startTim
 	int maxFrame = (_endTime - _startTime) * 30 + 1;
 	events->ActionEvents.resize(maxFrame);
 	m_Events.insert(std::make_pair(strPath, events));
+
+
+	changeAnimClip(pAnim->GetKey());
 }
 
 void CAnimator3D::Play(const wstring& _strName, bool _bRepeat)
 {
 	m_isRun = true;
-	Events* events;
-
 	m_pPrevAnim = m_pCurrentAnim;
-	m_pCurrentAnim = findAnim(_strName).Get();
-
-	// 키값을 비교
-	if (m_pPrevAnim->GetKey() != m_pCurrentAnim->GetKey())
-	{
-		// =============
-		//Blend 진행 로직
-		// =============
-
-		// 1. 방금까지 재생중인 애님의 현재 프레임을 기록
-		m_prevFrameIdx = m_pPrevAnim->GetCurFrame();
-		// 2. 블렌드 조건 수락
-		m_blendTime.Activate();
-		// 3. 현재 애니메이션의 종료 이벤트 호출 및 초기화
-		events = FindEvents(m_pPrevAnim->GetKey());
-		if (events)
-			events->EndEvent();
-		// 4. 이전 애님은 초기화 해주기
-		m_pPrevAnim->Reset();
-	}
-	else
-	{
-		// 바뀐게 없음
-		if (m_pCurrentAnim->IsFinish())
-		{
-			m_pCurrentAnim->Reset();
-		}
-	}
+	changeAnimClip(_strName);
 	m_bRepeat = _bRepeat;
 }
 
-Ptr<CAnimClip> CAnimator3D::findAnim(const wstring& _strName)
-{
-	map<wstring, Ptr<CAnimClip>>::iterator iter = m_mapAnim.find(_strName);
-	if (iter == m_mapAnim.end())
-	{
-		return nullptr;
-	}
-
-	return iter->second;
-}
 
 Events* CAnimator3D::FindEvents(const std::wstring& name)
 {
@@ -433,8 +448,7 @@ std::function<void()>& CAnimator3D::ActionEvent(const std::wstring& name, UINT i
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {
 	// map 객체 저장
-	// vector 방식이라면 size 부터 저장해서 순회하며 SaveResRef 함수로 저장하는데
-	
+	// vector 방식이라면 size 부터 저장해서 순회하며 SaveResRef 함수로 저장하는데	
 	UINT iEventsCount = (UINT)m_Events.size();
 	fwrite(&iEventsCount, sizeof(int), 1, _pFile);
 	for (auto& animEvent : m_Events)
@@ -454,6 +468,7 @@ void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 		// value
 		SaveResRef(animClip.second.Get(), _pFile);		
 	}
+	
 
 	// 현 클립 정보 저장
 	SaveResRef(m_pCurrentAnim, _pFile);
@@ -488,11 +503,18 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 	// 현 클립 정보 로드
 	Ptr<CAnimClip> pAnim;
 	LoadResRef(pAnim, _pFile);
-	m_pCurrentAnim = pAnim.Get();
-	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
-	m_vecFinalBoneMat.resize(iBoneCount);
-	m_BoneFinalMatBuffer = new CStructuredBuffer();
 
+	if (pAnim.Get())
+	{
+		changeAnimClip(pAnim.Get()->GetKey());
+		UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
+		m_vecFinalBoneMat.resize(iBoneCount);
+	}
+	
+	if (nullptr == m_BoneFinalMatBuffer)
+		m_BoneFinalMatBuffer = new CStructuredBuffer();
+	if (nullptr == m_modifyIndicesBuffer)
+		m_modifyIndicesBuffer = new CStructuredBuffer();
 	// 제어 변수 세팅
 	m_isRun = false;
 	m_bRepeat = false;

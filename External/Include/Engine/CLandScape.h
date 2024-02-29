@@ -25,6 +25,7 @@ struct tWeight_8
 class CLandScape : public CRenderComponent
 {
 private:
+    static int              m_makeCnt;
     UINT                    m_iFaceX;
     UINT                    m_iFaceZ;
 
@@ -61,6 +62,10 @@ private:
     void CreateTexture();
 
     void Raycasting();
+
+public:
+    virtual void SaveToLevelFile(FILE* _File) override;
+    virtual void LoadFromLevelFile(FILE* _File) override;
 
     CLONE(CLandScape);
 public:

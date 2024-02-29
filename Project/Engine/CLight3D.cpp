@@ -135,16 +135,13 @@ void CLight3D::SetLightType(LIGHT_TYPE _type)
 void CLight3D::SaveToLevelFile(FILE* _File)
 {
 	fwrite(&m_LightInfo, sizeof(tLightInfo), 1, _File);
-	SaveResRef(m_Mesh.Get(), _File);
-	SaveResRef(m_Mtrl.Get(), _File);
-	fwrite(&m_LightIdx, sizeof(UINT), 1, _File);
+	fwrite(&m_isShowRange, sizeof(bool), 1, _File);
 }
 
 void CLight3D::LoadFromLevelFile(FILE* _File)
 {
 	fread(&m_LightInfo, sizeof(tLightInfo), 1, _File);
-	LoadResRef(m_Mesh, _File);
-	LoadResRef(m_Mtrl, _File);
-	fread(&m_LightIdx, sizeof(UINT), 1, _File);
-}
+	fread(&m_isShowRange, sizeof(bool), 1, _File);
 
+	SetLightType(static_cast<LIGHT_TYPE>(m_LightInfo.LightType));
+}
