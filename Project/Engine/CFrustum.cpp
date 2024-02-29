@@ -28,9 +28,7 @@ CFrustum::~CFrustum()
 
 void CFrustum::finaltick()
 {
-    // 투영 공간의 ndc 좌표가 역으로 월드 공간에 가면
-    // 카메라 시야범위가 월드 공간에서 8개의 모서리로 나온다
-
+    // 투영 공간의 ndc 좌표가 역으로 월드 공간에 가면 카메라 시야범위가 월드 공간에서 8개의 모서리로 나온다
     const Matrix& matProInv = m_pCam->GetProjInvMat();
     const Matrix& matViewInv = m_pCam->GetViewInvMat();
     Matrix matPVInv = matProInv * matViewInv;

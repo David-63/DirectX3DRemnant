@@ -68,7 +68,9 @@ public:
 public: 
     // MT 정보
     Ptr<CMesh> GetOriginMesh() { return m_originMesh; }
-    vector<tMTAnimClip> GetMTAnimClips() { return m_originMesh.Get()->GetMTAnimClips(); }
+    const vector<tMTAnimClip>& GetMTAnimClips() { return m_originMesh.Get()->GetMTAnimClips(); }
+    const vector<tMTBone>& GetMTBones() { return m_originMesh.Get()->GetMTBones(); }
+    UINT GetMTBoneCount() { return m_originMesh.Get()->GetMTBoneCount(); }
 
     // 클립 정보
     void SetAnimName(const string& _name) { m_AnimName = _name; }

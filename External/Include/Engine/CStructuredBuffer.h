@@ -1,5 +1,6 @@
 #pragma once
 #include "CEntity.h"
+#include "CDevice.h"
 
 class CStructuredBuffer : public CEntity
 {
@@ -37,6 +38,9 @@ public:
     UINT GetElementCount() { return m_iElementCount; }
     UINT GetBufferSize() { return m_iElementSize * m_iElementCount;}
 
+    template<typename T>
+    void GetData(vector<T>& _vecDst);
+
 
     CLONE_DISABLE(CStructuredBuffer);
 public:
@@ -44,3 +48,29 @@ public:
     ~CStructuredBuffer();
 };
 
+template<typename T>
+inline void CStructuredBuffer::GetData(vector<T>& _vecDst)
+{
+    // Main Buffer -> CPU ReadBuffer
+    CONTEXT->CopyResource(m_SB_CPU_Read.Get(), m_SB.Get());
+
+    // CPU ReadBuffer -> CPU
+    // 버퍼의 크기를 확인합니다.
+    D3D11_BUFFER_DESC desc;
+    m_SB_CPU_Read->GetDesc(&desc);
+    size_t bufferSize = desc.ByteWidth;
+    // 새로운 메모리 영역을 할당합니다.
+    T* bufferData = new T[bufferSize / sizeof(T)];
+
+    // 버퍼의 데이터를 새로운 메모리 영역에 복사합니다.
+    D3D11_MAPPED_SUBRESOURCE mappedResource;
+    CONTEXT->Map(m_SB_CPU_Read.Get(), 0, D3D11_MAP_READ, 0, &mappedResource);
+    memcpy(bufferData, mappedResource.pData, bufferSize);
+    CONTEXT->Unmap(m_SB_CPU_Read.Get(), 0);
+
+    // 새로운 메모리 영역에 있는 데이터를 vector에 복사합니다.
+    _vecDst.assign(bufferData, bufferData + bufferSize / sizeof(T));
+
+    // 새로운 메모리 영역을 해제합니다.
+    delete[] bufferData;
+}

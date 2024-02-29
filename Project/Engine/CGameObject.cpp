@@ -159,6 +159,12 @@ void CGameObject::render_shadowmap()
 		m_RenderCom->render_shadowmap();
 }
 
+void CGameObject::render_shadowmap(UINT _sub)
+{
+	if (nullptr != m_RenderCom)
+		m_RenderCom->render_shadowmap(_sub);
+}
+
 void CGameObject::AddComponent(CComponent* _Component)
 {
 	_Component->m_pOwner = this;

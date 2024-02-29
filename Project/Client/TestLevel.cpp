@@ -77,7 +77,7 @@ void CreateTestLevel()
 		SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 
 
-	
+	//
 
 
 	// SkyBox 추가
@@ -118,41 +118,42 @@ void CreateTestLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
 		
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\humanTest.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\humanTest.mdat");
+		// 인스턴싱 테스트
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		pObj = pMeshData->Instantiate();
 		pObj->AddComponent(new CTestScript());
 		
 		pObj->SetName(L"Player");
 		pObj->Transform()->SetDebugSphereUse(true);
 		pObj->SetLayerIdx(2);
-		pObj->Transform()->SetRelativePos(Vec3(40.f, -15.f, 40.f));
+		pObj->Transform()->SetRelativePos(Vec3(40.f, 100.f, 40.f));
 		pObj->AddComponent(new CRigidBody);
-
-		//pObj->Animator3D()->
 
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(15.f, 15.f, 15.f);
-		info.isPlayer = true;
+		info.massProperties.restitution = 0.99f;
 		pObj->RigidBody()->PushBackShapeInfo(info);
 
 		tShapeInfo info2 = {};
 		info2.eGeomType = GEOMETRY_TYPE::Sphere;
 		info2.size = Vector3(15.f, 15.f, 15.f);
-		info2.isPlayer = true;
+		info2.massProperties.restitution = 0.99f;
 		pObj->RigidBody()->PushBackShapeInfo(info2);
 
 		tShapeInfo info3 = {};
 		info3.eGeomType = GEOMETRY_TYPE::Sphere;
 		info3.size = Vector3(8.f, 8.f, 8.f);
-		info3.isPlayer = true;
+		info3.massProperties.restitution = 0.99f;
 		pObj->RigidBody()->PushBackShapeInfo(info3);
 
 		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
 		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
 
 		int num = pObj->RigidBody()->GetRigidActor()->getNbShapes();
@@ -166,7 +167,7 @@ void CreateTestLevel()
 		pObj->RigidBody()->AddActorToLevel();
 		
 
-		SpawnGameObject(pObj, Vec3(40.f, -15.f, 40.f), 2);
+		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 
 
 		//pCamMoveScript->SetCamTarget(pObj); //숄더뷰 용
@@ -190,15 +191,14 @@ void CreateTestLevel()
 		//SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
 	}
 	//prefab
-	{
+	//{
 		//Ptr<CMeshData> pMeshData = nullptr;
 		//CGameObject* pObj = nullptr;
 
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		////pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		//pObj = pMeshData->Instantiate();
-		//pObj->AddComponent(new CTestScript());
-
+		//
 		//pObj->SetName(L"Proto");
 		//pObj->Transform()->SetDebugSphereUse(true);
 		//pObj->SetLayerIdx(2);
@@ -208,22 +208,26 @@ void CreateTestLevel()
 		//tShapeInfo info = {};
 		//info.eGeomType = GEOMETRY_TYPE::Sphere;
 		//info.size = Vector3(15.f, 15.f, 15.f);
+		//info.massProperties.restitution = 0.99f;
 		//pObj->RigidBody()->PushBackShapeInfo(info);
 
 		//tShapeInfo info2 = {};
 		//info2.eGeomType = GEOMETRY_TYPE::Sphere;
 		//info2.size = Vector3(15.f, 15.f, 15.f);
+		//info2.massProperties.restitution = 0.99f;
 		//pObj->RigidBody()->PushBackShapeInfo(info2);
 
 		//tShapeInfo info3 = {};
 		//info3.eGeomType = GEOMETRY_TYPE::Sphere;
 		//info3.size = Vector3(8.f, 8.f, 8.f);
+		//info3.massProperties.restitution = 0.99f;
 		//pObj->RigidBody()->PushBackShapeInfo(info3);
 
 		//pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 		//pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
 		//pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		//pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		//pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 		//
 
 		//int num = pObj->RigidBody()->GetRigidActor()->getNbShapes();
@@ -236,51 +240,54 @@ void CreateTestLevel()
 		//pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 		//pObj->RigidBody()->AddActorToLevel();
 
-		//	
-		//SpawnGameObject(pObj, Vec3(-140.f, 100.f, 40.f), 2);
 
-		////CResMgr::GetInst()->SavePrefab(pObj, L"prefab\\prefab01.pref");
-		//Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\prefab01.pref");
-		//CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
-		//CGameObject* cloneObj2 = fab->Instantiate(Vec3(200.f, 0.f, 400.f), 2);
+		//SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 
-		//SpawnGameObject(cloneObj, Vec3(300.f, 0.f, 400.f), L"Player");
-		//SpawnGameObject(cloneObj2, Vec3(200.f, 0.f, 400.f), L"Player");
-	}
+		//CResMgr::GetInst()->SavePrefab(pObj, L"prefab\\prefab01.pref");
+		
+	//	Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\sampleObj.pref");
+	//	CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+	//	CGameObject* cloneObj2 = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+	//	
+
+	//	SpawnGameObject(cloneObj, Vec3(300.f, 0.f, 400.f), L"Player");
+	//	SpawnGameObject(cloneObj2, Vec3(300.f, 0.f, 400.f), L"Player");
+	//}
 
 	//monster
 	{
-		//Ptr<CMeshData> pMeshData = nullptr;
-		//CGameObject* pObj = nullptr;
+		Ptr<CMeshData> pMeshData = nullptr;
+		CGameObject* pObj = nullptr;
 
-		//// 인스턴싱 테스트
-		////pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		// 인스턴싱 테스트
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		//pObj = pMeshData->Instantiate();
-		////pObj->AddComponent(new CTestScript());
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		pObj = pMeshData->Instantiate();
+		//pObj->AddComponent(new CTestScript());
 
-		//pObj->SetName(L"Monster2");
-		//pObj->Transform()->SetDebugSphereUse(true);
-		//pObj->SetLayerIdx(2);
-		//pObj->Transform()->SetRelativePos(Vec3(100.f, 100.f, 0.f));
+		pObj->SetName(L"Monster2");
+		pObj->Transform()->SetDebugSphereUse(true);
+		pObj->SetLayerIdx(2);
+		pObj->Transform()->SetRelativePos(Vec3(100.f, 100.f, 0.f));
 
-		//tShapeInfo info = {};
-		//info.eGeomType = GEOMETRY_TYPE::Sphere;
-		//info.size = Vector3(100.f, 100.f, 100.f);
-		//
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(100.f, 100.f, 100.f);
+		info.massProperties.restitution = 0.01f;
+		
 
-		//pObj->AddComponent(new CRigidBody);
-		//pObj->RigidBody()->PushBackShapeInfo(info);
-		//pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-		//
+		pObj->AddComponent(new CRigidBody);
+		pObj->RigidBody()->PushBackShapeInfo(info);
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		
 
-		//pObj->AddComponent(new CCollider3D);
-		//pObj->RigidBody()->AddActorToLevel();
+		pObj->AddComponent(new CCollider3D);
+		pObj->RigidBody()->AddActorToLevel();
 
-		//pObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 180.f));
+		pObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 180.f));
 
-		//SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
+		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
 
 		
 	}
@@ -344,24 +351,24 @@ void CreateTestLevel()
 
 
 	}
-	// LandScape Object
-	{
-		CGameObject* pLandScape = new CGameObject;
-		pLandScape->SetName(L"LandScape");
+	//// LandScape Object
+	//{
+	//	CGameObject* pLandScape = new CGameObject;
+	//	pLandScape->SetName(L"LandScape");
 
-		pLandScape->AddComponent(new CTransform);
-		pLandScape->AddComponent(new CLandScape);
+	//	pLandScape->AddComponent(new CTransform);
+	//	pLandScape->AddComponent(new CLandScape);
 
-		pLandScape->Transform()->SetRelativeScale(Vec3(1000.f, 4000.f, 1000.f));
-		pLandScape->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+	//	pLandScape->Transform()->SetRelativeScale(Vec3(1000.f, 4000.f, 1000.f));
+	//	pLandScape->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
 
-		pLandScape->LandScape()->SetFace(64, 64);
-		pLandScape->LandScape()->SetFrustumCheck(false);
-		//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));
-		
+	//	pLandScape->LandScape()->SetFace(64, 64);
+	//	pLandScape->LandScape()->SetFrustumCheck(false);
+	//	//pLandScape->LandScape()->SetHeightMap(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\HeightMap_01.jpg"));
+	//	
 
-		SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 4);
-	}
+	//	SpawnGameObject(pLandScape, Vec3(0.f, 0.f, 0.f), 4);
+	//}
 	//ground
 	{
 		CGameObject* pGround = new CGameObject;
@@ -397,7 +404,7 @@ void CreateTestLevel()
 	}
 	
 	bool hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
-	tRayCastInfo* info = Physics::GetInst()->RayCast(Vec3(40, 5.f, 40), Vec3(1.f, 0.f, 0.f), 1000.f);
+
 
 	//파티클
 	{

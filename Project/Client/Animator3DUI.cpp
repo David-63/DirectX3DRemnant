@@ -97,16 +97,38 @@ int Animator3DUI::render_update()
 	}
 	ImGui::Separator();
 
-
-
-
-
-	ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "AnimClip");
+	// ===================================================================================================
+	ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "ModifyBone");
 	ImGui::Separator();
 
+	int maxBone = GetTarget()->Animator3D()->GetCurMTBoneCount();
+	bool modifyUse =  GetTarget()->Animator3D()->GetModifyUse();
+	int modifyIdx = GetTarget()->Animator3D()->GetModifyIdx();
+	float modifyRotScalar = GetTarget()->Animator3D()->GetModifyRotScalar();
+
+	ImGui::Checkbox("ModifyUse", &modifyUse);
+	GetTarget()->Animator3D()->SetModifyUse(modifyUse);
+	if (modifyUse)
+	{
+
+		ImGui::Text("Bone Index");
+		ImGui::SameLine();
+		ImGui::DragInt("##Modify Index", &modifyIdx, 1, 0, maxBone);
+		GetTarget()->Animator3D()->SetModifyIdx(modifyIdx);
+
+		ImGui::Text("RotScalar");
+		ImGui::SameLine();
+		ImGui::DragFloat("##Modify RotScalar", &modifyRotScalar);
+		GetTarget()->Animator3D()->SetModifyRotScalar(modifyRotScalar);
+	}
+
+	ImGui::Separator();
+	
 
 
 	// ===================================================================================================
+	ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "AnimClip");
+	ImGui::Separator();
 
 	// Mesh 선택
 	Ptr<CMesh> pMesh = GetTarget()->MeshRender()->GetMesh();	// 초기에 보여주는 용도 외로는 안쓰는건가?
