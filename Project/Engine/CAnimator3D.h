@@ -97,6 +97,9 @@ public:
 	float GetBlendRatio() { return m_blendRatio; }
 	int GetPrevFrameIdx() { return m_prevFrameIdx; }
 
+	const vector<Matrix>& GetBonesSocket() { return m_vecFinalBoneMat; }
+	Matrix& GetBoneSocket(UINT _idx) { return m_vecFinalBoneMat[_idx]; }
+
 	//event func
 public:
 	Events* FindEvents(const std::wstring& name);

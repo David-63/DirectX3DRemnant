@@ -6,7 +6,10 @@
 class RigidBodyUI : public ComponentUI
 {
 private:
-
+    int mCurIdx;
+    int mSelectIdx;
+    bool m_bSelect;
+    UINT m_TargetID;
 
 public:
     virtual int render_update() override;

@@ -54,6 +54,7 @@ void Physics::init()
 	sceneDesc.simulationEventCallback = mCallback;
 	sceneDesc.flags = PxSceneFlag::eENABLE_CCD;
 
+
 	mCurScene = mPhysics->createScene(sceneDesc);
 
 	mSceneClient = mCurScene->getScenePvdClient();
@@ -95,9 +96,8 @@ tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLe
 	
 	PxRaycastBuffer hitBuffer;
 	PxQueryFilterData data;
-	//data.data.word0 = 0x01;
-	
-	bool hit = mCurScene->raycast(rayOrigin, rayDir, _rayLength, hitBuffer);
+	data.data.word0 = 1 << 2;
+	bool hit = mCurScene->raycast(rayOrigin, rayDir, _rayLength, hitBuffer,PxHitFlag::eDEFAULT, data);
 
 	if (hit)
 	{
