@@ -158,6 +158,7 @@ void CResMgr::SavePrefab(CGameObject* _obj, const wstring& _strRelativePath)
 	Ptr<CPrefab> pref = new CPrefab;
 
 	pref->RegisterProtoObject(_obj);
+	pref->SetRelativePath(_strRelativePath);
 
 	wstring strPath = CPathMgr::GetInst()->GetContentPath();
 	strPath += _strRelativePath;

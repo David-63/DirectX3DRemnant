@@ -3,6 +3,7 @@
 
 #include "CLevel.h"
 #include "CLayer.h"
+#include "Physics.h"
 
 CLevelMgr::CLevelMgr()
 	: m_pCurLevel(nullptr)
@@ -53,4 +54,7 @@ void CLevelMgr::ChangeLevel(CLevel* _NextLevel)
 	}
 
 	m_pCurLevel = _NextLevel;
+
+	//피직스씬 초기화
+	Physics::GetInst()->ReleaseAndCreatePxScene();
 }
