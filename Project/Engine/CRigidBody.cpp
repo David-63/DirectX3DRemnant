@@ -4,6 +4,7 @@
 #include "CGameObject.h"
 #include "CTransform.h"
 #include "CCollisionMgr.h"
+#include "CAnimator3D.h"
 
 CRigidBody::CRigidBody()
 	: CComponent(COMPONENT_TYPE::RIGIDBODY)
@@ -425,6 +426,29 @@ void CRigidBody::SetShapeLocalPos(int _idx, CTransform* _transform)
 	mShapes[_idx]->setLocalPose(pxTransform);
 }
 
+//void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos, UINT _boneIdx)
+//{
+//	//Matrix soketMat = GetOwner()->Animator3D()->GetBoneSocket(32);
+//
+//	PxTransform tr = GetPhysicsTransform();
+//	Matrix trMat = Matrix::CreateTranslation({ tr.p.x, tr.p.y, tr.p.z });
+//
+//	//Matrix finalMat = trMat * soketMat;
+//	
+//	//XMVECTOR vec = XMVectorGetX(finalMat.);
+//
+//	PxTransform localpose(PxVec3(_localPos.x, _localPos.y, _localPos.z));
+//	localpose.q = GetPhysicsTransform().q;
+//
+//	mShapes[_idx]->setLocalPose(localpose);
+//	mShapeInfos[_idx].offset = _localPos;
+//}
+
+void CRigidBody::AttachShape(int _idx)
+{
+	GetRigidActor()->attachShape(*mShapes[_idx]);
+}
+
 void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos)
 {
 	PxTransform localpose(PxVec3(_localPos.x, _localPos.y, _localPos.z));
@@ -432,11 +456,6 @@ void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos)
 
 	mShapes[_idx]->setLocalPose(localpose);
 	mShapeInfos[_idx].offset = _localPos;
-}
-
-void CRigidBody::AttachShape(int _idx)
-{
-	GetRigidActor()->attachShape(*mShapes[_idx]);
 }
 
 Vec3 CRigidBody::GetShapePosition(int _shapeIdx)

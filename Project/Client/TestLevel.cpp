@@ -129,6 +129,8 @@ void CreateTestLevel()
 		pObj->Transform()->SetRelativePos(Vec3(40.f, -15.f, 40.f));
 		pObj->AddComponent(new CRigidBody);
 
+		//pObj->Animator3D()->
+
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(15.f, 15.f, 15.f);
@@ -189,61 +191,61 @@ void CreateTestLevel()
 	}
 	//prefab
 	{
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
+		//Ptr<CMeshData> pMeshData = nullptr;
+		//CGameObject* pObj = nullptr;
 
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		pObj = pMeshData->Instantiate();
-		pObj->AddComponent(new CTestScript());
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		//pObj = pMeshData->Instantiate();
+		//pObj->AddComponent(new CTestScript());
 
-		pObj->SetName(L"Proto");
-		pObj->Transform()->SetDebugSphereUse(true);
-		pObj->SetLayerIdx(2);
-		pObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
-		pObj->AddComponent(new CRigidBody);
+		//pObj->SetName(L"Proto");
+		//pObj->Transform()->SetDebugSphereUse(true);
+		//pObj->SetLayerIdx(2);
+		//pObj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+		//pObj->AddComponent(new CRigidBody);
 
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(15.f, 15.f, 15.f);
-		pObj->RigidBody()->PushBackShapeInfo(info);
+		//tShapeInfo info = {};
+		//info.eGeomType = GEOMETRY_TYPE::Sphere;
+		//info.size = Vector3(15.f, 15.f, 15.f);
+		//pObj->RigidBody()->PushBackShapeInfo(info);
 
-		tShapeInfo info2 = {};
-		info2.eGeomType = GEOMETRY_TYPE::Sphere;
-		info2.size = Vector3(15.f, 15.f, 15.f);
-		pObj->RigidBody()->PushBackShapeInfo(info2);
+		//tShapeInfo info2 = {};
+		//info2.eGeomType = GEOMETRY_TYPE::Sphere;
+		//info2.size = Vector3(15.f, 15.f, 15.f);
+		//pObj->RigidBody()->PushBackShapeInfo(info2);
 
-		tShapeInfo info3 = {};
-		info3.eGeomType = GEOMETRY_TYPE::Sphere;
-		info3.size = Vector3(8.f, 8.f, 8.f);
-		pObj->RigidBody()->PushBackShapeInfo(info3);
+		//tShapeInfo info3 = {};
+		//info3.eGeomType = GEOMETRY_TYPE::Sphere;
+		//info3.size = Vector3(8.f, 8.f, 8.f);
+		//pObj->RigidBody()->PushBackShapeInfo(info3);
 
-		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		
+		//pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		//pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		//pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		//pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		//
 
-		int num = pObj->RigidBody()->GetRigidActor()->getNbShapes();
-		pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-		pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
+		//int num = pObj->RigidBody()->GetRigidActor()->getNbShapes();
+		//pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		//pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+		//pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
 
 
-		pObj->AddComponent(new CCollider3D);
-		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
-		pObj->RigidBody()->AddActorToLevel();
+		//pObj->AddComponent(new CCollider3D);
+		//pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+		//pObj->RigidBody()->AddActorToLevel();
 
-			
-		SpawnGameObject(pObj, Vec3(-140.f, 100.f, 40.f), 2);
+		//	
+		//SpawnGameObject(pObj, Vec3(-140.f, 100.f, 40.f), 2);
 
-		//CResMgr::GetInst()->SavePrefab(pObj, L"prefab\\prefab01.pref");
-		Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\prefab01.pref");
-		CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
-		CGameObject* cloneObj2 = fab->Instantiate(Vec3(200.f, 0.f, 400.f), 2);
+		////CResMgr::GetInst()->SavePrefab(pObj, L"prefab\\prefab01.pref");
+		//Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\prefab01.pref");
+		//CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+		//CGameObject* cloneObj2 = fab->Instantiate(Vec3(200.f, 0.f, 400.f), 2);
 
-		SpawnGameObject(cloneObj, Vec3(300.f, 0.f, 400.f), L"Player");
-		SpawnGameObject(cloneObj2, Vec3(200.f, 0.f, 400.f), L"Player");
+		//SpawnGameObject(cloneObj, Vec3(300.f, 0.f, 400.f), L"Player");
+		//SpawnGameObject(cloneObj2, Vec3(200.f, 0.f, 400.f), L"Player");
 	}
 
 	//monster
