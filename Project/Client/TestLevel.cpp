@@ -191,7 +191,7 @@ void CreateTestLevel()
 		//SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
 	}
 	//prefab
-	{
+	//{
 		//Ptr<CMeshData> pMeshData = nullptr;
 		//CGameObject* pObj = nullptr;
 
@@ -245,14 +245,14 @@ void CreateTestLevel()
 
 		//CResMgr::GetInst()->SavePrefab(pObj, L"prefab\\prefab01.pref");
 		
-		Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\sampleObj.pref");
-		CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
-		CGameObject* cloneObj2 = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
-		
+	//	Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\sampleObj.pref");
+	//	CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+	//	CGameObject* cloneObj2 = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+	//	
 
-		SpawnGameObject(cloneObj, Vec3(300.f, 0.f, 400.f), L"Player");
-		SpawnGameObject(cloneObj2, Vec3(300.f, 0.f, 400.f), L"Player");
-	}
+	//	SpawnGameObject(cloneObj, Vec3(300.f, 0.f, 400.f), L"Player");
+	//	SpawnGameObject(cloneObj2, Vec3(300.f, 0.f, 400.f), L"Player");
+	//}
 
 	//monster
 	{
