@@ -488,10 +488,15 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 	// 현 클립 정보 로드
 	Ptr<CAnimClip> pAnim;
 	LoadResRef(pAnim, _pFile);
-	m_pCurrentAnim = pAnim.Get();
-	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
-	m_vecFinalBoneMat.resize(iBoneCount);
-	m_BoneFinalMatBuffer = new CStructuredBuffer();
+	if (pAnim.Get())
+	{
+		m_pCurrentAnim = pAnim.Get();
+		UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
+		m_vecFinalBoneMat.resize(iBoneCount);
+
+	}
+	if (!m_BoneFinalMatBuffer)
+		m_BoneFinalMatBuffer = new CStructuredBuffer();
 
 	// 제어 변수 세팅
 	m_isRun = false;
