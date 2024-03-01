@@ -12,6 +12,8 @@ private:
     bool            m_bShow;
 
 public:
+    void SetTexture(Ptr<CTexture> _tex) { m_DecalTex = _tex; }
+
     // 지연렌더링 설정에 다라 Mtrl 변경
     void SetDeferredDecal(bool _bDeferred);
     bool IsDeferredDecal() { return m_bDeferred; }

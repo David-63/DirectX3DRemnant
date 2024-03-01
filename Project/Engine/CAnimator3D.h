@@ -35,6 +35,25 @@ struct Events
 		fwrite(&StartEvent, sizeof(Event), 1, _pFile);
 		fwrite(&CompleteEvent, sizeof(Event), 1, _pFile);
 		fwrite(&EndEvent, sizeof(Event), 1, _pFile);
+
+		// 프레임 최대 크기 저장
+		int frameCnt = ActionEvents.size();
+		fwrite(&frameCnt, sizeof(int), 1, _pFile);
+
+		// 프레임 순회하며 유효한 이벤트 확인
+		int cnt = 0;
+		for (; cnt < frameCnt; ++cnt)
+		{
+			// 빈자리면 넘김
+			if (nullptr == ActionEvents[cnt].mEvent)
+				continue;
+			// 유효한 인덱스 및 이벤트 등록
+			fwrite(&cnt, sizeof(int), 1, _pFile);
+			fwrite(&ActionEvents[cnt].mEvent, sizeof(Event), 1, _pFile);
+		}
+		// 마감 숫자 등록
+		cnt = -1;
+		fread(&cnt, sizeof(int), 1, _pFile);
 	}
 
 	Events* Load(FILE* _pFile)
@@ -42,6 +61,23 @@ struct Events
 		fread(&StartEvent, sizeof(Event), 1, _pFile);
 		fread(&CompleteEvent, sizeof(Event), 1, _pFile);
 		fread(&EndEvent, sizeof(Event), 1, _pFile);
+
+		// 벡터 크기 갱신
+		int frameCnt = 0;
+		fread(&frameCnt, sizeof(int), 1, _pFile);
+		ActionEvents.resize(frameCnt);
+
+		for (int i = 0; i < frameCnt; ++i)
+		{
+			// 인덱스가 마감인 경우 탈출
+			UINT idx = -1;
+			fread(&idx, sizeof(int), 1, _pFile);
+			if (idx == -1)
+				break;
+
+			// 찾은 숫자로 인덱싱해서 이벤트 등록
+			fread(&ActionEvents[idx].mEvent, sizeof(Event), 1, _pFile);
+		}
 		return this;
 	}	
 };

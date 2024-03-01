@@ -244,7 +244,8 @@ void CCamera::SortObject()
 						// Shader 의 Pov 에 따라서 인스턴싱 그룹을 분류
 						map<ULONG64, vector<tInstObj>>* pMap = NULL;
 						Ptr<CMaterial> pMtrl = pRenderCom->GetMaterial(iMtrl);
-						if (SHADER_DOMAIN::DOMAIN_DEFERRED == pShader->GetDomain())
+						if (SHADER_DOMAIN::DOMAIN_DEFERRED == pShader->GetDomain()
+							|| SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL == pShader->GetDomain())
 						{
 							pMap = &m_mapInstGroup_D;
 						}

@@ -7,7 +7,7 @@
 #include "CResMgr.h"
 #include "CMeshRender.h"
 
-CAnimClip::CAnimClip(bool _bEngine) : CRes(RES_TYPE::ANIMCLIP, _bEngine), m_Owner(nullptr), m_iFrameCount(30) { }
+CAnimClip::CAnimClip(bool _bEngine) : CRes(RES_TYPE::ANIMCLIP, _bEngine), m_iFrameCount(30) { }
 CAnimClip::~CAnimClip() { }
 
 void CAnimClip::MakeAnimClip(const wstring& _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _pMesh)

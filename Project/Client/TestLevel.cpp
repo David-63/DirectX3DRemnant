@@ -117,16 +117,16 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-		
+
 		// 인스턴싱 테스트
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		pObj = pMeshData->Instantiate();		
-		pObj->SetName(L"Player");
-		pObj->Transform()->SetDebugSphereUse(true);		
 		pObj = pMeshData->Instantiate();
 		pObj->AddComponent(new CTestScript());
 
+		pObj->SetName(L"Player");
+		pObj->Transform()->SetDebugSphereUse(true);
 		pObj->SetLayerIdx(2);
 		pObj->Transform()->SetRelativePos(Vec3(40.f, 100.f, 40.f));
 		pObj->AddComponent(new CRigidBody);
@@ -155,25 +155,16 @@ void CreateTestLevel()
 		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
 		pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
-
 		int num = pObj->RigidBody()->GetRigidActor()->getNbShapes();
 		pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
 		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
 		pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
 
-
 		pObj->AddComponent(new CCollider3D);
 		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 		pObj->RigidBody()->AddActorToLevel();
-		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 
-		//for (int i = 0; i < 10; ++i)
-		//{
-		//	pObj = pMeshData->Instantiate();
-		//	pObj->SetName(L"Monster");
-		//	pObj->Transform()->SetDebugSphereUse(true);
-		//	SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
-		//}
+		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 	}
 	//prefab
 	{
@@ -182,7 +173,6 @@ void CreateTestLevel()
 		CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
 		CGameObject* cloneObj2 = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
 		
-
 		SpawnGameObject(cloneObj, Vec3(300.f, 100.f, 400.f), L"Player");
 		SpawnGameObject(cloneObj2, Vec3(300.f, 100.f, 400.f), L"Player");*/
 	}

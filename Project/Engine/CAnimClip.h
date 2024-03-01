@@ -25,7 +25,6 @@ class CStructuredBuffer;
 class CAnimClip : public CRes
 {
 private:
-    CAnimator3D*                m_Owner;
     Ptr<CMesh>                  m_originMesh;
 
     // 애니메이션 정보

@@ -280,17 +280,30 @@ void CAnimator3D::changeAnimClip(wstring _strAnimName)
 		Reset();
 }
 
-
-
 void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 {
-	_clip->m_Owner = this;
+	// map에 이벤트가 있는지 확인
+	Events* events = FindEvents(_clip->GetKey());
+	// 없으면 clip에 대한 새 이벤트 생성 후 map에 추가하기
+	if (!events)
+	{
+		events = new Events();
+		int maxFrame = (m_CurAnimData.EndTime - m_CurAnimData.BeginTime) * 30 + 1;
+		events->ActionEvents.resize(maxFrame);
+		m_Events.insert(std::make_pair(_clip->GetKey(), events));
+	}
+
+	// 클립을 map에 추가하기	
 	m_mapAnim.insert(make_pair(_clip->GetKey(), _clip.Get()));
+
+	// 애니메이션 변경해주기
 	changeAnimClip(_clip->GetKey());
 
+	// 버퍼 새로 구성하기
 	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
 	m_vecFinalBoneMat.resize(iBoneCount);
 
+	// boneSocket 옵션
 	{
 		m_curBones = m_pCurrentAnim->GetOriginMesh()->GetMTBones();
 		//m_modifyIndices.push_back(33);	// 허리
@@ -328,17 +341,7 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 		{
 			m_modifyIndicesBuffer->Create(sizeof(UINT), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, m_modifyIndices.data());
 		}
-	}
-
-	Events* events = FindEvents(_clip->GetKey());
-	if (events)
-		return;
-
-	events = new Events();
-	// 최대 프레임수만큼
-	int maxFrame = (m_CurAnimData.EndTime - m_CurAnimData.BeginTime) * 30 + 1;
-	events->ActionEvents.resize(maxFrame);
-	m_Events.insert(std::make_pair(_clip->GetKey(), events));
+	}	
 }
 
 void CAnimator3D::CollectChildrenIndices(int current_index)
@@ -358,43 +361,46 @@ void CAnimator3D::CollectChildrenIndices(int current_index)
 
 void CAnimator3D::Remove(const wstring& _key)
 {
+	auto item = m_Events.find(_key);
+	if (item != m_Events.end())
+	{
+		delete item->second;
+		m_Events.erase(item);
+	}
 	m_mapAnim.erase(_key);
 	m_pCurrentAnim = nullptr;
 }
 
 void CAnimator3D::MakeAnimClip(string _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh)
 {
+	// 이름 중복 검사
 	wstring strPath = wstring(_strAnimName.begin(), _strAnimName.end());
-
 	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(strPath);
 	if (nullptr != pAnim)
 		return;
+	// 생성 및 리소스 등록
 	pAnim = new CAnimClip(false);
 	pAnim->MakeAnimClip(strPath, _clipIdx, _startTime, _endTime, _inMesh);
-
 	pAnim->SetKey(strPath);
 	pAnim->SetRelativePath(strPath);
-	CResMgr::GetInst()->AddRes<CAnimClip>(pAnim->GetKey(), pAnim.Get());
-
 	pAnim->SetAnimName(_strAnimName);
 	pAnim->Save(strPath);
+	CResMgr::GetInst()->AddRes<CAnimClip>(pAnim->GetKey(), pAnim.Get());
 
-
-	pAnim->m_Owner = this;
+	// map 에 클립 등록
 	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
 
-	// 이벤트 기초공사?
+	// 이벤트 체크
 	Events* events = FindEvents(strPath);
-	if (events)
-		return;
-
-	events = new Events();
-	// 최대 프레임수만큼
-	int maxFrame = (_endTime - _startTime) * 30 + 1;
-	events->ActionEvents.resize(maxFrame);
-	m_Events.insert(std::make_pair(strPath, events));
-
-
+	// 없으면 생성해서 map에 등록
+	if (!events)
+	{
+		events = new Events();
+		int maxFrame = (_endTime - _startTime) * 30 + 1;
+		events->ActionEvents.resize(maxFrame);
+		m_Events.insert(std::make_pair(strPath, events));
+	}
+	// 애니메이션 변경해줌
 	changeAnimClip(pAnim->GetKey());
 }
 
@@ -442,25 +448,21 @@ std::function<void()>& CAnimator3D::ActionEvent(const std::wstring& name, UINT i
 	return events->ActionEvents[index].mEvent;
 }
 
-
-
-
 void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {
 	// map 객체 저장
-	// vector 방식이라면 size 부터 저장해서 순회하며 SaveResRef 함수로 저장하는데	
 	UINT iEventsCount = (UINT)m_Events.size();
 	fwrite(&iEventsCount, sizeof(int), 1, _pFile);
 	for (auto& animEvent : m_Events)
 	{
-		// key
+		// key : 이건 문자열만 저장하니까 문제 없음
 		SaveWString(animEvent.first, _pFile);		
-		// value
+		// value : 여기서 문제 생긴듯?
 		animEvent.second->Save(_pFile);
 	}
 	
 	UINT iClipCount = (UINT)m_mapAnim.size();
-	fwrite(&iEventsCount, sizeof(int), 1, _pFile);
+	fwrite(&iClipCount, sizeof(int), 1, _pFile);
 	for (auto& animClip : m_mapAnim)
 	{
 		// key
@@ -484,8 +486,9 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 	Events* eventValue = new Events();
 	for (int curEvent = 0; curEvent < iEventsCount; ++curEvent)
 	{
-		LoadWString(eventKey, _pFile);		
-		m_Events.insert(make_pair(eventKey, eventValue->Load(_pFile)));
+		LoadWString(eventKey, _pFile);
+		eventValue->Load(_pFile);
+		m_Events.insert(make_pair(eventKey, eventValue));
 	}
 
 	m_mapAnim.clear();
