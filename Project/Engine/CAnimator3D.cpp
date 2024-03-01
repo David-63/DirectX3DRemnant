@@ -452,26 +452,24 @@ void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 {
 	// map 객체 저장
 	UINT iEventsCount = (UINT)m_Events.size();
-	fwrite(&iEventsCount, sizeof(int), 1, _pFile);
+	fwrite(&iEventsCount, sizeof(int), 1, _pFile);					// 이벤트맵 크기 저장
 	for (auto& animEvent : m_Events)
 	{
 		// key : 이건 문자열만 저장하니까 문제 없음
-		SaveWString(animEvent.first, _pFile);		
+		SaveWString(animEvent.first, _pFile);						// 이벤트 이름
 		// value : 여기서 문제 생긴듯?
-		animEvent.second->Save(_pFile);
+		animEvent.second->Save(_pFile);								// 이벤트 함수
 	}
 	
 	UINT iClipCount = (UINT)m_mapAnim.size();
-	fwrite(&iClipCount, sizeof(int), 1, _pFile);
+	fwrite(&iClipCount, sizeof(int), 1, _pFile);					// 애니메이션 개수 저장
 	for (auto& animClip : m_mapAnim)
 	{
 		// key
-		SaveWString(animClip.first, _pFile);
+		SaveWString(animClip.first, _pFile);						// 애니메이션 이름
 		// value
-		SaveResRef(animClip.second.Get(), _pFile);		
+		SaveResRef(animClip.second.Get(), _pFile);					// 애니메이션 포인터
 	}
-	
-
 	// 현 클립 정보 저장
 	SaveResRef(m_pCurrentAnim, _pFile);
 }
@@ -479,13 +477,14 @@ void CAnimator3D::SaveToLevelFile(FILE* _pFile)
 void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 {
 	// map 객체 로드
-	m_Events.clear();
+	m_Events.clear();												// 이벤트 맵 초기화
 	UINT iEventsCount;
-	fread(&iEventsCount, sizeof(int), 1, _pFile);
-	wstring eventKey;
-	Events* eventValue = new Events();
-	for (int curEvent = 0; curEvent < iEventsCount; ++curEvent)
+	fread(&iEventsCount, sizeof(int), 1, _pFile);					// 이벤트 맵 크기 가져옴
+	
+	for (int curEvent = 0; curEvent < iEventsCount; ++curEvent)		// 크기만큼 순회
 	{
+		wstring eventKey;
+		Events* eventValue = new Events();
 		LoadWString(eventKey, _pFile);
 		eventValue->Load(_pFile);
 		m_Events.insert(make_pair(eventKey, eventValue));
