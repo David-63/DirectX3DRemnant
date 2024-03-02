@@ -9,12 +9,11 @@ class CLight3D :
 {
 private:
     tLightInfo      m_LightInfo;
+    bool            m_isShowRange;
 
     Ptr<CMesh>      m_Mesh;
     Ptr<CMaterial>  m_Mtrl;
-
     UINT            m_LightIdx;
-    bool            m_isShowRange;
     CGameObject*    m_CamObj;
 
 public:

@@ -71,12 +71,21 @@ void CLandScape::CreateMesh()
 		}
 	}
 
-	Ptr<CMesh> pMesh = new CMesh;
-	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
-	SetMesh(pMesh);
 
+	Ptr<CMesh> pMesh = new CMesh(true);
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+
+	wstring meshName = L"LandMesh";
+	meshName += m_makeCnt;
+	CResMgr::GetInst()->AddRes(meshName, pMesh);
+
+	//pMesh->SetName(L"LandMesh");
+	//pMesh->SetKey(L"LandMesh");
+	//pMesh->SetRelativePath(L"LandMesh");
+	SetMesh(pMesh);
 	// Mesh 재설정하고 나면 재질이 날라가기 때문에 다시 설정
 	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
+	m_makeCnt++;
 }
 
 void CLandScape::CreateComputeShader()
@@ -100,7 +109,7 @@ void CLandScape::CreateComputeShader()
 	{
 		m_pCSRaycast = new CRaycastShader(32, 32, 1);
 		m_pCSRaycast->CreateComputeShader(L"shader\\raycast.fx", "CS_Raycast");
-		CResMgr::GetInst()->AddRes<CComputeShader>(L"RaycastShader", m_pCSHeightMap.Get());
+		CResMgr::GetInst()->AddRes<CComputeShader>(L"RaycastShader", m_pCSRaycast.Get());
 	}
 
 	// =======================

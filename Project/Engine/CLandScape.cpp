@@ -9,12 +9,15 @@
 #include "CStructuredBuffer.h"
 #include "CCamera.h"
 
+
+int CLandScape::m_makeCnt = 0;
+
 CLandScape::CLandScape() : CRenderComponent(COMPONENT_TYPE::LANDSCAPE)
 	, m_iFaceX(1), m_iFaceZ(1), m_vBrushScale(0.2f, 0.2f), m_eMod(LANDSCAPE_MOD::NONE)
 {
-	//SetDynamicShadow(false);
-	SetFrustumCheck(false);
 	init();
+	SetFrustumCheck(false);
+	SetFace(64, 64);
 }
 
 CLandScape::~CLandScape()
@@ -166,4 +169,63 @@ void CLandScape::Raycasting()
 
 	//m_pCrossBuffer->GetData(&out);
 	//int a = 0;
+}
+
+void CLandScape::SaveToLevelFile(FILE* _File)
+{
+	CRenderComponent::SaveToLevelFile(_File);
+	fwrite(&m_iFaceX, sizeof(UINT), 1, _File);
+	fwrite(&m_iFaceZ, sizeof(UINT), 1, _File);
+	fwrite(&m_vBrushScale, sizeof(Vec2), 1, _File);
+	SaveResRef(m_pBrushTex.Get(), _File);
+	SaveWString(m_pCSRaycast.Get()->GetKey(), _File);
+	SaveWString(m_pCSHeightMap.Get()->GetKey(), _File);
+	SaveResRef(m_HeightMap.Get(), _File);
+	SaveWString(m_pCSWeightMap.Get()->GetKey(), _File);
+
+	fwrite(&m_iWeightWidth, sizeof(UINT), 1, _File);
+	fwrite(&m_iWeightHeight, sizeof(UINT), 1, _File);
+	fwrite(&m_iWeightIdx, sizeof(UINT), 1, _File);
+	fwrite(&m_eMod, sizeof(LANDSCAPE_MOD), 1, _File);
+	SaveResRef(m_pTileArrTex.Get(), _File);
+}
+
+void CLandScape::LoadFromLevelFile(FILE* _File)
+{
+	CRenderComponent::LoadFromLevelFile(_File);
+	fread(&m_iFaceX, sizeof(UINT), 1, _File);
+	fread(&m_iFaceZ, sizeof(UINT), 1, _File);
+	fread(&m_vBrushScale, sizeof(Vec2), 1, _File);
+	LoadResRef(m_pBrushTex, _File);
+
+
+
+	wstring CSRaycastName;
+	LoadWString(CSRaycastName, _File);
+	m_pCSRaycast = (CRaycastShader*)CResMgr::GetInst()->FindRes<CComputeShader>(CSRaycastName).Get();
+
+	wstring CSHeightMapName;
+	LoadWString(CSHeightMapName, _File);
+	m_pCSHeightMap = (CHeightMapShader*)CResMgr::GetInst()->FindRes<CComputeShader>(CSHeightMapName).Get();
+
+	LoadResRef(m_HeightMap, _File);
+	
+	wstring CSWeightMapName;
+	LoadWString(CSWeightMapName, _File);
+	m_pCSWeightMap = (CWeightMapShader*)CResMgr::GetInst()->FindRes<CComputeShader>(CSWeightMapName).Get();
+
+
+	fread(&m_iWeightWidth, sizeof(UINT), 1, _File);
+	fread(&m_iWeightHeight, sizeof(UINT), 1, _File);
+	fread(&m_iWeightIdx, sizeof(UINT), 1, _File);
+	fread(&m_eMod, sizeof(LANDSCAPE_MOD), 1, _File);
+	LoadResRef(m_pTileArrTex, _File);
+
+	if (!m_pCrossBuffer)
+		m_pCrossBuffer = new CStructuredBuffer;
+	m_pCrossBuffer->Create(sizeof(tRaycastOut), 1, SB_TYPE::READ_WRITE, true);
+
+	if (!m_pWeightMapBuffer)
+		m_pWeightMapBuffer = new CStructuredBuffer;
+	m_pWeightMapBuffer->Create(sizeof(tWeight_4), m_iWeightWidth * m_iWeightHeight, SB_TYPE::READ_WRITE, false);
 }

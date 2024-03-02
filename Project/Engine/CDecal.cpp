@@ -50,22 +50,6 @@ void CDecal::render(UINT _iSubset)
 	render();
 }
 
-void CDecal::SaveToLevelFile(FILE* _File)
-{
-	CRenderComponent::SaveToLevelFile(_File);
-	SaveResRef(m_DecalTex.Get(), _File);
-	fwrite(&m_bDeferred, sizeof(bool), 1, _File);
-	fwrite(&m_bEmissive, sizeof(bool), 1, _File);
-}
-
-void CDecal::LoadFromLevelFile(FILE* _File)
-{
-	CRenderComponent::LoadFromLevelFile(_File);
-	LoadResRef(m_DecalTex, _File);
-	fread(&m_bDeferred, sizeof(bool), 1, _File);
-	fread(&m_bEmissive, sizeof(bool), 1, _File);
-}
-
 
 
 void CDecal::SetDeferredDecal(bool _bDeferred)
@@ -83,4 +67,22 @@ void CDecal::SetDeferredDecal(bool _bDeferred)
 
 	GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex"));
 
+}
+
+
+
+void CDecal::SaveToLevelFile(FILE* _File)
+{
+	CRenderComponent::SaveToLevelFile(_File);
+	SaveResRef(m_DecalTex.Get(), _File);
+	fwrite(&m_bDeferred, sizeof(bool), 1, _File);
+	fwrite(&m_bEmissive, sizeof(bool), 1, _File);
+}
+
+void CDecal::LoadFromLevelFile(FILE* _File)
+{
+	CRenderComponent::LoadFromLevelFile(_File);
+	LoadResRef(m_DecalTex, _File);
+	fread(&m_bDeferred, sizeof(bool), 1, _File);
+	fread(&m_bEmissive, sizeof(bool), 1, _File);
 }

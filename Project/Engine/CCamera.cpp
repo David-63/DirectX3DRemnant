@@ -59,6 +59,13 @@ CCamera::CCamera(const CCamera& _Other)
 	, m_OrthoWidth(_Other.m_OrthoWidth)
 	, m_OrthoHeight(_Other.m_OrthoHeight)
 {
+	SetName(L"Camera");
+
+	Vec2 vRenderResol = CDevice::GetInst()->GetRenderResolution();
+	m_fAspectRatio = vRenderResol.x / vRenderResol.y;
+
+	m_OrthoWidth = vRenderResol.x;
+	m_OrthoHeight = vRenderResol.y;
 }
 
 CCamera::~CCamera()
@@ -237,7 +244,8 @@ void CCamera::SortObject()
 						// Shader 의 Pov 에 따라서 인스턴싱 그룹을 분류
 						map<ULONG64, vector<tInstObj>>* pMap = NULL;
 						Ptr<CMaterial> pMtrl = pRenderCom->GetMaterial(iMtrl);
-						if (SHADER_DOMAIN::DOMAIN_DEFERRED == pShader->GetDomain())
+						if (SHADER_DOMAIN::DOMAIN_DEFERRED == pShader->GetDomain()
+							|| SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL == pShader->GetDomain())
 						{
 							pMap = &m_mapInstGroup_D;
 						}
@@ -831,24 +839,30 @@ void CCamera::render_ui()
 void CCamera::SaveToLevelFile(FILE* _File)
 {
 	fwrite(&m_Frustum, sizeof(CFrustum), 1, _File);
+	fwrite(&m_ray, sizeof(tRay), 1, _File);
+	fwrite(&m_iCamIdx, sizeof(int), 1, _File);
+	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
+	fwrite(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fwrite(&m_fAspectRatio, sizeof(float), 1, _File);
 	fwrite(&m_fScale, sizeof(float), 1, _File);
 	fwrite(&m_Far, sizeof(float), 1, _File);
-	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
-	fwrite(&m_iLayerMask, sizeof(UINT), 1, _File);
-	fwrite(&m_iCamIdx, sizeof(int), 1, _File);
-
+	fwrite(&m_Fov, sizeof(float), 1, _File);
+	fwrite(&m_OrthoWidth, sizeof(float), 1, _File);
+	fwrite(&m_OrthoHeight, sizeof(float), 1, _File);
 }
 
 void CCamera::LoadFromLevelFile(FILE* _File)
 {
 	fread(&m_Frustum, sizeof(CFrustum), 1, _File);
 	m_Frustum.SetCamera(this);
-
+	fread(&m_ray, sizeof(tRay), 1, _File);
+	fread(&m_iCamIdx, sizeof(int), 1, _File);
+	fread(&m_ProjType, sizeof(UINT), 1, _File);
+	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
 	fread(&m_fAspectRatio, sizeof(float), 1, _File);
 	fread(&m_fScale, sizeof(float), 1, _File);
 	fread(&m_Far, sizeof(float), 1, _File);
-	fread(&m_ProjType, sizeof(UINT), 1, _File);
-	fread(&m_iLayerMask, sizeof(UINT), 1, _File);
-	fread(&m_iCamIdx, sizeof(int), 1, _File);
+	fread(&m_Fov, sizeof(float), 1, _File);
+	fread(&m_OrthoWidth, sizeof(float), 1, _File);
+	fread(&m_OrthoHeight, sizeof(float), 1, _File);
 }

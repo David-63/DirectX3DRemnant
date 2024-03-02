@@ -2,7 +2,6 @@
 #include "CResMgr.h"
 #include "CPathMgr.h"
 
-
 CResMgr::CResMgr()
 	: m_Changed(false)
 {
@@ -158,14 +157,11 @@ void CResMgr::SavePrefab(CGameObject* _obj, const wstring& _strRelativePath)
 	Ptr<CPrefab> pref = new CPrefab;
 
 	pref->RegisterProtoObject(_obj);
-	pref->SetRelativePath(_strRelativePath);
 
 	wstring strPath = CPathMgr::GetInst()->GetContentPath();
 	strPath += _strRelativePath;
 	pref->Save(strPath);
-
 	m_arrRes[(UINT)RES_TYPE::PREFAB].insert(make_pair(_strRelativePath, pref.Get()));
-
 	pref->RegisterProtoObject(nullptr);
 }
 

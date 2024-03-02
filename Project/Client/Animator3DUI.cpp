@@ -27,18 +27,20 @@ int Animator3DUI::render_update()
 	ImGui::Separator();
 
 	// 속도 조절
-	float fTimeScale = CTimeMgr::GetInst()->GetTimeScale();
+	/*float fTimeScale = CTimeMgr::GetInst()->GetTimeScale();
 	ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "Change Time Scale");
 
 	ImGui::SliderFloat("Scale", &fTimeScale, 0.01f, 5.49f, "ratio = %.2f");
 	CTimeMgr::GetInst()->SetTimeScale(fTimeScale);
-	ImGui::Separator();
+	ImGui::Separator();*/
 
 	// ====================================================================================================================
 
-
+	// animator 멤버 가져오기
 	bool repeat = GetTarget()->Animator3D()->IsRepeat();
 	map<wstring, Ptr<CAnimClip>> anims = GetTarget()->Animator3D()->GetAnims();
+
+	// map 리스트 세팅
 	static vector<const char*> animList;
 	static int item_current_idx = 0; // Here we store our selection data as an index.
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> charToWstring;
@@ -50,8 +52,7 @@ int Animator3DUI::render_update()
 		}
 		const char* combo_preview_value = animList[item_current_idx];  // Pass in the preview value visible before opening the combo (it could be anything)	
 
-
-		// 필요한 변수 anims
+		// map에서 clip 고르게 하기
 		ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "AnimClip List");
 		ImGui::Separator();
 		if (ImGui::BeginCombo("Select", combo_preview_value))
@@ -72,6 +73,7 @@ int Animator3DUI::render_update()
 			ImGui::EndCombo();
 		}
 	}
+	ImGui::Separator();
 
 	ImGui::Text("Add");
 	ImGui::SameLine();
@@ -103,19 +105,12 @@ int Animator3DUI::render_update()
 
 	int maxBone = GetTarget()->Animator3D()->GetCurMTBoneCount();
 	bool modifyUse =  GetTarget()->Animator3D()->GetModifyUse();
-	int modifyIdx = GetTarget()->Animator3D()->GetModifyIdx();
 	float modifyRotScalar = GetTarget()->Animator3D()->GetModifyRotScalar();
 
 	ImGui::Checkbox("ModifyUse", &modifyUse);
 	GetTarget()->Animator3D()->SetModifyUse(modifyUse);
 	if (modifyUse)
 	{
-
-		ImGui::Text("Bone Index");
-		ImGui::SameLine();
-		ImGui::DragInt("##Modify Index", &modifyIdx, 1, 0, maxBone);
-		GetTarget()->Animator3D()->SetModifyIdx(modifyIdx);
-
 		ImGui::Text("RotScalar");
 		ImGui::SameLine();
 		ImGui::DragFloat("##Modify RotScalar", &modifyRotScalar);
@@ -153,7 +148,7 @@ int Animator3DUI::render_update()
 	// animclip//AnimTest
 
 	// 애니메이션 생성
-	static char inputAnimName[128] = "Write AnimName";
+	static char inputAnimName[128] = "Write Name";
 	static wstring inputClipName;
 	static float inputStartTime = 0.001f;
 	static float inputEndTime = 0.001f;
@@ -180,7 +175,6 @@ int Animator3DUI::render_update()
 			// 항목 선택시 호출받을 델리게이트 등록
 			pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&Animator3DUI::SelectMesh);
 		}
-
 
 		// MT Datas
 		ImGui::Text("MT ClipCount %d", mtClipCount);
@@ -212,7 +206,7 @@ int Animator3DUI::render_update()
 
 
 			if (nullptr != m_SelectMesh)
-				GetTarget()->Animator3D()->NewAnimClip(outPath, selectClipIdx, inputStartTime, inputEndTime, m_SelectMesh);
+				GetTarget()->Animator3D()->MakeAnimClip(outPath, selectClipIdx, inputStartTime, inputEndTime, m_SelectMesh);
 		}
 
 		ImGui::TreePop();
@@ -227,6 +221,7 @@ int Animator3DUI::render_update()
 
 	// Cur Anim Info
 	CAnimClip* curAnim = GetTarget()->Animator3D()->GetCurAnim(); // Current AnimClip
+	tAnim3DData curAnimData = GetTarget()->Animator3D()->GetCurAnimData(); // Current AnimClip
 	float fFinishTime = -1;
 	float fCurTime = -1;
 	int curFrame = -1;
@@ -237,16 +232,16 @@ int Animator3DUI::render_update()
 
 	if (curAnim)
 	{
-		fFinishTime = curAnim->GetFinishTime();
-		fCurTime = curAnim->GetCurTime();
-		curFrame = curAnim->GetCurFrame();
+		fFinishTime = GetTarget()->Animator3D()->GetFinishTime();		
+		fCurTime = GetTarget()->Animator3D()->GetCurTime();
+		curFrame = GetTarget()->Animator3D()->GetCurFrame();
 	}
 
 	static float v2EditTime[2] = { 0.f, 0.f };
 	if (ImGui::Button("Play"))
 	{
 		if (curAnim)
-			GetTarget()->Animator3D()->Play(charToWstring.from_bytes(animList[item_current_idx]), repeat);
+			GetTarget()->Animator3D()->Play(curAnim->GetKey(), repeat);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Stop"))
@@ -271,33 +266,13 @@ int Animator3DUI::render_update()
 	float fEndTime = -1;
 	if (curAnim)
 	{
-		curClipIdx = curAnim->GetClipIdx();
 		AnimClips = curAnim->GetMTAnimClips();
+		curClipIdx = curAnimData.AnimClipIdx;
 		iClipCount = AnimClips.size();
 		curTimeLength = static_cast<float>(AnimClips.at(curClipIdx).dTimeLength);
 		curFrameLength = AnimClips.at(curClipIdx).iFrameLength;
-		fBeginTime = curAnim->GetBeginTime();
-		fEndTime = curAnim->GetEndTime();
-	}
-	
-	 
-	
-
-	if (ImGui::TreeNode("Edit Clip"))
-	{
-		ImGui::Text("AnimClipCount	  %i", iClipCount);
-		ImGui::Text("TimeLength  %.1f", curTimeLength);
-		ImGui::Text("FrameLenght %i", curFrameLength);
-		ImGui::Text("Begin To End %.1f - %.1f", fBeginTime, fEndTime);
-
-		ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), "Edit Interface");
-		ImGui::DragFloat2("Edit Time", v2EditTime, 0.01f, 0.0f, curTimeLength, "%.1f");
-		if (ImGui::Button("Edit Now!"))
-		{
-			if (curAnim)
-				curAnim->Edit(v2EditTime[0], v2EditTime[1]);
-		}
-		ImGui::TreePop();
+		fBeginTime = curAnimData.BeginTime;
+		fEndTime = curAnimData.EndTime;
 	}
 	
 	ImGui::Separator();

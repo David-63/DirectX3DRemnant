@@ -6,8 +6,7 @@ class CCamera : public CComponent
 {
 private:
     CFrustum                m_Frustum;
-    tRay                    m_ray;      // 마우스 방향을 향하는 직선
-
+    tRay                    m_ray;              // 마우스 방향을 향하는 직선
     int                     m_iCamIdx;          // 카메라 우선순위
     PROJ_TYPE               m_ProjType;
     UINT                    m_iLayerMask;
@@ -23,8 +22,6 @@ private:
     Matrix                  m_matProj;
     Matrix                  m_matProjInv;
 
-    //vector<CGameObject*>              m_vecDeferred;
-    //vector<CGameObject*>              m_vecDeferredDecal;
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_D;	    // Deferred
     map<ULONG64, vector<tInstObj>>		m_mapInstGroup_F;	    // Foward ( Opaque, Mask )	
     map<INT_PTR, vector<tInstObj>>		m_mapSingleObj;		    // Single Object
