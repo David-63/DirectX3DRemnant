@@ -8,6 +8,7 @@
 #include <Engine\CGameObject.h>
 #include <Engine\components.h>
 #include <Engine\CScript.h>
+#include <Engine\Physics.h>
 
 #include <Script\CScriptMgr.h>
 
@@ -18,12 +19,12 @@ int CLevelSaveLoad::SaveLevel(const wstring& _LevelPath, CLevel* _Level)
 	if (_Level->GetState() != LEVEL_STATE::STOP)
 		return E_FAIL;
 
-	wstring strPath = CPathMgr::GetInst()->GetContentPath();
-	strPath += _LevelPath;
+	//wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	//strPath += _LevelPath;
 
 	FILE* pFile = nullptr;
 
-	_wfopen_s(&pFile, strPath.c_str(), L"wb");
+	_wfopen_s(&pFile, _LevelPath.c_str(), L"wb");
 
 	if (nullptr == pFile)	
 		return E_FAIL;
@@ -114,23 +115,25 @@ int CLevelSaveLoad::SaveGameObject(CGameObject* _Object, FILE* _File)
 
 CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 {
-	wstring strPath = CPathMgr::GetInst()->GetContentPath();
-	strPath += _LevelPath;
+	/*wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	strPath += _LevelPath;*/
 
 	FILE* pFile = nullptr;
 
-	_wfopen_s(&pFile, strPath.c_str(), L"rb");
+	_wfopen_s(&pFile, _LevelPath.c_str(), L"rb");
 
 	if (nullptr == pFile)
 		return nullptr;
 
 	CLevel* NewLevel = new CLevel;
 
+	//피직스씬 초기화
+	Physics::GetInst()->ReleaseAndCreatePxScene();
+
 	// 레벨 이름
 	wstring strLevelName;
 	LoadWString(strLevelName, pFile);
 	NewLevel->SetName(strLevelName);
-
 
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
@@ -149,6 +152,25 @@ CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 		for (size_t j = 0; j < objCount; ++j)
 		{
 			CGameObject* pNewObj = LoadGameObject(pFile);
+			if (pNewObj->RigidBody())
+			{
+				pNewObj->Transform()->SetRelativePos(pNewObj->Transform()->GetRelativePos());
+				pNewObj->SetLayerIdx(i);
+
+
+				ACTOR_TYPE type = pNewObj->RigidBody()->GetActorType();
+				pNewObj->RigidBody()->SetPhysical(type);
+				if (type == ACTOR_TYPE::Dynamic)
+				{
+					pNewObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+					pNewObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+					pNewObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+				}
+
+
+				pNewObj->RigidBody()->AddActorToLevel();
+			}
+
 			NewLevel->AddGameObject(pNewObj, i, false);
 		}
 	}

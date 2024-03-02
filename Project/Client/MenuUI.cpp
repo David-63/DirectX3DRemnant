@@ -19,6 +19,7 @@
 
 
 
+
 MenuUI::MenuUI()
 	: UI("##Menu")
 {
@@ -45,20 +46,106 @@ int MenuUI::render_update()
         {
             if (ImGui::MenuItem("Save Level"))
             {
+
+             wchar_t szName[256] = {};
+
+              OPENFILENAME ofn = {};
+              ofn.lStructSize = sizeof(OPENFILENAME);
+              ofn.hwndOwner = CEngine::GetInst()->GetMainWnd();
+              ofn.lpstrFile = szName;
+              ofn.nMaxFile = sizeof(szName);
+              ofn.lpstrFilter = L"ALL\0*.*\0Lv\0*.lv\0";
+              ofn.nFilterIndex = 0;
+              ofn.lpstrFileTitle = nullptr;
+              ofn.nMaxFileTitle = 0;
+
+              wstring strTileFolder = CPathMgr::GetInst()->GetContentPath();
+              strTileFolder += L"Level";
+
+              ofn.lpstrInitialDir = strTileFolder.c_str();
+              ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+              // Modal
+              if (GetSaveFileName(&ofn))
+              {
+
+                  CLevelSaveLoad::SaveLevel(szName, CLevelMgr::GetInst()->GetCurLevel());
+
+                  // info에 파일명 띄워주기 위해서 경로 저장
+                //  CLevelMgr::GetInst()->SetCurLevelPath(szName);
+              }
+
+              // Outliner 갱신
+              OutlinerUI* pUI = (OutlinerUI*)ImGuiMgr::GetInst()->FindUI("##Outliner");
+              pUI->ResetOutliner();
+
+              // InspectorUI
+              InspectorUI* Inspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
+              Inspector->SetTargetObject(nullptr);     
+        
+                // ===== 원본
                 // Level 저장
-                CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());                
+               // CLevelSaveLoad::SaveLevel(L"Level\\TestLevel.lv", CLevelMgr::GetInst()->GetCurLevel());                
             }
 
             if (ImGui::MenuItem("Load Level"))
             {
-                // Level 불러오기
-                CLevel* pLoadedLevel = CLevelSaveLoad::LoadLevel(L"Level\\TestLevel.lv");
 
-                tEvent evn = {};
-                evn.Type = EVENT_TYPE::LEVEL_CHANGE;
-                evn.wParam = (DWORD_PTR)pLoadedLevel;
+                 wchar_t szName[256] = {};
 
-                CEventMgr::GetInst()->AddEvent(evn);
+                 OPENFILENAME ofn = {};
+
+                 ofn.lStructSize = sizeof(OPENFILENAME);
+                 ofn.hwndOwner = CEngine::GetInst()->GetMainWnd();
+                 ofn.lpstrFile = szName;
+                 ofn.nMaxFile = sizeof(szName);
+
+                 //ofn.lpstrFilter는 파일 대화 상자에서 파일 유형 필터를 설정하는 데 사용됩니다.
+                 // 이 필터는 사용자가 파일 대화 상자에서 특정 유형의 파일만 표시하도록 할 수 있게 해줍니다.
+                 ofn.lpstrFilter = L"ALL\0*.*\0Lv\0*.lv\0";
+                 ofn.nFilterIndex = 0;
+                 ofn.lpstrFileTitle = nullptr;
+                 ofn.nMaxFileTitle = 0;
+
+                 wstring strTileFolder = CPathMgr::GetInst()->GetContentPath();
+                 strTileFolder += L"Level";
+
+                 ofn.lpstrInitialDir = strTileFolder.c_str();
+                 ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+                 // Modal
+                 if (GetOpenFileName(&ofn))
+                 {
+                     CLevel* pLoadLevel = CLevelSaveLoad::LoadLevel(szName);
+
+                     // info에 현재 씬 불러오기 위해서 해둠 
+                   //  CLevelMgr::GetInst()->SetCurLevelPath(szName);
+
+                     tEvent evn = {};
+                     evn.Type = EVENT_TYPE::LEVEL_CHANGE;
+                     evn.wParam = (DWORD_PTR)pLoadLevel;
+
+                     CEventMgr::GetInst()->AddEvent(evn);
+                 }
+
+                 // Outliner 갱신
+                 OutlinerUI* pUI = (OutlinerUI*)ImGuiMgr::GetInst()->FindUI("##Outliner");
+                 pUI->ResetOutliner();
+
+                 // InspectorUI
+                 InspectorUI* Inspector = (InspectorUI*)ImGuiMgr::GetInst()->FindUI("##Inspector");
+                 Inspector->SetTargetObject(nullptr);
+                 // 
+                 
+                //// ====== 원본
+                //// Level 불러오기
+                //CLevel* pLoadedLevel = CLevelSaveLoad::LoadLevel(L"Level\\TestLevel.lv");
+
+                //tEvent evn = {};
+                //evn.Type = EVENT_TYPE::LEVEL_CHANGE;
+                //evn.wParam = (DWORD_PTR)pLoadedLevel;
+
+                //CEventMgr::GetInst()->AddEvent(evn);
             }
 
             ImGui::EndMenu();

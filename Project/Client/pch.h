@@ -5,6 +5,7 @@
 
 #include <Engine\global.h>
 #include <Engine\CEngine.h>
+#include <commdlg.h>
 
 
 // Engine Library
