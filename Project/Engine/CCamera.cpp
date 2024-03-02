@@ -200,13 +200,17 @@ void CCamera::SortObject()
 {
 	clear();
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
+
+	// 레이어 수 만큼 반벅
 	for (UINT layerIdx = 0; layerIdx < MAX_LAYER; ++layerIdx)
 	{
+		// 카메라에 출력되는 레이어만 유효
 		if (m_iLayerMask & (1 << layerIdx))
 		{
 			CLayer* pLayer = pCurLevel->GetLayer(layerIdx);
 			const vector<CGameObject*>& vecObject = pLayer->GetObjects();
 
+			// 레이어 안의 오브젝트 수 만큼 반복
 			for (size_t objIdx = 0; objIdx < vecObject.size(); ++objIdx)
 			{
 				CRenderComponent* pRenderCom = vecObject[objIdx]->GetRenderComponent();
@@ -220,6 +224,7 @@ void CCamera::SortObject()
 					&& false == m_Frustum.FrustumCheckBound(objPos, radius))
 					continue;
 
+				// 머티리얼 수 만큼 반복
 				UINT iMtrlCount = pRenderCom->GetMtrlCount();
 				for (UINT iMtrl = 0; iMtrl < iMtrlCount; ++iMtrl)
 				{
@@ -231,21 +236,29 @@ void CCamera::SortObject()
 					}
 
 					// 쉐이더 도메인에 따른 분류					
-					SHADER_DOMAIN eDomain = pRenderCom->GetMaterial(iMtrl)->GetShader()->GetDomain();
 					Ptr<CGraphicsShader> pShader = pRenderCom->GetMaterial(iMtrl)->GetShader();
-
+					SHADER_DOMAIN eDomain = pShader->GetDomain();
 					switch (eDomain)
 					{
-					case SHADER_DOMAIN::DOMAIN_DEFERRED:
 					case SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL:
+					case SHADER_DOMAIN::DOMAIN_DECAL:
+						if (SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL == pShader->GetDomain())
+						{
+							m_vecDecal_D.push_back(vecObject[objIdx]);
+						}
+						else
+						{
+							m_vecDecal.push_back(vecObject[objIdx]);
+						}
+						break;
+					case SHADER_DOMAIN::DOMAIN_DEFERRED:
 					case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					case SHADER_DOMAIN::DOMAIN_MASK:
 					{
 						// Shader 의 Pov 에 따라서 인스턴싱 그룹을 분류
 						map<ULONG64, vector<tInstObj>>* pMap = NULL;
 						Ptr<CMaterial> pMtrl = pRenderCom->GetMaterial(iMtrl);
-						if (SHADER_DOMAIN::DOMAIN_DEFERRED == pShader->GetDomain()
-							|| SHADER_DOMAIN::DOMAIN_DEFERRED_DECAL == pShader->GetDomain())
+						if (SHADER_DOMAIN::DOMAIN_DEFERRED == pShader->GetDomain())
 						{
 							pMap = &m_mapInstGroup_D;
 						}
@@ -278,9 +291,7 @@ void CCamera::SortObject()
 						}
 					}
 					break;
-					case SHADER_DOMAIN::DOMAIN_DECAL:
-						m_vecDecal.push_back(vecObject[objIdx]);
-						break;
+					
 					case SHADER_DOMAIN::DOMAIN_TRANSPARENT:
 						m_vecTransparent.push_back(vecObject[objIdx]);
 						break;
@@ -412,7 +423,7 @@ void CCamera::render()
 	mergeRender();		//					| MRT::SWAPCHAINrendering
 
 	render_forward();	
-	render_decal();
+	render_forward_Decal();
 	render_transparent();
 
 	render_postprocess();
@@ -526,8 +537,7 @@ void CCamera::clear()
 	for (auto& pair : m_mapInstGroup_F)
 		pair.second.clear();
 
-	m_vecOpaque.clear();
-	m_vecMask.clear();
+	m_vecDecal_D.clear();
 	m_vecDecal.clear();
 	m_vecTransparent.clear();
 	m_vecPost.clear();
@@ -756,22 +766,39 @@ void CCamera::render_forward()
 	}
 }
 
+void CCamera::render_deferred_Decal()
+{
+	updateMatrix();
+
+	for (size_t i = 0; i < m_vecDecal_D.size(); ++i)
+	{
+		m_vecDecal_D[i]->render();
+	}
+}
+
+void CCamera::render_forward_Decal()
+{
+	updateMatrix();
+
+	for (size_t i = 0; i < m_vecDecal.size(); ++i)
+	{
+		m_vecDecal[i]->render();
+	}
+}
+
 void CCamera::geometryRender()
 {
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 	render_deferred();
 
 	// decal은 다른 객체들이 그려진 다음에 그려야함
-	/*CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED_DECAL)->OMSet();
-	for (size_t i = 0; i < m_vecDeferredDecal.size(); ++i)
-	{
-		m_vecDeferredDecal[i]->render();
-	}*/
+	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED_DECAL)->OMSet(true);
+	render_deferred_Decal();
 }
 
 void CCamera::lightRender()
 {
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet(false);
+	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::LIGHT)->OMSet();
 
 	const vector<CLight3D*>& vecLight3D = CRenderMgr::GetInst()->GetLight3D();
 	for (size_t i = 0; i < vecLight3D.size(); ++i)
@@ -797,15 +824,6 @@ void CCamera::mergeRender()
 	}
 	pMtrl->UpdateData();
 	pRectMesh->render(0);
-}
-
-void CCamera::render_decal()
-{
-	updateMatrix();
-	for (size_t i = 0; i < m_vecDecal.size(); ++i)
-	{
-		m_vecDecal[i]->render();
-	}
 }
 
 void CCamera::render_transparent()
