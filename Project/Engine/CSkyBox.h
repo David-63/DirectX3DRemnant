@@ -9,13 +9,15 @@ enum class SKYBOX_TYPE
     End,
 };
 
+// 목표
+// 스카이박스 프리팹으로 만들기
+
 class CSkyBox :
     public CRenderComponent
 {
 private:
     SKYBOX_TYPE     m_Type;
     Ptr<CTexture>   m_SkyBoxTex;
-
 
 public:
     SKYBOX_TYPE GetSkyBoxType() { return m_Type; }
