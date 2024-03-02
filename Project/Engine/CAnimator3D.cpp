@@ -35,11 +35,22 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	m_BoneFinalMatBuffer = new CStructuredBuffer();
 	m_modifyIndicesBuffer = new CStructuredBuffer();
 
-	// 이벤트랑 클립 정보 긁어오기
-	m_Events = _origin.m_Events;
-	m_mapAnim.insert(_origin.m_mapAnim.begin(), _origin.m_mapAnim.end());
-	// 현재 애니메이션 세팅해주기
-	changeAnimClip(_origin.m_pCurrentAnim->GetKey());
+
+	if (_origin.m_Events.empty())
+	{
+		m_Events = _origin.m_Events;
+	}
+
+	if (_origin.m_mapAnim.empty())
+	{
+		m_mapAnim.insert(_origin.m_mapAnim.begin(), _origin.m_mapAnim.end());
+	}
+
+	if (_origin.m_pCurrentAnim)
+	{
+		changeAnimClip(_origin.m_pCurrentAnim->GetKey());
+	}
+
 	// 버퍼 생성해주기?
 	m_modifyIndices = _origin.m_modifyIndices;
 	if (m_modifyIndicesBuffer->GetElementCount() != m_modifyIndices.size())
