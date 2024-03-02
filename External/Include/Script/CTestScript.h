@@ -6,8 +6,7 @@ class CTestScript :
 {
 private:
     Vec3 pivot;
-    Vec3 mDir;
-    bool mWallCol;
+    Vec3 vMoveVector;
 
 public:
     virtual void begin() override;
@@ -18,23 +17,7 @@ public:
     virtual void EndOverlap(CCollider3D* _Other) override;
 
 public:
-    void Start()
-    {
-        int a = 0;
-    }
-    void Complete()
-    {
-        int a = 0;
-    }
-    
-    void End()
-    {
-        int a = 0;
-    }
-    void Action()
-    {
-        int a = 0;
-    }
+   
 
 public:
     virtual void SaveToLevelFile(FILE* _File) override;

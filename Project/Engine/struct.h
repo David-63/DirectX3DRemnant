@@ -346,7 +346,7 @@ extern tGlobal GlobalData;
 
 struct tMassProperties
 {
-	tMassProperties(float _staticFriction = 0.f, float _dynamicFriction = 0.f, float _restitution = 0.01f)
+	tMassProperties(float _staticFriction = 0.75f, float _dynamicFriction = 0.55f, float _restitution = 0.603f)
 		: staticFriction(_staticFriction)
 		, dynamicFriction(_dynamicFriction)
 		, restitution(_restitution)
@@ -431,6 +431,7 @@ struct tShapeInfo
 		, massProperties(tMassProperties())
 		, filterData{}
 		, offset(0.f,0.f,0.f)
+		, isPlayer(false)
 	{}
 
 	GEOMETRY_TYPE eGeomType;
@@ -438,7 +439,7 @@ struct tShapeInfo
 	tMassProperties massProperties;
 	physx::PxFilterData filterData;
 	Vector3 offset;
-	//Geometries* pGeometries;
+	bool isPlayer;
 };
 
 struct tRayCastInfo

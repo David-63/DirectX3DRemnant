@@ -2,9 +2,10 @@
 #include "RigidBodyUI.h"
 
 
-RigidBodyUI::RigidBodyUI() : ComponentUI("##RigidBodyUI", COMPONENT_TYPE::RIGIDBODY)
+RigidBodyUI::RigidBodyUI() : ComponentUI("##RigidBodyUI", COMPONENT_TYPE::RIGIDBODY) 
 {
 	SetName("RigidBodyUI");
+	
 }
 
 RigidBodyUI::~RigidBodyUI()
@@ -16,23 +17,34 @@ int RigidBodyUI::render_update()
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
 
+	UINT id = GetTarget()->GetID();
+
+	if (id != m_TargetID)
+	{
+		m_TargetID = id;
+		m_bSelect = false;
+	}
+
 	//actor Type
 	{
-		UINT curIdx = (UINT)GetTarget()->RigidBody()->GetActorType();
-
+		mCurIdx = (UINT)GetTarget()->RigidBody()->GetActorType();
+		
 		ImGui::TextColored(ImVec4(0.10f, 0.80f, 0.30f, 1.0f), "Actor Type");
 
 		const char* ActorTypes[3] = { "Static", "Dynamic", "Kinetic" };
 
+		if(!m_bSelect)
+			mSelectIdx = mCurIdx;
 
-		if (ImGui::BeginCombo("Select", ActorTypes[curIdx]))
+		if (ImGui::BeginCombo("Select", ActorTypes[mSelectIdx]))
 		{
 			for (int idx = 0; idx < IM_ARRAYSIZE(ActorTypes); idx++)
 			{
-				const bool is_selected = (curIdx == idx);
+				const bool is_selected = (mSelectIdx == idx);
 				if (ImGui::Selectable(ActorTypes[idx], is_selected))
 				{
-					curIdx = idx;
+					mSelectIdx = idx;
+					m_bSelect = true;
 				}
 
 				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
@@ -45,7 +57,7 @@ int RigidBodyUI::render_update()
 		ImGui::SameLine();
 		if (ImGui::Button("##ActorTypeSelectBtn", ImVec2(18, 18)))
 		{
-			GetTarget()->RigidBody()->SetActorType((ACTOR_TYPE)curIdx);
+			GetTarget()->RigidBody()->SetActorType((ACTOR_TYPE)mSelectIdx);
 		}
 
 		ImGui::Separator();

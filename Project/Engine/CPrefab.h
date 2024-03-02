@@ -11,6 +11,7 @@ private:
 
 public:
 	CGameObject* Instantiate(Vec3 _pos, int _layerIdx);
+	int SaveGameObject(CGameObject* _Object, const wstring& _strRelativePath);
 
 private:
 	void SaveGameObject(CGameObject* _Object, FILE* _File);

@@ -4,6 +4,7 @@
 #include "CGameObject.h"
 #include "CTransform.h"
 #include "CCollisionMgr.h"
+#include "CAnimator3D.h"
 
 CRigidBody::CRigidBody()
 	: CComponent(COMPONENT_TYPE::RIGIDBODY)
@@ -60,7 +61,6 @@ void CRigidBody::LoadFromLevelFile(FILE* _File)
 		fread(&temp, sizeof(tShapeInfo), 1, _File);
 		mShapeInfos.push_back(temp);
 	}
-
 }
 void CRigidBody::begin()
 {
@@ -80,13 +80,6 @@ void CRigidBody::finaltick()
 	}
 
 	DrawDebugMesh();
-
-	if (true == mbAppliedPhysics && ACTOR_TYPE::Static == mActorType)
-		return;
-	else
-	{
-		GetOwner()->Transform()->Move(mVelocity);
-	}
 
 }
 void CRigidBody::Destroy()
@@ -146,8 +139,23 @@ void CRigidBody::AddActorToLevel()
 	AssertEx(mbAppliedPhysics, L"RigidBody::AddActorToLevel() - 물리가 들어가지 않은 오브젝트에 대한 AddActorToScene 호출");
 	AssertEx(mActor, L"RigidBody::AddActorToLevel() - mpActor가 생성되지 않음");
 
-	if(mActorType == ACTOR_TYPE::Dynamic)
-		PxRigidBodyExt::setMassAndUpdateInertia(*GetDynamicActor(), 200.f);
+	if (mActorType == ACTOR_TYPE::Dynamic)
+	{
+		std::vector<PxReal> shapeMasses(mShapes.size());
+		for (int i = 0; i < mShapes.size(); i++)
+		{
+			shapeMasses[i] = 1.f;
+		}
+
+		std::vector<PxVec3> shapeLocalPoses(mShapes.size());
+		for (int i = 0; i < mShapes.size(); i++)
+		{
+			Vec3 offset = mShapeInfos[i].offset;
+			shapeLocalPoses[i] = { offset.x, offset.y, offset.z };
+		}
+
+		PxRigidBodyExt::setMassAndUpdateInertia(*GetDynamicActor(), shapeMasses[0], &shapeLocalPoses[0]);
+	}
 	
 	Physics::GetInst()->AddActor(GetOwner());
 	mbIsActorInLevel = true;
@@ -178,6 +186,7 @@ void CRigidBody::SetVelocity(const Vector3 _velocity)
 
 	CheckMaxVelocity();
 }
+
 void CRigidBody::SetVelocity(AXIS3D_TYPE _eAxis, float _velocity)
 {
 	if (true == mbAppliedPhysics)
@@ -350,8 +359,9 @@ void CRigidBody::SetFreezeRotation(FreezeRotationFlag flag, bool enable)
 				rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_ANGULAR_Z, false);
 		}
 
-		rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X, true);
-		rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, true);
+		//해당 축 이동막기
+		//rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_X, true);
+		//rigidActor->setRigidDynamicLockFlag(physx::PxRigidDynamicLockFlag::eLOCK_LINEAR_Z, true);
 	}
 }
 
@@ -380,6 +390,7 @@ void CRigidBody::SetActorInLevelFlag(bool _bFlag)
 {
 	mbIsActorInLevel = _bFlag;
 }
+
 void CRigidBody::AddForce(const Vector3& _force)
 {
 	AssertEx(mbAppliedPhysics, L"RigidBody::AddForce() - 물리가 들어가지 않은 오브젝트에 대한 AddForce 호출");
@@ -415,6 +426,29 @@ void CRigidBody::SetShapeLocalPos(int _idx, CTransform* _transform)
 	mShapes[_idx]->setLocalPose(pxTransform);
 }
 
+//void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos, UINT _boneIdx)
+//{
+//	//Matrix soketMat = GetOwner()->Animator3D()->GetBoneSocket(32);
+//
+//	PxTransform tr = GetPhysicsTransform();
+//	Matrix trMat = Matrix::CreateTranslation({ tr.p.x, tr.p.y, tr.p.z });
+//
+//	//Matrix finalMat = trMat * soketMat;
+//	
+//	//XMVECTOR vec = XMVectorGetX(finalMat.);
+//
+//	PxTransform localpose(PxVec3(_localPos.x, _localPos.y, _localPos.z));
+//	localpose.q = GetPhysicsTransform().q;
+//
+//	mShapes[_idx]->setLocalPose(localpose);
+//	mShapeInfos[_idx].offset = _localPos;
+//}
+
+void CRigidBody::AttachShape(int _idx)
+{
+	GetRigidActor()->attachShape(*mShapes[_idx]);
+}
+
 void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos)
 {
 	PxTransform localpose(PxVec3(_localPos.x, _localPos.y, _localPos.z));
@@ -422,11 +456,6 @@ void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos)
 
 	mShapes[_idx]->setLocalPose(localpose);
 	mShapeInfos[_idx].offset = _localPos;
-}
-
-void CRigidBody::AttachShape(int _idx)
-{
-	GetRigidActor()->attachShape(*mShapes[_idx]);
 }
 
 Vec3 CRigidBody::GetShapePosition(int _shapeIdx)
@@ -503,6 +532,7 @@ void CRigidBody::CreateShape()
 		SetShapeLocalPos(i, mShapeInfos[i].offset);
 	}
 }
+
 void CRigidBody::CreateActor()
 {
 	Vec3 playerPos = GetOwner()->Transform()->GetRelativePos();
@@ -537,7 +567,8 @@ void CRigidBody::CreateMaterial()
 		mShapeInfos[0].massProperties.restitution);
 }
 void CRigidBody::InitializeActor()
-{
+{ 
+	//충돌 매트릭스 생성
 	physx::PxRigidActor* pActor = mActor->is<physx::PxRigidActor>();
 	pActor->userData = GetOwner();
 
@@ -560,14 +591,27 @@ void CRigidBody::InitializeActor()
 	for (int i = 0; i < mShapes.size(); ++i)
 	{
 		mShapes[i]->setSimulationFilterData(mShapeInfos[i].filterData);
-		//mShapes[i]->setQueryFilterData()
+
+		if (mShapeInfos[i].isPlayer)
+		{
+			PxFilterData data;
+			data.word0 = 1 << 3;
+			mShapes[i]->setQueryFilterData(data);
+		}
+		else
+		{
+			PxFilterData data;
+			data.word0 = 1 << 2;
+			mShapes[i]->setQueryFilterData(data);
+		}
 	}
 
-
+	//위치적용
 	Vector3 trPos = GetOwner()->Transform()->GetRelativePos();
 	physx::PxVec3 myPos = physx::PxVec3(trPos.x, trPos.y, trPos.z);
 	pActor->setGlobalPose(physx::PxTransform(myPos));
 
+	//GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
 	switch (mActorType)
 	{

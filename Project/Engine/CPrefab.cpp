@@ -44,6 +44,27 @@ CGameObject* CPrefab::Instantiate(Vec3 _pos, int _layerIdx)
 	return clone;
 }
 
+int CPrefab::SaveGameObject(CGameObject* _Object, const wstring& _strRelativePath)
+{
+	wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	strPath += _strRelativePath;
+
+	m_ProtoObj = _Object;
+
+	FILE* pFile = nullptr;
+
+	_wfopen_s(&pFile, strPath.c_str(), L"wb");
+
+	if (nullptr == pFile)
+		return E_FAIL;
+
+	SaveGameObject(m_ProtoObj, pFile);
+
+	fclose(pFile);
+
+	return S_OK;
+}
+
 void CPrefab::RegisterProtoObject(CGameObject* _Proto)
 {
 	m_ProtoObj = _Proto;
