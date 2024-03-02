@@ -493,10 +493,11 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 	m_mapAnim.clear();
 	UINT iClipCount;
 	fread(&iClipCount, sizeof(int), 1, _pFile);
-	wstring clipKey;
-	Ptr<CAnimClip> clipVlaue;
+	
 	for (int curClip = 0; curClip < iClipCount; ++curClip)
 	{
+		wstring clipKey;
+		Ptr<CAnimClip> clipVlaue;
 		LoadWString(clipKey, _pFile);
 		LoadResRef(clipVlaue, _pFile);
 		m_mapAnim.insert(make_pair(clipKey, clipVlaue));

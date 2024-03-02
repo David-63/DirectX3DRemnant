@@ -22,6 +22,11 @@ struct tWeight_8
     float arrWeight[8];
 };
 
+// 목표
+// 1 코드에서 만드는게 아니라 Editor에서 세팅해주기
+// 2 Save | Load 로 세팅되도록 하기? <- 이거 프리팹으로 하면 될듯
+
+
 class CLandScape : public CRenderComponent
 {
 private:
@@ -46,6 +51,8 @@ private:
 
     LANDSCAPE_MOD           m_eMod;
     Ptr<CTexture>           m_pTileArrTex;
+
+public:
 
 public:
     void SetFace(UINT _iFaceX, UINT _iFaceZ);
