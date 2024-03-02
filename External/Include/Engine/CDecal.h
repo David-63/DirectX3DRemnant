@@ -1,6 +1,10 @@
 #pragma once
 #include "CRenderComponent.h"
 
+// 목표
+// 1 텍스쳐 렌더링 되도록 하기
+
+
 class CDecal :
     public CRenderComponent
 {
@@ -11,7 +15,9 @@ private:
     bool            m_bEmissive;
     bool            m_bShow;
 
-public:
+public:    
+    void SetTexture(Ptr<CTexture> _tex) { m_DecalTex = _tex; }
+
     // 지연렌더링 설정에 다라 Mtrl 변경
     void SetDeferredDecal(bool _bDeferred);
     bool IsDeferredDecal() { return m_bDeferred; }
