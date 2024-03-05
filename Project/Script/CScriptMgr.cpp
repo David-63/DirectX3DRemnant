@@ -4,11 +4,14 @@
 #include "CCameraMoveScript.h"
 #include "CCharacterMoveScript.h"
 #include "CGravityScript.h"
+#include "CIdleStateScript.h"
 #include "CMissileScript.h"
 #include "CMonsterScript.h"
 #include "CPlanetScript.h"
 #include "CPlayerScript.h"
+#include "CPlayerScriptFsm.h"
 #include "CShoulderViewScript.h"
+#include "CStateScript.h"
 #include "CTestScript.h"
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
@@ -16,11 +19,14 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CCameraMoveScript");
 	_vec.push_back(L"CCharacterMoveScript");
 	_vec.push_back(L"CGravityScript");
+	_vec.push_back(L"CIdleStateScript");
 	_vec.push_back(L"CMissileScript");
 	_vec.push_back(L"CMonsterScript");
 	_vec.push_back(L"CPlanetScript");
 	_vec.push_back(L"CPlayerScript");
+	_vec.push_back(L"CPlayerScriptFsm");
 	_vec.push_back(L"CShoulderViewScript");
+	_vec.push_back(L"CStateScript");
 	_vec.push_back(L"CTestScript");
 }
 
@@ -32,6 +38,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CCharacterMoveScript;
 	if (L"CGravityScript" == _strScriptName)
 		return new CGravityScript;
+	if (L"CIdleStateScript" == _strScriptName)
+		return new CIdleStateScript;
 	if (L"CMissileScript" == _strScriptName)
 		return new CMissileScript;
 	if (L"CMonsterScript" == _strScriptName)
@@ -40,8 +48,12 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CPlanetScript;
 	if (L"CPlayerScript" == _strScriptName)
 		return new CPlayerScript;
+	if (L"CPlayerScriptFsm" == _strScriptName)
+		return new CPlayerScriptFsm;
 	if (L"CShoulderViewScript" == _strScriptName)
 		return new CShoulderViewScript;
+	if (L"CStateScript" == _strScriptName)
+		return new CStateScript;
 	if (L"CTestScript" == _strScriptName)
 		return new CTestScript;
 	return nullptr;
@@ -60,6 +72,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::GRAVITYSCRIPT:
 		return new CGravityScript;
 		break;
+	case (UINT)SCRIPT_TYPE::IDLESTATESCRIPT:
+		return new CIdleStateScript;
+		break;
 	case (UINT)SCRIPT_TYPE::MISSILESCRIPT:
 		return new CMissileScript;
 		break;
@@ -72,8 +87,14 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::PLAYERSCRIPT:
 		return new CPlayerScript;
 		break;
+	case (UINT)SCRIPT_TYPE::PLAYERSCRIPTFSM:
+		return new CPlayerScriptFsm;
+		break;
 	case (UINT)SCRIPT_TYPE::SHOULDERVIEWSCRIPT:
 		return new CShoulderViewScript;
+		break;
+	case (UINT)SCRIPT_TYPE::STATESCRIPT:
+		return new CStateScript;
 		break;
 	case (UINT)SCRIPT_TYPE::TESTSCRIPT:
 		return new CTestScript;
@@ -98,6 +119,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CGravityScript";
 		break;
 
+	case SCRIPT_TYPE::IDLESTATESCRIPT:
+		return L"CIdleStateScript";
+		break;
+
 	case SCRIPT_TYPE::MISSILESCRIPT:
 		return L"CMissileScript";
 		break;
@@ -114,8 +139,16 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CPlayerScript";
 		break;
 
+	case SCRIPT_TYPE::PLAYERSCRIPTFSM:
+		return L"CPlayerScriptFsm";
+		break;
+
 	case SCRIPT_TYPE::SHOULDERVIEWSCRIPT:
 		return L"CShoulderViewScript";
+		break;
+
+	case SCRIPT_TYPE::STATESCRIPT:
+		return L"CStateScript";
 		break;
 
 	case SCRIPT_TYPE::TESTSCRIPT:

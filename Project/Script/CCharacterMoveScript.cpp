@@ -4,13 +4,7 @@
 #include <Engine/CTimeMgr.h>
 #include <Engine/CTransform.h>
 
-void CCharacterMoveScript::SaveToLevelFile(FILE* _File)
-{
-}
 
-void CCharacterMoveScript::LoadFromLevelFile(FILE* _FILE)
-{
-}
 
 CCharacterMoveScript::CCharacterMoveScript()
 	: CScript((UINT)SCRIPT_TYPE::CHARACTERMOVESCRIPT)
@@ -67,5 +61,13 @@ void CCharacterMoveScript::OnOverlap(CCollider3D* _Other)
 }
 
 void CCharacterMoveScript::EndOverlap(CCollider3D* _Other)
+{
+}
+
+void CCharacterMoveScript::SaveToLevelFile(FILE* _File)
+{
+}
+
+void CCharacterMoveScript::LoadFromLevelFile(FILE* _FILE)
 {
 }

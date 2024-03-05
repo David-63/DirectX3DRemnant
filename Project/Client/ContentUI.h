@@ -19,6 +19,7 @@ public:
     void Reload(); // Content 폴더에 있는 리소스를 로딩
     void ResetContent();
     void SetTargetToInspector(DWORD_PTR _SelectedNode);
+    CRes* GetSelectedRes();
 
 
 private:

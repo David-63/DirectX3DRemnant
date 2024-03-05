@@ -417,92 +417,92 @@ void CreateTestLevel()
 		SpawnGameObject(pParticleObj, Vec3(0.f, 0.f, 0.f), 0);
 	}
 
-	CGameObject* pObject = new CGameObject;
+	//CGameObject* pObject = new CGameObject;
 
-	pObject->SetName(L"Player");
+	//pObject->SetName(L"Player");
 
-	pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CTransform);
 
-	pObject->AddComponent(new CMeshRender);
-
-
-
-	pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
-
-	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	//pObject->AddComponent(new CMeshRender);
 
 
 
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	//pObject->Transform()->SetRelativeScale(Vec3(1000.f, 1000.f, 1000.f));
 
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-
-	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
-
-	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
+	//pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 
 
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Player");
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+
+	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+
+	//pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
+
+	//pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
 
 
 
-	pObject = new CGameObject;
-
-	pObject->SetName(L"Plane");
-
-	pObject->AddComponent(new CTransform);
-
-	pObject->AddComponent(new CMeshRender);
+	//SpawnGameObject(pObject, Vec3(0.f, 0.f, 0.f), L"Player");
 
 
 
-	pObject->Transform()->SetRelativeScale(Vec3(2000.f, 2000.f, 2000.f));
+	//pObject = new CGameObject;
 
-	pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+	//pObject->SetName(L"Plane");
 
+	//pObject->AddComponent(new CTransform);
 
-
-	pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
-
-	pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
-
-	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
-
-	pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
+	//pObject->AddComponent(new CMeshRender);
 
 
 
-	SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Default");
+	//pObject->Transform()->SetRelativeScale(Vec3(2000.f, 2000.f, 2000.f));
+
+	//pObject->Transform()->SetRelativeRot(Vec3(XM_PI / 2.f, 0.f, 0.f));
+
+
+
+	//pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+
+	//pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"), 0);
+
+	//pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
+
+	//pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
+
+
+
+	//SpawnGameObject(pObject, Vec3(0.f, -1000.f, 0.f), L"Default");
 
 
 
 
 
-	pObject = new CGameObject;
+	//pObject = new CGameObject;
 
-	pObject->SetName(L"Decal");
+	//pObject->SetName(L"Decal");
 
-	pObject->AddComponent(new CTransform);
+	//pObject->AddComponent(new CTransform);
 
-	pObject->AddComponent(new CDecal);
-
-
-
-	pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
-
-	pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
+	//pObject->AddComponent(new CDecal);
 
 
 
-	pObject->Decal()->SetDeferredDecal(true);
+	//pObject->Transform()->SetRelativeScale(Vec3(200.f, 200.f, 200.f));
 
-	pObject->Decal()->ActivateEmissive(true);
+	//pObject->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f));
 
 
 
-	pObject->Decal()->SetTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\decal\\testDecal.png"));
+	//pObject->Decal()->SetDeferredDecal(true);
 
-	SpawnGameObject(pObject, Vec3(0.f, 0.f, 500.f), L"Default");
+	//pObject->Decal()->ActivateEmissive(true);
+
+
+
+	//pObject->Decal()->SetTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\decal\\testDecal.png"));
+
+	//SpawnGameObject(pObject, Vec3(0.f, 0.f, 500.f), L"Default");
 
 }

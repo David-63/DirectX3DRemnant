@@ -16,6 +16,9 @@
     <Filter Include="Script\Test">
       <UniqueIdentifier>{ea948113-95ce-4848-908a-1852e7aa190c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\FSM">
+      <UniqueIdentifier>{d961b49d-8e38-4dbb-9cdb-fb83b6f23c3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMissileScript.h">
@@ -54,6 +57,15 @@
     <ClInclude Include="CTestScript.h">
       <Filter>Script\Test</Filter>
     </ClInclude>
+    <ClInclude Include="CStateScript.h">
+      <Filter>Script\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CIdleStateScript.h">
+      <Filter>Script\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerScriptFsm.h">
+      <Filter>Script\FSM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CMissileScript.cpp">
@@ -91,6 +103,15 @@
     </ClCompile>
     <ClCompile Include="CTestScript.cpp">
       <Filter>Script\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="CStateScript.cpp">
+      <Filter>Script\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CIdleStateScript.cpp">
+      <Filter>Script\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScriptFsm.cpp">
+      <Filter>Script\FSM</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
