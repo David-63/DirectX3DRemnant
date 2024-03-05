@@ -5,6 +5,8 @@
 #include "CResMgr.h"
 #include "CDevice.h"
 
+
+
 CGraphicsShader::CGraphicsShader()
 	: CShader(RES_TYPE::GRAPHICS_SHADER)
 	, m_eTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
@@ -171,4 +173,17 @@ void CGraphicsShader::UpdateData_Inst()
 	CONTEXT->RSSetState(CDevice::GetInst()->GetRSState(m_RSType).Get());
 	CONTEXT->OMSetDepthStencilState(CDevice::GetInst()->GetDSState(m_DSType).Get(), 10);
 	CONTEXT->OMSetBlendState(CDevice::GetInst()->GetBSState(m_BSType).Get(), Vec4(0.f, 0.f, 0.f, 0.f), 0xffffffff);
+}
+
+void CGraphicsShader::ResetScalarParam(SCALAR_PARAM _Param)
+{
+
+	for (auto it = m_vecScalarParam.begin(); it != m_vecScalarParam.end(); ++it)
+	{
+		if (it->eParam == _Param)
+		{
+			m_vecScalarParam.erase(it);
+			break;
+		}
+	}
 }

@@ -19,6 +19,9 @@ private:
     void AddComponent(COMPONENT_TYPE _type);
     void AddScript(const wstring& _strScriptName);
 
+    void AddScalarParam(int _ParamNum, string _ParamName);
+    void DeleteScalarParam(int _ParamNum, string _ParamName);
+
 public:
     MenuUI();
     ~MenuUI();

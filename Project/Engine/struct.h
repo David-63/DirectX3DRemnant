@@ -133,6 +133,7 @@ struct tRWParticleBuffer
 struct tParticleModule
 {
 	Vec3    vRandomSpark;
+	int     iGunSpark;
 
 	// 스폰 모듈
 	Vec4    vSpawnColor;
@@ -164,7 +165,7 @@ struct tParticleModule
 
 	// 버퍼 최대크기
 	int		iMaxParticleCount;
-	int		ipad[2];
+	int		ipad;
 
 	// Add Velocity 모듈
 	Vec4	vVelocityDir;	

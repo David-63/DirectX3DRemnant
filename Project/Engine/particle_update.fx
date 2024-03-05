@@ -77,11 +77,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                     // Box ½ºÆù
                     if (ModuleData.SpawnShapeType == 0) 
                     {
-                        //particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
-                        //                              , ModuleData.vBoxShapeScale.y * vOut2.r  - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
-                        //                              , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\
-
-
+                       
                         //particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * RandomSpark.x
                         //                              , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * RandomSpark.y
                         //                              , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * RandomSpark.z); // 0.f;\        
@@ -133,7 +129,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         {
                            
                             float3 vVelocity = normalize(particle.vLocalPos.xyz);
-                            particle.vVelocity.xyz = vVelocity * ModuleData.Speed * RandomSpark; // ¿ø·¡´Â ·£´ýSpark ¾È°öÇØÁü
+                            particle.vVelocity.xyz = vVelocity * ModuleData.Speed * RandomSpark * vOut3; // ¿ø·¡´Â ·£´ýSpark ¾È°öÇØÁü
                         }
                         
                         // To Center
