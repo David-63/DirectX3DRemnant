@@ -38,7 +38,6 @@ CCamera::CCamera()
 	, m_OrthoHeight(0.f)
 {
 	SetName(L"Camera");
-
 	Vec2 vRenderResol = CDevice::GetInst()->GetRenderResolution();
 	m_fAspectRatio = vRenderResol.x / vRenderResol.y;
 
@@ -59,13 +58,13 @@ CCamera::CCamera(const CCamera& _Other)
 	, m_OrthoWidth(_Other.m_OrthoWidth)
 	, m_OrthoHeight(_Other.m_OrthoHeight)
 {
-	SetName(L"Camera");
+	//SetName(L"Camera");
 
-	Vec2 vRenderResol = CDevice::GetInst()->GetRenderResolution();
+	/*Vec2 vRenderResol = CDevice::GetInst()->GetRenderResolution();
 	m_fAspectRatio = vRenderResol.x / vRenderResol.y;
 
 	m_OrthoWidth = vRenderResol.x;
-	m_OrthoHeight = vRenderResol.y;
+	m_OrthoHeight = vRenderResol.y;*/
 }
 
 CCamera::~CCamera()

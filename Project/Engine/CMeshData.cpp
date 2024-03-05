@@ -22,6 +22,7 @@ CGameObject* CMeshData::Instantiate()
 	CGameObject* pNewObj = new CGameObject;
 	pNewObj->AddComponent(new CTransform);
 	pNewObj->AddComponent(new CMeshRender);
+	pNewObj->MeshRender()->SetMeshData(this);
 
 	pNewObj->MeshRender()->SetMesh(m_pMesh);
 

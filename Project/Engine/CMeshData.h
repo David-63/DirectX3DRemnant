@@ -11,6 +11,10 @@ class CMeshData : public CRes
 	vector<Ptr<CMaterial>>	m_vecMtrl;
 
 public:
+	Ptr<CMesh> GetMeshFromData() { return m_pMesh; }
+	vector<Ptr<CMaterial>> GetMtrlFromData() { return m_vecMtrl; }
+
+public:
 	static CMeshData* LoadFromFBX(const wstring& _strFilePath);
 
 	virtual int Save(const wstring& _strFilePath) override;

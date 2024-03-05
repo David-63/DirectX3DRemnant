@@ -38,7 +38,9 @@ public:
 	void SetCamera(CCamera* _cam) { m_pCam = _cam; }
 
 public:
-	CLONE(CFrustum);	
+	CLONE(CFrustum);
+	CFrustum();
+	CFrustum(const CFrustum& _other);
 	CFrustum(CCamera* _camera);
 	~CFrustum();
 };

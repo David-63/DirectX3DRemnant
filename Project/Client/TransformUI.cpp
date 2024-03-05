@@ -28,20 +28,30 @@ int TransformUI::render_update()
 	ImGui::Text("Position");
 	ImGui::SameLine();
 	ImGui::DragFloat3("##Relative Position", vPos);
+	GetTarget()->Transform()->SetRelativePos(vPos);
 
 	ImGui::Text("Scale   ");
 	ImGui::SameLine();
 	ImGui::DragFloat3("##Relative Scale", vScale);
+	GetTarget()->Transform()->SetRelativeScale(vScale);
 
 	ImGui::Text("Rotation");
 	ImGui::SameLine();
 	ImGui::DragFloat3("##Relative Rotation", vRotation);
-
-	GetTarget()->Transform()->SetRelativePos(vPos);
-	GetTarget()->Transform()->SetRelativeScale(vScale);
-
 	vRotation = (vRotation / 180.f) * XM_PI;
 	GetTarget()->Transform()->SetRelativeRot(vRotation);
+
+
+	float scaleRatio = 1.f;
+	ImGui::Text("ScaleRatio");
+	ImGui::SameLine();
+	ImGui::DragFloat("##Relative Rotation", &scaleRatio, 0.02f);	
+	GetTarget()->Transform()->SetScaleRatio(scaleRatio);
+
+
+
+
+
 
 	if (ImGui::TreeNode("Create Prefab"))
 	{

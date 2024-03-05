@@ -18,9 +18,8 @@ public:
     virtual void render(UINT _iSubset) override;
 
 public:
-    void SetMeshData(Ptr<CMeshData> _meshData) { m_meshData = _meshData; }
+    void SetMeshData(Ptr<CMeshData> _meshData);
     Ptr<CMeshData> GetMeshData() { return m_meshData; }
-
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;

@@ -28,35 +28,13 @@ int MeshRenderUI::render_update()
 
 	char szBuff[50] = {};
 
+	Ptr<CMeshData> pMeshData = GetTarget()->MeshRender()->GetMeshData();
 	Ptr<CMesh> pMesh = GetTarget()->MeshRender()->GetMesh();
 	Ptr<CMaterial> pMtrl = GetTarget()->MeshRender()->GetMaterial(0);
-
-
-	bool isFrustum = GetTarget()->MeshRender()->IsUseFrustumCheck();
-	bool isDynamic = GetTarget()->MeshRender()->IsDynamicShadow();
-	float fBounding = GetTarget()->MeshRender()->GetBounding();
-
-	ImGui::Text("Frustum");
-	ImGui::SameLine();
-	ImGui::Checkbox("##Check Frustum", &isFrustum);
-
-	ImGui::Text("DynamicShadow");
-	ImGui::SameLine();
-	ImGui::Checkbox("##Check DynamicShadow", &isDynamic);
-
-	ImGui::Text("BoundingSize");
-	ImGui::SameLine();
-	ImGui::DragFloat("##Mesh BoundingSize", &fBounding);
-
-	GetTarget()->MeshRender()->SetFrustumCheck(isFrustum);
-	GetTarget()->MeshRender()->SetDynamicShadow(isDynamic);
-	GetTarget()->MeshRender()->SetBounding(fBounding);
-
-
-	ImGui::Text("Mesh    ");
+	ImGui::Text("MeshData ");
 	ImGui::SameLine();
 	GetResKey(pMesh.Get(), szBuff, 50);
-	ImGui::InputText("##MeshName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
+	ImGui::InputText("##MeshDataName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
 
 	// Mesh 드랍 체크
 	if (ImGui::BeginDragDropTarget())
@@ -67,9 +45,9 @@ int MeshRenderUI::render_update()
 		{
 			TreeNode* pNode = (TreeNode*)pPayLoad->Data;
 			CRes* pRes = (CRes*)pNode->GetData();
-			if (RES_TYPE::MESH == pRes->GetType())
+			if (RES_TYPE::MESHDATA == pRes->GetType())
 			{
-				GetTarget()->MeshRender()->SetMesh((CMesh*)pRes);
+				GetTarget()->MeshRender()->SetMeshData((CMeshData*)pRes);
 			}
 		}
 
@@ -82,60 +60,47 @@ int MeshRenderUI::render_update()
 
 	if (ImGui::Button("##MeshSelectBtn", ImVec2(18, 18)))
 	{
-		const map<wstring, Ptr<CRes>>& mapMesh = CResMgr::GetInst()->GetResources(RES_TYPE::MESH);
+		const map<wstring, Ptr<CRes>>& mapMeshData = CResMgr::GetInst()->GetResources(RES_TYPE::MESHDATA);
 
 		ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
-		pListUI->Reset("Mesh List", ImVec2(300.f, 500.f));
-		for (const auto& pair : mapMesh)
+		pListUI->Reset("MeshData List", ImVec2(300.f, 500.f));
+		for (const auto& pair : mapMeshData)
 		{
 			pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
 		}
 
 		// 항목 선택시 호출받을 델리게이트 등록
-		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&MeshRenderUI::SelectMesh);
+		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&MeshRenderUI::SelectMeshData);
 	}
 
-	ImGui::Text("Material");
+	bool isFrustum = GetTarget()->MeshRender()->IsUseFrustumCheck();
+	bool isDynamic = GetTarget()->MeshRender()->IsDynamicShadow();
+	float fBounding = GetTarget()->MeshRender()->GetBounding();
+
+	ImGui::Text("Frustum");
 	ImGui::SameLine();
-	GetResKey(pMtrl.Get(), szBuff, 50);
-	ImGui::InputText("##MtrlName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
+	ImGui::Checkbox("##Check Frustum", &isFrustum);
+	GetTarget()->MeshRender()->SetFrustumCheck(isFrustum);
 
-	if (ImGui::BeginDragDropTarget())
-	{
-		// 해당 노드에서 마우스 뗀 경우, 지정한 PayLoad 키값이 일치한 경우
-		const ImGuiPayload* pPayLoad = ImGui::AcceptDragDropPayload("Resource");
-		if (pPayLoad)
-		{
-			TreeNode* pNode = (TreeNode*)pPayLoad->Data;
-			CRes* pRes = (CRes*)pNode->GetData();
-			if (RES_TYPE::MATERIAL == pRes->GetType())
-			{
-				GetTarget()->MeshRender()->SetMaterial((CMaterial*)pRes, 0);
-			}
-		}
-
-		ImGui::EndDragDropTarget();
-	}
-
-
+	ImGui::Text("DynamicShadow");
 	ImGui::SameLine();
+	ImGui::Checkbox("##Check DynamicShadow", &isDynamic);
+	GetTarget()->MeshRender()->SetDynamicShadow(isDynamic);
 
-	if (ImGui::Button("##MtrlSelectBtn", ImVec2(18, 18)))
-	{
-		const map<wstring, Ptr<CRes>>& mapMtrl = CResMgr::GetInst()->GetResources(RES_TYPE::MATERIAL);
+	ImGui::Text("BoundingSize");
+	ImGui::SameLine();
+	ImGui::DragFloat("##Mesh BoundingSize", &fBounding);
+	GetTarget()->MeshRender()->SetBounding(fBounding);
 
-		ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
-		pListUI->Reset("Material", ImVec2(300.f, 500.f));
-		for (const auto& pair : mapMtrl)
-		{
-			pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
-		}
-
-		// 항목 선택시 호출받을 델리게이트 등록
-		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&MeshRenderUI::SelectMaterial);
-	}
 
 	return TRUE;
+}
+
+void MeshRenderUI::SelectMeshData(DWORD_PTR _Key)
+{
+	string strKey = (char*)_Key;
+	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(wstring(strKey.begin(), strKey.end()));
+	GetTarget()->MeshRender()->SetMeshData(pMeshData);
 }
 
 void MeshRenderUI::SelectMesh(DWORD_PTR _Key)

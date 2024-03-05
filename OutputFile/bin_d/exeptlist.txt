@@ -3,3 +3,4 @@ stdafx.h
 CScriptMgr.h
 targetver.h
 CSceneSaveLoad.h
+CStateScript.h
