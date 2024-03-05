@@ -97,18 +97,19 @@ void CreateTestLevel()
 
 	// ±¤¿ø Ãß°¡
 	{
-		CGameObject* pLightObj = new CGameObject;
+		/*CGameObject* pLightObj = new CGameObject;
 		pLightObj->SetName(L"Directional Light");
 
 		pLightObj->AddComponent(new CTransform);
 		pLightObj->AddComponent(new CLight3D);
 
 		pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
+		pLightObj->Light3D()->SetName(L"DirLightComp");
 		pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
 		pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
 		pLightObj->Light3D()->SetLightAmbient(Vec3(0.5f, 0.5f, 0.5f));
 
-		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
+		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);*/
 	}
 
 	// ============
@@ -377,8 +378,7 @@ void CreateTestLevel()
 		pGround->Transform()->SetRelativeScale(10000.f, 10.f, 10000.f);
 		pGround->SetLayerIdx(5);
 		pGround->Transform()->SetRelativePos(Vec3(0.f, -5.f, 0.f));
-		
-
+				
 		pGround->AddComponent(new CCollider3D);
 		pGround->AddComponent(new CRigidBody);
 		tShapeInfo info = {};
@@ -397,6 +397,9 @@ void CreateTestLevel()
 		pGround->MeshRender()->SetMesh(mesh);
 		Ptr<CMaterial> mater = CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl");
 		pGround->MeshRender()->SetMaterial(mater, 0);
+		pGround->MeshRender()->SetDynamicShadow(false);
+		pGround->MeshRender()->SetFrustumCheck(false);
+
 
 		PxVec3 pos = pGround->Transform()->GetPhysicsPosition();
 		

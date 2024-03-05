@@ -90,4 +90,5 @@ void CDecal::LoadFromLevelFile(FILE* _File)
 	LoadResRef(m_DecalTex, _File);
 	fread(&m_bDeferred, sizeof(bool), 1, _File);
 	fread(&m_bEmissive, sizeof(bool), 1, _File);
+	m_bShow = false;
 }
