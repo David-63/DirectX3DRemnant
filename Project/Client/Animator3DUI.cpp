@@ -149,7 +149,6 @@ int Animator3DUI::render_update()
 
 	// 局聪皋捞记 积己
 	static char inputAnimName[128] = "Write Name";
-	static wstring inputClipName;
 	static float inputStartTime = 0.001f;
 	static float inputEndTime = 0.001f;
 
@@ -202,8 +201,6 @@ int Animator3DUI::render_update()
 			std::string outPath;
 			outPath += "animclip\\";
 			outPath += outName + ".animclip";
-
-
 
 			if (nullptr != m_SelectMesh)
 				GetTarget()->Animator3D()->MakeAnimClip(outPath, selectClipIdx, inputStartTime, inputEndTime, m_SelectMesh);

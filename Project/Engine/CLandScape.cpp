@@ -10,15 +10,12 @@
 #include "CCamera.h"
 
 
-int CLandScape::m_makeCnt = 0;
-
 CLandScape::CLandScape() : CRenderComponent(COMPONENT_TYPE::LANDSCAPE)
-	, m_FaceSize(1, 1), m_vBrushScale(0.2f, 0.2f), m_eMod(LANDSCAPE_MOD::NONE)
+	, m_FaceSize(DEFAULT_FACE, DEFAULT_FACE), m_vBrushScale(0.12f, 0.12f), m_eMod(LANDSCAPE_MOD::NONE)
 {
 	// init 없애야함
 	init();
 	SetFrustumCheck(false);
-	//SetFace(64, 64);
 }
 
 CLandScape::~CLandScape()
@@ -130,16 +127,6 @@ void CLandScape::render()
 void CLandScape::render(UINT _iSubset)
 {
 	render();
-}
-
-void CLandScape::SaveHeightMap()
-{
-	wstring strResKey = L"texture\\landscape\\";
-
-	wstring meshName(m_heightMapName.begin(), m_heightMapName.end());
-	strResKey += meshName;
-	strResKey += L".tex";
-	m_HeightMap->Save(strResKey);
 }
 
 void CLandScape::Raycasting()

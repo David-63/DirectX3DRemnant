@@ -5,6 +5,8 @@
 #include "CWeightMapShader.h"
 
 
+#define DEFAULT_FACE  32  
+
 enum class LANDSCAPE_MOD
 {
     HEIGHT_MAP,
@@ -31,11 +33,7 @@ struct tWeight_8
 class CLandScape : public CRenderComponent
 {
 private:
-    static int              m_makeCnt;
     tUINTS                  m_FaceSize;
-    Ptr<CMesh>              m_pFaceMesh;
-    string                  m_meshName;
-
 
     Vec2                    m_vBrushScale;
     Ptr<CTexture>           m_pBrushTex;
@@ -59,25 +57,37 @@ private:
 public:
 
 public:
+    void SetFaceMesh(Ptr<CMesh> _mesh)
+    {
+        SetMesh(_mesh);
+        SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
+    }
+
     // face mesh create
     void SetFaceSize(UINT _iFaceX, UINT _iFaceZ) { m_FaceSize.set(_iFaceX, _iFaceZ); }
     void SetFaceSize(tUINTS _faceSize) { m_FaceSize = _faceSize; }
     tUINTS& GetFaceSize() { return m_FaceSize; }
-    void SetFaceName(string _name = "") { m_meshName = _name; }
-    string& GetFaceName() { return m_meshName; }
+        
     
-    void CreateMesh();
+    void CreateMesh();                                                      // 이건 코드상에서 생성할 때
+    // 규칙:
+    //  1 이름에 face 숫자 기입해주기
+    //  2 이름에 F 붙여주기
+    // ex) F_MainStage_128x128
+    void MakeFaceMesh(string _strAnimName, UINT _iFaceX, UINT _iFaceZ);     // 파일로 생성할 때
 
-    // height map tex
-    void SaveHeightMap();
+public:
     void SetHeightMap(Ptr<CTexture> _pHeightMap) { m_HeightMap = _pHeightMap; }
     Ptr<CTexture> GetHeightMap() { return m_HeightMap; }
+    
+    void CreateHeightMap();
 
+public:
     // tile arr tex
     void SetTileArrTex(Ptr<CTexture> _pTileArrTex) { m_pTileArrTex = _pTileArrTex; }
     Ptr<CTexture> GetTileArrTex() { return m_pTileArrTex; }
 
-
+public:
     virtual void finaltick() override;
     virtual void render() override;
     virtual void render(UINT _iSubset) override;
