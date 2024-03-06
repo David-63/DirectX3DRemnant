@@ -157,6 +157,16 @@ void ContentUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 	pInspector->SetTargetResource(pSelectObject);
 }
 
+CRes* ContentUI::GetSelectedRes()
+{
+	TreeNode* pSelectedNode = m_Tree->GetSelectedNode();
+
+	if (nullptr == pSelectedNode)
+		return nullptr;
+
+	return (CRes*)pSelectedNode->GetData();
+}
+
 
 void ContentUI::FindFileName(const wstring& _FolderPath)
 {
