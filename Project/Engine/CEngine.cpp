@@ -13,6 +13,7 @@
 #include "CFontMgr.h"
 #include "CInstancingBuffer.h"
 #include "Physics.h"
+#include "CPathFinderMgr.h"
 
 CEngine::CEngine()
 	: m_hWnd(nullptr)
@@ -64,7 +65,7 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 
 	Physics::GetInst()->init();
 	
-
+	CPathFinderMgr::GetInst();
 
 	return S_OK;
 }

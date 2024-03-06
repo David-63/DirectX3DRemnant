@@ -217,6 +217,9 @@
     <ClInclude Include="..\Client\TestLevel.h">
       <Filter>Default</Filter>
     </ClInclude>
+    <ClInclude Include="CPathFinderMgr.h">
+      <Filter>Default\Source\03. Manager\12. PathFinderMgr</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine.cpp">
@@ -419,6 +422,9 @@
     </ClCompile>
     <ClCompile Include="CAnimClip.cpp">
       <Filter>Default\Source\07. Resource\8. AnimClip</Filter>
+    </ClCompile>
+    <ClCompile Include="CPathFinderMgr.cpp">
+      <Filter>Default\Source\03. Manager\12. PathFinderMgr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -631,6 +637,9 @@
     </Filter>
     <Filter Include="Default\Source\07. Resource\8. AnimClip">
       <UniqueIdentifier>{31f1874e-bc67-4112-a438-a1ec4cc0945d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Default\Source\03. Manager\12. PathFinderMgr">
+      <UniqueIdentifier>{98d11f56-c484-42ee-afcd-0250e53f2efb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

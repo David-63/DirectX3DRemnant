@@ -93,6 +93,7 @@ public:
 	void SetShapeLocalPos(int _idx, Vec3 _localPos);
 	void AttachShape(int _idx);
 	Vec3 GetShapePosition(int _shapeIdx);
+	float GetRad() { return mShapeInfos[0].size.x / 2.f; }
 
 	//IMGUI¿ë
 	std::vector<tShapeInfo>* GetShapeInfos() { return &mShapeInfos; }

@@ -212,6 +212,7 @@ call EngineCopy.bat</Command>
     <ClInclude Include="components.h" />
     <ClInclude Include="CParticleSystem.h" />
     <ClInclude Include="CParticleUpdateShader.h" />
+    <ClInclude Include="CPathFinderMgr.h" />
     <ClInclude Include="CPathMgr.h" />
     <ClInclude Include="CPrefab.h" />
     <ClInclude Include="CRaycastShader.h" />
@@ -288,6 +289,7 @@ call EngineCopy.bat</Command>
     <ClCompile Include="CMRT.cpp" />
     <ClCompile Include="CParticleSystem.cpp" />
     <ClCompile Include="CParticleUpdateShader.cpp" />
+    <ClCompile Include="CPathFinderMgr.cpp" />
     <ClCompile Include="CPathMgr.cpp" />
     <ClCompile Include="CPrefab.cpp" />
     <ClCompile Include="CRaycastShader.cpp" />

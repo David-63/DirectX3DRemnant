@@ -19,6 +19,8 @@
 #include <Script/CTestScript.h>
 #include <Script/CShoulderViewScript.h>
 #include <Script/CCharacterMoveScript.h>
+#include <Script/CPathFinderScript.h>
+#include <Script/CMonsterMoveScript.h>
 
 
 void CreateTestLevel()
@@ -111,85 +113,64 @@ void CreateTestLevel()
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}
 
-	// ============
-	// FBX Loading
-	// ============	
-	{
+
+	
 		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
+		CGameObject* player = nullptr;
 		
 		// ÀÎ½ºÅÏ½Ì Å×½ºÆ®
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		pObj = pMeshData->Instantiate();
-		pObj->AddComponent(new CTestScript());
+		player = pMeshData->Instantiate();
+		player->AddComponent(new CTestScript());
 		
-		pObj->SetName(L"Player");
-		pObj->Transform()->SetDebugSphereUse(true);
-		pObj->SetLayerIdx(2);
-		pObj->Transform()->SetRelativePos(Vec3(40.f, 100.f, 40.f));
-		pObj->AddComponent(new CRigidBody);
+		player->SetName(L"Player");
+		player->Transform()->SetDebugSphereUse(true);
+		player->SetLayerIdx(2);
+		player->Transform()->SetRelativePos(Vec3(-1040.f, 10.f, 800.f));
+		player->AddComponent(new CRigidBody);
 
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(15.f, 15.f, 15.f);
-		info.massProperties.restitution = 0.99f;
-		pObj->RigidBody()->PushBackShapeInfo(info);
+		player->RigidBody()->PushBackShapeInfo(info);
 
 		tShapeInfo info2 = {};
 		info2.eGeomType = GEOMETRY_TYPE::Sphere;
 		info2.size = Vector3(15.f, 15.f, 15.f);
-		info2.massProperties.restitution = 0.99f;
-		pObj->RigidBody()->PushBackShapeInfo(info2);
+		player->RigidBody()->PushBackShapeInfo(info2);
 
 		tShapeInfo info3 = {};
 		info3.eGeomType = GEOMETRY_TYPE::Sphere;
 		info3.size = Vector3(8.f, 8.f, 8.f);
-		info3.massProperties.restitution = 0.99f;
-		pObj->RigidBody()->PushBackShapeInfo(info3);
+		player->RigidBody()->PushBackShapeInfo(info3);
 
-		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
 
-		int num = pObj->RigidBody()->GetRigidActor()->getNbShapes();
-		pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-		pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
+		int num = player->RigidBody()->GetRigidActor()->getNbShapes();
+		player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		player->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+		player->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
 
 		
-		pObj->AddComponent(new CCollider3D);
-		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
-		pObj->RigidBody()->AddActorToLevel();
+		player->AddComponent(new CCollider3D);
+		player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+		player->RigidBody()->AddActorToLevel();
 		
 
-		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
+		SpawnGameObject(player, Vec3(-1040.f, 10.f, 800.f), 2);
 
 
 		//pCamMoveScript->SetCamTarget(pObj); //¼ñ´õºä ¿ë
 
 		
-		//for (int i = 0; i < 10; ++i)
-		//{
-		//	pObj = pMeshData->Instantiate();
-		//	pObj->SetName(L"Monster");
-		//	pObj->Transform()->SetDebugSphereUse(true);
-		//	SpawnGameObject(pObj, Vec3((i + 1) * 50.f, 200.f, 500.f), 0);
-		//}
-		//
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
-		//pMeshData = CResMgr::GetInst()->Load<CMeshData>(L"meshdata\\monster.mdat", L"meshdata\\monster.mdat");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		//pObj = pMeshData->Instantiate();
-		//pObj->SetName(L"Monster");
-		//pObj->Transform()->SetRelativeScale(Vec3(50.f, 50.f, 50.f));
-
-		//SpawnGameObject(pObj, Vec3(0.f, 0.f, 100.f), L"Default");
-	}
+		
 	//prefab
 	//{
 		//Ptr<CMeshData> pMeshData = nullptr;
@@ -256,40 +237,48 @@ void CreateTestLevel()
 
 	//monster
 	{
-		//Ptr<CMeshData> pMeshData = nullptr;
-		//CGameObject* pObj = nullptr;
+		Ptr<CMeshData> pMeshData = nullptr;
+		CGameObject* pObj = nullptr;
 
-		//// ÀÎ½ºÅÏ½Ì Å×½ºÆ®
-		////pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		// ÀÎ½ºÅÏ½Ì Å×½ºÆ®
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		//pObj = pMeshData->Instantiate();
-		////pObj->AddComponent(new CTestScript());
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		pObj = pMeshData->Instantiate();
+		pObj->AddComponent(new CPathFinderScript());
+		pObj->AddComponent(new CMonsterMoveScript());
 
-		//pObj->SetName(L"Monster2");
-		//pObj->Transform()->SetDebugSphereUse(true);
-		//pObj->SetLayerIdx(2);
-		//pObj->Transform()->SetRelativePos(Vec3(100.f, 100.f, 0.f));
+		pObj->SetName(L"MonsterTrace");
+		pObj->Transform()->SetDebugSphereUse(true);
+		pObj->SetLayerIdx(2);
+		pObj->Transform()->SetRelativePos(Vec3(100.f, 100.f, 0.f));
 
-		//tShapeInfo info = {};
-		//info.eGeomType = GEOMETRY_TYPE::Sphere;
-		//info.size = Vector3(100.f, 100.f, 100.f);
-		//info.massProperties.restitution = 0.01f;
-		//
+		pObj->AddComponent(new CRigidBody);
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(15.f, 15.f, 15.f);
+		pObj->RigidBody()->PushBackShapeInfo(info);
 
-		//pObj->AddComponent(new CRigidBody);
-		//pObj->RigidBody()->PushBackShapeInfo(info);
-		//pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-		//
+		tShapeInfo info2 = {};
+		info2.eGeomType = GEOMETRY_TYPE::Sphere;
+		info2.size = Vector3(15.f, 15.f, 15.f);
+		pObj->RigidBody()->PushBackShapeInfo(info2);
 
-		//pObj->AddComponent(new CCollider3D);
-		//pObj->RigidBody()->AddActorToLevel();
+		tShapeInfo info3 = {};
+		info3.eGeomType = GEOMETRY_TYPE::Sphere;
+		info3.size = Vector3(8.f, 8.f, 8.f);
+		pObj->RigidBody()->PushBackShapeInfo(info3);
 
-		//pObj->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 180.f));
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 
-		//SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
+		pObj->AddComponent(new CCollider3D);
+		pObj->RigidBody()->AddActorToLevel();
+
+
+		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
 
 		
+		pObj->GetScript<CMonsterMoveScript>()->SetAndGetPath(player);
 	}
 	//static box
 	{

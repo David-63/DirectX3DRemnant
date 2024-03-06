@@ -177,12 +177,14 @@ call CodeGen.exe</Command>
     <ClInclude Include="CGravityScript.h" />
     <ClInclude Include="CMissileScript.h" />
     <ClInclude Include="CMonsterScript.h" />
+    <ClInclude Include="CPathFinderScript.h" />
     <ClInclude Include="CPlanetScript.h" />
     <ClInclude Include="CPlayerScript.h" />
     <ClInclude Include="CScriptMgr.h" />
     <ClInclude Include="CShoulderViewScript.h" />
     <ClInclude Include="CTestScript.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="CMonsterMoveScript.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -191,11 +193,13 @@ call CodeGen.exe</Command>
     <ClCompile Include="CGravityScript.cpp" />
     <ClCompile Include="CMissileScript.cpp" />
     <ClCompile Include="CMonsterScript.cpp" />
+    <ClCompile Include="CPathFinderScript.cpp" />
     <ClCompile Include="CPlanetScript.cpp" />
     <ClCompile Include="CPlayerScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
     <ClCompile Include="CShoulderViewScript.cpp" />
     <ClCompile Include="CTestScript.cpp" />
+    <ClCompile Include="CMonsterMoveScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

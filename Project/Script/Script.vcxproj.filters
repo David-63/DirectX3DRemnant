@@ -16,6 +16,12 @@
     <Filter Include="Script\Test">
       <UniqueIdentifier>{ea948113-95ce-4848-908a-1852e7aa190c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\PathFinderScript">
+      <UniqueIdentifier>{83e226c8-ae1b-4ea0-aac7-fece3deb6e7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\MonsterMoveScript">
+      <UniqueIdentifier>{3400bf0f-3f2b-4ab7-ac6d-15ec4067f13e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMissileScript.h">
@@ -54,6 +60,12 @@
     <ClInclude Include="CTestScript.h">
       <Filter>Script\Test</Filter>
     </ClInclude>
+    <ClInclude Include="CPathFinderScript.h">
+      <Filter>Script\PathFinderScript</Filter>
+    </ClInclude>
+    <ClInclude Include="CMonsterMoveScript.h">
+      <Filter>Script\MonsterMoveScript</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CMissileScript.cpp">
@@ -91,6 +103,12 @@
     </ClCompile>
     <ClCompile Include="CTestScript.cpp">
       <Filter>Script\Test</Filter>
+    </ClCompile>
+    <ClCompile Include="CPathFinderScript.cpp">
+      <Filter>Script\PathFinderScript</Filter>
+    </ClCompile>
+    <ClCompile Include="CMonsterMoveScript.cpp">
+      <Filter>Script\MonsterMoveScript</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
