@@ -46,6 +46,8 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 {
 	wstring strFullPath = CPathMgr::GetInst()->GetContentPath();
 	strFullPath += _strPath;
+	// content//meshdata
+
 
 	CFBXLoader loader;
 	loader.init();

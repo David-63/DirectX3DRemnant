@@ -10,23 +10,21 @@
 
 void CLandScape::init()
 {
-	CreateMesh();
-
-	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
-
 	CreateComputeShader();
 
 	CreateTexture();
 
 	// 레이캐스팅 결과 받는 버퍼
-	m_pCrossBuffer = new CStructuredBuffer;
-	m_pCrossBuffer->Create(sizeof(tRaycastOut), 1, SB_TYPE::READ_WRITE, true);
-
-	// 타일 텍스쳐(Color, Normal 혼합, 총 6장)	
-	//m_pTileArrTex = CResMgr::GetInst()->Load<CTexture>(L"texture\\tile\\TILE_ARRR.dds", L"texture\\tile\\TILE_ARRR.dds");
-	//m_pTileArrTex = CResMgr::GetInst()->LoadTexture(L"texture\\tile\\TILE_ARRR.dds", L"texture\\tile\\TILE_ARRR.dds", 8);
-	m_pTileArrTex = CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_ARRR.dds");
-	m_pTileArrTex->GenerateMip(8);
+	if (!m_pCrossBuffer)
+	{
+		m_pCrossBuffer = new CStructuredBuffer;
+		m_pCrossBuffer->Create(sizeof(tRaycastOut), 1, SB_TYPE::READ_WRITE, true);
+	}
+	if (nullptr == m_pTileArrTex)
+	{
+		m_pTileArrTex = CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_ARRR.dds");
+		//m_pTileArrTex->GenerateMip(8);
+	}
 }
 
 void CLandScape::CreateMesh()
@@ -34,12 +32,13 @@ void CLandScape::CreateMesh()
 	Vtx v;
 	vector<Vtx> vecVtx;
 
-	for (UINT i = 0; i < m_iFaceZ + 1; ++i)
+	// 변수의 Y를 Z축으로 사용
+	for (UINT i = 0; i < m_FaceSize.Y + 1; ++i)
 	{
-		for (UINT j = 0; j < m_iFaceX + 1; ++j)
+		for (UINT j = 0; j < m_FaceSize.X + 1; ++j)
 		{
 			v.vPos = Vec3((float)j, 0.f, (float)i);
-			v.vUV = Vec2((float)j, (float)m_iFaceZ - i);
+			v.vUV = Vec2((float)j, (float)m_FaceSize.Y - i);
 			v.vTangent = Vec3(1.f, 0.f, 0.f);
 			v.vNormal = Vec3(0.f, 1.f, 0.f);
 			v.vBinormal = Vec3(0.f, 0.f, -1.f);
@@ -51,41 +50,68 @@ void CLandScape::CreateMesh()
 
 	vector<UINT> vecIdx;
 
-	for (UINT i = 0; i < m_iFaceZ; ++i)
+	for (UINT i = 0; i < m_FaceSize.Y; ++i)
 	{
-		for (UINT j = 0; j < m_iFaceX; ++j)
+		for (UINT j = 0; j < m_FaceSize.X; ++j)
 		{
 			// 0
 			// | \
 			// 2--1  
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j));
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j + 1));
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i + 1) + (j));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i)+(j + 1));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i)+(j));
 
 			// 1--2
 			//  \ |
 			//    0
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j + 1));
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j));
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j + 1));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i)+(j + 1));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i + 1) + (j));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i + 1) + (j + 1));
 		}
 	}
 
 
+	// mesh create
 	Ptr<CMesh> pMesh = new CMesh(true);
 	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	wstring strResKey;
 
-	wstring meshName = L"LandMesh";
-	meshName += m_makeCnt;
-	CResMgr::GetInst()->AddRes(meshName, pMesh);
+	// save mesh file
 
-	//pMesh->SetName(L"LandMesh");
-	//pMesh->SetKey(L"LandMesh");
-	//pMesh->SetRelativePath(L"LandMesh");
+	bool isDefault = true;
+	// 파일로 생성하는 조건()
+
+	// 매쉬가 없는데 이름이 있음
+	if (nullptr == m_pFaceMesh && !m_meshName.empty())
+		isDefault = false;
+	// 매쉬가 있는데 키값이 다름
+	if (nullptr != m_pFaceMesh && m_pFaceMesh.Get()->GetKey() != m_meshName)
+		isDefault = false;
+	// 메쉬 있는데 이름값이 없으면
+	if (nullptr != m_pFaceMesh && m_meshName.empty())
+		isDefault = true;
+
+	if (isDefault)
+	{
+		strResKey = L"LandMesh";
+		strResKey += m_makeCnt++;
+	}
+	else
+	{
+		wstring meshName(m_meshName.begin(), m_meshName.end());
+		strResKey = L"mesh\\landscape\\";
+		strResKey += meshName;
+		strResKey += L".mesh";
+		pMesh->Save(strResKey);
+	}
+	
+	// add mesh resource
+	CResMgr::GetInst()->AddRes<CMesh>(strResKey, pMesh);
+
+	// setting mesh & mtrl
+	m_pFaceMesh = pMesh;
 	SetMesh(pMesh);
-	// Mesh 재설정하고 나면 재질이 날라가기 때문에 다시 설정
 	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
-	m_makeCnt++;
 }
 
 void CLandScape::CreateComputeShader()
@@ -126,7 +152,7 @@ void CLandScape::CreateComputeShader()
 
 void CLandScape::CreateTexture()
 {
-	// 높이맵 텍스쳐		
+	// 높이맵 텍스쳐
 	m_HeightMap = CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap");
 	if (nullptr == m_HeightMap)
 	{

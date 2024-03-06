@@ -12,6 +12,7 @@ enum class LANDSCAPE_MOD
     NONE,
 };
 
+// 기본 Wdight4 사용
 struct tWeight_4
 {
     float arrWeight[4];
@@ -31,8 +32,10 @@ class CLandScape : public CRenderComponent
 {
 private:
     static int              m_makeCnt;
-    UINT                    m_iFaceX;
-    UINT                    m_iFaceZ;
+    tUINTS                  m_FaceSize;
+    Ptr<CMesh>              m_pFaceMesh;
+    string                  m_meshName;
+
 
     Vec2                    m_vBrushScale;
     Ptr<CTexture>           m_pBrushTex;
@@ -42,6 +45,7 @@ private:
 
     Ptr<CHeightMapShader>   m_pCSHeightMap;
     Ptr<CTexture>           m_HeightMap;
+    string                  m_heightMapName;
 
     Ptr<CWeightMapShader>   m_pCSWeightMap;
     CStructuredBuffer*      m_pWeightMapBuffer;
@@ -55,8 +59,24 @@ private:
 public:
 
 public:
-    void SetFace(UINT _iFaceX, UINT _iFaceZ);
-    void SetHeightMap(Ptr<CTexture> _HeightMap) { m_HeightMap = _HeightMap; }
+    // face mesh create
+    void SetFaceSize(UINT _iFaceX, UINT _iFaceZ) { m_FaceSize.set(_iFaceX, _iFaceZ); }
+    void SetFaceSize(tUINTS _faceSize) { m_FaceSize = _faceSize; }
+    tUINTS& GetFaceSize() { return m_FaceSize; }
+    void SetFaceName(string _name = "") { m_meshName = _name; }
+    string& GetFaceName() { return m_meshName; }
+    
+    void CreateMesh();
+
+    // height map tex
+    void SaveHeightMap();
+    void SetHeightMap(Ptr<CTexture> _pHeightMap) { m_HeightMap = _pHeightMap; }
+    Ptr<CTexture> GetHeightMap() { return m_HeightMap; }
+
+    // tile arr tex
+    void SetTileArrTex(Ptr<CTexture> _pTileArrTex) { m_pTileArrTex = _pTileArrTex; }
+    Ptr<CTexture> GetTileArrTex() { return m_pTileArrTex; }
+
 
     virtual void finaltick() override;
     virtual void render() override;
@@ -64,7 +84,6 @@ public:
 
 private:
     void init();
-    void CreateMesh();
     void CreateComputeShader();
     void CreateTexture();
 

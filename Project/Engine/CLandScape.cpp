@@ -13,11 +13,12 @@
 int CLandScape::m_makeCnt = 0;
 
 CLandScape::CLandScape() : CRenderComponent(COMPONENT_TYPE::LANDSCAPE)
-	, m_iFaceX(1), m_iFaceZ(1), m_vBrushScale(0.2f, 0.2f), m_eMod(LANDSCAPE_MOD::NONE)
+	, m_FaceSize(1, 1), m_vBrushScale(0.2f, 0.2f), m_eMod(LANDSCAPE_MOD::NONE)
 {
+	// init 없애야함
 	init();
 	SetFrustumCheck(false);
-	SetFace(64, 64);
+	//SetFace(64, 64);
 }
 
 CLandScape::~CLandScape()
@@ -88,8 +89,8 @@ void CLandScape::render()
 
 	//GetMaterial(0)->GetShader()->SetRSType(RS_TYPE::WIRE_FRAME);
 
-	GetMaterial(0)->SetScalarParam(INT_0, &m_iFaceX);
-	GetMaterial(0)->SetScalarParam(INT_1, &m_iFaceZ);
+	GetMaterial(0)->SetScalarParam(INT_0, &m_FaceSize.X);
+	GetMaterial(0)->SetScalarParam(INT_1, &m_FaceSize.Y);
 	GetMaterial(0)->SetTexParam(TEX_2, m_HeightMap);
 
 	Vec2 vResolution = Vec2(m_HeightMap->Width(), m_HeightMap->Height());
@@ -131,13 +132,14 @@ void CLandScape::render(UINT _iSubset)
 	render();
 }
 
-
-void CLandScape::SetFace(UINT _iFaceX, UINT _iFaceZ)
+void CLandScape::SaveHeightMap()
 {
-	m_iFaceX = _iFaceX;
-	m_iFaceZ = _iFaceZ;
+	wstring strResKey = L"texture\\landscape\\";
 
-	CreateMesh();
+	wstring meshName(m_heightMapName.begin(), m_heightMapName.end());
+	strResKey += meshName;
+	strResKey += L".tex";
+	m_HeightMap->Save(strResKey);
 }
 
 void CLandScape::Raycasting()
@@ -161,7 +163,7 @@ void CLandScape::Raycasting()
 	m_pCrossBuffer->SetData(&out, 1);
 
 	m_pCSRaycast->SetHeightMap(m_HeightMap);
-	m_pCSRaycast->SetFaceCount(m_iFaceX, m_iFaceZ);
+	m_pCSRaycast->SetFaceCount(m_FaceSize);
 	m_pCSRaycast->SetCameraRay(CamRay);
 	m_pCSRaycast->SetOuputBuffer(m_pCrossBuffer);
 
@@ -174,8 +176,7 @@ void CLandScape::Raycasting()
 void CLandScape::SaveToLevelFile(FILE* _File)
 {
 	CRenderComponent::SaveToLevelFile(_File);
-	fwrite(&m_iFaceX, sizeof(UINT), 1, _File);
-	fwrite(&m_iFaceZ, sizeof(UINT), 1, _File);
+	fwrite(&m_FaceSize, sizeof(tUINTS), 1, _File);
 	fwrite(&m_vBrushScale, sizeof(Vec2), 1, _File);
 	SaveResRef(m_pBrushTex.Get(), _File);
 	SaveWString(m_pCSRaycast.Get()->GetKey(), _File);
@@ -193,12 +194,9 @@ void CLandScape::SaveToLevelFile(FILE* _File)
 void CLandScape::LoadFromLevelFile(FILE* _File)
 {
 	CRenderComponent::LoadFromLevelFile(_File);
-	fread(&m_iFaceX, sizeof(UINT), 1, _File);
-	fread(&m_iFaceZ, sizeof(UINT), 1, _File);
+	fread(&m_FaceSize, sizeof(tUINTS), 1, _File);
 	fread(&m_vBrushScale, sizeof(Vec2), 1, _File);
 	LoadResRef(m_pBrushTex, _File);
-
-
 
 	wstring CSRaycastName;
 	LoadWString(CSRaycastName, _File);

@@ -16,7 +16,21 @@ struct tTimeCtrl
 	void SetFinishTime(float _value) { maxTime = _value; }
 	void Activate() { active = true; }
 	void ResetTime() { curTime = 0; active = false; }
+};
 
+struct tUINTS
+{
+	UINT X, Y;
+
+	tUINTS() : X(0), Y(0) {}
+	tUINTS(UINT _x, UINT _y) : X(_x), Y(_y) {}
+	~tUINTS() {}
+	tUINTS& set(UINT _x, UINT _y)
+	{
+		X = _x;
+		Y = _y;
+		return *this;
+	}
 };
 
 struct tVertex
