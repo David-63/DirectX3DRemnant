@@ -17,6 +17,7 @@ private:
 
 public:    
     void SetTexture(Ptr<CTexture> _tex) { m_DecalTex = _tex; }
+    Ptr<CTexture> GetTexture() { return m_DecalTex; }
     void ActiveDecal();
 
     // 지연렌더링 설정에 다라 Mtrl 변경

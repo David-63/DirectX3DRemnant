@@ -215,7 +215,8 @@ RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath)
 		return RES_TYPE::MATERIAL;
 	else if (L".png" == strExt || L".jpg" == strExt
 		|| L".jpeg" == strExt || L".bmp" == strExt
-		|| L".tga" == strExt || L".dds" == strExt)
+		|| L".tga" == strExt || L".dds" == strExt
+		|| L".tex" == strExt)
 		return RES_TYPE::TEXTURE;
 	else if (L".animclip" == strExt)
 		return RES_TYPE::ANIMCLIP;

@@ -56,6 +56,10 @@ public:
     virtual void OnOverlap(CCollider3D* _Other) {}
     virtual void EndOverlap(CCollider3D* _Other) {}
 
+    // ===== State Script¿ë ====
+    virtual void Enter() {}
+    virtual void Exit() {}
+
 public:
     virtual void SaveToLevelFile(FILE* _File) override {}
     virtual void LoadFromLevelFile(FILE* _FILE) override {}

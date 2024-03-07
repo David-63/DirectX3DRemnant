@@ -11,35 +11,48 @@
 void CLandScape::init()
 {
 	CreateMesh();
-
-	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
-
 	CreateComputeShader();
-
 	CreateTexture();
 
-	// 레이캐스팅 결과 받는 버퍼
-	m_pCrossBuffer = new CStructuredBuffer;
-	m_pCrossBuffer->Create(sizeof(tRaycastOut), 1, SB_TYPE::READ_WRITE, true);
+	// 가중치 버퍼
+	if (!m_pWeightMapBuffer)
+	{
+		m_iWeightWidth = 1024;
+		m_iWeightHeight = 1024;
 
-	// 타일 텍스쳐(Color, Normal 혼합, 총 6장)	
-	//m_pTileArrTex = CResMgr::GetInst()->Load<CTexture>(L"texture\\tile\\TILE_ARRR.dds", L"texture\\tile\\TILE_ARRR.dds");
-	//m_pTileArrTex = CResMgr::GetInst()->LoadTexture(L"texture\\tile\\TILE_ARRR.dds", L"texture\\tile\\TILE_ARRR.dds", 8);
-	m_pTileArrTex = CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_ARRR.dds");
-	m_pTileArrTex->GenerateMip(8);
+		m_pWeightMapBuffer = new CStructuredBuffer;
+		m_pWeightMapBuffer->Create(sizeof(tWeight_4), m_iWeightWidth * m_iWeightHeight, SB_TYPE::READ_WRITE, false);
+	}
+
+	// 레이캐스팅 결과 받는 버퍼
+	if (!m_pCrossBuffer)
+	{
+		m_pCrossBuffer = new CStructuredBuffer;
+		m_pCrossBuffer->Create(sizeof(tRaycastOut), 1, SB_TYPE::READ_WRITE, true);
+	}	
 }
 
 void CLandScape::CreateMesh()
 {
+	// 이미 기본 메쉬가 있다면 생성 안함
+	wstring strResKey = L"LandMesh";
+	Ptr<CMesh> pMesh = CResMgr::GetInst()->FindRes<CMesh>(strResKey);
+	if (nullptr != pMesh)
+	{
+		SetFaceMesh(pMesh);
+		return;
+	}
+
 	Vtx v;
 	vector<Vtx> vecVtx;
 
-	for (UINT i = 0; i < m_iFaceZ + 1; ++i)
+	// 변수의 Y를 Z축으로 사용
+	for (UINT i = 0; i < DEFAULT_FACE + 1; ++i)
 	{
-		for (UINT j = 0; j < m_iFaceX + 1; ++j)
+		for (UINT j = 0; j < DEFAULT_FACE + 1; ++j)
 		{
 			v.vPos = Vec3((float)j, 0.f, (float)i);
-			v.vUV = Vec2((float)j, (float)m_iFaceZ - i);
+			v.vUV = Vec2((float)j, (float)DEFAULT_FACE - i);
 			v.vTangent = Vec3(1.f, 0.f, 0.f);
 			v.vNormal = Vec3(0.f, 1.f, 0.f);
 			v.vBinormal = Vec3(0.f, 0.f, -1.f);
@@ -51,41 +64,114 @@ void CLandScape::CreateMesh()
 
 	vector<UINT> vecIdx;
 
-	for (UINT i = 0; i < m_iFaceZ; ++i)
+	for (UINT i = 0; i < DEFAULT_FACE; ++i)
 	{
-		for (UINT j = 0; j < m_iFaceX; ++j)
+		for (UINT j = 0; j < DEFAULT_FACE; ++j)
 		{
 			// 0
 			// | \
 			// 2--1  
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j));
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j + 1));
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j));
+			vecIdx.push_back((DEFAULT_FACE + 1) * (i + 1) + (j));
+			vecIdx.push_back((DEFAULT_FACE + 1) * (i)+(j + 1));
+			vecIdx.push_back((DEFAULT_FACE + 1) * (i)+(j));
 
 			// 1--2
 			//  \ |
 			//    0
-			vecIdx.push_back((m_iFaceX + 1) * (i)+(j + 1));
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j));
-			vecIdx.push_back((m_iFaceX + 1) * (i + 1) + (j + 1));
+			vecIdx.push_back((DEFAULT_FACE + 1) * (i)+(j + 1));
+			vecIdx.push_back((DEFAULT_FACE + 1) * (i + 1) + (j));
+			vecIdx.push_back((DEFAULT_FACE + 1) * (i + 1) + (j + 1));
 		}
 	}
 
-
-	Ptr<CMesh> pMesh = new CMesh(true);
+	// create new mesh
+	pMesh = new CMesh(true);
 	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
 
-	wstring meshName = L"LandMesh";
-	meshName += m_makeCnt;
-	CResMgr::GetInst()->AddRes(meshName, pMesh);
+	// add mesh resource
+	CResMgr::GetInst()->AddRes<CMesh>(strResKey, pMesh);
 
-	//pMesh->SetName(L"LandMesh");
-	//pMesh->SetKey(L"LandMesh");
-	//pMesh->SetRelativePath(L"LandMesh");
-	SetMesh(pMesh);
-	// Mesh 재설정하고 나면 재질이 날라가기 때문에 다시 설정
-	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
-	m_makeCnt++;
+	// setting mesh & mtrl
+	SetFaceMesh(pMesh);
+}
+
+void CLandScape::MakeFaceMesh(string _strAnimName, UINT _iFaceX, UINT _iFaceZ)
+{
+	string meshName = _strAnimName;
+	string strResKey;
+	strResKey = "mesh\\landscape\\";
+	strResKey += meshName + ".mesh";
+	
+
+	// 이름 중복 검사
+	wstring strPath = wstring(strResKey.begin(), strResKey.end());
+	Ptr<CMesh> pMesh = CResMgr::GetInst()->FindRes<CMesh>(strPath);
+	if (nullptr != pMesh)
+		return;
+
+	m_FaceSize.X = _iFaceX;
+	m_FaceSize.Y = _iFaceZ;
+
+
+	// 메쉬 만들기
+	Vtx v;
+	vector<Vtx> vecVtx;
+	// 변수의 Y를 Z축으로 사용
+	for (UINT i = 0; i < m_FaceSize.Y + 1; ++i)
+	{
+		for (UINT j = 0; j < m_FaceSize.X + 1; ++j)
+		{
+			v.vPos = Vec3((float)j, 0.f, (float)i);
+			v.vUV = Vec2((float)j, (float)m_FaceSize.Y - i);
+			v.vTangent = Vec3(1.f, 0.f, 0.f);
+			v.vNormal = Vec3(0.f, 1.f, 0.f);
+			v.vBinormal = Vec3(0.f, 0.f, -1.f);
+			v.vColor = Vec4(1.f, 1.f, 1.f, 1.f);
+
+			vecVtx.push_back(v);
+		}
+	}
+	vector<UINT> vecIdx;
+	for (UINT i = 0; i < m_FaceSize.Y; ++i)
+	{
+		for (UINT j = 0; j < m_FaceSize.X; ++j)
+		{
+			// 0
+			// | \
+			// 2--1  
+			vecIdx.push_back((m_FaceSize.X + 1) * (i + 1) + (j));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i)+(j + 1));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i)+(j));
+			// 1--2
+			//  \ |
+			//    0
+			vecIdx.push_back((m_FaceSize.X + 1) * (i)+(j + 1));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i + 1) + (j));
+			vecIdx.push_back((m_FaceSize.X + 1) * (i + 1) + (j + 1));
+		}
+	}
+	pMesh = new CMesh(true);
+	pMesh->Create(vecVtx.data(), (UINT)vecVtx.size(), vecIdx.data(), (UINT)vecIdx.size());
+	
+	// 메쉬 등록 및 파일로 저장
+	pMesh->SetKey(strPath);
+	pMesh->SetRelativePath(strPath);	
+	pMesh->Save(strPath);
+
+	CResMgr::GetInst()->AddRes<CMesh>(pMesh->GetKey(), pMesh.Get());
+
+	SetFaceMesh(pMesh);
+}
+
+
+void CLandScape::CreateHeightMap()
+{
+	wstring strResKey = L"texture\\landscape\\";
+
+	wstring meshName(m_heightMapName.begin(), m_heightMapName.end());
+	strResKey += meshName;
+	strResKey += L".tex";
+	m_HeightMap->Save(strResKey);
 }
 
 void CLandScape::CreateComputeShader()
@@ -126,7 +212,7 @@ void CLandScape::CreateComputeShader()
 
 void CLandScape::CreateTexture()
 {
-	// 높이맵 텍스쳐		
+	// 높이맵
 	m_HeightMap = CResMgr::GetInst()->FindRes<CTexture>(L"HeightMap");
 	if (nullptr == m_HeightMap)
 	{
@@ -136,15 +222,13 @@ void CLandScape::CreateTexture()
 			, D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_UNORDERED_ACCESS
 			, D3D11_USAGE_DEFAULT);
 	}
-	
+	// 브러쉬
 	m_pBrushTex = CResMgr::GetInst()->FindRes<CTexture>(L"texture\\brush\\Brush_01.png");
 
-
-	// 가중치 버퍼
-	m_iWeightWidth = 1024;
-	m_iWeightHeight = 1024;
-
-	m_pWeightMapBuffer = new CStructuredBuffer;
-	m_pWeightMapBuffer->Create(sizeof(tWeight_4), m_iWeightWidth * m_iWeightHeight, SB_TYPE::READ_WRITE, false);
-
+	// 가중치 타일 배열*
+	if (nullptr == m_pTileArrTex)
+	{
+		m_pTileArrTex = CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_ARRR.dds");
+		m_pTileArrTex->GenerateMip(8);
+	}
 }

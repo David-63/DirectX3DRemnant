@@ -5,6 +5,8 @@
 #include "CWeightMapShader.h"
 
 
+#define DEFAULT_FACE  32  
+
 enum class LANDSCAPE_MOD
 {
     HEIGHT_MAP,
@@ -12,6 +14,7 @@ enum class LANDSCAPE_MOD
     NONE,
 };
 
+// 기본 Wdight4 사용
 struct tWeight_4
 {
     float arrWeight[4];
@@ -30,9 +33,7 @@ struct tWeight_8
 class CLandScape : public CRenderComponent
 {
 private:
-    static int              m_makeCnt;
-    UINT                    m_iFaceX;
-    UINT                    m_iFaceZ;
+    tUINTS                  m_FaceSize;
 
     Vec2                    m_vBrushScale;
     Ptr<CTexture>           m_pBrushTex;
@@ -42,6 +43,7 @@ private:
 
     Ptr<CHeightMapShader>   m_pCSHeightMap;
     Ptr<CTexture>           m_HeightMap;
+    string                  m_heightMapName;
 
     Ptr<CWeightMapShader>   m_pCSWeightMap;
     CStructuredBuffer*      m_pWeightMapBuffer;
@@ -55,16 +57,43 @@ private:
 public:
 
 public:
-    void SetFace(UINT _iFaceX, UINT _iFaceZ);
-    void SetHeightMap(Ptr<CTexture> _HeightMap) { m_HeightMap = _HeightMap; }
+    void SetFaceMesh(Ptr<CMesh> _mesh)
+    {
+        SetMesh(_mesh);
+        SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"LandScapeMtrl"), 0);
+    }
 
+    // face mesh create
+    void SetFaceSize(UINT _iFaceX, UINT _iFaceZ) { m_FaceSize.set(_iFaceX, _iFaceZ); }
+    void SetFaceSize(tUINTS _faceSize) { m_FaceSize = _faceSize; }
+    tUINTS& GetFaceSize() { return m_FaceSize; }
+        
+    
+    void CreateMesh();                                                      // 이건 코드상에서 생성할 때
+    // 규칙:
+    //  1 이름에 face 숫자 기입해주기
+    //  2 이름에 F 붙여주기
+    // ex) F_MainStage_128x128
+    void MakeFaceMesh(string _strAnimName, UINT _iFaceX, UINT _iFaceZ);     // 파일로 생성할 때
+
+public:
+    void SetHeightMap(Ptr<CTexture> _pHeightMap) { m_HeightMap = _pHeightMap; }
+    Ptr<CTexture> GetHeightMap() { return m_HeightMap; }
+    
+    void CreateHeightMap();
+
+public:
+    // tile arr tex
+    void SetTileArrTex(Ptr<CTexture> _pTileArrTex) { m_pTileArrTex = _pTileArrTex; }
+    Ptr<CTexture> GetTileArrTex() { return m_pTileArrTex; }
+
+public:
     virtual void finaltick() override;
     virtual void render() override;
     virtual void render(UINT _iSubset) override;
 
 private:
     void init();
-    void CreateMesh();
     void CreateComputeShader();
     void CreateTexture();
 

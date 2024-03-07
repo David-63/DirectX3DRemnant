@@ -10,26 +10,50 @@
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{78d2676d-e9d6-47ca-8d90-52e8d457d264}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Cam">
+    <Filter Include="Script\Creature">
+      <UniqueIdentifier>{adc9a722-bf88-42de-b8b5-77c66bd066ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\System">
+      <UniqueIdentifier>{50a9e949-a5cc-4d4a-bef9-dcf08efd4a9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Player">
+      <UniqueIdentifier>{9c10cbfc-01d1-4cf3-8483-5149eecc2915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster">
+      <UniqueIdentifier>{7e7533cf-2577-4dca-b6c2-0554a5e4b9d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Object">
+      <UniqueIdentifier>{8427c908-ce8b-4e48-9b61-84c56bebb1f1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Object\Static">
+      <UniqueIdentifier>{3f44c4a9-aaf7-4749-b243-a89195b1c1dd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Object\dynamic">
+      <UniqueIdentifier>{614a0ec1-2711-4769-ad84-81bdc757ebea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Boss">
+      <UniqueIdentifier>{dcdf453e-932e-4355-aff4-f3738b23d32b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\System\Cam">
       <UniqueIdentifier>{fd09dc36-c00e-45bb-8be0-75c286d9a8bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Test">
+    <Filter Include="Script\Sample">
       <UniqueIdentifier>{ea948113-95ce-4848-908a-1852e7aa190c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\FSM">
+    <Filter Include="Script\Creature\Player\P_FSM">
+      <UniqueIdentifier>{578763be-0dfb-478f-aba8-7786e8f1571e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Sample\FSM">
       <UniqueIdentifier>{d961b49d-8e38-4dbb-9cdb-fb83b6f23c3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_FSM">
+      <UniqueIdentifier>{28eb6ad2-1446-4495-9a35-70aefbd19f39}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Boss\B_FSM">
+      <UniqueIdentifier>{43cf5517-70c1-486c-80e3-b5d75ca8c5c3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CMissileScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CMonsterScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>Default</Filter>
     </ClInclude>
@@ -39,44 +63,32 @@
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CGravityScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlanetScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="CCameraMoveScript.h">
-      <Filter>Script\Cam</Filter>
+      <Filter>Script\System\Cam</Filter>
     </ClInclude>
     <ClInclude Include="CShoulderViewScript.h">
-      <Filter>Script\Cam</Filter>
+      <Filter>Script\System\Cam</Filter>
     </ClInclude>
     <ClInclude Include="CCharacterMoveScript.h">
-      <Filter>Script\Test</Filter>
+      <Filter>Script\Sample</Filter>
     </ClInclude>
     <ClInclude Include="CTestScript.h">
-      <Filter>Script\Test</Filter>
+      <Filter>Script\Sample</Filter>
     </ClInclude>
     <ClInclude Include="CStateScript.h">
-      <Filter>Script\FSM</Filter>
+      <Filter>Script\Sample\FSM</Filter>
     </ClInclude>
     <ClInclude Include="CIdleStateScript.h">
-      <Filter>Script\FSM</Filter>
+      <Filter>Script\Sample\FSM</Filter>
     </ClInclude>
     <ClInclude Include="CPlayerScriptFsm.h">
-      <Filter>Script\FSM</Filter>
+      <Filter>Script\Sample\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerScript.h">
+      <Filter>Script\Sample</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CMissileScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CMonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Default</Filter>
     </ClCompile>
@@ -86,32 +98,29 @@
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CGravityScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlanetScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="CCameraMoveScript.cpp">
-      <Filter>Script\Cam</Filter>
+      <Filter>Script\System\Cam</Filter>
     </ClCompile>
     <ClCompile Include="CShoulderViewScript.cpp">
-      <Filter>Script\Cam</Filter>
+      <Filter>Script\System\Cam</Filter>
     </ClCompile>
     <ClCompile Include="CCharacterMoveScript.cpp">
-      <Filter>Script\Test</Filter>
+      <Filter>Script\Sample</Filter>
     </ClCompile>
     <ClCompile Include="CTestScript.cpp">
-      <Filter>Script\Test</Filter>
+      <Filter>Script\Sample</Filter>
     </ClCompile>
     <ClCompile Include="CStateScript.cpp">
-      <Filter>Script\FSM</Filter>
+      <Filter>Script\Sample\FSM</Filter>
     </ClCompile>
     <ClCompile Include="CIdleStateScript.cpp">
-      <Filter>Script\FSM</Filter>
+      <Filter>Script\Sample\FSM</Filter>
     </ClCompile>
     <ClCompile Include="CPlayerScriptFsm.cpp">
-      <Filter>Script\FSM</Filter>
+      <Filter>Script\Sample\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScript.cpp">
+      <Filter>Script\Sample</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

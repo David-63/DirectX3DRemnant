@@ -13,6 +13,7 @@ CMesh::CMesh(bool _bEngine)
 	: CRes(RES_TYPE::MESH, _bEngine)
 	, m_tVBDesc{}
 	, m_VtxCount(0)
+	, m_mtrlCount(0)
 	, m_pVtxSys(nullptr)
 	, m_pBoneFrameData(nullptr)
 	, m_pBoneOffset(nullptr)

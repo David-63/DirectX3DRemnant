@@ -37,6 +37,7 @@ public:
     CLONE(CSkyBox);
 public:
     CSkyBox();
+    CSkyBox(const CSkyBox& _other);
     ~CSkyBox();
 };
 

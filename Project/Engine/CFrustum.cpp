@@ -2,6 +2,32 @@
 #include "CFrustum.h"
 #include "CCamera.h"
 
+CFrustum::CFrustum() : m_pCam(nullptr), m_arrProj{}, m_arrFace{}
+{
+    m_arrProj[0] = Vec3(-1.f, 1.f, 0.f);
+    m_arrProj[1] = Vec3(1.f, 1.f, 0.f);
+    m_arrProj[2] = Vec3(1.f, -1.f, 0.f);
+    m_arrProj[3] = Vec3(-1.f, -1.f, 0.f);
+
+    m_arrProj[4] = Vec3(-1.f, 1.f, 1.f);
+    m_arrProj[5] = Vec3(1.f, 1.f, 1.f);
+    m_arrProj[6] = Vec3(1.f, -1.f, 1.f);
+    m_arrProj[7] = Vec3(-1.f, -1.f, 1.f);
+}
+
+CFrustum::CFrustum(const CFrustum& _other) : m_pCam(nullptr), m_arrProj{}, m_arrFace{}
+{
+    m_arrProj[0] = Vec3(-1.f, 1.f, 0.f);
+    m_arrProj[1] = Vec3(1.f, 1.f, 0.f);
+    m_arrProj[2] = Vec3(1.f, -1.f, 0.f);
+    m_arrProj[3] = Vec3(-1.f, -1.f, 0.f);
+
+    m_arrProj[4] = Vec3(-1.f, 1.f, 1.f);
+    m_arrProj[5] = Vec3(1.f, 1.f, 1.f);
+    m_arrProj[6] = Vec3(1.f, -1.f, 1.f);
+    m_arrProj[7] = Vec3(-1.f, -1.f, 1.f);
+}
+
 CFrustum::CFrustum(CCamera* _camera)
     : m_pCam(_camera), m_arrProj{}, m_arrFace{}
 {
@@ -28,6 +54,8 @@ CFrustum::~CFrustum()
 
 void CFrustum::finaltick()
 {
+    if (!m_pCam)
+        return;
     // 투영 공간의 ndc 좌표가 역으로 월드 공간에 가면 카메라 시야범위가 월드 공간에서 8개의 모서리로 나온다
     const Matrix& matProInv = m_pCam->GetProjInvMat();
     const Matrix& matViewInv = m_pCam->GetViewInvMat();

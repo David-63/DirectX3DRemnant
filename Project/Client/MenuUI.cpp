@@ -224,7 +224,9 @@ int MenuUI::render_update()
 
             if (ImGui::MenuItem("Play", nullptr, nullptr, PlayEnable))
             {                
-                CLevelSaveLoad::SaveLevel(L"Level\\Temp.lv", CurLevel);
+                wstring strPath = CPathMgr::GetInst()->GetContentPath();
+
+                CLevelSaveLoad::SaveLevel(strPath + L"Level\\Temp.lv", CurLevel);
                 CurLevel->ChangeState(LEVEL_STATE::PLAY);
             }
             else if (ImGui::MenuItem("Pause", nullptr, nullptr, PauseEnable))
@@ -234,7 +236,8 @@ int MenuUI::render_update()
             else if (ImGui::MenuItem("Stop", nullptr, nullptr, StopEnable))
             {
                 CurLevel->ChangeState(LEVEL_STATE::STOP);
-                CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(L"Level\\Temp.lv");
+                wstring strPath = CPathMgr::GetInst()->GetContentPath();
+                CLevel* pNewLevel = CLevelSaveLoad::LoadLevel(strPath + L"Level\\Temp.lv");
              
                 tEvent evn = {};
                 evn.Type = EVENT_TYPE::LEVEL_CHANGE;

@@ -43,38 +43,38 @@ void CreateTestLevel()
 	CCollisionMgr::GetInst()->SetColLayer(5, 5);
 
 	// camera
-	
+
 		// Main Camera Object 생성
-		CGameObject* pMainCam = new CGameObject;
-		pMainCam->SetName(L"MainCamera");
+	CGameObject* pMainCam = new CGameObject;
+	pMainCam->SetName(L"MainCamera");
 
-		pMainCam->AddComponent(new CTransform);
-		pMainCam->AddComponent(new CCamera);
-		pMainCam->AddComponent(new CCameraMoveScript);
-		
-		
-		// 숄더뷰용
-		//pMainCam->AddComponent(new CShoulderViewScript);
-		//CShoulderViewScript* pCamMoveScript = pMainCam->GetScript<CShoulderViewScript>(); 
+	pMainCam->AddComponent(new CTransform);
+	pMainCam->AddComponent(new CCamera);
+	pMainCam->AddComponent(new CCameraMoveScript);
 
-		pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-		pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
-		pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
-		pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
-		pMainCam->Camera()->SetFar(20000.f);
-		SpawnGameObject(pMainCam, Vec3(200.f, 133.f, -500.f), 0);
 
-		// UI cameara
-		CGameObject* pUICam = new CGameObject;
-		pUICam->SetName(L"UICamera");
+	// 숄더뷰용
+	//pMainCam->AddComponent(new CShoulderViewScript);
+	//CShoulderViewScript* pCamMoveScript = pMainCam->GetScript<CShoulderViewScript>(); 
 
-		pUICam->AddComponent(new CTransform);
-		pUICam->AddComponent(new CCamera);
+	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
+	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
+	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
+	pMainCam->Camera()->SetFar(20000.f);
+	SpawnGameObject(pMainCam, Vec3(200.f, 133.f, -500.f), 0);
 
-		pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
-		pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
-		SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
+	// UI cameara
+	CGameObject* pUICam = new CGameObject;
+	pUICam->SetName(L"UICamera");
+
+	pUICam->AddComponent(new CTransform);
+	pUICam->AddComponent(new CCamera);
+
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
+	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
+	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 
 
 	//
@@ -117,14 +117,14 @@ void CreateTestLevel()
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* pObj = nullptr;
-		
+
 		// 인스턴싱 테스트
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		pObj = pMeshData->Instantiate();
 		pObj->AddComponent(new CTestScript());
-		
+
 		pObj->SetName(L"Player");
 		pObj->Transform()->SetDebugSphereUse(true);
 		pObj->SetLayerIdx(2);
@@ -161,18 +161,18 @@ void CreateTestLevel()
 		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
 		pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
 
-		
+
 		pObj->AddComponent(new CCollider3D);
 		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 		pObj->RigidBody()->AddActorToLevel();
-		
+
 
 		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 
 
 		//pCamMoveScript->SetCamTarget(pObj); //숄더뷰 용
 
-		
+
 		//for (int i = 0; i < 10; ++i)
 		//{
 		//	pObj = pMeshData->Instantiate();
@@ -244,7 +244,7 @@ void CreateTestLevel()
 		//SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
 
 		//CResMgr::GetInst()->SavePrefab(pObj, L"prefab\\prefab01.pref");
-		
+
 	//	Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\sampleObj.pref");
 	//	CGameObject* cloneObj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
 	//	CGameObject* cloneObj2 = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
@@ -289,7 +289,7 @@ void CreateTestLevel()
 
 		//SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
 
-		
+
 	}
 	//static box
 	{
@@ -377,7 +377,7 @@ void CreateTestLevel()
 		pGround->Transform()->SetRelativeScale(10000.f, 10.f, 10000.f);
 		pGround->SetLayerIdx(5);
 		pGround->Transform()->SetRelativePos(Vec3(0.f, -5.f, 0.f));
-		
+
 
 		pGround->AddComponent(new CCollider3D);
 		pGround->AddComponent(new CRigidBody);
@@ -399,10 +399,10 @@ void CreateTestLevel()
 		pGround->MeshRender()->SetMaterial(mater, 0);
 
 		PxVec3 pos = pGround->Transform()->GetPhysicsPosition();
-		
+
 		SpawnGameObject(pGround, Vec3(0.f, -5.f, 0.f), 4);
 	}
-	
+
 	bool hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
 
 

@@ -22,6 +22,7 @@ CGameObject* CMeshData::Instantiate()
 	CGameObject* pNewObj = new CGameObject;
 	pNewObj->AddComponent(new CTransform);
 	pNewObj->AddComponent(new CMeshRender);
+	pNewObj->MeshRender()->SetMeshData(this);
 
 	pNewObj->MeshRender()->SetMesh(m_pMesh);
 
@@ -45,6 +46,8 @@ CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 {
 	wstring strFullPath = CPathMgr::GetInst()->GetContentPath();
 	strFullPath += _strPath;
+	// content//meshdata
+
 
 	CFBXLoader loader;
 	loader.init();

@@ -16,7 +16,21 @@ struct tTimeCtrl
 	void SetFinishTime(float _value) { maxTime = _value; }
 	void Activate() { active = true; }
 	void ResetTime() { curTime = 0; active = false; }
+};
 
+struct tUINTS
+{
+	UINT X, Y;
+
+	tUINTS() : X(0), Y(0) {}
+	tUINTS(UINT _x, UINT _y) : X(_x), Y(_y) {}
+	~tUINTS() {}
+	tUINTS& set(UINT _x, UINT _y)
+	{
+		X = _x;
+		Y = _y;
+		return *this;
+	}
 };
 
 struct tVertex
@@ -133,6 +147,7 @@ struct tRWParticleBuffer
 struct tParticleModule
 {
 	Vec3    vRandomSpark;
+	int     iGunSpark;
 
 	// 스폰 모듈
 	Vec4    vSpawnColor;
@@ -164,7 +179,7 @@ struct tParticleModule
 
 	// 버퍼 최대크기
 	int		iMaxParticleCount;
-	int		ipad[2];
+	int		ipad;
 
 	// Add Velocity 모듈
 	Vec4	vVelocityDir;	
