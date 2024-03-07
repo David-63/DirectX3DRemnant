@@ -4,8 +4,6 @@
 #include <Engine\CMeshRender.h>
 #include <Engine\CMaterial.h>
 
-#include "CMissileScript.h"
-
 
 CPlayerScript::CPlayerScript()
 	: CScript((UINT)SCRIPT_TYPE::PLAYERSCRIPT)
