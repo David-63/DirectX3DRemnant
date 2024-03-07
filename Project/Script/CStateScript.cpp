@@ -16,7 +16,6 @@ CStateScript::~CStateScript()
 
 void CStateScript::begin()
 {
-	//m_Transform = GetPlayerScript()->GetOwner()->GetComponent<Transform>();
 }
 
 void CStateScript::tick()

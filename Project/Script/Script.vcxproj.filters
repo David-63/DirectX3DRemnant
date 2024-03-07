@@ -52,6 +52,12 @@
     <Filter Include="Script\Creature\Boss\B_FSM">
       <UniqueIdentifier>{43cf5517-70c1-486c-80e3-b5d75ca8c5c3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Creature\0 base">
+      <UniqueIdentifier>{545fb234-9c61-4792-a37a-851ef3a24f19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Player\P_States">
+      <UniqueIdentifier>{a713c042-cd3f-4b33-9dc1-f29d3b11fa2e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -75,9 +81,6 @@
     <ClInclude Include="CTestScript.h">
       <Filter>Script\Sample</Filter>
     </ClInclude>
-    <ClInclude Include="CStateScript.h">
-      <Filter>Script\Sample\FSM</Filter>
-    </ClInclude>
     <ClInclude Include="CIdleStateScript.h">
       <Filter>Script\Sample\FSM</Filter>
     </ClInclude>
@@ -86,6 +89,27 @@
     </ClInclude>
     <ClInclude Include="CPlayerScript.h">
       <Filter>Script\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_FSMScript.h">
+      <Filter>Script\Creature\0 base</Filter>
+    </ClInclude>
+    <ClInclude Include="CStateScript.h">
+      <Filter>Script\Sample\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_StatesScript.h">
+      <Filter>Script\Creature\0 base</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_StatesScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_FSMScript.h">
+      <Filter>Script\Creature\Player\P_FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEIdleScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEMoveScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -110,9 +134,6 @@
     <ClCompile Include="CTestScript.cpp">
       <Filter>Script\Sample</Filter>
     </ClCompile>
-    <ClCompile Include="CStateScript.cpp">
-      <Filter>Script\Sample\FSM</Filter>
-    </ClCompile>
     <ClCompile Include="CIdleStateScript.cpp">
       <Filter>Script\Sample\FSM</Filter>
     </ClCompile>
@@ -121,6 +142,27 @@
     </ClCompile>
     <ClCompile Include="CPlayerScript.cpp">
       <Filter>Script\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_FSMScript.cpp">
+      <Filter>Script\Creature\0 base</Filter>
+    </ClCompile>
+    <ClCompile Include="CStateScript.cpp">
+      <Filter>Script\Sample\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_StatesScript.cpp">
+      <Filter>Script\Creature\0 base</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_StatesScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_FSMScript.cpp">
+      <Filter>Script\Creature\Player\P_FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEIdleScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEMoveScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

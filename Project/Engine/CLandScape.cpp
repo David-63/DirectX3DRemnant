@@ -48,7 +48,7 @@ void CLandScape::finaltick()
 		return;
 	}
 
-	if (KEY_PRESSED(KEY::LBTN))
+	if (KEY_HOLD(KEY::LBTN))
 	{
 		Raycasting();
 

@@ -9,7 +9,7 @@
 
 #define KEY_TAP(Key) CKeyMgr::GetInst()->GetKeyState(Key) == KEY_STATE::TAP		
 #define KEY_RELEASE(Key) CKeyMgr::GetInst()->GetKeyState(Key) == KEY_STATE::RELEASE
-#define KEY_PRESSED(Key) CKeyMgr::GetInst()->GetKeyState(Key) == KEY_STATE::PRESSED
+#define KEY_HOLD(Key) CKeyMgr::GetInst()->GetKeyState(Key) == KEY_STATE::HOLD
 
 #define DT CTimeMgr::GetInst()->GetDeltaTime()
 #define ScaleDT CTimeMgr::GetInst()->GetScaledDeltaTime()

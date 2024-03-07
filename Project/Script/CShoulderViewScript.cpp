@@ -258,7 +258,7 @@ void CShoulderViewScript::Input()
 	}
 
 	// == 카메라 전환
-	if (KEY_PRESSED(KEY::RBTN))
+	if (KEY_HOLD(KEY::RBTN))
 	{
 		m_eViewState = VIEW_STATE::AIMING;
 

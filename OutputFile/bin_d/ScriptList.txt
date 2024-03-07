@@ -1,7 +1,13 @@
 CCameraMoveScript
 CCharacterMoveScript
+CC_FSMScript
+CC_StatesScript
 CIdleStateScript
 CPlayerScript
 CPlayerScriptFsm
+CP_FSMScript
+CP_STATEIdleScript
+CP_STATEMoveScript
+CP_StatesScript
 CShoulderViewScript
 CTestScript
