@@ -16,8 +16,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Script", "Project\Script\Sc
 		{7E0E511C-FB50-47F0-B655-99DC30AB0FE5} = {7E0E511C-FB50-47F0-B655-99DC30AB0FE5}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CodeGen", "Project\CodeGen\CodeGen.vcxproj", "{FD69567E-8FBB-45F0-AA9E-71872590AFDD}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -50,14 +48,6 @@ Global
 		{5B1B31D5-6602-4A99-B0E1-3F817BA05EA1}.Release|x64.Build.0 = Release|x64
 		{5B1B31D5-6602-4A99-B0E1-3F817BA05EA1}.Release|x86.ActiveCfg = Release|Win32
 		{5B1B31D5-6602-4A99-B0E1-3F817BA05EA1}.Release|x86.Build.0 = Release|Win32
-		{FD69567E-8FBB-45F0-AA9E-71872590AFDD}.Debug|x64.ActiveCfg = Debug|x64
-		{FD69567E-8FBB-45F0-AA9E-71872590AFDD}.Debug|x64.Build.0 = Debug|x64
-		{FD69567E-8FBB-45F0-AA9E-71872590AFDD}.Debug|x86.ActiveCfg = Debug|Win32
-		{FD69567E-8FBB-45F0-AA9E-71872590AFDD}.Debug|x86.Build.0 = Debug|Win32
-		{FD69567E-8FBB-45F0-AA9E-71872590AFDD}.Release|x64.ActiveCfg = Release|x64
-		{FD69567E-8FBB-45F0-AA9E-71872590AFDD}.Release|x64.Build.0 = Release|x64
-		{FD69567E-8FBB-45F0-AA9E-71872590AFDD}.Release|x86.ActiveCfg = Release|Win32
-		{FD69567E-8FBB-45F0-AA9E-71872590AFDD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
