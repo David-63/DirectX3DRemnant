@@ -48,8 +48,15 @@ private:
     ePlayerStance   P_Stance;
     ePlayerMoveDir  P_MoveDir;
 
+    bool            m_InpCrouch;
+    bool            m_InpAim;
+    bool            m_InpSprint;
+
+
+
 public:
     virtual void begin() override;
+    virtual void tick() override;
 
 
 public:
@@ -58,7 +65,13 @@ public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
     ePlayerStance GetStance() { return P_Stance; }
 
-
+public:
+    void InputCrouch() { m_InpCrouch ? m_InpCrouch = false : m_InpCrouch = true; }
+    void InputAim() { m_InpAim ? m_InpAim = false : m_InpAim = true; }
+    void InputSprint() { m_InpSprint ? m_InpSprint = false : m_InpSprint = true; }
+    bool IsCrouch() { return m_InpCrouch; }
+    bool IsAim() { return m_InpAim; }
+    bool IsSprint() { return m_InpSprint; }
 
 public:
     virtual void BeginOverlap(CCollider3D* _Other) override;

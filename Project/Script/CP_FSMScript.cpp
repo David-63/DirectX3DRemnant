@@ -22,6 +22,10 @@ void CP_FSMScript::tick()
 {
 	CC_FSMScript::tick();
 
+	// 달리기 추가
+	
+	// 회피 추가
+
 	if (m_InpCrouch && m_InpAim)
 	{
 		P_Stance = ePlayerStance::CrouchAim;

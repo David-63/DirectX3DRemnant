@@ -66,9 +66,9 @@ public:
     ePlayerStance GetStance() { return P_Stance; }
 
 public:
-    void InputCrouch() { m_InpCrouch ? false : true; }
-    void InputAim() { m_InpAim ? false : true; }
-    void InputSprint() { m_InpSprint ? false : true; }
+    void InputCrouch() { m_InpCrouch ? m_InpCrouch = false : m_InpCrouch = true; }
+    void InputAim() { m_InpAim ? m_InpAim = false : m_InpAim = true; }
+    void InputSprint() { m_InpSprint ? m_InpSprint = false : m_InpSprint = true; }
     bool IsCrouch() { return m_InpCrouch; }
     bool IsAim() { return m_InpAim; }
     bool IsSprint() { return m_InpSprint; }

@@ -20,7 +20,7 @@ void CP_STATEIdleScript::tick()
 	
 	
 
-	Input();
+	MoveInput();
 
 	// 상태 변경해주기
 	if (m_isMove)
@@ -29,7 +29,7 @@ void CP_STATEIdleScript::tick()
 	}	
 }
 
-void CP_STATEIdleScript::Input()
+void CP_STATEIdleScript::MoveInput()
 {
 	if (KEY_TAP(KEY::RBTN))
 	{
@@ -93,7 +93,7 @@ void CP_STATEIdleScript::IdleNormalInput()
 	// 스텐스 변경
 	
 	// Move Input
-	Input();
+	MoveInput();
 }
 
 void CP_STATEIdleScript::IdleAimInput()
@@ -117,7 +117,7 @@ void CP_STATEIdleScript::IdleAimInput()
 	{
 		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::CrouchAim);
 	}
-	Input();
+	MoveInput();
 }
 
 void CP_STATEIdleScript::IdleCrouchInput()
@@ -139,7 +139,7 @@ void CP_STATEIdleScript::IdleCrouchAimInput()
 	{
 		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Aim);
 	}
-	Input();
+	MoveInput();
 }
 
 void CP_STATEIdleScript::Enter()

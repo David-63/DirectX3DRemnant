@@ -18,6 +18,7 @@ public:
     void MoveInput();
     void IdleMouseInput();
 
+public:
     void IdleNormalInput();
     void IdleAimInput();
     void IdleCrouchInput();

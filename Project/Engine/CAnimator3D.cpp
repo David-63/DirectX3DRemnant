@@ -267,7 +267,7 @@ void CAnimator3D::changeAnimClip(wstring _strAnimName)
 	m_pCurrentAnim = findAnim(_strAnimName).Get();
 	if (m_pPrevAnim)
 	{
-		if (m_pPrevAnim->GetKey() == m_pCurrentAnim->GetKey())
+		if (m_pPrevAnim->GetKey() != m_pCurrentAnim->GetKey())
 		{
 			Events* events;
 
