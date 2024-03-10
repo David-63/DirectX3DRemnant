@@ -54,6 +54,7 @@ struct tRWParticleBuffer
 struct tParticleModule
 {
     float3  vRandomSpark;
+    int     iGunSpark; // 사실 이건 스크립트에서 파라미터 세팅해주면 될 문제라...
     
 	// 스폰 모듈
     float4  vSpawnColor;
@@ -85,7 +86,7 @@ struct tParticleModule
 
     // 버퍼 최대크기
     int     iMaxParticleCount;
-    int2    ipad;
+    int    ipad;
     
     // Add Velocity 모듈
     float4  vVelocityDir;

@@ -40,8 +40,8 @@ void CDecal::render()
 
 	int IsEmissive = m_bEmissive;
 	GetMaterial(0)->SetScalarParam(INT_0, &IsEmissive);
+	ActiveDecal();
 	GetMaterial(0)->UpdateData();
-
 	GetMesh()->render(0);	
 }
 
@@ -69,6 +69,11 @@ void CDecal::SetDeferredDecal(bool _bDeferred)
 
 }
 
+void CDecal::ActiveDecal()
+{
+	if (m_DecalTex.Get())
+		GetMaterial(0)->SetTexParam(TEX_1, m_DecalTex);
+}
 
 
 void CDecal::SaveToLevelFile(FILE* _File)
@@ -85,4 +90,5 @@ void CDecal::LoadFromLevelFile(FILE* _File)
 	LoadResRef(m_DecalTex, _File);
 	fread(&m_bDeferred, sizeof(bool), 1, _File);
 	fread(&m_bEmissive, sizeof(bool), 1, _File);
+	m_bShow = false;
 }

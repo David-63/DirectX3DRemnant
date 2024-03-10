@@ -201,14 +201,15 @@ enum class PROJ_TYPE
 
 enum class SHADER_DOMAIN
 {
-	DOMAIN_DEFERRED,		// 지연 렌더링 오브젝트
-	DOMAIN_DEFERRED_DECAL,	// Deferred Decal(광원 적용 가능한 Decal)
+	DOMAIN_DEFERRED,			// 지연 렌더링 오브젝트
+	DOMAIN_DEFERRED_DECAL,		// Deferred Decal
+	DOMAIN_DEFERRED_PARTICLE,	// Deferred Particle 
 
-	DOMAIN_OPAQUE,			// 불투명 오브젝트
-	DOMAIN_MASK,			// 불투명, 완전 투명
-	DOMAIN_DECAL,			// 데칼 오브젝트
-	DOMAIN_TRANSPARENT,		// 반투명
-	DOMAIN_POSTPROCESS,		// 후 처리
+	DOMAIN_OPAQUE,				// 불투명 오브젝트
+	DOMAIN_MASK,				// 불투명, 완전 투명
+	DOMAIN_DECAL,				// 데칼 오브젝트
+	DOMAIN_TRANSPARENT,			// 반투명		| Paritcle
+	DOMAIN_POSTPROCESS,			// 후 처리
 	DOMAIN_UI,
 
 	DOMAIN_LIGHT,			// 광원 타입 

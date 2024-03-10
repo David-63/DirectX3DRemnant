@@ -10,9 +10,7 @@ public:
 
 
 public:
-    void SelectMesh(DWORD_PTR _Key);
-    void SelectMaterial(DWORD_PTR _Key);
-
+    void SelectMeshData(DWORD_PTR _Key);
 
 public:
     MeshRenderUI();

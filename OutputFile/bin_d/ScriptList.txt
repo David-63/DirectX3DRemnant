@@ -1,11 +1,7 @@
 CCameraMoveScript
 CCharacterMoveScript
-CGravityScript
-CMissileScript
-CMonsterMoveScript
-CMonsterScript
-CPathFinderScript
-CPlanetScript
+CIdleStateScript
 CPlayerScript
+CPlayerScriptFsm
 CShoulderViewScript
 CTestScript

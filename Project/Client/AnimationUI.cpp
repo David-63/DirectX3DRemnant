@@ -20,7 +20,7 @@ int AnimationUI::render_update()
 
     Ptr<CMesh> pMesh = (CMesh*)GetTargetRes().Get();
     string strKey = string(pMesh->GetKey().begin(), pMesh->GetKey().end());
-    ImGui::InputText("##MeshUIName", (char*)strKey.c_str(), strKey.length(), ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
+    ImGui::InputText("##AnimUIName", (char*)strKey.c_str(), strKey.length(), ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
 
     return 0;
 }

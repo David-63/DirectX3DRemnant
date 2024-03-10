@@ -157,6 +157,16 @@ void ContentUI::SetTargetToInspector(DWORD_PTR _SelectedNode)
 	pInspector->SetTargetResource(pSelectObject);
 }
 
+CRes* ContentUI::GetSelectedRes()
+{
+	TreeNode* pSelectedNode = m_Tree->GetSelectedNode();
+
+	if (nullptr == pSelectedNode)
+		return nullptr;
+
+	return (CRes*)pSelectedNode->GetData();
+}
+
 
 void ContentUI::FindFileName(const wstring& _FolderPath)
 {
@@ -205,7 +215,8 @@ RES_TYPE ContentUI::GetResTypeByExt(const wstring& _relativepath)
 		return RES_TYPE::MATERIAL;
 	else if (L".png" == strExt || L".jpg" == strExt
 		|| L".jpeg" == strExt || L".bmp" == strExt
-		|| L".tga" == strExt || L".dds" == strExt)
+		|| L".tga" == strExt || L".dds" == strExt
+		|| L".tex" == strExt)
 		return RES_TYPE::TEXTURE;
 	else if (L".animclip" == strExt)
 		return RES_TYPE::ANIMCLIP;

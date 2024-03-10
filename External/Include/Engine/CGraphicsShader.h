@@ -71,6 +71,8 @@ public:
     const vector<tScalarParam>& GetScalarParam() { return m_vecScalarParam; }
     const vector<tTexParam>& GetTexParam() { return m_vecTexParam; }
 
+    void ResetScalarParam(SCALAR_PARAM _Param);
+
 public:
     CGraphicsShader();
     ~CGraphicsShader();

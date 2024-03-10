@@ -18,7 +18,7 @@ private:
 
 public:
     virtual void finaltick() override;
-    void render();              // light render
+    void render();                          // light render
     void render_shadowmap();
 
     virtual void SaveToLevelFile(FILE* _File) override;

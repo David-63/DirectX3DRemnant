@@ -17,6 +17,14 @@ CSkyBox::CSkyBox()
 	SetFrustumCheck(false);
 }
 
+CSkyBox::CSkyBox(const CSkyBox& _other)
+	: CRenderComponent(_other), m_Type(_other.m_Type), m_SkyBoxTex(_other.m_SkyBoxTex)
+{
+	SetSkyBoxType(m_Type);
+	SetDynamicShadow(false);
+	SetFrustumCheck(false);
+}
+
 CSkyBox::~CSkyBox()
 {
 }

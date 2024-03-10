@@ -29,6 +29,8 @@ CLight3D::CLight3D(const CLight3D& _origin)
 	, m_CamObj(nullptr)
 {
 	m_CamObj = new CGameObject(*_origin.m_CamObj);
+	m_LightInfo = _origin.m_LightInfo;
+	SetLightType(static_cast<LIGHT_TYPE>(m_LightInfo.LightType));
 }
 
 CLight3D::~CLight3D()

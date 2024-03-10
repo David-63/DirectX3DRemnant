@@ -75,6 +75,11 @@ public:
             m_vWorldDir[i] = _OtherTransform.m_vWorldDir[i];
         }
     }
+
+public:
+    void SetScaleRatio(float _ratio) { m_vRelativeScale *= _ratio; }
+
+
 public:
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;

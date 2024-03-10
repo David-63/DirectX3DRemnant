@@ -102,6 +102,18 @@ void CMeshRender::render(UINT _iSubset)
 		Animator3D()->ClearData();
 }
 
+void CMeshRender::SetMeshData(Ptr<CMeshData> _meshData)
+{
+	m_meshData = _meshData;
+	SetMesh(m_meshData->GetMeshFromData());
+
+	vector<Ptr<CMaterial>> pMtrl = m_meshData->GetMtrlFromData();
+	for (UINT i = 0; i < pMtrl.size(); ++i)
+	{
+		SetMaterial(pMtrl[i], i);
+	}
+}
+
 void CMeshRender::SaveToLevelFile(FILE* _File)
 {
 	CRenderComponent::SaveToLevelFile(_File);

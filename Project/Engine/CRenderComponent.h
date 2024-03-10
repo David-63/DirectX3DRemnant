@@ -17,7 +17,7 @@ class CRenderComponent :
 {
 private:
     Ptr<CMesh>              m_pMesh;
-    vector<tMtrlSet>        m_vecMtrls;     // 재질    
+    vector<tMtrlSet>        m_vecMtrls;
 
     float                   m_fBounding;        // FrustumCheck 용도 경계범위
     bool                    m_bFrustumCheck;    // 절두체 컬링 체크 유무
