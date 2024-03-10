@@ -13,9 +13,13 @@ CP_STATEMoveScript::~CP_STATEMoveScript()
 }
 
 void CP_STATEMoveScript::tick()
-{
-	//MoveKeyInput();
+{	
 	TranslateInput();
+
+	m_PHQ->GetStance();
+	ePlayerStance::CrouchAim stance = 
+
+	//
 	if (KEY_RELEASE(KEY::W) || KEY_RELEASE(KEY::A)
 		|| KEY_RELEASE(KEY::S) || KEY_RELEASE(KEY::D))
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::IDLE));

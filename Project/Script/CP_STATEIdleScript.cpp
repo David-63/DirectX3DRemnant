@@ -18,38 +18,28 @@ void CP_STATEIdleScript::tick()
 	// 입력 받기
 	IdleMouseInput();
 	
-	// 스탠스에 맞춰서 로직 진행하기
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-	switch (curStance)
-	{
-	case CP_FSMScript::ePlayerStance::Normal:
-		IdleNormalInput();
-		break;
-	case CP_FSMScript::ePlayerStance::Crouch:
-		IdleCrouchInput();
-		break;
-	case CP_FSMScript::ePlayerStance::Aim:
-		IdleAimInput();
-		break;
-	case CP_FSMScript::ePlayerStance::CrouchAim:
-		IdleCrouchAimInput();
-		break;
-	}
+	
+
+	Input();
 
 	// 상태 변경해주기
 	if (m_isMove)
 	{
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
-	}
-	
-	if (m_isMelee)
-	{
-		//m_PHQ->ChangeState(static_cast<UINT>(eP_States::MELEE));
-	}
+	}	
 }
 
-void CP_STATEIdleScript::MoveInput()
+void CP_STATEIdleScript::Input()
 {
+	if (KEY_TAP(KEY::RBTN))
+	{
+		m_PHQ->InputAim();
+	}
+	if (KEY_TAP(KEY::LCTRL))
+	{
+		m_PHQ->InputCrouch();
+	}
+
 	if (KEY_TAP(KEY::W))
 	{
 		m_isMove = true;
@@ -101,30 +91,9 @@ void CP_STATEIdleScript::IdleMouseInput()
 void CP_STATEIdleScript::IdleNormalInput()
 {
 	// 스텐스 변경
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-	if (KEY_TAP(KEY::LBTN))
-	{
-		m_isMelee = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::N);
-	}
-
-	if (KEY_TAP(KEY::RBTN))
-	{
-		if (CP_FSMScript::ePlayerStance::Crouch == curStance)
-			m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::CrouchAim);	
-		else
-			m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Aim);
-	}
-	if (KEY_TAP(KEY::LCTRL))
-	{
-		if (CP_FSMScript::ePlayerStance::Aim == curStance)
-			m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::CrouchAim);
-		else
-			m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Crouch);
-	}
-
+	
 	// Move Input
-	MoveInput();
+	Input();
 }
 
 void CP_STATEIdleScript::IdleAimInput()
@@ -148,31 +117,11 @@ void CP_STATEIdleScript::IdleAimInput()
 	{
 		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::CrouchAim);
 	}
-	MoveInput();
+	Input();
 }
 
 void CP_STATEIdleScript::IdleCrouchInput()
-{
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-	if (KEY_TAP(KEY::LBTN))
-	{
-		m_isMelee = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::N);
-	}
-
-	if (KEY_RELEASE(KEY::LCTRL))
-	{
-		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
-			m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Aim);
-		else
-			m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Normal);
-	}
-
-	if (KEY_TAP(KEY::RBTN))
-	{
-		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::CrouchAim);
-	}
-	MoveInput();
+{	
 }
 
 void CP_STATEIdleScript::IdleCrouchAimInput()
@@ -190,7 +139,7 @@ void CP_STATEIdleScript::IdleCrouchAimInput()
 	{
 		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Aim);
 	}
-	MoveInput();
+	Input();
 }
 
 void CP_STATEIdleScript::Enter()
