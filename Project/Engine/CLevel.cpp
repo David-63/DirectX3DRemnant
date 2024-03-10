@@ -5,6 +5,7 @@
 #include "CGameObject.h"
 
 #include "CRenderMgr.h"
+#include "CPathFinderMgr.h"
 
 CLevel::CLevel()
 	: m_arrLayer{}
@@ -25,6 +26,8 @@ CLevel::~CLevel()
 
 void CLevel::begin()
 {
+	CPathFinderMgr::GetInst()->MakeStaticMap();
+
 	for (UINT i = 0; i < MAX_LAYER; ++i)
 	{
 		m_arrLayer[i]->begin();

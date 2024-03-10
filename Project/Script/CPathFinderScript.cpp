@@ -27,6 +27,11 @@ CPathFinderScript::~CPathFinderScript()
 
 }
 
+void CPathFinderScript::begin()
+{
+	m_vStaticMap = CPathFinderMgr::GetInst()->GetStaticMap();
+}
+
 void CPathFinderScript::tick()
 {
 	
@@ -37,10 +42,11 @@ void CPathFinderScript::Clear()
 {
 	if (!m_ArrNode.empty())
 	{
-		for (auto iter = m_ArrNode.begin(); iter != m_ArrNode.end(); ++iter)
+		for (auto iter = m_ArrNode.begin(); iter != m_ArrNode.end(); )
 		{
 			delete iter->second;
 			iter->second = nullptr;
+			m_ArrNode.erase(iter++);
 		}
 
 		m_ArrNode.clear();
@@ -58,7 +64,7 @@ void CPathFinderScript::Clear()
 	m_bPathReady = false;
 }
 
-tYX CPathFinderScript::TransCoordinate(Vec3 _pos)
+tYX CPathFinderScript::TransToYX(Vec3 _pos)
 {
 	int x;
 	int y;
@@ -78,12 +84,19 @@ tYX CPathFinderScript::TransCoordinate(Vec3 _pos)
 	return coordinate;
 }
 
+
+
 float CPathFinderScript::SetDestObject(CGameObject* _pObject)
 {
 	Clear();
-	SetDstYX(_pObject->Transform()->GetRelativePos());
 
-	SetCurCoordinate();
+	SetDstYX(_pObject->Transform()->GetRelativePos());
+	SetCurYX();
+
+	ApplyStaticMap();
+	//m_vvDynamicMap = CPathFinderMgr::GetInst()->GetDynamicMap();
+	//ApplyDynamicMap();
+
 	FindPath();
 
 	m_fDstCirclePad = CalCirclePad(_pObject);
@@ -94,7 +107,7 @@ float CPathFinderScript::SetDestObject(CGameObject* _pObject)
 
 
 
-Vec3 CPathFinderScript::TransYX(tYX _coord)
+Vec3 CPathFinderScript::TransYXToPos(tYX _coord)
 {
 	Vec3 pos = {};
 
@@ -123,10 +136,10 @@ float CPathFinderScript::CalCirclePad(CGameObject* _pObject)
 	return 0.f;
 }
 
-void CPathFinderScript::SetCurCoordinate()
+void CPathFinderScript::SetCurYX()
 {
 	Vec3 curPos = GetOwner()->Transform()->GetRelativePos();
-	tYX yx = TransCoordinate(curPos);
+	tYX yx = TransToYX(curPos);
 
 	m_iCurPosX = yx.x;
 	m_iCurPosY = yx.y;
@@ -134,10 +147,36 @@ void CPathFinderScript::SetCurCoordinate()
 
 void CPathFinderScript::SetDstYX(Vec3 _DstPos)
 {
-	tYX yx = TransCoordinate(_DstPos);
+	tYX yx = TransToYX(_DstPos);
 
 	m_iDestPosX = yx.x;
 	m_iDestPosY = yx.y;
+}
+
+void CPathFinderScript::ApplyStaticMap()
+{
+	for (tYX yx : m_vStaticMap)
+	{
+		tPNode* node = new tPNode;
+		node->iIdxX = yx.x;
+		node->iIdxY = yx.y;
+		node->bMove = false;
+
+		m_ArrNode[make_pair(yx.y, yx.x)] = node;
+	}
+}
+
+void CPathFinderScript::ApplyDynamicMap()
+{
+	for (tYX yx : m_vDynamicMap)
+	{
+		tPNode* node = new tPNode;
+		node->iIdxX = yx.x;
+		node->iIdxY = yx.y;
+		node->bMove = false;
+
+		m_ArrNode[make_pair(yx.y, yx.x)] = node;
+	}
 }
 
 
@@ -224,13 +263,13 @@ void CPathFinderScript::FindPath()
 	// 길 저장
 	while (true)
 	{
-		Vec3 nodePos = TransYX(tYX(pCurNode->iIdxY, pCurNode->iIdxX));
+		Vec3 nodePos = TransYXToPos(tYX(pCurNode->iIdxY, pCurNode->iIdxX));
 		m_Stack.push(nodePos);
 		pCurNode = pCurNode->pPrevNode;
 
 		if (pCurNode->iIdxX == m_iCurPosX && pCurNode->iIdxY == m_iCurPosY)
 		{
-			Vec3 nodePos = TransYX(tYX(m_iCurPosY, m_iCurPosX));
+			Vec3 nodePos = TransYXToPos(tYX(m_iCurPosY, m_iCurPosX));
 			m_Stack.push(nodePos);
 			m_bPathReady = true;
 			break;
@@ -256,17 +295,25 @@ void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, bo
 {
 	// 현재 지점에서 갈 수 있는 곳을 OpenList 에 넣는다.
 	// 노드 범위를 벗어난 경우
-	if (_iXIdx < 0 || _iXIdx >= m_iXCount || _iYIdx < 0 || _iYIdx >= m_iYCount
-		|| (m_ArrNode[make_pair(_iYIdx, _iXIdx)] != nullptr && !m_ArrNode[make_pair(_iYIdx, _iXIdx)]->bMove))
+	if (_iXIdx < 0 || _iXIdx >= m_iXCount || _iYIdx < 0 || _iYIdx >= m_iYCount)
 		return;
 
-	// 해당 길이 Closed List 에 있는 경우, Open List 에 넣지 않는다.
-	if (m_ArrNode[make_pair(_iYIdx, _iXIdx)] != nullptr && m_ArrNode[make_pair(_iYIdx, _iXIdx)]->bClosed)
-		return;
-
-	//노드 생성
-	if (m_ArrNode[make_pair(_iYIdx, _iXIdx)] == nullptr)
+	//해당 키값이 있으면서 
+	auto iter = m_ArrNode.find(make_pair(_iYIdx, _iXIdx));
+	if (iter != m_ArrNode.end())
 	{
+		//이동불가일때
+		if (!iter->second->bMove)
+			return;
+
+		// 해당 길이 Closed List 에 있는 경우, Open List 에 넣지 않는다.
+		if (iter->second->bClosed)
+			return;
+	} 
+
+	if (iter == m_ArrNode.end())
+	{
+		//노드 생성
 		tPNode* pCurNode = new tPNode;
 		pCurNode->iIdxX = _iXIdx;
 		pCurNode->iIdxY = _iYIdx;
@@ -293,6 +340,7 @@ void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, bo
 		{
 			delete m_ArrNode[make_pair(_iYIdx, _iXIdx)];
 			m_ArrNode[make_pair(_iYIdx, _iXIdx)] = nullptr;
+			m_ArrNode.erase(make_pair(_iYIdx, _iXIdx));
 
 			m_ArrNode[make_pair(_iYIdx, _iXIdx)] = copy;
 

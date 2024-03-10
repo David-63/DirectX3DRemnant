@@ -18,14 +18,14 @@ public:
 	}
 };
 
-struct tYX
-{
-	tYX(int _y, int _x) 
-		: x(_x), y(_y)
-	{}
-	int x;
-	int y;
-};
+//struct tYX
+//{
+//	tYX(int _y, int _x) 
+//		: x(_x), y(_y)
+//	{}
+//	int x;
+//	int y;
+//};
 
 class CPathFinderScript
 	: public CScript
@@ -53,6 +53,10 @@ private:
 	std::unordered_map<pair<int, int>, tPNode*, tPairHash> m_ArrNode;
 	std::stack<Vec3> m_Stack;
 
+	//from Mgr
+	vector<tYX> m_vStaticMap;
+	vector<tYX> m_vDynamicMap;
+
 public:
 	CPathFinderScript();
 	~CPathFinderScript();
@@ -61,7 +65,7 @@ public:
 
 public:
 	void tick() override;
-
+	void begin() override;
 
 public:
 	float SetDestObject(CGameObject* _pObject);
@@ -69,17 +73,22 @@ public:
 	void Clear();
 
 private:
+	//길찾기 핵심로직
 	void Rebuild(priority_queue<tPNode*, vector<tPNode*>, ComparePathLength>& _queue);
 	void CalculateCost(tPNode* _pCurNode, tPNode* _pOrigin, bool _bDiagonal = false);
 	void AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, bool _bDiagonal = false);
 	void FindPath();
 
+	//좌표변환
 	void SetDstYX(Vec3 _DstPos);
-	tYX TransCoordinate(Vec3 _pos);
-	Vec3 TransYX(tYX _coord);
-	void SetCurCoordinate();
+	tYX TransToYX(Vec3 _pos);
+	Vec3 TransYXToPos(tYX _coord);
+	void SetCurYX();
 	float CalCirclePad(CGameObject* _pObject);
 
-	
+	//map 정보 받기
+	void ApplyStaticMap();
+	void ApplyDynamicMap();
+
 };
 

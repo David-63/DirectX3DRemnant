@@ -453,7 +453,18 @@ struct tRayCastInfo
 
 struct tPNode
 {
-	tPNode* pPrevNode;   // 이전 노드
+	tPNode()
+		: pPrevNode(nullptr)
+		, fFromParent(0.f)
+		, fToDest(0.f)
+		, fFinal(0.f)
+		, iIdxX(0)
+		, iIdxY(0)
+		, bMove(true)
+		, bOpen(false)
+		, bClosed(false)
+	{}
+	tPNode*     pPrevNode;   // 이전 노드
 	float		fFromParent; // 이전 노드에서 현재 노드까지의 거리
 	float		fToDest;	 // 현재 노드에서 목적지 까지의 거리
 	float		fFinal;		 // 위에 두 값을 합친 값(우선순위 기준)
@@ -472,4 +483,13 @@ struct tPairHash
 	{
 		return std::hash<int>()(p.first) ^ std::hash<int>()(p.second);
 	}
+};
+
+struct tYX
+{
+	tYX(int _y, int _x)
+		: x(_x), y(_y)
+	{}
+	int x;
+	int y;
 };

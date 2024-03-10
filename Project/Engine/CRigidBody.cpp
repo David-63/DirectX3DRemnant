@@ -74,10 +74,6 @@ void CRigidBody::tick()
 }
 void CRigidBody::finaltick()
 {
-	if (true == mbAppliedGravity && false == mbAppliedPhysics)
-	{
-		AddGravity();
-	}
 
 	DrawDebugMesh();
 

@@ -15,8 +15,11 @@ private:
 	const float m_fLength = 20.f;
 	const int m_iXCount = 500;
 	const int m_iYCount = 500;
+
+	int m_iRenewCount;
 	
-	std::unordered_map<pair<int, int>, tPNode*, tPairHash> m_GameMap;
+	vector<tYX> m_vStaticYX = {};
+	vector<tYX> m_vDynamicYX = {};
 
 public:
 	int GetXCount() { return m_iXCount; }
@@ -28,8 +31,16 @@ public:
 	void tick();
 
 public:
-	
+	void MakeStaticMap();
+	vector<tYX> GetStaticMap() { return m_vStaticYX; }
+	vector<tYX> GetDynamicMap() { return m_vDynamicYX; }
 
-	
+private:
+	void MakeDynamicMap();
+
+	void CalBoxYX(Vec3 _pos, Vec3 _size, vector<tYX>* _vector);
+	void CalSphereYX(Vec3 _pos, Vec3 _size, vector<tYX>* _vector);
+
+	tYX TransToYX(Vec3 _pos);
 };
 

@@ -6,7 +6,7 @@
 CMonsterMoveScript::CMonsterMoveScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERMOVESCRIPT)
 	, m_Speed(100.f)
-	, m_RenewCount(0)
+	, m_RenewCount(300)
 {
 
 }
@@ -21,8 +21,8 @@ void CMonsterMoveScript::begin()
 
 void CMonsterMoveScript::tick()
 {
-	/*if (m_bTargetOn)
-		RenewPath();*/
+	if (m_bTargetOn)
+		RenewPath();
 
 	if (!m_bCatch && m_bTargetOn)
 		Trace();
@@ -91,7 +91,7 @@ void CMonsterMoveScript::Trace()
 bool CMonsterMoveScript::RenewPath()
 {
 	m_RenewCount++;
-	if (m_RenewCount < 10)
+	if (m_RenewCount < 300)
 		return false;
 
 	m_RenewCount = 0;
@@ -116,7 +116,7 @@ void CMonsterMoveScript::SetAndGetPath(CGameObject* _pObject)
 	m_TargetObj = _pObject;
 	m_finalDst = _pObject->Transform()->GetRelativePos();
 	m_Pad = m_sPathFinder->SetDestObject(_pObject);
-	m_Stack = m_sPathFinder->GetPathStack();
+	//m_Stack = m_sPathFinder->GetPathStack();
 	m_bTargetOn = true;
 	m_bCatch = false;
 }

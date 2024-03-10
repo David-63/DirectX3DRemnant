@@ -31,18 +31,18 @@ void CreateTestLevel()
 
 	// Layer ÀÌ¸§¼³Á¤
 	pCurLevel->GetLayer(0)->SetName(L"Default");
-	pCurLevel->GetLayer(1)->SetName(L"Background");
-	pCurLevel->GetLayer(2)->SetName(L"Player");
-	pCurLevel->GetLayer(3)->SetName(L"Objects");
-	pCurLevel->GetLayer(4)->SetName(L"Ground");
-	pCurLevel->GetLayer(5)->SetName(L"Box");
+	pCurLevel->GetLayer((UINT)LAYER_TYPE::Player)->SetName(L"Player");
+	pCurLevel->GetLayer((UINT)LAYER_TYPE::Monster)->SetName(L"Monster");
+	pCurLevel->GetLayer((UINT)LAYER_TYPE::Wall)->SetName(L"Wall");
+	pCurLevel->GetLayer(4)->SetName(L"Background");
+	pCurLevel->GetLayer(5)->SetName(L"Ground");
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
-	CCollisionMgr::GetInst()->SetColLayer(2, 4);
-	CCollisionMgr::GetInst()->SetColLayer(2, 2);
-	CCollisionMgr::GetInst()->SetColLayer(4, 5);
+	CCollisionMgr::GetInst()->SetColLayer(1, 2);
+	CCollisionMgr::GetInst()->SetColLayer(1, 3);
+	CCollisionMgr::GetInst()->SetColLayer(2, 3);
+	CCollisionMgr::GetInst()->SetColLayer(1, 5);
 	CCollisionMgr::GetInst()->SetColLayer(2, 5);
-	CCollisionMgr::GetInst()->SetColLayer(5, 5);
 
 	// camera
 	
@@ -164,7 +164,7 @@ void CreateTestLevel()
 		player->RigidBody()->AddActorToLevel();
 		
 
-		SpawnGameObject(player, Vec3(-1040.f, 10.f, 800.f), 2);
+		SpawnGameObject(player, Vec3(200.f, 10.f, 0.f), 1);
 
 
 		//pCamMoveScript->SetCamTarget(pObj); //¼ñ´õºä ¿ë
@@ -241,9 +241,9 @@ void CreateTestLevel()
 		CGameObject* pObj = nullptr;
 
 		// ÀÎ½ºÅÏ½Ì Å×½ºÆ®
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Wasteland_Lurker_Atk_Dash.fbx");
 
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		pObj = pMeshData->Instantiate();
 		pObj->AddComponent(new CPathFinderScript());
 		pObj->AddComponent(new CMonsterMoveScript());
@@ -275,7 +275,7 @@ void CreateTestLevel()
 		pObj->RigidBody()->AddActorToLevel();
 
 
-		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 2);
+		SpawnGameObject(pObj, Vec3(700.f, 10.f, 0.f), 2);
 
 		
 		pObj->GetScript<CMonsterMoveScript>()->SetAndGetPath(player);
@@ -305,7 +305,7 @@ void CreateTestLevel()
 		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Wall);
 		pObj->RigidBody()->AddActorToLevel();
 
-		SpawnGameObject(pObj, Vec3(500.f, 100.f, 0.f), 5);
+		SpawnGameObject(pObj, Vec3(500.f, 100.f, 0.f), (UINT)LAYER_TYPE::Wall);
 
 
 	}

@@ -333,3 +333,12 @@ enum class AXIS3D_TYPE
 	Z,
 	END
 };
+
+enum class LAYER_TYPE
+{
+	Ground,
+	Player,
+	Monster,
+	Wall,
+	END,
+};

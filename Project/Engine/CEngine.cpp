@@ -95,6 +95,7 @@ void CEngine::tick()
 	// Level Update
 	// Level 안에 존재하는 모든 GameObject 들이 Tick 을 호출받음
 	CLevelMgr::GetInst()->tick();
+	CPathFinderMgr::GetInst()->tick();
 
 	Physics::GetInst()->tick();
 
