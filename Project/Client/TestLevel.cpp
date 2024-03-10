@@ -105,11 +105,11 @@ void CreateTestLevel()
 		CGameObject* pObj = nullptr;
 
 		// 인스턴싱 테스트
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_MoveWalk.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_IdleStand.fbx");
 		pObj = pMeshData->Instantiate();
 		pObj->SetName(L"Player");
 		pObj->AddComponent(new CP_FSMScript);
 
 		SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
-	}	
+	}
 }

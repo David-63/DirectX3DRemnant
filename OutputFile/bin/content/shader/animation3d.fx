@@ -138,6 +138,24 @@ void MatrixRotationQuaternion(in float4 Quaternion, out matrix _outMat)
 }
 
 
+float4x4 inverse(float4x4 m)
+{
+    float det = determinant(m);
+    if (det == 0.0f)
+    {
+        // 역행렬이 존재하지 않음
+        return float4x4(0.0f, 0.0f, 0.0f, 0.0f,
+                        0.0f, 0.0f, 0.0f, 0.0f,
+                        0.0f, 0.0f, 0.0f, 0.0f,
+                        0.0f, 0.0f, 0.0f, 0.0f);
+    }
+    else
+    {
+        // 전치행렬과 행렬식의 역수를 곱하여 역행렬 계산
+        return transpose(m) / det;
+    }
+}
+
 void MatrixAffineTransformation(in float4 Scaling
     , in float4 RotationOrigin
     , in float4 RotationQuaternion
@@ -165,9 +183,13 @@ void MatrixAffineTransformation(in float4 Scaling
     , in float4 RotationOrigin
     , in float4 RotationQuaternion
     , in matrix AdditionalRotation
+    , in matrix targetIndexMatrix
     , in float4 Translation
     , out matrix _outMat)
 {
+    // 메트릭스는 (크기, 자전, 이동) 으로 구성됨
+    // 특정 뼈에 회전을 주고 싶다면
+    // 1 - 전체 행렬 구하기
     matrix MScaling = (matrix) 0.f;
     MScaling._11_22_33 = Scaling.xyz;
 
@@ -176,15 +198,23 @@ void MatrixAffineTransformation(in float4 Scaling
 
     matrix MRotation = (matrix) 0.f;
     MatrixRotationQuaternion(RotationQuaternion, MRotation);
-
-    MRotation = mul(MRotation, AdditionalRotation);
     
-    matrix M = MScaling;
-    M._41_42_43_44 = M._41_42_43_44 - VRotationOrigin;
-    M = mul(M, MRotation);
-    M._41_42_43_44 = M._41_42_43_44 + VRotationOrigin;
-    M._41_42_43_44 = M._41_42_43_44 + VTranslation;
-    _outMat = M;
+    // totalM은 현재 뼈의 최종 행렬
+    matrix totalM = MScaling;
+    totalM._41_42_43_44 = totalM._41_42_43_44 - VRotationOrigin;
+    totalM = mul(totalM, MRotation);
+    totalM._41_42_43_44 = totalM._41_42_43_44 + VRotationOrigin;
+    totalM._41_42_43_44 = totalM._41_42_43_44 + VTranslation;
+    
+    // 2 - 최종 행렬에서 기준 메트릭스의 역행렬을 적용하여 기준 이후의 뼈 행렬을 구함
+    matrix inverseTargetMat = inverse(targetIndexMatrix);
+    matrix partMat = mul(totalM, inverseTargetMat);
+    
+    // 3 - 회전 행렬을 적용
+    partMat = mul(partMat, AdditionalRotation);
+    partMat = mul(partMat, targetIndexMatrix);
+    
+    _outMat = partMat;
 }
 
 float4 QuternionLerp(in float4 _vQ1, in float4 _vQ2, float _fRatio)
@@ -255,6 +285,7 @@ float4 EulerToQuaternion(float3 euler)
     return q;
 }
 
+
 struct tFrameTrans
 {
     float4 vTranslate;
@@ -262,22 +293,30 @@ struct tFrameTrans
     float4 qRot;
 };
 
+struct tAnimIndices
+{
+    uint idx;
+    uint targetIdx;
+    uint padd2;
+    uint padd3;
+};
+
 StructuredBuffer<tFrameTrans> g_arrFrameTrans : register(t16);
 StructuredBuffer<matrix> g_arrOffset : register(t17);
 StructuredBuffer<tFrameTrans> g_arrFrameTrans_next : register(t18);
-StructuredBuffer<uint> g_modifyIndices : register(t19);
+StructuredBuffer<tAnimIndices> g_modifyIndices : register(t19);
 
 RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
 
 // ===========================
 // Animation3D Compute Shader
-#define BoneCount   g_int_0
-#define CurFrame    g_int_1
-#define NextFrame   g_int_2
-#define Ratio       g_float_0
-#define RotScalar   g_float_1
-#define ModifyUse   g_iModifyUse
-#define ModifyCnt   g_iModifyCount
+#define BoneCount       g_int_0
+#define CurFrame        g_int_1
+#define NextFrame       g_int_2
+#define Ratio           g_float_0
+#define RotScalar       g_float_1
+#define ModifyActive    g_iModifyUse
+#define ModifyCnt       g_iModifyCount
 // ===========================
 [numthreads(256, 1, 1)]
 void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
@@ -287,7 +326,9 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
 
     // _iThreadIdx.x : 1차원 배열 형태의 스레드를 통해서 각 스레드마다 한개의 뼈를 담당하여 연산    
     float4 vQZero = float4(0.f, 0.f, 0.f, 1.f);
+    float4 vtQZero = float4(0.f, 0.f, 0.f, 1.f);
     matrix matBone = (matrix) 0.f;
+    matrix targetBoneMat = (matrix) 0.f;
     
     
     
@@ -301,36 +342,47 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     float4 vTrans = lerp(g_arrFrameTrans[iFrameDataIndex].vTranslate, g_arrFrameTrans_next[iNextFrameDataIdx].vTranslate, Ratio);
     float4 qRot = QuternionLerp(g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans_next[iNextFrameDataIdx].qRot, Ratio);
     
-    bool modiIdx = false;
+    bool modiUse = false;
     matrix addRotMatrix = (matrix) 0.f;
     
-    // 회전시킬 뼈의 위치를 찾으면서, 회전량도 구함
-    if (ModifyUse)
+    // 변형 조건 진입
+    if (ModifyActive)
     {
+        // 회전 행렬
         float4 quaternion = { cos(radians(RotScalar) / 2), 0, 0, sin(radians(RotScalar) / 2) };
         MatrixRotationQuaternion(quaternion, addRotMatrix);
         
         // 영향 받는 뼈 찾기
-        for (int idx = 0; idx < ModifyCnt; ++idx)
+        for (int idx = 0; idx < 173; ++idx)
         {
-            if (_iThreadIdx.x == g_modifyIndices[idx])
+            if (_iThreadIdx.x == g_modifyIndices[idx].idx)
             {
-                modiIdx = true;
+                modiUse = true;                
+                uint PiFrameDataIndex = BoneCount * CurFrame + g_modifyIndices[idx].targetIdx;
+                uint PiNextFrameDataIdx = BoneCount * NextFrame + g_modifyIndices[idx].targetIdx;
+                float4 vtScale = lerp(g_arrFrameTrans[PiFrameDataIndex].vScale, g_arrFrameTrans_next[PiNextFrameDataIdx].vScale, Ratio);
+                float4 vtTrans = lerp(g_arrFrameTrans[PiFrameDataIndex].vTranslate, g_arrFrameTrans_next[PiNextFrameDataIdx].vTranslate, Ratio);
+                float4 qtRot = QuternionLerp(g_arrFrameTrans[PiFrameDataIndex].qRot, g_arrFrameTrans_next[PiNextFrameDataIdx].qRot, Ratio);
+                
+                
+                MatrixAffineTransformation(vtScale, vtQZero, qtRot, vtTrans, targetBoneMat);
+                
+                
                 break;
             }
         }
     }    
     
     // 최종 본행렬 연산 (lerp)
-    if (modiIdx)
+    if (modiUse)
     {
-        MatrixAffineTransformation(vScale, vQZero, qRot, addRotMatrix, vTrans, matBone);
+        // targetBoneMat 행렬을 넣어서 modi 행렬을 구함
+        MatrixAffineTransformation(vScale, vQZero, qRot, addRotMatrix, targetBoneMat, vTrans, matBone);
     }
     else
     {
         MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);        
     }
-    
     // 최종 본행렬 연산    
     //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
 
