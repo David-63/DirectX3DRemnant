@@ -30,39 +30,39 @@ void CCameraMoveScript::Camera2DMove()
 	Vec3 vPos = Transform()->GetRelativePos();
 
 	float fSpeed = m_fCamSpeed;
-	if (KEY_PRESSED(KEY::LSHIFT))
+	if (KEY_HOLD(KEY::LSHIFT))
 		fSpeed *= 5.f;
 
-	if (KEY_PRESSED(KEY::W))
+	if (KEY_HOLD(KEY::W))
 	{
 		vPos.y += DT * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::S))
+	if (KEY_HOLD(KEY::S))
 	{
 		vPos.y -= DT * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::A))
+	if (KEY_HOLD(KEY::A))
 	{
 		vPos.x -= DT * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::D))
+	if (KEY_HOLD(KEY::D))
 	{
 		vPos.x += DT * fSpeed;
 	}
 
 
 
-	if (KEY_PRESSED(KEY::_1))
+	if (KEY_HOLD(KEY::_1))
 	{
 		float fScale = Camera()->GetScale();
 		fScale += DT * 1.f;
 		Camera()->SetScale(fScale);
 	}
 
-	if (KEY_PRESSED(KEY::_2))
+	if (KEY_HOLD(KEY::_2))
 	{
 		float fScale = Camera()->GetScale();
 		fScale -= DT * 1.f;
@@ -83,42 +83,42 @@ void CCameraMoveScript::Camera3DMove()
 
 	float fSpeed = m_fCamSpeed;
 
-	if (KEY_PRESSED(KEY::LSHIFT))
+	if (KEY_HOLD(KEY::LSHIFT))
 		fSpeed *= 10.f;
 
-	if (KEY_PRESSED(KEY::W))
+	if (KEY_HOLD(KEY::UP))
 	{
 		vPos += DT * vFront * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::S))
+	if (KEY_HOLD(KEY::DOWN))
 	{
 		vPos -= DT * vFront * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::A))
+	if (KEY_HOLD(KEY::LEFT))
 	{
 		vPos -= DT * vRight * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::D))
+	if (KEY_HOLD(KEY::RIGHT))
 	{
 		vPos += DT * vRight * fSpeed;
 	}
 
 
-	if (KEY_PRESSED(KEY::LCTRL))
+	if (KEY_HOLD(KEY::LCTRL))
 	{
 		vPos -= DT * vUp * fSpeed;
 	}
 
 
-	if (KEY_PRESSED(KEY::SPACE))
+	if (KEY_HOLD(KEY::SPACE))
 	{
 		vPos += DT * vUp * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::RBTN))
+	if (KEY_HOLD(KEY::RBTN))
 	{
 		Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();
 		vRot.y += vMouseDir.x * 0.005f;

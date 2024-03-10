@@ -1,8 +1,7 @@
 #pragma once
 #include <Engine\CScript.h>
 
-class CStateScript :
-    public CScript
+class CStateScript : public CScript
 {
 public:
     enum class eState
@@ -25,18 +24,12 @@ public:
     virtual void Enter() override;
     virtual void Exit() override;
 
-
-
 public:
     void SetStateType(eState _StateType)
     {
         m_StateType = _StateType;
     }
 
-   /* void SetPlayerScript(PlayerScript* _PlayerScript)
-    {
-        m_PlayerScript = _PlayerScript;
-    }*/
 
 public:
     eState GetStateType()	const
@@ -44,10 +37,6 @@ public:
         return m_StateType;
     }
 
- /*   PlayerScript* GetPlayerScript()	const
-    {
-        return m_PlayerScript;
-    }*/
 
 public:
     CLONE(CStateScript);

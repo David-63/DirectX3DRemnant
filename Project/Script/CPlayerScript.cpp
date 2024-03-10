@@ -27,7 +27,7 @@ void CPlayerScript::tick()
 {
 	Vec3 vCurPos = Transform()->GetRelativePos();
 
-	if (KEY_PRESSED(KEY::UP))
+	if (KEY_HOLD(KEY::UP))
 	{
 		for (int i = 0; i < 4; ++i)
 		{
@@ -35,7 +35,7 @@ void CPlayerScript::tick()
 		}
 	}
 
-	if (KEY_PRESSED(KEY::DOWN))
+	if (KEY_HOLD(KEY::DOWN))
 	{
 		for (int i = 0; i < 4; ++i)
 		{
@@ -43,7 +43,7 @@ void CPlayerScript::tick()
 		}
 	}
 
-	if (KEY_PRESSED(KEY::LEFT))
+	if (KEY_HOLD(KEY::LEFT))
 	{
 		for (int i = 0; i < 4; ++i)
 		{
@@ -51,7 +51,7 @@ void CPlayerScript::tick()
 		}
 	}
 
-	if (KEY_PRESSED(KEY::RIGHT))
+	if (KEY_HOLD(KEY::RIGHT))
 	{
 		for (int i = 0; i < 4; ++i)
 		{
@@ -59,7 +59,7 @@ void CPlayerScript::tick()
 		}
 	}
 
-	if (KEY_PRESSED(KEY::Z))
+	if (KEY_HOLD(KEY::Z))
 	{
 		Vec3 vRot = Transform()->GetRelativeRot();
 		vRot.z += DT * XM_PI;
