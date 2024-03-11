@@ -28,22 +28,22 @@ void CCharacterMoveScript::tick()
 	float fSpeed = 10000.f;
 
 
-	if (KEY_PRESSED(KEY::UP))
+	if (KEY_HOLD(KEY::UP))
 	{
 		vMoveVector += DT * vFront * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::DOWN))
+	if (KEY_HOLD(KEY::DOWN))
 	{
 		vMoveVector -= DT * vFront * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::LEFT))
+	if (KEY_HOLD(KEY::LEFT))
 	{
 		vMoveVector -= DT * vRight * fSpeed;
 	}
 
-	if (KEY_PRESSED(KEY::RIGHT))
+	if (KEY_HOLD(KEY::RIGHT))
 	{
 		vMoveVector += DT * vRight * fSpeed;
 	}

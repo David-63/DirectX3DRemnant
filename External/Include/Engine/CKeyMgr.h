@@ -38,7 +38,7 @@ enum class KEY
 enum class KEY_STATE
 {
 	TAP,
-	PRESSED,
+	HOLD,
 	RELEASE,
 	NONE,
 };

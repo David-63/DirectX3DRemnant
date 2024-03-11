@@ -7,6 +7,9 @@ class CIdleStateScript :
 {
 
 public:
+    virtual void tick() override;
+
+public:
     virtual void Enter() override;
     virtual void Exit() override;
 

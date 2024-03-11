@@ -12,6 +12,11 @@ CIdleStateScript::~CIdleStateScript()
 }
 
 
+void CIdleStateScript::tick()
+{
+	// 입력을 받아서 상태를 변경해야함
+}
+
 void CIdleStateScript::Enter()
 {
 }

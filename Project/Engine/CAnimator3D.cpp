@@ -267,7 +267,7 @@ void CAnimator3D::changeAnimClip(wstring _strAnimName)
 	m_pCurrentAnim = findAnim(_strAnimName).Get();
 	if (m_pPrevAnim)
 	{
-		if (m_pPrevAnim->GetKey() == m_pCurrentAnim->GetKey())
+		if (m_pPrevAnim->GetKey() != m_pCurrentAnim->GetKey())
 		{
 			Events* events;
 
@@ -317,40 +317,46 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 	// boneSocket ¿É¼Ç
 	{
 		m_curBones = m_pCurrentAnim->GetOriginMesh()->GetMTBones();
+		m_targetBone = 36;
+		//tPassIndices in = { 38 };
 		//m_modifyIndices.push_back(33);	// Çã¸®
 		//m_modifyIndices.push_back(34);	// º¹ºÎ
-		//m_modifyIndices.push_back(35);	// ¸íÄ¡
-		m_modifyIndices.push_back(36);	// °¡½¿
+		m_modifyIndices.push_back({ m_targetBone, m_targetBone });	// ¸íÄ¡
+		//m_modifyIndices.push_back(36);	// °¡½¿
 		//m_modifyIndices.push_back(37);	// ¸ñ
-		//m_modifyIndices.push_back(38);	// ¸Ó¸®
+		//m_modifyIndices.push_back(in);	// ¸Ó¸®
 		//m_modifyIndices.push_back(39);	// ÅÎ
 		//m_modifyIndices.push_back(40);	// ÅÎ
 		//m_modifyIndices.push_back(136);	// ¾î±ú
 		//m_modifyIndices.push_back(168);	// ¼Õ¸ñ
 
+		CollectChildrenIndices(m_targetBone);
+
 		//CollectChildrenIndices(33);
 		//CollectChildrenIndices(34);
 		//CollectChildrenIndices(35);
-		CollectChildrenIndices(36);
+		//CollectChildrenIndices(35);
 		//CollectChildrenIndices(37);
 		//CollectChildrenIndices(38);
 		//CollectChildrenIndices(39);
 		//CollectChildrenIndices(136);
 		//CollectChildrenIndices(168);
 
-		std::sort(m_modifyIndices.begin(), m_modifyIndices.end());
-		int bufferPadding = m_modifyIndices.size() % 16;
+		//std::sort(m_modifyIndices.begin(), m_modifyIndices.end());
+		/*int bufferPadding = m_modifyIndices.size() % 16;
 		if (0 != bufferPadding)
 		{
 			for (int i = 0; i < 16 - bufferPadding; ++i)
 			{
-				m_modifyIndices.push_back(999 + i);
+				tPassIndices in = { 9999 + i, 0, 0, 0 };
+
+				m_modifyIndices.push_back(in);
 			}
-		}
+		}*/
 
 		if (m_modifyIndicesBuffer->GetElementCount() != m_modifyIndices.size())
 		{
-			m_modifyIndicesBuffer->Create(sizeof(UINT), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, m_modifyIndices.data());
+			m_modifyIndicesBuffer->Create(sizeof(tPassIndices), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, m_modifyIndices.data());
 		}
 	}	
 }
@@ -363,8 +369,10 @@ void CAnimator3D::CollectChildrenIndices(int current_index)
 		if (current_index == m_curBones[i].iParentIdx)
 		{
 			auto iter = find(m_modifyIndices.begin(), m_modifyIndices.end(), i);
-			if (iter == m_modifyIndices.end())			
-				m_modifyIndices.push_back(i); // ÀÚ½Ä »ÀÀÇ ÀÎµ¦½º Ãß°¡
+			if (iter == m_modifyIndices.end())
+			{
+				m_modifyIndices.push_back(tPassIndices(i, m_targetBone)); // ÀÚ½Ä »ÀÀÇ ÀÎµ¦½º Ãß°¡
+			}
 			CollectChildrenIndices(i); // Àç±Í È£Ãâ
 		}
 	}

@@ -82,6 +82,7 @@ struct Events
 	}	
 };
 
+
 class CStructuredBuffer;
 class CAnimator3D : public CComponent
 {
@@ -113,7 +114,8 @@ private:
 	bool						m_isModifyUse;
 	float						m_modifyRotScalar;
 	CStructuredBuffer*			m_modifyIndicesBuffer;
-	vector<UINT>				m_modifyIndices;
+	UINT						m_targetBone;
+	vector<tPassIndices>		m_modifyIndices;
 	vector<tMTBone>				m_curBones;
 
 public:

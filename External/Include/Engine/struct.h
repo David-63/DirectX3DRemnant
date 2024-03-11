@@ -347,6 +347,25 @@ struct tMtrlConst
 };
 
 
+struct tPassIndices
+{
+	UINT curidx;
+	UINT targetIdx;
+	UINT padd2;
+	UINT padd3;
+	bool operator==(const int _idx) const
+	{
+		return curidx == _idx;
+	}
+	bool operator==(const tPassIndices& rhs) const
+	{
+		return curidx == rhs.curidx;
+	}
+	tPassIndices(UINT _idx) : curidx(_idx), targetIdx(0), padd2(0), padd3(0) {}
+	tPassIndices(UINT _idx, UINT _parent) : curidx(_idx), targetIdx(_parent), padd2(0), padd3(0) {}
+};
+
+
 struct tGlobal
 {
 	Vec2  Resolution;

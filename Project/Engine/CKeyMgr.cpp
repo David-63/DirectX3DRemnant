@@ -78,7 +78,7 @@ void CKeyMgr::tick()
 				else
 				{
 					// 지금도 눌려있고, 이전 프레임에서도 눌려있었다.
-					m_vecKey[i].state = KEY_STATE::PRESSED;
+					m_vecKey[i].state = KEY_STATE::HOLD;
 				}
 			}
 			else
@@ -113,7 +113,7 @@ void CKeyMgr::tick()
 	{
 		for (size_t i = 0; i < m_vecKey.size(); ++i)
 		{
-			if (KEY_STATE::TAP == m_vecKey[i].state || KEY_STATE::PRESSED == m_vecKey[i].state)
+			if (KEY_STATE::TAP == m_vecKey[i].state || KEY_STATE::HOLD == m_vecKey[i].state)
 			{
 				m_vecKey[i].state = KEY_STATE::RELEASE;
 			}

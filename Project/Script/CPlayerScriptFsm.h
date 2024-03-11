@@ -2,10 +2,6 @@
 #include <Engine\CScript.h>
 #include "CStateScript.h"
 
-class CFSM;
-
-
-
 class CPlayerScriptFsm :
     public CScript
 {
