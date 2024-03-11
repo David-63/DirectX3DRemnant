@@ -20,7 +20,7 @@ ParticleSystemUI::ParticleSystemUI()
 	, m_AccTime(0.0f)
 	, m_fDebugTime(0.0f)
 {
-    SetName("ParticleSystem");
+	SetName("ParticleSystem");
 }
 
 ParticleSystemUI::~ParticleSystemUI()
@@ -30,101 +30,101 @@ ParticleSystemUI::~ParticleSystemUI()
 
 int ParticleSystemUI::render_update()
 {
-    if (FALSE == ComponentUI::render_update())
-        return FALSE;
+	if (FALSE == ComponentUI::render_update())
+		return FALSE;
 
 
-    m_Particle = GetTarget()->ParticleSystem();
+	m_Particle = GetTarget()->ParticleSystem();
 
-    Ptr<CMaterial> pMaterial = m_Particle->GetMaterial(0);
-    Ptr<CMesh> pMesh = m_Particle->GetMesh();
-    tParticleModule tParticleData = m_Particle->GetModuleData();
+	Ptr<CMaterial> pMaterial = m_Particle->GetMaterial(0);
+	Ptr<CMesh> pMesh = m_Particle->GetMesh();
+	tParticleModule tParticleData = m_Particle->GetModuleData();
 
-    // ==== Mesh
-    char szBuff[256] = {};
-    ImGui::Text("Mesh   ");
-    ImGui::SameLine();
-    GetResKey(pMesh.Get(), szBuff, 50);
+	// ==== Mesh
+	char szBuff[256] = {};
+	ImGui::Text("Mesh   ");
+	ImGui::SameLine();
+	GetResKey(pMesh.Get(), szBuff, 50);
 
-    ImGui::SetNextItemWidth(150.f);
-    ImGui::InputText("##MeshName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
-    ImGui::SameLine();
+	ImGui::SetNextItemWidth(150.f);
+	ImGui::InputText("##MeshName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
+	ImGui::SameLine();
 
-    if (ImGui::Button("Mesh Select", ImVec2(150, 18)))
-    {
-        const map<wstring, Ptr<CRes>>& mapMesh =
-            CResMgr::GetInst()->GetResources(RES_TYPE::MESH);
+	if (ImGui::Button("Mesh Select", ImVec2(150, 18)))
+	{
+		const map<wstring, Ptr<CRes>>& mapMesh =
+			CResMgr::GetInst()->GetResources(RES_TYPE::MESH);
 
-        ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
-        pListUI->Reset("Mesh List", ImVec2(300.f, 500.f));
+		ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+		pListUI->Reset("Mesh List", ImVec2(300.f, 500.f));
 
-        for (const auto& pair : mapMesh)
-        {
-            pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
-        }
+		for (const auto& pair : mapMesh)
+		{
+			pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+		}
 
-        // 항목 선택시 호출받을 델리게이트 등록
-        pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&ParticleSystemUI::SelectMesh);
+		// 항목 선택시 호출받을 델리게이트 등록
+		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&ParticleSystemUI::SelectMesh);
 
-    }
+	}
 
-    // ===== Material
-    ImGui::Text("Material");
-    ImGui::SameLine();
+	// ===== Material
+	ImGui::Text("Material");
+	ImGui::SameLine();
 
-    GetResKey(pMaterial.Get(), szBuff, 50);
-    ImGui::SetNextItemWidth(150.f);
+	GetResKey(pMaterial.Get(), szBuff, 50);
+	ImGui::SetNextItemWidth(150.f);
 
-    ImGui::InputText("##MtrlName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
-    ImGui::SameLine();
+	ImGui::InputText("##MtrlName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
+	ImGui::SameLine();
 
-    if (ImGui::Button("##Mtrl Select", ImVec2(150, 18)))
-    {
-        const map<wstring, Ptr<CRes>>& mapMtrl =
-            CResMgr::GetInst()->GetResources(RES_TYPE::MATERIAL);
+	if (ImGui::Button("##Mtrl Select", ImVec2(150, 18)))
+	{
+		const map<wstring, Ptr<CRes>>& mapMtrl =
+			CResMgr::GetInst()->GetResources(RES_TYPE::MATERIAL);
 
-        ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
-        pListUI->Reset("Material", ImVec2(300.f, 500.f));
+		ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+		pListUI->Reset("Material", ImVec2(300.f, 500.f));
 
-        for (const auto& pair : mapMtrl)
-        {
-            pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
-        }
+		for (const auto& pair : mapMtrl)
+		{
+			pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+		}
 
-        // 항목 선택시 호출받을 델리게이트 등록
-        pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&ParticleSystemUI::SelectMaterial);
+		// 항목 선택시 호출받을 델리게이트 등록
+		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&ParticleSystemUI::SelectMaterial);
 
-    }
+	}
 
 
-    // ===== Texture
-    ImGui::Text("Texture");
-    ImGui::SameLine();
+	// ===== Texture
+	ImGui::Text("Texture");
+	ImGui::SameLine();
 
-    GetResKey(m_ParticleTex.Get(), szBuff, 50);
+	GetResKey(m_ParticleTex.Get(), szBuff, 50);
 
-    ImGui::SetNextItemWidth(150.f);
-    ImGui::InputText("##Tex Name", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
-    ImGui::SameLine();
+	ImGui::SetNextItemWidth(150.f);
+	ImGui::InputText("##Tex Name", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
+	ImGui::SameLine();
 
-    if (ImGui::Button("##Tex Select", ImVec2(150, 18)))
-    {
-        const map<wstring, Ptr<CRes>>& mapTex =
-        CResMgr::GetInst()->GetResources(RES_TYPE::TEXTURE);
+	if (ImGui::Button("##Tex Select", ImVec2(150, 18)))
+	{
+		const map<wstring, Ptr<CRes>>& mapTex =
+			CResMgr::GetInst()->GetResources(RES_TYPE::TEXTURE);
 
-        ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
-        pListUI->Reset("Texture", ImVec2(300.f, 500.f));
+		ListUI* pListUI = (ListUI*)ImGuiMgr::GetInst()->FindUI("##List");
+		pListUI->Reset("Texture", ImVec2(300.f, 500.f));
 
-        for (const auto& pair : mapTex)
-        {
-            pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
-        }
+		for (const auto& pair : mapTex)
+		{
+			pListUI->AddItem(string(pair.first.begin(), pair.first.end()));
+		}
 
-        // 항목 선택시 호출받을 델리게이트 등록
-        pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&ParticleSystemUI::SelectTexture);
+		// 항목 선택시 호출받을 델리게이트 등록
+		pListUI->AddDynamic_Select(this, (UI_DELEGATE_1)&ParticleSystemUI::SelectTexture);
 
-		
-    }
+
+	}
 
 	if (nullptr != m_ParticleTex)
 	{
@@ -132,248 +132,248 @@ int ParticleSystemUI::render_update()
 		ImGui::Image(TexView, ImVec2(100.f, 100.f));
 	}
 
-    // ===== Module Data
-    ImGui::Text("Particle Module");
+	// ===== Module Data
+	ImGui::Text("Particle Module");
 
 	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None))
 	{
 		// ==============
 		// PARTICLE_SPAWN
 		// ==============
-if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
-{
-	// Default Option
-	if (ImGui::TreeNodeEx("Default Options", ImGuiTreeNodeFlags_Selected))
-	{
-		// ===== 파티클 만들 때는 아래 코드로 사용할것 				 				
-		// Module On/Off
-		//bool SpawnOnOff = tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN];
-		//ImGui::Text("Spawn Module ON/OFF");
-		//ImGui::SameLine();
-		//if (ImGui::Checkbox("##ON/OFF", &SpawnOnOff))
-		//{
-		//	tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = SpawnOnOff;
-
-
-		//}
-
-		//if (SpawnOnOff)
-		//{
-		//	m_AccTime += (float)DT;
-		//}
-
-		//else
-		//{
-		//	m_fDebugTime = m_AccTime;
-		//	m_AccTime = 0.0f;
-		//}
-
-		//ImGui::Text("AccDuringTime : %.2f", m_AccTime); // 누적되는 시간
-
-
-
-
-		// ==== 파티클 다 만들었으면 아래 코드로 사용할 것
-		// Spawn Loop
-
-		bool bLoop = m_Particle->GetLoop();
-
-		ImGui::Text("Spawn Loop On/Off");
-		ImGui::SameLine();
-		if (ImGui::Checkbox("##Loop_OnOff", &bLoop))
+		if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
 		{
-			m_Particle->SetLoop(bLoop);
-			
-		}
-
-		ImGui::SameLine();
-		bool Excute = m_Particle->GetOnceExcute();
-		ImGui::Text("Once Excute");
-		ImGui::SameLine();
-		if (ImGui::Checkbox("##oneceExcute ON/OFF", &Excute))
-		{
-			m_Particle->SetOnceExcute(Excute);
-		}
-
-
-		// Module On/Off
-		bool SpawnOnOff = tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN];
-		ImGui::Text("Spawn Module ON/OFF");
-		ImGui::SameLine();
-		if (ImGui::Checkbox("##ON/OFF", &SpawnOnOff))
-		{
-			tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = SpawnOnOff;
-		}
-		ImGui::Separator();
-
-		// During 지속시간
-		ImGui::Text("Set During Time");
-		ImGui::SameLine();
-		float SpawnTime = m_Particle->GetSpawnTime();
-
-		if (SpawnOnOff && !bLoop)
-		{
-			m_AccTime += (float)DT;
-		}
-
-		ImGui::SetNextItemWidth(80);
-		if(ImGui::InputFloat("##DuringTime", &SpawnTime))
-		{
-			m_Particle->SetSpawnTime(SpawnTime);
-		}
-
-
-		ImGui::Text("AccDuringTime : %.2f", m_AccTime); // 누적되는 시간
-
-
-		if (SpawnTime < m_AccTime && !bLoop)
-		{
-			tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = 0;
-			m_AccTime = 0.0f;
-			m_Particle->SetSpawnTime(0.f);
-
-			// 체크시간이 지나면 알파값을 0으로
-			tParticleData.vSpawnColor.w = 0.0f;
-		}
-
-		else if (SpawnTime > m_AccTime && !bLoop )
-		{
-			// 시간의 비율에 따른 alpha 값 감소
-
-			tParticleData.vSpawnColor.w = (SpawnTime - m_AccTime) / SpawnTime;
-		} 
-
-
-
-
-
-
-		// ================================ 아래는 만지지 말것 
-
-		// bursts 기능을 켤지 말지 (입자가 한꺼번에 나가게 할지 말지)
-		bool bBursts = m_Particle->GetBursts();
-
-		ImGui::Separator();
-		ImGui::Text("Bursts Mode ON/OFF");
-		ImGui::SameLine();
-		if (ImGui::Checkbox("##Bursts ON/OFF", &bBursts))
-		{
-			m_Particle->SetBursts(bBursts);
-		}
-
-		ImGui::SameLine();	
-		//ImGui::SetNextItemWidth(200);
-
-
-		// == 최대 파티클 갯수 
-		int	Origin = tParticleData.iMaxParticleCount;
-
-		ImGui::Text("MaxParitcleCount ");
-		ImGui::SameLine();
-		ImGui::SetNextItemWidth(50);
-		if (ImGui::DragInt("##MaxCount_", &Origin, 1.f, 0.0f, Origin, "%d", ImGuiSliderFlags_AlwaysClamp))
-		{
-			tParticleData.iMaxParticleCount = Origin;
-		} 
-
-		bool Reset = false;
-
-		ImGui::SameLine();
-
-		ImGui::Text("   Reset Count");
-
-		ImGui::SameLine();
-		UINT OriginCount = m_Particle->GetParticleBuffer()->GetElementCount();
-
-		if (ImGui::Checkbox("##Reset Count", &Reset))
-		{
-			tParticleData.iMaxParticleCount = OriginCount;
-
-		}
-
-
-
-		// == 초당 생성 개수
-		ImGui::Separator();
-		int	SpawnRate = tParticleData.SpawnRate;
-		ImGui::Text("SpawnCount Per Sec   ");
-		ImGui::SameLine();
-		ImGui::SetNextItemWidth(110);
-		if (ImGui::DragInt("##SpawnRate", &SpawnRate, 0.25f, 0, tParticleData.iMaxParticleCount, "%d", ImGuiSliderFlags_AlwaysClamp))
-		{
-			tParticleData.SpawnRate = SpawnRate;
-		}
-
-
-		
-		// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)
-		int item_current_idx = tParticleData.Space;
-		const char* items[2] = { "World" , "Local" };
-		ImGui::Text("Update Space");
-		ImGui::SameLine();
-		ImGui::SetNextItemWidth(110);
-		if (ImGui::BeginCombo("##combo", items[item_current_idx]))
-		{
-			for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+			// Default Option
+			if (ImGui::TreeNodeEx("Default Options", ImGuiTreeNodeFlags_Selected))
 			{
-				const bool is_selected = (item_current_idx == n);
-				if (ImGui::Selectable(items[n], is_selected))
-					item_current_idx = n;
+				// ===== 파티클 만들 때는 아래 코드로 사용할것 				 				
+				// Module On/Off
+				//bool SpawnOnOff = tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN];
+				//ImGui::Text("Spawn Module ON/OFF");
+				//ImGui::SameLine();
+				//if (ImGui::Checkbox("##ON/OFF", &SpawnOnOff))
+				//{
+				//	tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = SpawnOnOff;
 
-				if (is_selected)
+
+				//}
+
+				//if (SpawnOnOff)
+				//{
+				//	m_AccTime += (float)DT;
+				//}
+
+				//else
+				//{
+				//	m_fDebugTime = m_AccTime;
+				//	m_AccTime = 0.0f;
+				//}
+
+				//ImGui::Text("AccDuringTime : %.2f", m_AccTime); // 누적되는 시간
+
+
+
+
+				// ==== 파티클 다 만들었으면 아래 코드로 사용할 것
+				// Spawn Loop
+
+				bool bLoop = m_Particle->GetLoop();
+
+				ImGui::Text("Spawn Loop On/Off");
+				ImGui::SameLine();
+				if (ImGui::Checkbox("##Loop_OnOff", &bLoop))
 				{
-					ImGui::SetItemDefaultFocus();
+					m_Particle->SetLoop(bLoop);
+
 				}
+
+				ImGui::SameLine();
+				bool Excute = m_Particle->GetOnceExcute();
+				ImGui::Text("Once Excute");
+				ImGui::SameLine();
+				if (ImGui::Checkbox("##oneceExcute ON/OFF", &Excute))
+				{
+					m_Particle->SetOnceExcute(Excute);
+				}
+
+
+				// Module On/Off
+				bool SpawnOnOff = tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN];
+				ImGui::Text("Spawn Module ON/OFF");
+				ImGui::SameLine();
+				if (ImGui::Checkbox("##ON/OFF", &SpawnOnOff))
+				{
+					tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = SpawnOnOff;
+				}
+				ImGui::Separator();
+
+				// During 지속시간
+				ImGui::Text("Set During Time");
+				ImGui::SameLine();
+				float SpawnTime = m_Particle->GetSpawnTime();
+
+				if (SpawnOnOff && !bLoop)
+				{
+					m_AccTime += (float)DT;
+				}
+
+				ImGui::SetNextItemWidth(80);
+				if (ImGui::InputFloat("##DuringTime", &SpawnTime))
+				{
+					m_Particle->SetSpawnTime(SpawnTime);
+				}
+
+
+				ImGui::Text("AccDuringTime : %.2f", m_AccTime); // 누적되는 시간
+
+
+				if (SpawnTime < m_AccTime && !bLoop)
+				{
+					tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = 0;
+					m_AccTime = 0.0f;
+					m_Particle->SetSpawnTime(0.f);
+
+					// 체크시간이 지나면 알파값을 0으로
+					tParticleData.vSpawnColor.w = 0.0f;
+				}
+
+				else if (SpawnTime > m_AccTime && !bLoop)
+				{
+					// 시간의 비율에 따른 alpha 값 감소
+
+					tParticleData.vSpawnColor.w = (SpawnTime - m_AccTime) / SpawnTime;
+				}
+
+
+
+
+
+
+				// ================================ 아래는 만지지 말것 
+
+				// bursts 기능을 켤지 말지 (입자가 한꺼번에 나가게 할지 말지)
+				bool bBursts = m_Particle->GetBursts();
+
+				ImGui::Separator();
+				ImGui::Text("Bursts Mode ON/OFF");
+				ImGui::SameLine();
+				if (ImGui::Checkbox("##Bursts ON/OFF", &bBursts))
+				{
+					m_Particle->SetBursts(bBursts);
+				}
+
+				ImGui::SameLine();
+				//ImGui::SetNextItemWidth(200);
+
+
+				// == 최대 파티클 갯수 
+				int	Origin = tParticleData.iMaxParticleCount;
+
+				ImGui::Text("MaxParitcleCount ");
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(50);
+				if (ImGui::DragInt("##MaxCount_", &Origin, 1.f, 0.0f, Origin, "%d", ImGuiSliderFlags_AlwaysClamp))
+				{
+					tParticleData.iMaxParticleCount = Origin;
+				}
+
+				bool Reset = false;
+
+				ImGui::SameLine();
+
+				ImGui::Text("   Reset Count");
+
+				ImGui::SameLine();
+				UINT OriginCount = m_Particle->GetParticleBuffer()->GetElementCount();
+
+				if (ImGui::Checkbox("##Reset Count", &Reset))
+				{
+					tParticleData.iMaxParticleCount = OriginCount;
+
+				}
+
+
+
+				// == 초당 생성 개수
+				ImGui::Separator();
+				int	SpawnRate = tParticleData.SpawnRate;
+				ImGui::Text("SpawnCount Per Sec   ");
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(110);
+				if (ImGui::DragInt("##SpawnRate", &SpawnRate, 0.25f, 0, tParticleData.iMaxParticleCount, "%d", ImGuiSliderFlags_AlwaysClamp))
+				{
+					tParticleData.SpawnRate = SpawnRate;
+				}
+
+
+
+				// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)
+				int item_current_idx = tParticleData.Space;
+				const char* items[2] = { "World" , "Local" };
+				ImGui::Text("Update Space");
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(110);
+				if (ImGui::BeginCombo("##combo", items[item_current_idx]))
+				{
+					for (int n = 0; n < IM_ARRAYSIZE(items); n++)
+					{
+						const bool is_selected = (item_current_idx == n);
+						if (ImGui::Selectable(items[n], is_selected))
+							item_current_idx = n;
+
+						if (is_selected)
+						{
+							ImGui::SetItemDefaultFocus();
+						}
+					}
+
+					tParticleData.Space = item_current_idx;
+
+					ImGui::EndCombo();
+				}
+
+
+				// 수명
+				float MinLifeTime = tParticleData.MinLifeTime;
+				float MaxLifeTime = tParticleData.MaxLifeTime;
+				ImGui::Text("LifeTime Per Particle   ");
+				ImGui::SameLine();
+				ImGui::SetNextItemWidth(150);
+				if (ImGui::DragFloatRange2("##LifeTime", &MinLifeTime, &MaxLifeTime, 0.25f, 0.0f, 100.0f, "Min: %.1f", "Max: %.1f", ImGuiSliderFlags_AlwaysClamp))
+				{
+					tParticleData.MinLifeTime = MinLifeTime;
+					tParticleData.MaxLifeTime = MaxLifeTime;
+				}
+
+
+				ImGui::TreePop();
 			}
 
-			tParticleData.Space = item_current_idx;
-
-			ImGui::EndCombo();
-		}
-
-
-		// 수명
-		float MinLifeTime = tParticleData.MinLifeTime;
-		float MaxLifeTime = tParticleData.MaxLifeTime;
-		ImGui::Text("LifeTime Per Particle   ");
-		ImGui::SameLine();
-		ImGui::SetNextItemWidth(150);
-		if (ImGui::DragFloatRange2("##LifeTime", &MinLifeTime, &MaxLifeTime, 0.25f, 0.0f, 100.0f, "Min: %.1f", "Max: %.1f", ImGuiSliderFlags_AlwaysClamp))
-		{
-			tParticleData.MinLifeTime = MinLifeTime;
-			tParticleData.MaxLifeTime = MaxLifeTime;
-		}
-
-
-		ImGui::TreePop();
-		}
-
-		// SpawnColor
-		if (ImGui::TreeNodeEx("SpwanColor", ImGuiTreeNodeFlags_Selected))
-		{
-
-			bool UseStrongColor = tParticleData.bStrongColor;
-
-			if (ImGui::Checkbox("UseStrongColor", &UseStrongColor))
+			// SpawnColor
+			if (ImGui::TreeNodeEx("SpwanColor", ImGuiTreeNodeFlags_Selected))
 			{
-				tParticleData.bStrongColor = UseStrongColor;
 
+				bool UseStrongColor = tParticleData.bStrongColor;
+
+				if (ImGui::Checkbox("UseStrongColor", &UseStrongColor))
+				{
+					tParticleData.bStrongColor = UseStrongColor;
+
+				}
+
+				ImGui::NewLine();
+
+				Vec4 SpawnColor = tParticleData.vSpawnColor;
+				ImVec4 color = ImVec4(SpawnColor.x, SpawnColor.y, SpawnColor.z, SpawnColor.w);
+				ImGuiColorEditFlags flags = ImGuiColorEditFlags_::ImGuiColorEditFlags_DefaultOptions_;
+				if (ImGui::ColorPicker4("Cur Color", (float*)&color, flags, NULL))
+				{
+					SpawnColor = Vec4(color.x, color.y, color.z, color.w);
+					tParticleData.vSpawnColor = SpawnColor;
+
+				}
+
+				ImGui::TreePop();
 			}
-
-			ImGui::NewLine();
-
-			Vec4 SpawnColor = tParticleData.vSpawnColor;
-			ImVec4 color = ImVec4(SpawnColor.x, SpawnColor.y, SpawnColor.z, SpawnColor.w);
-			ImGuiColorEditFlags flags = ImGuiColorEditFlags_::ImGuiColorEditFlags_DefaultOptions_;
-			if (ImGui::ColorPicker4("Cur Color", (float*)&color, flags, NULL))
-			{
-				SpawnColor = Vec4(color.x, color.y, color.z, color.w);
-				tParticleData.vSpawnColor = SpawnColor;
-	
-			}
-
-			ImGui::TreePop();
-		}
 
 
 			// SpawnScaleMin/Max
@@ -461,11 +461,21 @@ if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
 					float SpawnAreaOffsetFactor = tParticleData.fSpawnAreaOffsetFactor;
 					ImGui::SetNextItemWidth(110);
 
-					if (ImGui::DragFloat("##BoxOffset", &SpawnAreaOffsetFactor, 0.03f, -0.5f, 1.5f, "%0.5f", ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("BoxOffset", &SpawnAreaOffsetFactor, 0.03f, -0.5f, 1.5f, "%0.5f", ImGuiSliderFlags_AlwaysClamp))
 					{
 						// 0.5가 원 모양으로 퍼짐 
 						tParticleData.fSpawnAreaOffsetFactor = SpawnAreaOffsetFactor;
 					}
+
+
+
+					bool UseSpark = tParticleData.bUseSpark;
+
+					if (ImGui::Checkbox("Use Spark", &UseSpark))
+					{
+						tParticleData.bUseSpark = UseSpark;
+					}
+
 
 
 				}
@@ -742,7 +752,7 @@ if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
 			float GravityForce = tParticleData.fGravityForce;
 			ImGui::SetNextItemWidth(110);
 
-			if (ImGui::DragFloat("##GravityForce", &GravityForce, 0.25f, -1000.0f, 1000.0f, 
+			if (ImGui::DragFloat("##GravityForce", &GravityForce, 0.25f, -1000.0f, 1000.0f,
 				"%.1f", ImGuiSliderFlags_AlwaysClamp))
 			{
 				tParticleData.fGravityForce = GravityForce;
@@ -800,7 +810,7 @@ if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
 					ID3D11ShaderResourceView* TexView = (m_NoiseTex->GetSRV().Get());
 					ImGui::Image(TexView, ImVec2(100.f, 100.f));
 				}
-				
+
 
 
 
@@ -886,7 +896,7 @@ if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
 					tParticleData.vMaxVelocityScale.y = Scale[1];
 				}
 			}
-			 
+
 
 
 			// ========== 회전
@@ -926,42 +936,42 @@ if (ImGui::BeginTabItem("PARTICLE_SPAWN"))
 		ImGui::EndTabBar();
 	}
 
-    m_Particle->SetModuleData(tParticleData);
+	m_Particle->SetModuleData(tParticleData);
 
 
-    return TRUE;
+	return TRUE;
 }
 
 void ParticleSystemUI::SelectMesh(DWORD_PTR _Key)
 {
-    string strKey = (char*)_Key;
-    Ptr<CMesh> pMesh = CResMgr::GetInst()->
-        FindRes<CMesh>(wstring(strKey.begin(), strKey.end()));
-    m_Particle->SetMesh(pMesh);
+	string strKey = (char*)_Key;
+	Ptr<CMesh> pMesh = CResMgr::GetInst()->
+		FindRes<CMesh>(wstring(strKey.begin(), strKey.end()));
+	m_Particle->SetMesh(pMesh);
 }
 
 void ParticleSystemUI::SelectMaterial(DWORD_PTR _Key)
 {
-    string strKey = (char*)_Key;
-    Ptr<CMaterial> pMtrl = CResMgr::GetInst()->
-        FindRes<CMaterial>(wstring(strKey.begin(), strKey.end()));
+	string strKey = (char*)_Key;
+	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->
+		FindRes<CMaterial>(wstring(strKey.begin(), strKey.end()));
 
-    // ** 현재 0번에만 있는데 파티클이 여러개일 경우도 한번 생각해보기
-    m_Particle->SetMaterial(pMtrl, 0);
+	// ** 현재 0번에만 있는데 파티클이 여러개일 경우도 한번 생각해보기
+	m_Particle->SetMaterial(pMtrl, 0);
 
 }
 
 void ParticleSystemUI::SelectTexture(DWORD_PTR _Key)
 {
-    string strKey = (char*)_Key;
+	string strKey = (char*)_Key;
 
-     m_ParticleTex = 
-		 CResMgr::GetInst()->FindRes<CTexture>(wstring(strKey.begin(), strKey.end()));
+	m_ParticleTex =
+		CResMgr::GetInst()->FindRes<CTexture>(wstring(strKey.begin(), strKey.end()));
 
-	 m_Particle->SetParticleTex(m_ParticleTex);
+	m_Particle->SetParticleTex(m_ParticleTex);
 
 
-    // 현재 0번만 고려 중 
+	// 현재 0번만 고려 중 
    // m_Particle->GetMaterial(0)->SetTexParam(TEX_0, m_ParticleTex)
 
 
@@ -971,10 +981,10 @@ void ParticleSystemUI::SelectNoiseTex(DWORD_PTR _Key)
 {
 	string strKey = (char*)_Key;
 
-	m_NoiseTex = 
+	m_NoiseTex =
 		CResMgr::GetInst()->FindRes<CTexture>(wstring(strKey.begin(), strKey.end()));
 
-		m_Particle->SetNoiseTex(m_NoiseTex);
+	m_Particle->SetNoiseTex(m_NoiseTex);
 
 
 
