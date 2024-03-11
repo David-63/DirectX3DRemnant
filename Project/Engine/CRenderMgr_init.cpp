@@ -85,6 +85,29 @@ void CRenderMgr::CreateMRT()
         m_MRT[(UINT)MRT_TYPE::DEFERRED_DECAL]->Create(arrRTTex, 2, nullptr);
     }
 
+    // ====================
+     // DEFERRED_PARTICLE MRT ¸¸µé±â
+     // ====================
+    {
+        m_MRT[(UINT)MRT_TYPE::DEFFERRED_PARTICLE] = new CMRT();
+        Vec2 vResol = CDevice::GetInst()->GetRenderResolution();
+
+
+        Ptr<CTexture> pDSTex = CResMgr::GetInst()->FindRes<CTexture>(L"DepthStencilTex");
+
+        Ptr<CTexture> arrRTTex[8] = {};
+        /*  arrRTTex[0] = CResMgr::GetInst()->CreateTexture(L"ParticleTargetTex",
+              vResol.x, vResol.y,
+              DXGI_FORMAT_R32G32B32A32_FLOAT,
+              D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE);*/
+
+              // arrRTTex[0] = CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex");
+        arrRTTex[0] = CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex");
+        //arrRTTex[2] = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
+
+        m_MRT[(UINT)MRT_TYPE::DEFFERRED_PARTICLE]->Create(arrRTTex, 1, pDSTex);
+    }
+
 
 
     // ====================

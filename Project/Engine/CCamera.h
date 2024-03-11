@@ -32,6 +32,7 @@ private:
 
     vector<CGameObject*>                m_vecDecal_D;
     vector<CGameObject*>                m_vecDecal;
+    vector<CGameObject*>                m_vecParticle_D;
 
 
 
@@ -97,6 +98,7 @@ private:
 
     void render_deferred();
     void render_deferred_Decal();
+    void render_particle();
 
     void render_forward();
     void render_forward_Decal();

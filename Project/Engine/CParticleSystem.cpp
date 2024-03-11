@@ -21,6 +21,7 @@ CParticleSystem::CParticleSystem()
 	, m_bBursts(false)
 	, m_SpawnTime(0.0f)
 	, m_bLoop(false)
+	, m_bUseSpark(false)
 
 
 {
@@ -69,7 +70,7 @@ CParticleSystem::CParticleSystem()
 
 	m_ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = true;
 	m_ModuleData.VelocityAlignment = true;
-	m_ModuleData.VelocityScale = true;
+	m_ModuleData.VelocityScale = false;
 	m_ModuleData.vMaxVelocityScale = Vec3(15.f, 1.f, 1.f);
 	m_ModuleData.vMaxSpeed = 500.f;
 
@@ -103,7 +104,7 @@ CParticleSystem::CParticleSystem()
 	m_ModuleDataBuffer->Create(sizeof(tParticleModule), 1, SB_TYPE::READ_ONLY, true);
 
 
-	m_ParticleTex = CResMgr::GetInst()->Load<CTexture>(L"Particle_0", L"texture\\particle\\HardRain.png");
+	m_ParticleTex = CResMgr::GetInst()->Load<CTexture>(L"Particle_0", L"texture\\particle\\AlphaCircle.png");
 	m_NoiseTex = CResMgr::GetInst()->FindRes<CTexture>(L"texture\\noise\\noise_01.png");
 
 
@@ -161,7 +162,7 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 
 	m_ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::RENDER] = true;
 	m_ModuleData.VelocityAlignment = true;
-	m_ModuleData.VelocityScale = true;
+	m_ModuleData.VelocityScale = false;
 	m_ModuleData.vMaxVelocityScale = Vec3(15.f, 1.f, 1.f);
 	m_ModuleData.vMaxSpeed = 500.f;
 
@@ -193,7 +194,7 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 	m_ModuleDataBuffer = new CStructuredBuffer;
 	m_ModuleDataBuffer->Create(sizeof(tParticleModule), 1, SB_TYPE::READ_ONLY, true);
 
-	m_ParticleTex = CResMgr::GetInst()->Load<CTexture>(L"Particle_0", L"texture\\particle\\HardRain.png");
+	m_ParticleTex = CResMgr::GetInst()->Load<CTexture>(L"Particle_0", L"texture\\particle\\AlphaCircle.png");
 	m_NoiseTex = CResMgr::GetInst()->FindRes<CTexture>(L"texture\\noise\\noise_01.png");
 
 
@@ -357,6 +358,7 @@ void CParticleSystem::SaveToLevelFile(FILE* _File)
 	fwrite(&m_bBursts, sizeof(bool), 1, _File);
 	fwrite(&m_SpawnTime, sizeof(float), 1, _File);
 	fwrite(&m_bLoop, sizeof(bool), 1, _File);
+	fwrite(&m_bUseSpark, sizeof(bool), 1, _File);
 
 	SaveResRef(m_UpdateCS.Get(), _File);
 	SaveResRef(m_ParticleTex.Get(), _File);
@@ -379,6 +381,7 @@ void CParticleSystem::LoadFromLevelFile(FILE* _File)
 	fread(&m_bBursts, sizeof(bool), 1, _File);
 	fread(&m_SpawnTime, sizeof(float), 1, _File);
 	fread(&m_bLoop, sizeof(bool), 1, _File);
+	fread(&m_bUseSpark, sizeof(bool), 1, _File);
 
 
 
