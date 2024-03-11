@@ -18,15 +18,6 @@ public:
 	}
 };
 
-//struct tYX
-//{
-//	tYX(int _y, int _x) 
-//		: x(_x), y(_y)
-//	{}
-//	int x;
-//	int y;
-//};
-
 class CPathFinderScript
 	: public CScript
 {
@@ -50,7 +41,7 @@ private:
 	// Open List
 	priority_queue<tPNode*, vector<tPNode*>, ComparePathLength>	m_OpenList;
 
-	std::unordered_map<pair<int, int>, tPNode*, tPairHash> m_ArrNode;
+	std::unordered_map<UINT, tPNode*> m_ArrNode;
 	std::stack<Vec3> m_Stack;
 
 	//from Mgr

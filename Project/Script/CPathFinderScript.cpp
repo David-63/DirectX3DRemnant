@@ -18,6 +18,7 @@ CPathFinderScript::CPathFinderScript()
 	m_fDiagLength = m_fLength * sqrtf(2.f);
 	
 	m_ArrNode = {};
+	m_ArrNode.rehash(2500);
 	m_OpenList = {};
 }
 
@@ -47,6 +48,7 @@ void CPathFinderScript::Clear()
 			delete iter->second;
 			iter->second = nullptr;
 			m_ArrNode.erase(iter++);
+			m_ArrNode.rehash(25000);
 		}
 
 		m_ArrNode.clear();
@@ -93,7 +95,7 @@ float CPathFinderScript::SetDestObject(CGameObject* _pObject)
 	SetDstYX(_pObject->Transform()->GetRelativePos());
 	SetCurYX();
 
-	ApplyStaticMap();
+	//ApplyStaticMap();
 	//m_vvDynamicMap = CPathFinderMgr::GetInst()->GetDynamicMap();
 	//ApplyDynamicMap();
 
@@ -162,7 +164,7 @@ void CPathFinderScript::ApplyStaticMap()
 		node->iIdxY = yx.y;
 		node->bMove = false;
 
-		m_ArrNode[make_pair(yx.y, yx.x)] = node;
+		m_ArrNode[yx.y*1000 + yx.x] = node;
 	}
 }
 
@@ -175,14 +177,9 @@ void CPathFinderScript::ApplyDynamicMap()
 		node->iIdxY = yx.y;
 		node->bMove = false;
 
-		m_ArrNode[make_pair(yx.y, yx.x)] = node;
+		m_ArrNode[yx.y * 1000 + yx.x] = node;
 	}
 }
-
-
-
-
-
 
 
 void CPathFinderScript::Rebuild(priority_queue<tPNode*, vector<tPNode*>, ComparePathLength>& _queue)
@@ -209,7 +206,7 @@ void CPathFinderScript::FindPath()
 	pCurNode->iIdxY = m_iCurPosY;
 	pCurNode->bClosed = true;
 	pCurNode->fFromParent = 0;
-	m_ArrNode[{m_iCurPosY, m_iCurPosX}] = pCurNode;
+	m_ArrNode[iCurY * 1000 + iCurX] = pCurNode;
 
 	while (true)
 	{
@@ -299,7 +296,7 @@ void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, bo
 		return;
 
 	//해당 키값이 있으면서 
-	auto iter = m_ArrNode.find(make_pair(_iYIdx, _iXIdx));
+	auto iter = m_ArrNode.find(_iYIdx * 1000 + _iXIdx);
 	if (iter != m_ArrNode.end())
 	{
 		//이동불가일때
@@ -317,37 +314,37 @@ void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, bo
 		tPNode* pCurNode = new tPNode;
 		pCurNode->iIdxX = _iXIdx;
 		pCurNode->iIdxY = _iYIdx;
-		m_ArrNode[make_pair(_iYIdx, _iXIdx)] = pCurNode;
+		m_ArrNode[_iYIdx * 1000 + _iXIdx] = pCurNode;
 	}
 
 	// Open List 에 비용을 계산해서 넣는다.
-	if (false == m_ArrNode[make_pair(_iYIdx, _iXIdx)]->bOpen)
+	if (false == m_ArrNode[_iYIdx * 1000 + _iXIdx]->bOpen)
 	{
-		CalculateCost(m_ArrNode[make_pair(_iYIdx, _iXIdx)], _pOrigin, _bDiagonal);
+		CalculateCost(m_ArrNode[_iYIdx * 1000 + _iXIdx], _pOrigin, _bDiagonal);
 		// Open List 에 넣는다.
-		m_ArrNode[make_pair(_iYIdx, _iXIdx)]->bOpen = true;
-		m_OpenList.push(m_ArrNode[make_pair(_iYIdx, _iXIdx)]);
+		m_ArrNode[_iYIdx * 1000 + _iXIdx]->bOpen = true;
+		m_OpenList.push(m_ArrNode[_iYIdx * 1000 + _iXIdx]);
 	}
 	else // 이미 OpenList 에 있는 경우,
 	{
 		//비용을 계산해서 더 효율이 좋은 것으로 대체한다.
-		tPNode* pNodePtr = m_ArrNode[make_pair(_iYIdx, _iXIdx)];
+		tPNode* pNodePtr = m_ArrNode[_iYIdx * 1000 + _iXIdx];
 		tPNode* copy = new tPNode(*pNodePtr);
 
 		CalculateCost(copy, _pOrigin, _bDiagonal); //카피의 코스트를 계산
 
-		if (m_ArrNode[make_pair(_iYIdx, _iXIdx)]->fFinal > copy->fFinal)
+		if (m_ArrNode[_iYIdx * 1000 + _iXIdx]->fFinal > copy->fFinal)
 		{
-			delete m_ArrNode[make_pair(_iYIdx, _iXIdx)];
-			m_ArrNode[make_pair(_iYIdx, _iXIdx)] = nullptr;
-			m_ArrNode.erase(make_pair(_iYIdx, _iXIdx));
+			delete m_ArrNode[_iYIdx * 1000 + _iXIdx];
+			m_ArrNode[_iYIdx * 1000 + _iXIdx] = nullptr;
+			m_ArrNode.erase(_iYIdx * 1000 + _iXIdx);
 
-			m_ArrNode[make_pair(_iYIdx, _iXIdx)] = copy;
+			m_ArrNode[_iYIdx * 1000 + _iXIdx] = copy;
 
 			// 오픈리스트(우선순위큐) 재설정
 			Rebuild(m_OpenList);
 		}
-		else
+		else // 카피 폐기
 		{
 			delete copy;
 			copy = nullptr;

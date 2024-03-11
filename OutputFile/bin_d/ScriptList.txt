@@ -1,6 +1,8 @@
 CCameraMoveScript
 CCharacterMoveScript
 CIdleStateScript
+CMonsterMoveScript
+CPathFinderScript
 CPlayerScript
 CPlayerScriptFsm
 CShoulderViewScript

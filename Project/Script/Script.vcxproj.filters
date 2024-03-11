@@ -10,29 +10,56 @@
     <Filter Include="ScriptMgr">
       <UniqueIdentifier>{78d2676d-e9d6-47ca-8d90-52e8d457d264}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Cam">
+    <Filter Include="Script\Creature">
+      <UniqueIdentifier>{e4d48d2f-a9ad-4547-b2f1-4c317d0f117b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Object">
+      <UniqueIdentifier>{53652c8b-ecfb-4876-b387-fdb9fa1280a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Sample">
+      <UniqueIdentifier>{8e4e6880-39a0-42b5-bc5b-81bf163bf2d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\System">
+      <UniqueIdentifier>{29cebafc-4277-4c64-8246-7c240ac31e72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Boss">
+      <UniqueIdentifier>{326b6fc8-ea07-444a-8974-0a7b333e3bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Boss\B_FSM">
+      <UniqueIdentifier>{deec3160-b9cc-4e1a-9bb2-c6af22bb3b79}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster">
+      <UniqueIdentifier>{f0a41fb9-4f8a-4e2a-afe3-db97a8a1aa13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_FSM">
+      <UniqueIdentifier>{6aa21f24-1bf5-4948-84f6-f06f8965e64c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\MonsterMoveScript">
+      <UniqueIdentifier>{3400bf0f-3f2b-4ab7-ac6d-15ec4067f13e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Player">
+      <UniqueIdentifier>{f51448b5-1b50-4343-a74a-7cf10e4396c6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Player\P_FSM">
+      <UniqueIdentifier>{31662f34-2a1a-42ee-b502-80d7f66cc229}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Object\Dynamic">
+      <UniqueIdentifier>{c1ad46a5-8905-4745-8d14-47d2dbc3d5e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Object\Static">
+      <UniqueIdentifier>{f4102aa0-fdb7-426b-a9dc-87ebdab96ff5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Sample\FSM">
+      <UniqueIdentifier>{cd6187c7-d4cf-430d-975c-67a7ca18302b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\System\Cam">
       <UniqueIdentifier>{fd09dc36-c00e-45bb-8be0-75c286d9a8bc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Test">
-      <UniqueIdentifier>{ea948113-95ce-4848-908a-1852e7aa190c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\PathFinderScript">
+    <Filter Include="Script\System\PathFinderScript">
       <UniqueIdentifier>{83e226c8-ae1b-4ea0-aac7-fece3deb6e7c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Script\MonsterMoveScript">
-      <UniqueIdentifier>{3400bf0f-3f2b-4ab7-ac6d-15ec4067f13e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CMissileScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CMonsterScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlayerScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="framework.h">
       <Filter>Default</Filter>
     </ClInclude>
@@ -42,41 +69,38 @@
     <ClInclude Include="CScriptMgr.h">
       <Filter>ScriptMgr</Filter>
     </ClInclude>
-    <ClInclude Include="CGravityScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
-    <ClInclude Include="CPlanetScript.h">
-      <Filter>Script</Filter>
-    </ClInclude>
     <ClInclude Include="CCameraMoveScript.h">
-      <Filter>Script\Cam</Filter>
+      <Filter>Script\System\Cam</Filter>
     </ClInclude>
     <ClInclude Include="CShoulderViewScript.h">
-      <Filter>Script\Cam</Filter>
-    </ClInclude>
-    <ClInclude Include="CCharacterMoveScript.h">
-      <Filter>Script\Test</Filter>
-    </ClInclude>
-    <ClInclude Include="CTestScript.h">
-      <Filter>Script\Test</Filter>
+      <Filter>Script\System\Cam</Filter>
     </ClInclude>
     <ClInclude Include="CPathFinderScript.h">
-      <Filter>Script\PathFinderScript</Filter>
+      <Filter>Script\System\PathFinderScript</Filter>
     </ClInclude>
     <ClInclude Include="CMonsterMoveScript.h">
-      <Filter>Script\MonsterMoveScript</Filter>
+      <Filter>Script\Creature\Monster\MonsterMoveScript</Filter>
+    </ClInclude>
+    <ClInclude Include="CIdleStateScript.h">
+      <Filter>Script\Sample\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerScriptFsm.h">
+      <Filter>Script\Sample\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CStateScript.h">
+      <Filter>Script\Sample\FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlayerScript.h">
+      <Filter>Script\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="CCharacterMoveScript.h">
+      <Filter>Script\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="CTestScript.h">
+      <Filter>Script\Sample</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CMissileScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CMonsterScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlayerScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>Default</Filter>
     </ClCompile>
@@ -86,29 +110,35 @@
     <ClCompile Include="CScriptMgr.cpp">
       <Filter>ScriptMgr</Filter>
     </ClCompile>
-    <ClCompile Include="CGravityScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
-    <ClCompile Include="CPlanetScript.cpp">
-      <Filter>Script</Filter>
-    </ClCompile>
     <ClCompile Include="CCameraMoveScript.cpp">
-      <Filter>Script\Cam</Filter>
+      <Filter>Script\System\Cam</Filter>
     </ClCompile>
     <ClCompile Include="CShoulderViewScript.cpp">
-      <Filter>Script\Cam</Filter>
-    </ClCompile>
-    <ClCompile Include="CCharacterMoveScript.cpp">
-      <Filter>Script\Test</Filter>
-    </ClCompile>
-    <ClCompile Include="CTestScript.cpp">
-      <Filter>Script\Test</Filter>
+      <Filter>Script\System\Cam</Filter>
     </ClCompile>
     <ClCompile Include="CPathFinderScript.cpp">
-      <Filter>Script\PathFinderScript</Filter>
+      <Filter>Script\System\PathFinderScript</Filter>
     </ClCompile>
     <ClCompile Include="CMonsterMoveScript.cpp">
-      <Filter>Script\MonsterMoveScript</Filter>
+      <Filter>Script\Creature\Monster\MonsterMoveScript</Filter>
+    </ClCompile>
+    <ClCompile Include="CIdleStateScript.cpp">
+      <Filter>Script\Sample\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScriptFsm.cpp">
+      <Filter>Script\Sample\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CStateScript.cpp">
+      <Filter>Script\Sample\FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlayerScript.cpp">
+      <Filter>Script\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="CCharacterMoveScript.cpp">
+      <Filter>Script\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="CTestScript.cpp">
+      <Filter>Script\Sample</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
