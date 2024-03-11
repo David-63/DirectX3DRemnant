@@ -264,7 +264,12 @@ Ptr<CAnimClip> CAnimator3D::findAnim(const wstring& _strName)
 void CAnimator3D::changeAnimClip(wstring _strAnimName)
 {
 	// cur Anim 변경
-	m_pCurrentAnim = findAnim(_strAnimName).Get();
+	CAnimClip* haveAnimClip = findAnim(_strAnimName).Get();
+	if (!haveAnimClip)
+		return;
+
+	m_pCurrentAnim = haveAnimClip;
+
 	if (m_pPrevAnim)
 	{
 		if (m_pPrevAnim->GetKey() != m_pCurrentAnim->GetKey())
@@ -359,6 +364,33 @@ void CAnimator3D::Add(Ptr<CAnimClip> _clip)
 			m_modifyIndicesBuffer->Create(sizeof(tPassIndices), m_modifyIndices.size(), SB_TYPE::READ_ONLY, false, m_modifyIndices.data());
 		}
 	}	
+}
+
+void CAnimator3D::Add(wstring _name)
+{
+	Ptr<CAnimClip> newAnim = CResMgr::GetInst()->FindRes<CAnimClip>(_name);
+	assert(newAnim.Get());
+	
+	// map에 이벤트가 있는지 확인
+	Events* events = FindEvents(_name);
+	// 없으면 clip에 대한 새 이벤트 생성 후 map에 추가하기
+	if (!events)
+	{
+		events = new Events();
+		int maxFrame = (m_CurAnimData.EndTime - m_CurAnimData.BeginTime) * 30 + 1;
+		events->ActionEvents.resize(maxFrame);
+		m_Events.insert(std::make_pair(_name, events));
+	}
+
+	// 클립을 map에 추가하기	
+	m_mapAnim.insert(make_pair(_name, newAnim.Get()));
+
+	// 애니메이션 변경해주기
+	changeAnimClip(_name);
+
+	// 버퍼 새로 구성하기
+	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
+	m_vecFinalBoneMat.resize(iBoneCount);
 }
 
 void CAnimator3D::CollectChildrenIndices(int current_index)

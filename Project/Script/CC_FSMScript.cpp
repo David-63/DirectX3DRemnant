@@ -23,7 +23,7 @@ void CC_FSMScript::begin()
 	// 이거 애매하네
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::IDLESTATESCRIPT)));
 
-	m_CurState = GetStateScript(STATE_IDLE);
+	m_CurState = FindStateScript(STATE_IDLE);
 	ChangeState(m_CurState->GetStateType());
 }
 
@@ -58,7 +58,7 @@ void CC_FSMScript::AddState(CC_StatesScript* _State)
 	m_States.insert(std::make_pair(eState, _State));
 }
 
-CC_StatesScript* CC_FSMScript::GetStateScript(UINT _State)
+CC_StatesScript* CC_FSMScript::FindStateScript(UINT _State)
 {
 	std::map<UINT, CC_StatesScript*>::iterator iter = m_States.find(_State);
 
@@ -70,7 +70,7 @@ CC_StatesScript* CC_FSMScript::GetStateScript(UINT _State)
 
 void CC_FSMScript::ChangeState(UINT _NextState)
 {
-	CC_StatesScript* inState = GetStateScript(_NextState);
+	CC_StatesScript* inState = FindStateScript(_NextState);
 	// 인자로 들어온 스크립트가 없으면 터짐
 	assert(inState);
 

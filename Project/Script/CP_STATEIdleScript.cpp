@@ -18,19 +18,6 @@ void CP_STATEIdleScript::tick()
 	// 입력 받기
 	IdleMouseInput();
 	
-	
-
-	MoveInput();
-
-	// 상태 변경해주기
-	if (m_isMove)
-	{
-		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
-	}	
-}
-
-void CP_STATEIdleScript::MoveInput()
-{
 	if (KEY_TAP(KEY::RBTN))
 	{
 		m_PHQ->InputAim();
@@ -39,7 +26,6 @@ void CP_STATEIdleScript::MoveInput()
 	{
 		m_PHQ->InputCrouch();
 	}
-
 	if (KEY_TAP(KEY::W))
 	{
 		m_isMove = true;
@@ -65,8 +51,18 @@ void CP_STATEIdleScript::MoveInput()
 		m_isMove = true;
 		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::N);
 	}
-
 	
+
+	// 상태 변경해주기
+	if (m_isMove)
+	{
+		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
+	}	
+}
+
+void CP_STATEIdleScript::MoveInput()
+{
+
 }
 
 void CP_STATEIdleScript::IdleMouseInput()
@@ -145,6 +141,13 @@ void CP_STATEIdleScript::IdleCrouchAimInput()
 void CP_STATEIdleScript::Enter()
 {
 	// 애니메이션 재생
+	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
+
+	if (CP_FSMScript::ePlayerStance::Crouch == curStance
+		|| CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+		m_PHQ->PlayAnimation(AnimIdleCrouch, true);
+	else
+		m_PHQ->PlayAnimation(AnimIdleStand, true);
 }
 
 void CP_STATEIdleScript::Exit()
