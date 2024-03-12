@@ -87,6 +87,11 @@ void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 
 void CP_FSMScript::BeginOverlap(CCollider3D* _Other)
 {
+	// Ray -> CollisionMgr != BeginOverlap
+
+	// Ray -> EventMgr != AddEvent
+
+
 }
 
 void CP_FSMScript::OnOverlap(CCollider3D* _Other)

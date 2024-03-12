@@ -74,7 +74,7 @@
       <UniqueIdentifier>{4d5ccecb-b2c3-4208-82df-d75da8352fc9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Script\Creature\Boss\B_States">
-      <UniqueIdentifier>{b5cea8ab-2607-4d47-9002-3cb885f795ee}</UniqueIdentifier>
+      <UniqueIdentifier>{499b86b2-2779-4840-9c91-a7e929e269e2}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +142,9 @@
       <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClInclude>
     <ClInclude Include="CM_Lurker_STATE_Idle_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_STATE_Sleep_Script.h">
       <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClInclude>
     <ClInclude Include="CB_FSMScript.h">
@@ -222,6 +225,9 @@
       <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClCompile>
     <ClCompile Include="CM_Lurker_STATE_Idle_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_STATE_Sleep_Script.cpp">
       <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClCompile>
     <ClCompile Include="CB_FSMScript.cpp">

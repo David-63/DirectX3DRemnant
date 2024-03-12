@@ -235,6 +235,94 @@ void CAnimator3D::ClearData()
 	}
 }
 
+void CAnimator3D::SimpleGen()
+{
+	Ptr<CMeshData> curMeshData = MeshRender()->GetMeshData();
+	Ptr<CMesh> pMesh = curMeshData.Get()->GetMeshFromData();
+
+	wstring meshKey = pMesh.Get()->GetKey();
+
+	// 이름 중복 검사
+	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(meshKey);
+	if (nullptr != pAnim)
+		return;
+
+	const vector<tMTAnimClip> clip = pMesh.Get()->GetMTAnimClips();
+
+	float endTime = clip[0].dTimeLength - 0.1f;
+
+	string strName(meshKey.begin(), meshKey.end());
+
+	// 생성 및 리소스 등록
+	pAnim = new CAnimClip(false);
+	pAnim->MakeAnimClip(meshKey, 0, 0, endTime, pMesh);
+	pAnim->SetKey(meshKey);
+	pAnim->SetRelativePath(meshKey);
+	pAnim->SetAnimName(strName);
+	pAnim->Save(meshKey);
+	CResMgr::GetInst()->AddRes<CAnimClip>(pAnim->GetKey(), pAnim.Get());
+
+	// map 에 클립 등록
+	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
+
+	// 이벤트 체크
+	Events* events = FindEvents(meshKey);
+	// 없으면 생성해서 map에 등록
+	if (!events)
+	{
+		events = new Events();
+		int maxFrame = endTime * 30 + 1;
+		events->ActionEvents.resize(maxFrame);
+		m_Events.insert(std::make_pair(meshKey, events));
+	}
+	// 애니메이션 변경해줌
+	changeAnimClip(pAnim->GetKey());
+}
+
+void CAnimator3D::SimpleGen(wstring _name)
+{
+	Ptr<CMeshData> curMeshData = MeshRender()->GetMeshData();
+	Ptr<CMesh> pMesh = curMeshData.Get()->GetMeshFromData();
+
+	//wstring meshKey = pMesh.Get()->GetKey();
+
+	// 이름 중복 검사
+	Ptr<CAnimClip> pAnim = CResMgr::GetInst()->FindRes<CAnimClip>(_name);
+	if (nullptr != pAnim)
+		return;
+
+	const vector<tMTAnimClip> clip = pMesh.Get()->GetMTAnimClips();
+
+	float endTime = clip[0].dTimeLength - 0.1f;
+
+	string strName(_name.begin(), _name.end());
+
+	// 생성 및 리소스 등록
+	pAnim = new CAnimClip(false);
+	pAnim->MakeAnimClip(_name, 0, 0, endTime, pMesh);
+	pAnim->SetKey(_name);
+	pAnim->SetRelativePath(_name);
+	pAnim->SetAnimName(strName);
+	pAnim->Save(_name);
+	CResMgr::GetInst()->AddRes<CAnimClip>(pAnim->GetKey(), pAnim.Get());
+
+	// map 에 클립 등록
+	m_mapAnim.insert(make_pair(pAnim->GetKey(), pAnim.Get()));
+
+	// 이벤트 체크
+	Events* events = FindEvents(_name);
+	// 없으면 생성해서 map에 등록
+	if (!events)
+	{
+		events = new Events();
+		int maxFrame = endTime * 30 + 1;
+		events->ActionEvents.resize(maxFrame);
+		m_Events.insert(std::make_pair(_name, events));
+	}
+	// 애니메이션 변경해줌
+	changeAnimClip(pAnim->GetKey());
+}
+
 
 
 void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)

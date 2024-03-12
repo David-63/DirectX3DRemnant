@@ -123,6 +123,11 @@ public:
 	void UpdateData();
 	void ClearData();
 
+public:
+	void SimpleGen();
+	void SimpleGen(wstring _name);
+
+
 private:
 	void animaTick();
 	void blendTick();
