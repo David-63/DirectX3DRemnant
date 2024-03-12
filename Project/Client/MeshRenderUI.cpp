@@ -26,7 +26,7 @@ int MeshRenderUI::render_update()
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
 
-	char szBuff[50] = {};
+	char szBuff[200] = {};
 
 	Ptr<CMeshData> pMeshData = GetTarget()->MeshRender()->GetMeshData();
 	ImGui::Text("MeshData ");

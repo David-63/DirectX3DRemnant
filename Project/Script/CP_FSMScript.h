@@ -2,11 +2,20 @@
 #include "CC_FSMScript.h"
 #include "CP_StatesScript.h"
 
-#define AnimIdleStand L"animclip\\P_IdleStand.animclip"
-#define AnimIdleCrouch L"animclip\\P_IdleCrouch.animclip"
-#define AnimMoveCrouch L"animclip\\P_MoveCrouch.animclip"
-#define AnimMoveWalk L"animclip\\P_MoveWalk.animclip"
-
+#define AnimIdleStand L"animclip\\player\\P_IdleStand.animclip"
+#define AnimIdleCrouch L"animclip\\player\\P_IdleCrouch.animclip"
+#define AnimMoveCrouch L"animclip\\player\\P_MoveCrouch.animclip"
+#define AnimMoveCrouchB L"animclip\\player\\P_MoveCrouchB.animclip"
+#define AnimMoveCrouchBL L"animclip\\player\\P_MoveCrouchBL.animclip"
+#define AnimMoveCrouchBR L"animclip\\player\\P_MoveCrouchBR.animclip"
+#define AnimMoveCrouchFL L"animclip\\player\\P_MoveCrouchFL.animclip"
+#define AnimMoveCrouchFR L"animclip\\player\\P_MoveCrouchFR.animclip"
+#define AnimMoveWalk L"animclip\\player\\P_MoveWalk.animclip"
+#define AnimMoveWalkB L"animclip\\player\\P_MoveWalkB.animclip"
+#define AnimMoveWalkBL L"animclip\\player\\P_MoveWalkBL.animclip"
+#define AnimMoveWalkBR L"animclip\\player\\P_MoveWalkBR.animclip"
+#define AnimMoveWalkFL L"animclip\\player\\P_MoveWalkFL.animclip"
+#define AnimMoveWalkFR L"animclip\\player\\P_MoveWalkFR.animclip"
 
 
 
@@ -54,11 +63,15 @@ private:
 
     // 스탠스와 방향은 버퍼로 관리해야함
     ePlayerStance   P_Stance;
-    ePlayerMoveDir  P_MoveDir;
+
+    // 토글 입력
     bool            m_InpCrouch;
     bool            m_InpAim;
     bool            m_InpSprint;
     bool            m_IsChangeStance;
+
+    // 방향
+    Vec2        m_moveDir;
 
 public:
     virtual void begin() override;
@@ -69,19 +82,23 @@ public:
 
 
 public:
-    void ChangeMoveDir(ePlayerMoveDir _dir) { P_MoveDir = _dir; }
-    ePlayerMoveDir  GetMoveDir() { return P_MoveDir; }
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
     ePlayerStance GetStance() { return P_Stance; }
     tP_Info GetPlayerInfo() { return m_tPlayerInfo; }
 
 public:
+    void ClearStanceChange() { m_IsChangeStance = false; }
     void InputCrouch() { m_InpCrouch ? m_InpCrouch = false : m_InpCrouch = true; m_IsChangeStance = true; }
     void InputAim() { m_InpAim ? m_InpAim = false : m_InpAim = true; m_IsChangeStance = true; }
     void InputSprint() { m_InpSprint ? m_InpSprint = false : m_InpSprint = true; m_IsChangeStance = true; }
     bool IsCrouch() { return m_InpCrouch; }
     bool IsAim() { return m_InpAim; }
     bool IsSprint() { return m_InpSprint; }
+
+    void InputMove(Vec2 _input) { m_moveDir += _input; }
+    void InputMove(int _inputX, int _inputY) { m_moveDir += Vec2(_inputX, _inputY); }
+    void ClearMoveDir() { m_moveDir = Vec2(0, 0); }
+    Vec2 GetMoveDir() { return m_moveDir; }
 
 public:
     virtual void BeginOverlap(CCollider3D* _Other) override;
