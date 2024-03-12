@@ -62,18 +62,24 @@ void CPathFinderMgr::MakeDynamicMap()
 
 	for (auto& obj : monsters)
 	{
-		Vec3 pos = obj->Transform()->GetRelativePos();
-		Vec3 size = obj->RigidBody()->GetShapeSize();
+		if (obj->RigidBody())
+		{
+			Vec3 pos = obj->Transform()->GetRelativePos();
+			Vec3 size = obj->RigidBody()->GetShapeSize();
 
-		CalSphereYX(pos, size, &m_vDynamicYX);
+			CalSphereYX(pos, size, &m_vDynamicYX);
+		}
 	}
 
 	for (auto& obj : player)
 	{
-		Vec3 pos = obj->Transform()->GetRelativePos();
-		Vec3 size = obj->RigidBody()->GetShapeSize();
+		if (obj->RigidBody())
+		{
+			Vec3 pos = obj->Transform()->GetRelativePos();
+			Vec3 size = obj->RigidBody()->GetShapeSize();
 
-		CalSphereYX(pos, size, &m_vDynamicYX);
+			CalSphereYX(pos, size, &m_vDynamicYX);
+		}
 	}
 }
 

@@ -15,6 +15,7 @@ CP_STATEIdleScript::~CP_STATEIdleScript()
 
 void CP_STATEIdleScript::tick()
 {
+
 	// 입력 받기
 	IdleMouseInput();
 	
