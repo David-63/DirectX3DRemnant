@@ -3,7 +3,6 @@
 
 void CM_Lurker_FSMScript::begin()
 {
-	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_SLEEP_SCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_IDLE_SCRIPT)));
 
 	ChangeState(static_cast<UINT>(eLurkerState::Sleep));

@@ -3,7 +3,16 @@
 
 class CM_Lurker_STATE_Idle_Script : public CM_Lurker_StatesScript
 {
+	enum class eInitialPose
+	{
+		Up,
+		Down,
+		Wall,
+		Landing,
+	};
 private:
+	bool m_bAlert;
+	eInitialPose m_pose;
 
 
 public:

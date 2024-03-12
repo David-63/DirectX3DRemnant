@@ -45,42 +45,50 @@ void CreateTestLevel()
 	CCollisionMgr::GetInst()->SetColLayer(2, 5);
 
 	// camera
-	
+
 		// Main Camera Object 생성
-		CGameObject* pMainCam = new CGameObject;
-		pMainCam->SetName(L"MainCamera");
+	CGameObject* pMainCam = new CGameObject;
+	pMainCam->SetName(L"MainCamera");
 
-		pMainCam->AddComponent(new CTransform);
-		pMainCam->AddComponent(new CCamera);
-		pMainCam->AddComponent(new CCameraMoveScript);
-		
-		
-		// 숄더뷰용
-		//pMainCam->AddComponent(new CShoulderViewScript);
-		//CShoulderViewScript* pCamMoveScript = pMainCam->GetScript<CShoulderViewScript>(); 
+	pMainCam->AddComponent(new CTransform);
+	pMainCam->AddComponent(new CCamera);
+	pMainCam->AddComponent(new CCameraMoveScript);
 
-		pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-		pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
-		pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
-		pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
-		pMainCam->Camera()->SetFar(20000.f);
-		SpawnGameObject(pMainCam, Vec3(200.f, 133.f, -500.f), 0);
 
-		// UI cameara
-		CGameObject* pUICam = new CGameObject;
-		pUICam->SetName(L"UICamera");
+	// 숄더뷰용
+	//pMainCam->AddComponent(new CShoulderViewScript);
+	//CShoulderViewScript* pCamMoveScript = pMainCam->GetScript<CShoulderViewScript>(); 
 
-		pUICam->AddComponent(new CTransform);
-		pUICam->AddComponent(new CCamera);
+	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
+	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
+	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
+	pMainCam->Camera()->SetFar(20000.f);
+	SpawnGameObject(pMainCam, Vec3(200.f, 133.f, -500.f), 0);
 
-		pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
-		pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
-		SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
+	// UI cameara
+	CGameObject* pUICam = new CGameObject;
+	pUICam->SetName(L"UICamera");
+
+	pUICam->AddComponent(new CTransform);
+	pUICam->AddComponent(new CCamera);
+
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
+	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
+	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 
 
 	//
 
+	//애니메이션 로드
+	{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\walk.fbx");
+		CGameObject* obj = data->Instantiate();
+		//obj->Animator3D()->
+		
+		
+	}
 
 	// SkyBox 추가
 	{
@@ -387,7 +395,7 @@ void CreateTestLevel()
 		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), 4);
 	}
 	
-	bool hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
+	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
 
 
 	//파티클

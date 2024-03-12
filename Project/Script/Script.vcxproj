@@ -172,6 +172,10 @@ call CodeGen.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CB_FSMScript.h" />
+    <ClInclude Include="CB_STATEIdleScript.h" />
+    <ClInclude Include="CB_STATEMoveScript.h" />
+    <ClInclude Include="CB_StateScript.h" />
     <ClInclude Include="CCameraMoveScript.h" />
     <ClInclude Include="CCharacterMoveScript.h" />
     <ClInclude Include="CC_FSMScript.h" />
@@ -180,7 +184,6 @@ call CodeGen.exe</Command>
     <ClInclude Include="CM_Lurker_STATE_Idle_Script.h" />
     <ClInclude Include="CM_Lurker_FSMScript.h" />
     <ClInclude Include="CM_Lurker_StatesScript.h" />
-    <ClInclude Include="CM_Lurker_STATE_Sleep_Script.h" />
     <ClInclude Include="CPathFinderScript.h" />
     <ClInclude Include="CPlayerScript.h" />
     <ClInclude Include="CPlayerScriptFsm.h" />
@@ -197,6 +200,10 @@ call CodeGen.exe</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CB_FSMScript.cpp" />
+    <ClCompile Include="CB_STATEIdleScript.cpp" />
+    <ClCompile Include="CB_STATEMoveScript.cpp" />
+    <ClCompile Include="CB_StateScript.cpp" />
     <ClCompile Include="CCameraMoveScript.cpp" />
     <ClCompile Include="CCharacterMoveScript.cpp" />
     <ClCompile Include="CC_FSMScript.cpp" />
@@ -205,7 +212,6 @@ call CodeGen.exe</Command>
     <ClCompile Include="CM_Lurker_STATE_Idle_Script.cpp" />
     <ClCompile Include="CM_Lurker_FSMScript.cpp" />
     <ClCompile Include="CM_Lurker_StatesScript.cpp" />
-    <ClCompile Include="CM_Lurker_STATE_Sleep_Script.cpp" />
     <ClCompile Include="CPathFinderScript.cpp" />
     <ClCompile Include="CPlayerScript.cpp" />
     <ClCompile Include="CPlayerScriptFsm.cpp" />
