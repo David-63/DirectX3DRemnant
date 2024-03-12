@@ -148,6 +148,7 @@ public:
 	// btn func
 public:
 	void Add(Ptr<CAnimClip> _clip);
+	void Add(wstring _name);
 	void Remove(const wstring& _key);
 	void MakeAnimClip(string _strAnimName, int _clipIdx, float _startTime, float _endTime, Ptr<CMesh> _inMesh);		// UI에서 생성할 때
 	void Play(const wstring& _strName, bool _bRepeat);

@@ -83,8 +83,8 @@ void CCameraMoveScript::Camera3DMove()
 
 	float fSpeed = m_fCamSpeed;
 
-	if (KEY_HOLD(KEY::LSHIFT))
-		fSpeed *= 10.f;
+	//if (KEY_HOLD(KEY::LSHIFT))
+	//	fSpeed *= 10.f;
 
 	if (KEY_HOLD(KEY::UP))
 	{
@@ -107,16 +107,16 @@ void CCameraMoveScript::Camera3DMove()
 	}
 
 
-	if (KEY_HOLD(KEY::LCTRL))
-	{
-		vPos -= DT * vUp * fSpeed;
-	}
+	//if (KEY_HOLD(KEY::LCTRL))
+	//{
+	//	vPos -= DT * vUp * fSpeed;
+	//}
 
 
-	if (KEY_HOLD(KEY::SPACE))
-	{
-		vPos += DT * vUp * fSpeed;
-	}
+	//if (KEY_HOLD(KEY::SPACE))
+	//{
+	//	vPos += DT * vUp * fSpeed;
+	//}
 
 	if (KEY_HOLD(KEY::RBTN))
 	{
