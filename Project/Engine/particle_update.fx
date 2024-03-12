@@ -147,21 +147,21 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         // Fixed Direction
                         else
                         {
-                            //float fAngle =
-                            //(vOut1.r * radians(ModuleData.OffsetAngle)) - radians(ModuleData.OffsetAngle) / 2.f;
+                            float fAngle =
+                            (vOut1.r * radians(ModuleData.OffsetAngle)) - radians(ModuleData.OffsetAngle) / 2.f;
                            
-                            //float3 fVelocity = normalize(ModuleData.vVelocityDir.xyz);
+                            float3 fVelocity = normalize(ModuleData.vVelocityDir.xyz);
                            
-                            //float4x4 rotMat =
-                            //{
-                            //    cos(fAngle), -sin(fAngle), 0, 0,
-                            //    sin(fAngle), cos(fAngle), 0, 0,
-                            //    0, 0, 1, 0,
-                            //    0, 0, 0, 1
-                            //};
+                            float4x4 rotMat =
+                            {
+                                cos(fAngle), -sin(fAngle), 0, 0,
+                                sin(fAngle), cos(fAngle), 0, 0,
+                                0, 0, 1, 0,
+                                0, 0, 0, 1
+                            };
                             
-                            //float4 rotVelocity = mul(rotMat, float4(fVelocity, 1.f));
-                            //particle.vVelocity.xyz = rotVelocity.xyz * ModuleData.Speed;
+                            float4 rotVelocity = mul(rotMat, float4(fVelocity, 1.f));
+                            particle.vVelocity.xyz = rotVelocity.xyz * ModuleData.Speed;
                         }
                     }
                                      
