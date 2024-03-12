@@ -172,5 +172,30 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
     return vOutColor;
 }
 
+struct PS_PARTICLE_OUT
+{
+    float4 EmissiveTargetTex : SV_Target0; //블룸 효과에도 쓸 수 있을듯  
+};
+
+
+
+PS_PARTICLE_OUT PS_DeferredParticleRender(GS_OUT _in) : SV_Target
+{
+    PS_PARTICLE_OUT vOutColor = (PS_PARTICLE_OUT)0.f;
+
+
+    vOutColor.EmissiveTargetTex = g_tex_0.Sample(g_sam_0, _in.vUV) * ParticleBuffer[_in.iInstID].vColor;
+
+    if (ModuleData.bEmissive)
+       {
+
+            vOutColor.EmissiveTargetTex = vOutColor.EmissiveTargetTex * vOutColor.EmissiveTargetTex.a;
+        }
+
+
+return vOutColor;
+
+}
+
 
 #endif

@@ -129,7 +129,12 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         {
                            
                             float3 vVelocity = normalize(particle.vLocalPos.xyz);
-                            particle.vVelocity.xyz = vVelocity * ModuleData.Speed * RandomSpark * vOut3; // ¿ø·¡´Â ·£´ýSpark ¾È°öÇØÁü
+
+                            if (ModuleData.bUseSpark == 1)
+                                particle.vVelocity.xyz = vVelocity * ModuleData.Speed * RandomSpark * vOut3; // ¿ø·¡´Â ·£´ýSpark ¾È°öÇØÁü
+
+                            else if (ModuleData.bUseSpark == 0)
+                                particle.vVelocity.xyz = vVelocity * ModuleData.Speed;
                         }
                         
                         // To Center

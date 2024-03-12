@@ -250,6 +250,12 @@ void CCamera::SortObject()
 							m_vecDecal.push_back(vecObject[objIdx]);
 						}
 						break;
+
+					case SHADER_DOMAIN::DOMAIN_DEFERRED_PARTICLE:
+						m_vecParticle_D.push_back(vecObject[objIdx]);
+						break;
+
+
 					case SHADER_DOMAIN::DOMAIN_DEFERRED:
 					case SHADER_DOMAIN::DOMAIN_OPAQUE:
 					case SHADER_DOMAIN::DOMAIN_MASK:
@@ -538,6 +544,7 @@ void CCamera::clear()
 
 	m_vecDecal_D.clear();
 	m_vecDecal.clear();
+	m_vecParticle_D.clear();
 	m_vecTransparent.clear();
 	m_vecPost.clear();
 	m_vecUI.clear();
@@ -775,6 +782,16 @@ void CCamera::render_deferred_Decal()
 	}
 }
 
+void CCamera::render_particle()
+{
+	updateMatrix();
+
+	for (size_t i = 0; i < m_vecParticle_D.size(); ++i)
+	{
+		m_vecParticle_D[i]->render();
+	}
+}
+
 void CCamera::render_forward_Decal()
 {
 	updateMatrix();
@@ -787,6 +804,9 @@ void CCamera::render_forward_Decal()
 
 void CCamera::geometryRender()
 {
+	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFFERRED_PARTICLE)->OMSet();
+	render_particle();
+
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 	render_deferred();
 
