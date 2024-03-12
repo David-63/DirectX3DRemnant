@@ -11,6 +11,7 @@ CPathFinderScript::CPathFinderScript()
 	, m_iCurPosY(0)
 	, m_iDestPosX(0)
 	, m_iDestPosY(0)
+	, m_Block(0)
 {
 	m_iXCount = CPathFinderMgr::GetInst()->GetXCount();
 	m_iYCount = CPathFinderMgr::GetInst()->GetYCount();
@@ -18,7 +19,7 @@ CPathFinderScript::CPathFinderScript()
 	m_fDiagLength = m_fLength * sqrtf(2.f);
 	
 	m_ArrNode = {};
-	m_ArrNode.rehash(2500);
+	//m_ArrNode.rehash(25000);
 	m_OpenList = {};
 }
 
@@ -31,6 +32,12 @@ CPathFinderScript::~CPathFinderScript()
 void CPathFinderScript::begin()
 {
 	m_vStaticMap = CPathFinderMgr::GetInst()->GetStaticMap();
+	m_fSelfPad = CalCirclePad(GetOwner()) / m_fLength;
+	if (m_fSelfPad < 1)
+		m_iSelfPad = 0;
+	else
+		m_iSelfPad = ceil(m_fSelfPad);
+
 }
 
 void CPathFinderScript::tick()
@@ -48,7 +55,7 @@ void CPathFinderScript::Clear()
 			delete iter->second;
 			iter->second = nullptr;
 			m_ArrNode.erase(iter++);
-			m_ArrNode.rehash(25000);
+			//m_ArrNode.rehash(25000);
 		}
 
 		m_ArrNode.clear();
@@ -95,16 +102,13 @@ float CPathFinderScript::SetDestObject(CGameObject* _pObject)
 	SetDstYX(_pObject->Transform()->GetRelativePos());
 	SetCurYX();
 
-	//ApplyStaticMap();
-	//m_vvDynamicMap = CPathFinderMgr::GetInst()->GetDynamicMap();
-	//ApplyDynamicMap();
-
-	FindPath();
+	m_vDynamicMap = CPathFinderMgr::GetInst()->GetDynamicMap();
 
 	m_fDstCirclePad = CalCirclePad(_pObject);
-	m_fSelfPad = CalCirclePad(GetOwner());
+	
+	FindPath();
 
-	return m_fSelfPad + m_fDstCirclePad;
+	return m_iSelfPad + m_fDstCirclePad;
 }
 
 
@@ -155,31 +159,33 @@ void CPathFinderScript::SetDstYX(Vec3 _DstPos)
 	m_iDestPosY = yx.y;
 }
 
-void CPathFinderScript::ApplyStaticMap()
+bool CPathFinderScript::MapTest(int _y, int _x)
 {
-	for (tYX yx : m_vStaticMap)
-	{
-		tPNode* node = new tPNode;
-		node->iIdxX = yx.x;
-		node->iIdxY = yx.y;
-		node->bMove = false;
+	if (_x == m_iDestPosX && _y == m_iDestPosY)
+		return true;
 
-		m_ArrNode[yx.y*1000 + yx.x] = node;
+	for (tRangeYX range : m_vStaticMap)
+	{
+		if (range.x1 - m_iSelfPad <= _x && _x <= range.x2 + m_iSelfPad
+			&& range.y1 - m_iSelfPad <= _y && _y <= range.y2 + m_iSelfPad)
+			return false;
 	}
+
+	for (tRangeYX range : m_vDynamicMap)
+	{
+		if (m_iCurPosX - m_iSelfPad == range.x1
+			&& m_iCurPosY - m_iSelfPad == range.y1)
+			continue;
+
+		if (range.x1 - m_iSelfPad <= _x && _x <= range.x2 + m_iSelfPad
+			&& range.y1 - m_iSelfPad <= _y && _y <= range.y2 + m_iSelfPad)
+			return false;
+	}
+	
+
+	return true;
 }
 
-void CPathFinderScript::ApplyDynamicMap()
-{
-	for (tYX yx : m_vDynamicMap)
-	{
-		tPNode* node = new tPNode;
-		node->iIdxX = yx.x;
-		node->iIdxY = yx.y;
-		node->bMove = false;
-
-		m_ArrNode[yx.y * 1000 + yx.x] = node;
-	}
-}
 
 
 void CPathFinderScript::Rebuild(priority_queue<tPNode*, vector<tPNode*>, ComparePathLength>& _queue)
@@ -195,6 +201,21 @@ void CPathFinderScript::Rebuild(priority_queue<tPNode*, vector<tPNode*>, Compare
 	_queue.swap(tempQueue);
 }
 
+void CPathFinderScript::EraseInOpenList(priority_queue<tPNode*, vector<tPNode*>, ComparePathLength>& _queue
+										, int _iYIdx, int _iXIdx)
+{
+	priority_queue<tPNode*, vector<tPNode*>, ComparePathLength> tempQueue;
+
+	while (!_queue.empty())
+	{
+		if (!(_queue.top()->iIdxX == _iXIdx && _queue.top()->iIdxY == _iYIdx))
+			tempQueue.push(_queue.top());
+		
+		_queue.pop();
+	}
+
+	_queue.swap(tempQueue);
+}
 
 void CPathFinderScript::FindPath()
 {
@@ -213,35 +234,46 @@ void CPathFinderScript::FindPath()
 		// 현재 지점에서 4방향의 노드를 OpenList 에 넣는다.
 		// UP
 		AddOpenList(pCurNode->iIdxX
-			, pCurNode->iIdxY - 1, pCurNode);
+			, pCurNode->iIdxY - 1, pCurNode, eBlock::UP);
 
 		// RIGHT		
 		AddOpenList(pCurNode->iIdxX + 1
-			, pCurNode->iIdxY, pCurNode);
+			, pCurNode->iIdxY, pCurNode, eBlock::RIGHT);
 
 		// DOWN		
 		AddOpenList(pCurNode->iIdxX
-			, pCurNode->iIdxY + 1, pCurNode);
+			, pCurNode->iIdxY + 1, pCurNode, eBlock::DOWN);
 
 		// LEFT		
 		AddOpenList(pCurNode->iIdxX - 1
-			, pCurNode->iIdxY, pCurNode);
+			, pCurNode->iIdxY, pCurNode, eBlock::LEFT);
 
 		//UPLEFT
-		AddOpenList(pCurNode->iIdxX - 1
-			, pCurNode->iIdxY - 1, pCurNode, true);
+		if (!(m_Block == 1000 || m_Block == 10 || m_Block == 1010))
+		{
+			AddOpenList(pCurNode->iIdxX - 1
+				, pCurNode->iIdxY - 1, pCurNode, eBlock::NONE, true);
+		}
 
 		//UPRIGHT
-		AddOpenList(pCurNode->iIdxX + 1
-			, pCurNode->iIdxY - 1, pCurNode, true);
-
+		if (!(m_Block == 1000 || m_Block == 1 || m_Block == 1001))
+		{
+			AddOpenList(pCurNode->iIdxX + 1
+				, pCurNode->iIdxY - 1, pCurNode, eBlock::NONE, true);
+		}
 		//DOWNLEFT
-		AddOpenList(pCurNode->iIdxX - 1
-			, pCurNode->iIdxY + 1, pCurNode, true);
-
+		if (!(m_Block == 100 || m_Block == 10 || m_Block == 110))
+		{
+			AddOpenList(pCurNode->iIdxX - 1
+				, pCurNode->iIdxY + 1, pCurNode, eBlock::NONE, true);
+		}
 		//DOWNRIGHT
-		AddOpenList(pCurNode->iIdxX + 1
-			, pCurNode->iIdxY + 1, pCurNode, true);
+		if (!(m_Block == 100 || m_Block == 1 || m_Block == 101))
+		{
+			AddOpenList(pCurNode->iIdxX + 1
+				, pCurNode->iIdxY + 1, pCurNode, eBlock::NONE, true);
+		}
+		m_Block = 0;
 
 		// 2. Open List 에서 가장 효율이 좋은 노드를 꺼낸다.
 		//  - 해당 노드는 ClostList 에 넣는다.
@@ -288,15 +320,41 @@ void CPathFinderScript::CalculateCost(tPNode* _pCurNode, tPNode* _pOrigin, bool 
 	_pCurNode->fFinal = _pCurNode->fFromParent + _pCurNode->fToDest;
 }
 
-void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, bool _bDiagonal)
+void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin,eBlock _dir, bool _bDiagonal)
 {
 	// 현재 지점에서 갈 수 있는 곳을 OpenList 에 넣는다.
 	// 노드 범위를 벗어난 경우
 	if (_iXIdx < 0 || _iXIdx >= m_iXCount || _iYIdx < 0 || _iYIdx >= m_iYCount)
 		return;
 
-	//해당 키값이 있으면서 
+	//스태틱맵상 벽인경우
+	if (!MapTest(_iYIdx, _iXIdx))
+	{
+		switch (_dir)
+		{
+		case CPathFinderScript::eBlock::NONE:
+			break;
+		case CPathFinderScript::eBlock::UP:
+			m_Block += 1000;
+			break;
+		case CPathFinderScript::eBlock::DOWN:
+			m_Block += 100;
+			break;
+		case CPathFinderScript::eBlock::LEFT:
+			m_Block += 10;
+			break;
+		case CPathFinderScript::eBlock::RIGHT:
+			m_Block += 1;
+			break;
+		default:
+			break;
+		}
+
+		return;
+	}
+
 	auto iter = m_ArrNode.find(_iYIdx * 1000 + _iXIdx);
+	//해당 키값이 있으면서 
 	if (iter != m_ArrNode.end())
 	{
 		//이동불가일때
@@ -335,11 +393,15 @@ void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, bo
 
 		if (m_ArrNode[_iYIdx * 1000 + _iXIdx]->fFinal > copy->fFinal)
 		{
+			//기존 노드 제거
+			EraseInOpenList(m_OpenList, _iYIdx, _iXIdx);
 			delete m_ArrNode[_iYIdx * 1000 + _iXIdx];
 			m_ArrNode[_iYIdx * 1000 + _iXIdx] = nullptr;
 			m_ArrNode.erase(_iYIdx * 1000 + _iXIdx);
 
+			//카피 삽입
 			m_ArrNode[_iYIdx * 1000 + _iXIdx] = copy;
+			m_OpenList.push(m_ArrNode[_iYIdx * 1000 + _iXIdx]);
 
 			// 오픈리스트(우선순위큐) 재설정
 			Rebuild(m_OpenList);

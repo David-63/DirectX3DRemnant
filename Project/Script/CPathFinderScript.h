@@ -21,6 +21,15 @@ public:
 class CPathFinderScript
 	: public CScript
 {
+	enum class eBlock
+	{
+		NONE,
+		UP,
+		DOWN,
+		LEFT,
+		RIGHT,
+	};
+
 private:
 	int m_iCurPosX;
 	int m_iCurPosY;
@@ -30,10 +39,13 @@ private:
 	int m_iXCount;
 	int m_iYCount;
 
+	int m_Block; // 상하좌우 ex상좌 1010, 우 1
+
 	float m_fLength; //한칸의 길이
 	float m_fDiagLength; //대각선 길이
 
 	float m_fSelfPad;
+	int m_iSelfPad;
 	float m_fDstCirclePad;
 
 	bool m_bPathReady;
@@ -45,8 +57,8 @@ private:
 	std::stack<Vec3> m_Stack;
 
 	//from Mgr
-	vector<tYX> m_vStaticMap;
-	vector<tYX> m_vDynamicMap;
+	vector<tRangeYX> m_vStaticMap;
+	vector<tRangeYX> m_vDynamicMap;
 
 public:
 	CPathFinderScript();
@@ -66,8 +78,9 @@ public:
 private:
 	//길찾기 핵심로직
 	void Rebuild(priority_queue<tPNode*, vector<tPNode*>, ComparePathLength>& _queue);
+	void EraseInOpenList(priority_queue<tPNode*, vector<tPNode*>, ComparePathLength>& _queue, int _iYIdx, int _iXIdx);
 	void CalculateCost(tPNode* _pCurNode, tPNode* _pOrigin, bool _bDiagonal = false);
-	void AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, bool _bDiagonal = false);
+	void AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin, eBlock _dir, bool _bDiagonal = false);
 	void FindPath();
 
 	//좌표변환
@@ -77,9 +90,8 @@ private:
 	void SetCurYX();
 	float CalCirclePad(CGameObject* _pObject);
 
-	//map 정보 받기
-	void ApplyStaticMap();
-	void ApplyDynamicMap();
+	//map 정보 테스트
+	bool MapTest(int _y, int _x);
 
 };
 

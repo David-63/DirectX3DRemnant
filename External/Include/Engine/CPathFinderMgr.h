@@ -18,8 +18,8 @@ private:
 
 	int m_iRenewCount;
 	
-	vector<tYX> m_vStaticYX = {};
-	vector<tYX> m_vDynamicYX = {};
+	vector<tRangeYX> m_vStaticYX = {};
+	vector<tRangeYX> m_vDynamicYX = {};
 
 public:
 	int GetXCount() { return m_iXCount; }
@@ -32,14 +32,14 @@ public:
 
 public:
 	void MakeStaticMap();
-	vector<tYX> GetStaticMap() { return m_vStaticYX; }
-	vector<tYX> GetDynamicMap() { return m_vDynamicYX; }
+	vector<tRangeYX> GetStaticMap() { return m_vStaticYX; }
+	vector<tRangeYX> GetDynamicMap() { return m_vDynamicYX; }
 
 private:
 	void MakeDynamicMap();
 
-	void CalBoxYX(Vec3 _pos, Vec3 _size, vector<tYX>* _vector);
-	void CalSphereYX(Vec3 _pos, Vec3 _size, vector<tYX>* _vector);
+	void CalBoxYX(Vec3 _pos, Vec3 _size, vector<tRangeYX>* _vector);
+	void CalSphereYX(Vec3 _pos, Vec3 _size, vector<tRangeYX>* _vector);
 
 	tYX TransToYX(Vec3 _pos);
 };

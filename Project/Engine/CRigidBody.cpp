@@ -67,7 +67,7 @@ void CRigidBody::begin()
 	if (true == mbAppliedPhysics &&
 		false == mbIsActorInLevel &&
 		nullptr != mActor)
-		Physics::GetInst()->AddActor(GetOwner());
+		AddActorToLevel();
 }
 void CRigidBody::tick()
 {

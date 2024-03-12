@@ -34,9 +34,6 @@
     <Filter Include="Script\Creature\Monster\M_FSM">
       <UniqueIdentifier>{6aa21f24-1bf5-4948-84f6-f06f8965e64c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Creature\Monster\MonsterMoveScript">
-      <UniqueIdentifier>{3400bf0f-3f2b-4ab7-ac6d-15ec4067f13e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\Creature\Player">
       <UniqueIdentifier>{f51448b5-1b50-4343-a74a-7cf10e4396c6}</UniqueIdentifier>
     </Filter>
@@ -58,6 +55,24 @@
     <Filter Include="Script\System\PathFinderScript">
       <UniqueIdentifier>{83e226c8-ae1b-4ea0-aac7-fece3deb6e7c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Creature\0 base">
+      <UniqueIdentifier>{920e20c9-21dc-435b-900b-efc86ddd6a21}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Player\P_States">
+      <UniqueIdentifier>{9cf99d7e-8732-44bd-9777-b4428643dc52}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_FSM\Lurker">
+      <UniqueIdentifier>{35d12322-551c-4e8b-b561-4f86606a43c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_States">
+      <UniqueIdentifier>{cf06d97b-88fd-4c9c-a213-cde583175940}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_States\Common">
+      <UniqueIdentifier>{fc928bb5-7790-4bc5-841f-291a2b9a8b9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_States\Lurker">
+      <UniqueIdentifier>{4d5ccecb-b2c3-4208-82df-d75da8352fc9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -78,9 +93,6 @@
     <ClInclude Include="CPathFinderScript.h">
       <Filter>Script\System\PathFinderScript</Filter>
     </ClInclude>
-    <ClInclude Include="CMonsterMoveScript.h">
-      <Filter>Script\Creature\Monster\MonsterMoveScript</Filter>
-    </ClInclude>
     <ClInclude Include="CIdleStateScript.h">
       <Filter>Script\Sample\FSM</Filter>
     </ClInclude>
@@ -98,6 +110,39 @@
     </ClInclude>
     <ClInclude Include="CTestScript.h">
       <Filter>Script\Sample</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_FSMScript.h">
+      <Filter>Script\Creature\0 base</Filter>
+    </ClInclude>
+    <ClInclude Include="CC_StatesScript.h">
+      <Filter>Script\Creature\0 base</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_FSMScript.h">
+      <Filter>Script\Creature\Player\P_FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEIdleScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEMoveScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_StatesScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_FSMScript.h">
+      <Filter>Script\Creature\Monster\M_FSM\Lurker</Filter>
+    </ClInclude>
+    <ClInclude Include="CMonsterMoveScript.h">
+      <Filter>Script\Creature\Monster\M_States\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_StatesScript.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_STATE_Idle_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_STATE_Sleep_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -119,9 +164,6 @@
     <ClCompile Include="CPathFinderScript.cpp">
       <Filter>Script\System\PathFinderScript</Filter>
     </ClCompile>
-    <ClCompile Include="CMonsterMoveScript.cpp">
-      <Filter>Script\Creature\Monster\MonsterMoveScript</Filter>
-    </ClCompile>
     <ClCompile Include="CIdleStateScript.cpp">
       <Filter>Script\Sample\FSM</Filter>
     </ClCompile>
@@ -139,6 +181,39 @@
     </ClCompile>
     <ClCompile Include="CTestScript.cpp">
       <Filter>Script\Sample</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_FSMScript.cpp">
+      <Filter>Script\Creature\0 base</Filter>
+    </ClCompile>
+    <ClCompile Include="CC_StatesScript.cpp">
+      <Filter>Script\Creature\0 base</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_FSMScript.cpp">
+      <Filter>Script\Creature\Player\P_FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEIdleScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEMoveScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_StatesScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_FSMScript.cpp">
+      <Filter>Script\Creature\Monster\M_FSM\Lurker</Filter>
+    </ClCompile>
+    <ClCompile Include="CMonsterMoveScript.cpp">
+      <Filter>Script\Creature\Monster\M_States\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_StatesScript.cpp">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_STATE_Idle_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_STATE_Sleep_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

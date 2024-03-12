@@ -8,7 +8,7 @@
 #include "CTransform.h"
 
 CPathFinderMgr::CPathFinderMgr()
-	: m_iRenewCount(0)
+	: m_iRenewCount(61)
 {
 
 }
@@ -39,7 +39,7 @@ void CPathFinderMgr::MakeStaticMap()
 		Vec3 pos = obj->Transform()->GetRelativePos();
 		Vec3 size = obj->RigidBody()->GetShapeSize();
 		GEOMETRY_TYPE geomType = obj->RigidBody()->GetGeomType();
-
+		
 		
 		if (geomType == GEOMETRY_TYPE::Box)
 		{
@@ -77,7 +77,7 @@ void CPathFinderMgr::MakeDynamicMap()
 	}
 }
 
-void CPathFinderMgr::CalBoxYX(Vec3 _pos, Vec3 _size, vector<tYX>* _vector)
+void CPathFinderMgr::CalBoxYX(Vec3 _pos, Vec3 _size, vector<tRangeYX>* _vector)
 {
 	int PadX;
 	int PadY;
@@ -97,17 +97,11 @@ void CPathFinderMgr::CalBoxYX(Vec3 _pos, Vec3 _size, vector<tYX>* _vector)
 
 	tYX center = TransToYX(_pos);
 
-	for (int i = center.y - PadY; i <= center.y + PadY; ++i)
-	{
-		for (int j = center.x - PadX; j <= center.x + PadX; ++j)
-		{
-			tYX pad(i, j);
-			_vector->push_back(pad);
-		}
-	}
+	tRangeYX range(center.y - PadY, center.x - PadX, center.y + PadY, center.x + PadX);
+	_vector->push_back(range);
 }
 
-void CPathFinderMgr::CalSphereYX(Vec3 _pos, Vec3 _size, vector<tYX>* _vector)
+void CPathFinderMgr::CalSphereYX(Vec3 _pos, Vec3 _size, vector<tRangeYX>* _vector)
 {
 	int PadR = 0;
 	float rad = _size.x / 2;
@@ -119,14 +113,8 @@ void CPathFinderMgr::CalSphereYX(Vec3 _pos, Vec3 _size, vector<tYX>* _vector)
 
 	tYX center = TransToYX(_pos);
 
-	for (int i = center.y - PadR; i <= center.y + PadR; ++i)
-	{
-		for (int j = center.x - PadR; j <= center.x + PadR; ++j)
-		{
-			tYX pad(i, j);
-			_vector->push_back(pad);
-		}
-	}
+	tRangeYX range(center.y - PadR, center.x - PadR, center.y + PadR, center.x + PadR);
+	_vector->push_back(range);
 }
 
 tYX CPathFinderMgr::TransToYX(Vec3 _pos)

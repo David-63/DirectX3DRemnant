@@ -128,7 +128,7 @@ void CreateTestLevel()
 		player->SetName(L"Player");
 		player->Transform()->SetDebugSphereUse(true);
 		player->SetLayerIdx(2);
-		player->Transform()->SetRelativePos(Vec3(-1040.f, 10.f, 800.f));
+		player->Transform()->SetRelativePos(Vec3(-1040.f, 0.f, 800.f));
 		player->AddComponent(new CRigidBody);
 
 		tShapeInfo info = {};
@@ -157,14 +157,11 @@ void CreateTestLevel()
 		player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
 		player->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
 		player->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
-
 		
 		player->AddComponent(new CCollider3D);
 		player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
-		player->RigidBody()->AddActorToLevel();
-		
 
-		SpawnGameObject(player, Vec3(200.f, 10.f, 0.f), 1);
+		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 
 
 		//pCamMoveScript->SetCamTarget(pObj); //¼ñ´õºä ¿ë
@@ -219,7 +216,6 @@ void CreateTestLevel()
 
 		//pObj->AddComponent(new CCollider3D);
 		//pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
-		//pObj->RigidBody()->AddActorToLevel();
 
 
 		//SpawnGameObject(pObj, Vec3(40.f, 100.f, 40.f), 2);
@@ -251,7 +247,7 @@ void CreateTestLevel()
 		pObj->SetName(L"MonsterTrace");
 		pObj->Transform()->SetDebugSphereUse(true);
 		pObj->SetLayerIdx(2);
-		pObj->Transform()->SetRelativePos(Vec3(100.f, 100.f, 0.f));
+		pObj->Transform()->SetRelativePos(Vec3(800.f, 0.f, 0.f));
 
 		pObj->AddComponent(new CRigidBody);
 		tShapeInfo info = {};
@@ -270,12 +266,14 @@ void CreateTestLevel()
 		pObj->RigidBody()->PushBackShapeInfo(info3);
 
 		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+		pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
 
 		pObj->AddComponent(new CCollider3D);
-		pObj->RigidBody()->AddActorToLevel();
 
 
-		SpawnGameObject(pObj, Vec3(700.f, 10.f, 0.f), 2);
+		SpawnGameObject(pObj, Vec3(800.f, 0.f, 0.f), 2);
 
 		
 		pObj->GetScript<CMonsterMoveScript>()->SetAndGetPath(player);
@@ -303,7 +301,6 @@ void CreateTestLevel()
 
 		pObj->AddComponent(new CCollider3D);
 		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Wall);
-		pObj->RigidBody()->AddActorToLevel();
 
 		SpawnGameObject(pObj, Vec3(500.f, 100.f, 0.f), (UINT)LAYER_TYPE::Wall);
 
@@ -334,7 +331,6 @@ void CreateTestLevel()
 		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 
 		pObj->AddComponent(new CCollider3D);
-		pObj->RigidBody()->AddActorToLevel();
 
 		SpawnGameObject(pObj, Vec3(-200.f, 700.f, 0.f), 5);
 
@@ -365,21 +361,20 @@ void CreateTestLevel()
 		pGround->AddComponent(new CTransform);
 		pGround->Transform()->SetRelativeScale(10000.f, 10.f, 10000.f);
 		pGround->SetLayerIdx(5);
-		pGround->Transform()->SetRelativePos(Vec3(0.f, -5.f, 0.f));
+		pGround->Transform()->SetRelativePos(Vec3(0.f, -500.f, 0.f));
 		
 
 		pGround->AddComponent(new CCollider3D);
 		pGround->AddComponent(new CRigidBody);
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Box;
-		info.size = Vector3(10000.f, 10.f, 10000.f);
+		info.size = Vector3(10000.f, 1000.f, 10000.f);
 		info.massProperties.restitution = 0.2f;
 		info.massProperties.dynamicFriction = 0.3f;
 		info.massProperties.staticFriction = 0.3f;
 		pGround->RigidBody()->PushBackShapeInfo(info);
 
 		pGround->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
-		pGround->RigidBody()->AddActorToLevel();
 
 		pGround->AddComponent(new CMeshRender);
 		Ptr<CMesh> mesh = CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug");
@@ -389,7 +384,7 @@ void CreateTestLevel()
 
 		PxVec3 pos = pGround->Transform()->GetPhysicsPosition();
 		
-		SpawnGameObject(pGround, Vec3(0.f, -5.f, 0.f), 4);
+		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), 4);
 	}
 	
 	bool hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);

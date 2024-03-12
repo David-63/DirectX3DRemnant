@@ -166,9 +166,6 @@ CLevel* CLevelSaveLoad::LoadLevel(const wstring& _LevelPath)
 					pNewObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 					pNewObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
 				}
-
-
-				pNewObj->RigidBody()->AddActorToLevel();
 			}
 
 			NewLevel->AddGameObject(pNewObj, i, false);

@@ -527,3 +527,15 @@ struct tYX
 	int x;
 	int y;
 };
+
+struct tRangeYX
+{
+	tRangeYX(int _y1, int _x1, int _y2, int _x2)
+		: y1(_y1), y2(_y2), x1(_x1), x2(_x2)
+	{};
+
+	int x1;
+	int x2;
+	int y1;
+	int y2;
+};

@@ -4,6 +4,10 @@ CC_FSMScript
 CC_StatesScript
 CIdleStateScript
 CMonsterMoveScript
+CM_Lurker_FSMScript
+CM_Lurker_StatesScript
+CM_Lurker_STATE_Idle_Script
+CM_Lurker_STATE_Sleep_Script
 CPathFinderScript
 CPlayerScript
 CPlayerScriptFsm
