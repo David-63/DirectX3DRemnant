@@ -172,6 +172,10 @@ call CodeGen.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CB_FSMScript.h" />
+    <ClInclude Include="CB_STATEIdleScript.h" />
+    <ClInclude Include="CB_STATEMoveScript.h" />
+    <ClInclude Include="CB_StateScript.h" />
     <ClInclude Include="CCameraMoveScript.h" />
     <ClInclude Include="CCharacterMoveScript.h" />
     <ClInclude Include="CC_FSMScript.h" />
@@ -197,6 +201,10 @@ call CodeGen.exe</Command>
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CB_FSMScript.cpp" />
+    <ClCompile Include="CB_STATEIdleScript.cpp" />
+    <ClCompile Include="CB_STATEMoveScript.cpp" />
+    <ClCompile Include="CB_StateScript.cpp" />
     <ClCompile Include="CCameraMoveScript.cpp" />
     <ClCompile Include="CCharacterMoveScript.cpp" />
     <ClCompile Include="CC_FSMScript.cpp" />

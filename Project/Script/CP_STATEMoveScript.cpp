@@ -13,7 +13,7 @@ CP_STATEMoveScript::~CP_STATEMoveScript()
 }
 
 void CP_STATEMoveScript::tick()
-{	
+{
 	// 스탠스 변경 키 : AIM
 	if (KEY_TAP(KEY::RBTN))
 	{

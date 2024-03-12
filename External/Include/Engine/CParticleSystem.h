@@ -29,6 +29,7 @@ private:
     bool                        m_bOnceExcute;
     bool                        m_bBursts;
     bool                        m_bLoop;
+    bool                        m_bUseSpark; // 스파크처럼 튀는거 만들때는 이 옵션을 킬 것
 
     
 
@@ -106,7 +107,11 @@ public:
 
     void SetLoop(bool _bLoop) { m_bLoop = _bLoop; }
     bool GetLoop() const { return m_bLoop; }
+
     Vec3 CreateRandomDirection(const Vector3& normal, float openAngle);
+
+    void SetUseSpark(bool _bUseSpark) { m_bUseSpark = _bUseSpark; }
+    bool GetUseSpark() const { return m_bUseSpark; }
 
 
 

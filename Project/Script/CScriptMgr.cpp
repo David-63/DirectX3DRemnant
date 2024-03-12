@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "CScriptMgr.h"
 
+#include "CB_FSMScript.h"
+#include "CB_STATEIdleScript.h"
+#include "CB_STATEMoveScript.h"
+#include "CB_StateScript.h"
 #include "CCameraMoveScript.h"
 #include "CCharacterMoveScript.h"
 #include "CC_FSMScript.h"
@@ -23,6 +27,10 @@
 
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
+	_vec.push_back(L"CB_FSMScript");
+	_vec.push_back(L"CB_STATEIdleScript");
+	_vec.push_back(L"CB_STATEMoveScript");
+	_vec.push_back(L"CB_StateScript");
 	_vec.push_back(L"CCameraMoveScript");
 	_vec.push_back(L"CCharacterMoveScript");
 	_vec.push_back(L"CC_FSMScript");
@@ -46,6 +54,14 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 
 CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
+	if (L"CB_FSMScript" == _strScriptName)
+		return new CB_FSMScript;
+	if (L"CB_STATEIdleScript" == _strScriptName)
+		return new CB_STATEIdleScript;
+	if (L"CB_STATEMoveScript" == _strScriptName)
+		return new CB_STATEMoveScript;
+	if (L"CB_StateScript" == _strScriptName)
+		return new CB_StateScript;
 	if (L"CCameraMoveScript" == _strScriptName)
 		return new CCameraMoveScript;
 	if (L"CCharacterMoveScript" == _strScriptName)
@@ -91,6 +107,18 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 {
 	switch (_iScriptType)
 	{
+	case (UINT)SCRIPT_TYPE::B_FSMSCRIPT:
+		return new CB_FSMScript;
+		break;
+	case (UINT)SCRIPT_TYPE::B_STATEIDLESCRIPT:
+		return new CB_STATEIdleScript;
+		break;
+	case (UINT)SCRIPT_TYPE::B_STATEMOVESCRIPT:
+		return new CB_STATEMoveScript;
+		break;
+	case (UINT)SCRIPT_TYPE::B_STATESCRIPT:
+		return new CB_StateScript;
+		break;
 	case (UINT)SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return new CCameraMoveScript;
 		break;
@@ -156,6 +184,22 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 {
 	switch ((SCRIPT_TYPE)_pScript->GetScriptType())
 	{
+	case SCRIPT_TYPE::B_FSMSCRIPT:
+		return L"CB_FSMScript";
+		break;
+
+	case SCRIPT_TYPE::B_STATEIDLESCRIPT:
+		return L"CB_STATEIdleScript";
+		break;
+
+	case SCRIPT_TYPE::B_STATEMOVESCRIPT:
+		return L"CB_STATEMoveScript";
+		break;
+
+	case SCRIPT_TYPE::B_STATESCRIPT:
+		return L"CB_StateScript";
+		break;
+
 	case SCRIPT_TYPE::CAMERAMOVESCRIPT:
 		return L"CCameraMoveScript";
 		break;

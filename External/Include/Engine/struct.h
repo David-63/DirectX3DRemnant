@@ -147,26 +147,24 @@ struct tRWParticleBuffer
 struct tParticleModule
 {
 	Vec3    vRandomSpark;
-	int     iGunSpark;
 
 	// 스폰 모듈
 	Vec4    vSpawnColor;
 	Vec4	vSpawnScaleMin;
-	Vec4	vSpawnScaleMax;	
+	Vec4	vSpawnScaleMax;
 	Vec3	vBoxShapeScale;
-	
-	float	fSphereShapeRadius;	
+
+	float	fSphereShapeRadius;
 	float   fSphereOffset;
 	int		SpawnShapeType;		// 0 : BOX, 1 : Sphere
-	int     BoxPad[4];
 
 	float   fSpawnAreaOffsetFactor;
 	int		SpawnRate;			// 초당 생성 개수
 	int		Space;				// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)	
-	
+
 	float   MinLifeTime;		// 최소 수명	
 	float   MaxLifeTime;		// 최대 수명
-	int     spawnpad;
+	int     spawnpad[3];
 
 	// Color Change 모듈
 	Vec4	vStartColor;		// 초기 색상
@@ -179,10 +177,10 @@ struct tParticleModule
 
 	// 버퍼 최대크기
 	int		iMaxParticleCount;
-	int		ipad;
+	int		ipad[2];
 
 	// Add Velocity 모듈
-	Vec4	vVelocityDir;	
+	Vec4	vVelocityDir;
 	int     AddVelocityType;	// 0 : From Center, 1: To Center, 2 : Fixed Direction	
 	float	OffsetAngle;
 	float	Speed;
@@ -207,6 +205,10 @@ struct tParticleModule
 	float   fRotAngle;
 	float   fRotSpeed;
 	int     bRot;				// 1 : 회전 사용, 0: 사용 안함
+	int		bUseSpark;
+	int     bEmissive;
+	Vec4	vEmissiveColor;
+
 
 	// Module Check
 	int		ModuleCheck[(UINT)PARTICLE_MODULE::END];
