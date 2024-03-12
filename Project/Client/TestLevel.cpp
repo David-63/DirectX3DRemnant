@@ -83,8 +83,8 @@ void CreateTestLevel()
 
 	//애니메이션 로드
 	{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\walk.fbx");
-		CGameObject* obj = data->Instantiate();
+		//Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker_Alert_01.fbx");
+		//CGameObject* obj = data->Instantiate();
 		//obj->Animator3D()->
 		
 		

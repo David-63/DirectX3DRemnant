@@ -14,7 +14,6 @@
 #include "CM_Lurker_FSMScript.h"
 #include "CM_Lurker_StatesScript.h"
 #include "CM_Lurker_STATE_Idle_Script.h"
-#include "CM_Lurker_STATE_Sleep_Script.h"
 #include "CPathFinderScript.h"
 #include "CPlayerScript.h"
 #include "CPlayerScriptFsm.h"
@@ -40,7 +39,6 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CM_Lurker_FSMScript");
 	_vec.push_back(L"CM_Lurker_StatesScript");
 	_vec.push_back(L"CM_Lurker_STATE_Idle_Script");
-	_vec.push_back(L"CM_Lurker_STATE_Sleep_Script");
 	_vec.push_back(L"CPathFinderScript");
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"CPlayerScriptFsm");
@@ -80,8 +78,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CM_Lurker_StatesScript;
 	if (L"CM_Lurker_STATE_Idle_Script" == _strScriptName)
 		return new CM_Lurker_STATE_Idle_Script;
-	if (L"CM_Lurker_STATE_Sleep_Script" == _strScriptName)
-		return new CM_Lurker_STATE_Sleep_Script;
 	if (L"CPathFinderScript" == _strScriptName)
 		return new CPathFinderScript;
 	if (L"CPlayerScript" == _strScriptName)
@@ -145,9 +141,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::M_LURKER_STATE_IDLE_SCRIPT:
 		return new CM_Lurker_STATE_Idle_Script;
-		break;
-	case (UINT)SCRIPT_TYPE::M_LURKER_STATE_SLEEP_SCRIPT:
-		return new CM_Lurker_STATE_Sleep_Script;
 		break;
 	case (UINT)SCRIPT_TYPE::PATHFINDERSCRIPT:
 		return new CPathFinderScript;
