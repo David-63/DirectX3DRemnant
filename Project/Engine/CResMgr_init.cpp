@@ -724,17 +724,17 @@ void CResMgr::CreateDefaultGraphicsShader()
 
 
 	// ============================
-	// ParticleRender
-	// 
-	// RS_TYPE : CULL_NONE
-	// DS_TYPE : NO_WRITE
-	// BS_TYPE : ALPHA_BLEND
+// ParticleRender (포워드)
+// 
+// RS_TYPE : CULL_NONE
+// DS_TYPE : NO_WRITE
+// BS_TYPE : ALPHA_BLEND
 
-	// Parameter
-	// g_int_0 : Particle Index
-	// 
-	// Domain : TRANSPARENT
-	// ============================
+// Parameter
+// g_int_0 : Particle Index
+// 
+// Domain : TRANSPARENT
+// ============================
 	pShader = new CGraphicsShader;
 	pShader->SetKey(L"ParticleRenderShader");
 	pShader->CreateVertexShader(L"shader\\particle_render.fx", "VS_ParticleRender");
@@ -748,6 +748,36 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_TRANSPARENT);
+
+	//pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED_PARTICLE);
+
+	AddRes(pShader->GetKey(), pShader);
+
+	// ============================
+	// ParticleRender (디퍼드)
+	// 
+	// RS_TYPE : CULL_NONE
+	// DS_TYPE : NO_WRITE
+	// BS_TYPE : ALPHA_BLEND
+
+	// Parameter
+	// g_int_0 : Particle Index
+	// 
+	// Domain : DOMAIN_DEFERRED_PARTICLE
+	// ============================
+	pShader = new CGraphicsShader;
+	pShader->SetKey(L"D_ParticleRenderShader");
+	pShader->CreateVertexShader(L"shader\\particle_render.fx", "VS_ParticleRender");
+	pShader->CreateGeometryShader(L"shader\\particle_render.fx", "GS_ParticleRender");
+	pShader->CreatePixelShader(L"shader\\particle_render.fx", "PS_DeferredParticleRender");
+
+	pShader->SetRSType(RS_TYPE::CULL_NONE);
+	//pShader->SetRSType(RS_TYPE::WIRE_FRAME);
+	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
+	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED_PARTICLE);
+
 
 	AddRes(pShader->GetKey(), pShader);
 
@@ -819,7 +849,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	// SkyBoxShader
 	// RS_TYPE : CULL_FRONT
 	// DS_TYPE : LESS
-	// BS_TYPE : DEFAULT
+	// BS_TYPE : ONEONE
 	// Domain : MASK
 	// ============================
 	pShader = new CGraphicsShader;
@@ -831,6 +861,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetRSType(RS_TYPE::CULL_FRONT);	
 	pShader->SetDSType(DS_TYPE::LESS_EQUAL);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_MASK);
+	pShader->SetBSType(BS_TYPE::ONE_ONE);
 
 	// Parameter	
 	pShader->AddTexParam(TEX_0, "Output Texture");
@@ -1089,10 +1120,16 @@ void CResMgr::CreateDefaultMaterial()
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"TileMapShader"));
 	AddRes(L"TileMapMtrl", pMtrl);
 
-	// Particle Render Material
+
+	// 포워드 Particle Render Material
 	pMtrl = new CMaterial(true);
 	pMtrl->SetShader(FindRes<CGraphicsShader>(L"ParticleRenderShader"));
 	AddRes(L"ParticleRenderMtrl", pMtrl);
+
+	// 디퍼드 Particle Render Material
+	pMtrl = new CMaterial(true);
+	pMtrl->SetShader(FindRes<CGraphicsShader>(L"D_ParticleRenderShader"));
+	AddRes(L"D_ParticleRenderMtrl", pMtrl);
 
 	// GrayShader(PostProcess)
 	pMtrl = new CMaterial(true);
