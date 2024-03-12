@@ -5,6 +5,7 @@
 
 CB_STATEMoveScript::CB_STATEMoveScript()
 {
+	SetStateType(static_cast<UINT>(eB_States::MOVE));
 }
 
 CB_STATEMoveScript::~CB_STATEMoveScript()
