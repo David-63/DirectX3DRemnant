@@ -3,7 +3,7 @@
 #include <Engine/CTransform.h>
 #include "CP_FSMScript.h"
 
-CP_STATEMoveScript::CP_STATEMoveScript() : m_isMelee(false)
+CP_STATEMoveScript::CP_STATEMoveScript() : m_isMelee(false), m_isFront(true)
 {
 	SetStateType(static_cast<UINT>(eP_States::MOVE));
 }
@@ -26,71 +26,158 @@ void CP_STATEMoveScript::tick()
 	}
 	// 스탠스 변경 키 : DODGE
 
+	// 방향 입력
+	if (KEY_TAP(KEY::W))
+	{
+		m_PHQ->InputMove(0, 1.f);
+	}
+	if (KEY_TAP(KEY::S))
+	{
+		m_PHQ->InputMove(0, -1.f);
+	}
+	if (KEY_TAP(KEY::A))
+	{
+		m_PHQ->InputMove(-1.f, 0);
+	}
+	if (KEY_TAP(KEY::D))
+	{
+		m_PHQ->InputMove(1.f, 0);
+	}
+	if (KEY_RELEASE(KEY::W))
+	{
+		m_PHQ->InputMove(0, -1.f);
+	}
+	if (KEY_RELEASE(KEY::S))
+	{
+		m_PHQ->InputMove(0, 1.f);
+	}
+	if (KEY_RELEASE(KEY::D))
+	{
+		m_PHQ->InputMove(-1.f, 0);
+	}
+	if (KEY_RELEASE(KEY::A))
+	{
+		m_PHQ->InputMove(1.f, 0);
+	}
+
+	Vec2 moveDir = m_PHQ->GetMoveDir();
+	// 앞 뒤 구분
+	if (0 <= moveDir.y)
+		m_isFront = true;
+	else
+		m_isFront = false;
+
+	if (moveDir != m_prevDir)
+	{
+		m_prevDir = moveDir;
+		CallAnimation();
+	}
 	// 이동
 	TranslateInput();
 
-	// 스테이트 변경 : IDEL
-	if (KEY_RELEASE(KEY::W) || KEY_RELEASE(KEY::A)
-		|| KEY_RELEASE(KEY::S) || KEY_RELEASE(KEY::D))
-		m_PHQ->ChangeState(static_cast<UINT>(eP_States::IDLE));	
+	// 애니메이션을 변경해주려면 이동 방향이 바뀐걸 확인 할 수 있어야함
+
+
+
+
+	// 이동량이 없으면 Idle로 변경
+	if ((0.1 >= moveDir.y && -0.1 <= moveDir.y)
+		&& (0.1 >= moveDir.x && -0.1 <= moveDir.x))
+		m_PHQ->ChangeState(static_cast<UINT>(eP_States::IDLE));
+
 	// 스테이트 변경 : MELEE
 	// 스테이트 변경 : DAMAGED
 }
 
+void CP_STATEMoveScript::CallAnimation()
+{
+	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
+
+	// 현재 방향 구하기
+
+	if (m_isFront)
+	{
+		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveCrouchFR, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveCrouchFL, true);
+			else
+				m_PHQ->PlayAnimation(AnimMoveCrouch, true);
+		}
+		else if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveCrouchFR, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveCrouchFL, true);
+			else
+				m_PHQ->PlayAnimation(AnimMoveCrouch, true);
+		}
+		else if (CP_FSMScript::ePlayerStance::Aim == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveWalkFR, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveWalkFL, true);
+			else
+				m_PHQ->PlayAnimation(AnimMoveWalk, true);
+		}
+		else if (CP_FSMScript::ePlayerStance::Normal == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveWalkFR, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveWalkFL, true);
+			else
+				m_PHQ->PlayAnimation(AnimMoveWalk, true);
+		}
+	}
+	else
+	{
+		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveCrouchBR, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveCrouchBL, true);
+			else
+				m_PHQ->PlayAnimation(AnimMoveCrouchB, true);
+		}
+		else if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveCrouchBR, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveCrouchBL, true);
+			else
+				m_PHQ->PlayAnimation(AnimMoveCrouchB, true);
+		}
+		else if (CP_FSMScript::ePlayerStance::Aim == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveWalkBR, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveWalkBL, true);
+			else
+				m_PHQ->PlayAnimation(AnimMoveWalkB, true);
+		}
+		else if (CP_FSMScript::ePlayerStance::Normal == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveWalkBR, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(AnimMoveWalkBL, true);
+			else
+				m_PHQ->PlayAnimation(AnimMoveWalkB, true);
+		}
+	}
+}
+
 void CP_STATEMoveScript::MoveKeyInput()
 {
-	// 방향이 바뀌는 키
-	/*if (KEY_TAP(KEY::W))
-	{
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::Front);
-	}
-	if (KEY_TAP(KEY::S))
-	{
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::Back);
-	}
-	if (KEY_TAP(KEY::A))
-	{
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::Left);
-	}
-	if (KEY_TAP(KEY::D))
-	{
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::Right);
-	}*/
-
-	// 상태가 바뀌는 키
-	if (KEY_TAP(KEY::SPACE))
-	{
-		// 현재 방향에 따라 Dodge 방향도 적용됨
-		
-
-		//m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::None);
-	}
-
-	if (KEY_TAP(KEY::LBTN))
-	{
-		m_isMelee = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::N);
-	}
-
-	if (KEY_TAP(KEY::RBTN))
-	{
-		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Aim);
-
-	}
-	if (KEY_RELEASE(KEY::RBTN))
-	{
-		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Normal);
-	}
-
-	if (KEY_TAP(KEY::LCTRL))
-	{
-		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Crouch);
-
-	}
-	if (KEY_RELEASE(KEY::LCTRL))
-	{
-		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Normal);
-	}
+	
 }
 
 void CP_STATEMoveScript::MoveMouseInput()
@@ -118,7 +205,7 @@ void CP_STATEMoveScript::TranslateInput()
 		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 1.8f;
 	else
 		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 0.3f;
-	 
+	
 	if (KEY_HOLD(KEY::W))
 	{
 		vCurPos -= vFront * moveMagnitude;
@@ -129,11 +216,11 @@ void CP_STATEMoveScript::TranslateInput()
 	}
 	if (KEY_HOLD(KEY::A))
 	{
-		vCurPos -= vRight * moveMagnitude;
+		vCurPos += vRight * moveMagnitude;
 	}
 	if (KEY_HOLD(KEY::D))
 	{
-		vCurPos += vRight * moveMagnitude;
+		vCurPos -= vRight * moveMagnitude;
 	}
 
 	m_PHQ->GetOwner()->Transform()->SetRelativePos(vCurPos);
@@ -175,15 +262,10 @@ void CP_STATEMoveScript::MoveCrouchAimInput()
 
 void CP_STATEMoveScript::Enter()
 {
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-
-	if (CP_FSMScript::ePlayerStance::Crouch == curStance
-		|| CP_FSMScript::ePlayerStance::CrouchAim == curStance)
-		m_PHQ->PlayAnimation(AnimMoveCrouch, true);
-	else
-		m_PHQ->PlayAnimation(AnimMoveWalk, true);
 }
 
 void CP_STATEMoveScript::Exit()
 {
+	m_PHQ->ClearMoveDir();
+	m_prevDir = Vec2(0, 0);
 }

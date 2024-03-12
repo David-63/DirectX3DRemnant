@@ -15,6 +15,10 @@ public:
 
 
 public:
+    virtual void CallAnimation() override;
+
+
+public:
     void MoveInput();
     void IdleMouseInput();
 

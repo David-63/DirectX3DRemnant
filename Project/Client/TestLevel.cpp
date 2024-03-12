@@ -119,22 +119,12 @@ void CreateTestLevel()
 		CGameObject* player = nullptr;
 
 		// 인스턴싱 테스트
-
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Undying\\Wasteland_Undying_Weapon_Summon.fbx");
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\player\\P_IdleStand.mdat");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_IdleStand.fbx");
 		player = pMeshData->Instantiate();
-	//	player->Animator3D()->SimpleGen(L"animclip\\B_Weapon_L.animclip");
 		player->SetName(L"Obj");
-		//player->AddComponent(new CP_FSMScript());
-
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_MoveCrouchFL.fbx");
-		//player = pMeshData->Instantiate();
-		//player->Animator3D()->SimpleGen(L"animclip\\P_MoveCrouchFL.animclip");
-		//player->SetName(L"Obj");
-
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_MoveCrouchFR.fbx");
-		//player = pMeshData->Instantiate();
-		//player->Animator3D()->SimpleGen(L"animclip\\P_MoveCrouchFR.animclip");
-	
+		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_MoveWalkFR.animclip");
+		player->AddComponent(new CP_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 	}
 }

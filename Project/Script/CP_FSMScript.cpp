@@ -3,7 +3,7 @@
 
 CP_FSMScript::CP_FSMScript()
 	: m_InpCrouch(false), m_InpAim(false), m_InpSprint(false), m_IsChangeStance(true)
-	, P_Stance(ePlayerStance::Normal), P_MoveDir(ePlayerMoveDir::F)
+	, P_Stance(ePlayerStance::Normal)
 {
 	// 생성자 호출 이후에 GameObject에서 Owner 세팅해줌
 }
@@ -22,8 +22,20 @@ void CP_FSMScript::begin()
 	// 애니메이션
 	GetOwner()->Animator3D()->Add(AnimIdleStand);
 	GetOwner()->Animator3D()->Add(AnimIdleCrouch);
+
 	GetOwner()->Animator3D()->Add(AnimMoveCrouch);
+	GetOwner()->Animator3D()->Add(AnimMoveCrouchFL);
+	GetOwner()->Animator3D()->Add(AnimMoveCrouchFR);
+	GetOwner()->Animator3D()->Add(AnimMoveCrouchB);
+	GetOwner()->Animator3D()->Add(AnimMoveCrouchBL);
+	GetOwner()->Animator3D()->Add(AnimMoveCrouchBR);
 	GetOwner()->Animator3D()->Add(AnimMoveWalk);
+	GetOwner()->Animator3D()->Add(AnimMoveWalkFL);
+	GetOwner()->Animator3D()->Add(AnimMoveWalkFR);
+	GetOwner()->Animator3D()->Add(AnimMoveWalkB);
+	GetOwner()->Animator3D()->Add(AnimMoveWalkBL);
+	GetOwner()->Animator3D()->Add(AnimMoveWalkBR);
+
 	PlayAnimation(AnimIdleStand, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));
 }
@@ -33,44 +45,33 @@ void CP_FSMScript::tick()
 	CC_FSMScript::tick();
 
 	if (m_IsChangeStance)
-	{		
-		eP_States curStateType = static_cast<eP_States>(GetCurState()->GetStateType());
-
+	{
+		CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
+		// 우선순위로 스탠스 적용
 		if (m_InpSprint)
 		{
 			ChangeStance(ePlayerStance::Sprint);
+			curState->CallAnimation();			
 		}
 		else if (m_InpCrouch && m_InpAim)
 		{
 			ChangeStance(ePlayerStance::CrouchAim);
-			if (eP_States::IDLE == curStateType)
-				PlayAnimation(AnimIdleCrouch, true);
-			else if (eP_States::MOVE == curStateType)
-				PlayAnimation(AnimMoveCrouch, true);
+			curState->CallAnimation();
 		}
 		else if (m_InpCrouch)
 		{
 			ChangeStance(ePlayerStance::Crouch);
-			if (eP_States::IDLE == curStateType)
-				PlayAnimation(AnimIdleCrouch, true);
-			else if (eP_States::MOVE == curStateType)
-				PlayAnimation(AnimMoveCrouch, true);
+			curState->CallAnimation();
 		}
 		else if (m_InpAim)
 		{
 			ChangeStance(ePlayerStance::Aim);
-			if (eP_States::IDLE == curStateType)
-				PlayAnimation(AnimIdleStand, true);
-			else if (eP_States::MOVE == curStateType)
-				PlayAnimation(AnimMoveWalk, true);
+			curState->CallAnimation();
 		}
 		else
 		{
 			ChangeStance(ePlayerStance::Normal);
-			if (eP_States::IDLE == curStateType)
-				PlayAnimation(AnimIdleStand, true);
-			else if (eP_States::MOVE == curStateType)
-				PlayAnimation(AnimMoveWalk, true);
+			curState->CallAnimation();
 		}
 
 		// 달리기 추가

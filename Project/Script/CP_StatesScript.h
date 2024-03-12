@@ -23,6 +23,9 @@ public:
     virtual void begin() override;
 
 public:
+    virtual void CallAnimation() {}
+
+public:
     virtual void SetStateType(UINT _StateType) override { m_PStateType = static_cast<eP_States>(_StateType); }
     virtual UINT GetStateType() const override { return static_cast<UINT>(m_PStateType); }
 

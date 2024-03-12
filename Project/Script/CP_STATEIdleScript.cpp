@@ -29,29 +29,46 @@ void CP_STATEIdleScript::tick()
 	}
 	if (KEY_TAP(KEY::W))
 	{
-		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::F);
+		m_PHQ->InputMove(0, 1.f);
 	}
 	if (KEY_TAP(KEY::S))
 	{
-		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::B);
+		m_PHQ->InputMove(0, -1.f);
 	}
 	if (KEY_TAP(KEY::A))
 	{
-		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::L);
+		m_PHQ->InputMove(-1.f, 0);
 	}
 	if (KEY_TAP(KEY::D))
 	{
-		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::R);
+		m_PHQ->InputMove(1.f, 0);
 	}
-	if (KEY_TAP(KEY::SPACE))
+	if (KEY_RELEASE(KEY::W))
+	{
+		m_PHQ->InputMove(0, -1.f);
+	}
+	if (KEY_RELEASE(KEY::S))
+	{
+		m_PHQ->InputMove(0, 1.f);
+	}
+	if (KEY_RELEASE(KEY::D))
+	{
+		m_PHQ->InputMove(-1.f, 0);
+	}
+	if (KEY_RELEASE(KEY::A))
+	{
+		m_PHQ->InputMove(1.f, 0);
+	}
+
+	Vec2 moveDir = m_PHQ->GetMoveDir();
+
+	if (Vec2(0, 0) != moveDir)
+		m_isMove = true;
+
+	/*if (KEY_TAP(KEY::SPACE))
 	{
 		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::N);
-	}
+	}*/
 	
 
 	// 상태 변경해주기
@@ -59,6 +76,28 @@ void CP_STATEIdleScript::tick()
 	{
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
 	}	
+}
+
+void CP_STATEIdleScript::CallAnimation()
+{
+	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
+
+	if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+	{
+		m_PHQ->PlayAnimation(AnimIdleCrouch, true);
+	}
+	else if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+	{
+		m_PHQ->PlayAnimation(AnimIdleCrouch, true);
+	}
+	else if (CP_FSMScript::ePlayerStance::Aim == curStance)
+	{
+		m_PHQ->PlayAnimation(AnimIdleStand, true);
+	}
+	else if (CP_FSMScript::ePlayerStance::Normal == curStance)
+	{
+		m_PHQ->PlayAnimation(AnimIdleStand, true);
+	}
 }
 
 void CP_STATEIdleScript::MoveInput()
