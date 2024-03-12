@@ -54,5 +54,4 @@ void CLevelMgr::ChangeLevel(CLevel* _NextLevel)
 	}
 
 	m_pCurLevel = _NextLevel;
-
 }

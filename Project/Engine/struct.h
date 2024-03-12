@@ -487,3 +487,57 @@ struct tRayCastInfo
 	float dist;
 };
 
+struct tPNode
+{
+	tPNode()
+		: pPrevNode(nullptr)
+		, fFromParent(0.f)
+		, fToDest(0.f)
+		, fFinal(0.f)
+		, iIdxX(0)
+		, iIdxY(0)
+		, bMove(true)
+		, bOpen(false)
+		, bClosed(false)
+	{}
+	tPNode*     pPrevNode;   // 이전 노드
+	float		fFromParent; // 이전 노드에서 현재 노드까지의 거리
+	float		fToDest;	 // 현재 노드에서 목적지 까지의 거리
+	float		fFinal;		 // 위에 두 값을 합친 값(우선순위 기준)
+
+	int			iIdxX;
+	int			iIdxY;
+	bool		bMove = true;   // 이동 가능 불가능
+	bool		bOpen = false;   // OpenList 에 들어갔는지
+	bool		bClosed = false; // ClostList 에 들어있는지
+
+};
+
+//struct tPairHash
+//{
+//	size_t operator()(const std::pair<int, int>& p) const
+//	{
+//		return std::hash<int>()(p.first) ^ std::hash<int>()(p.second);
+//	}
+//};
+
+struct tYX
+{
+	tYX(int _y, int _x)
+		: x(_x), y(_y)
+	{}
+	int x;
+	int y;
+};
+
+struct tRangeYX
+{
+	tRangeYX(int _y1, int _x1, int _y2, int _x2)
+		: y1(_y1), y2(_y2), x1(_x1), x2(_x2)
+	{};
+
+	int x1;
+	int x2;
+	int y1;
+	int y2;
+};

@@ -13,6 +13,7 @@
 #include "CFontMgr.h"
 #include "CInstancingBuffer.h"
 #include "Physics.h"
+#include "CPathFinderMgr.h"
 
 CEngine::CEngine()
 	: m_hWnd(nullptr)
@@ -64,7 +65,7 @@ int CEngine::init(HWND _hWnd, UINT _iWidth, UINT _iHeight)
 
 	Physics::GetInst()->init();
 	
-
+	CPathFinderMgr::GetInst();
 
 	return S_OK;
 }
@@ -94,6 +95,7 @@ void CEngine::tick()
 	// Level Update
 	// Level 안에 존재하는 모든 GameObject 들이 Tick 을 호출받음
 	CLevelMgr::GetInst()->tick();
+	CPathFinderMgr::GetInst()->tick();
 
 	Physics::GetInst()->tick();
 

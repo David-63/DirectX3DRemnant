@@ -37,7 +37,6 @@ CGameObject* CPrefab::Instantiate(Vec3 _pos, int _layerIdx)
 		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
 		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		clone->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		clone->RigidBody()->AddActorToLevel();
 	}
 	
 

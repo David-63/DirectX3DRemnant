@@ -177,18 +177,24 @@ call CodeGen.exe</Command>
     <ClInclude Include="CC_FSMScript.h" />
     <ClInclude Include="CC_StatesScript.h" />
     <ClInclude Include="CIdleStateScript.h" />
+    <ClInclude Include="CM_Lurker_STATE_Idle_Script.h" />
+    <ClInclude Include="CM_Lurker_FSMScript.h" />
+    <ClInclude Include="CM_Lurker_StatesScript.h" />
+    <ClInclude Include="CM_Lurker_STATE_Sleep_Script.h" />
+    <ClInclude Include="CPathFinderScript.h" />
     <ClInclude Include="CPlayerScript.h" />
+    <ClInclude Include="CPlayerScriptFsm.h" />
     <ClInclude Include="CP_FSMScript.h" />
     <ClInclude Include="CP_STATEIdleScript.h" />
     <ClInclude Include="CP_STATEMoveScript.h" />
     <ClInclude Include="CP_StatesScript.h" />
     <ClInclude Include="CScriptMgr.h" />
     <ClInclude Include="CShoulderViewScript.h" />
+    <ClInclude Include="CStateScript.h" />
     <ClInclude Include="CTestScript.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="CMonsterMoveScript.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="CPlayerScriptFsm.h" />
-    <ClInclude Include="CStateScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CCameraMoveScript.cpp" />
@@ -196,23 +202,29 @@ call CodeGen.exe</Command>
     <ClCompile Include="CC_FSMScript.cpp" />
     <ClCompile Include="CC_StatesScript.cpp" />
     <ClCompile Include="CIdleStateScript.cpp" />
+    <ClCompile Include="CM_Lurker_STATE_Idle_Script.cpp" />
+    <ClCompile Include="CM_Lurker_FSMScript.cpp" />
+    <ClCompile Include="CM_Lurker_StatesScript.cpp" />
+    <ClCompile Include="CM_Lurker_STATE_Sleep_Script.cpp" />
+    <ClCompile Include="CPathFinderScript.cpp" />
     <ClCompile Include="CPlayerScript.cpp" />
+    <ClCompile Include="CPlayerScriptFsm.cpp" />
     <ClCompile Include="CP_FSMScript.cpp" />
     <ClCompile Include="CP_STATEIdleScript.cpp" />
     <ClCompile Include="CP_STATEMoveScript.cpp" />
     <ClCompile Include="CP_StatesScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
     <ClCompile Include="CShoulderViewScript.cpp" />
+    <ClCompile Include="CStateScript.cpp" />
     <ClCompile Include="CTestScript.cpp" />
+    <ClCompile Include="CMonsterMoveScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="CPlayerScriptFsm.cpp" />
     <ClCompile Include="Script.cpp" />
-    <ClCompile Include="CStateScript.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

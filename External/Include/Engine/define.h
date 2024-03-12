@@ -24,8 +24,6 @@
 
 
 
-
-
 enum class COMPONENT_TYPE
 {
 	// update
@@ -335,4 +333,13 @@ enum class AXIS3D_TYPE
 	Y,
 	Z,
 	END
+};
+
+enum class LAYER_TYPE
+{
+	Ground,
+	Player,
+	Monster,
+	Wall,
+	END,
 };
