@@ -26,13 +26,13 @@ int MeshRenderUI::render_update()
 	if (FALSE == ComponentUI::render_update())
 		return FALSE;
 
-	char szBuff[50] = {};
+	char szBuff[200] = {};
 
 	Ptr<CMeshData> pMeshData = GetTarget()->MeshRender()->GetMeshData();
 	ImGui::Text("MeshData ");
 	ImGui::SameLine();
-	GetResKey(pMeshData.Get(), szBuff, 50);
-	ImGui::InputText("##MeshDataName", szBuff, 50, ImGuiInputTextFlags_ReadOnly);
+	GetResKey(pMeshData.Get(), szBuff, 200);
+	ImGui::InputText("##MeshDataName", szBuff, 200, ImGuiInputTextFlags_ReadOnly);
 	// Mesh 드랍 체크
 	if (ImGui::BeginDragDropTarget())
 	{

@@ -120,9 +120,9 @@ void CreateTestLevel()
 
 		// 인스턴싱 테스트
 
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_MoveCrouchBR.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Undying\\Wasteland_Undying_Weapon_Summon.fbx");
 		player = pMeshData->Instantiate();
-		player->Animator3D()->SimpleGen(L"animclip\\P_MoveCrouchBR.animclip");
+	//	player->Animator3D()->SimpleGen(L"animclip\\B_Weapon_L.animclip");
 		player->SetName(L"Obj");
 		//player->AddComponent(new CP_FSMScript());
 
@@ -134,7 +134,7 @@ void CreateTestLevel()
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_MoveCrouchFR.fbx");
 		//player = pMeshData->Instantiate();
 		//player->Animator3D()->SimpleGen(L"animclip\\P_MoveCrouchFR.animclip");
-		player->SetName(L"Obj");
+	
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 	}
 }
