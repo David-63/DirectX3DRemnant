@@ -84,19 +84,19 @@ void CP_STATEIdleScript::CallAnimation()
 
 	if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
 	{
-		m_PHQ->PlayAnimation(AnimIdleCrouch, true);
+		m_PHQ->PlayAnimation(P_AnimIdleCrouch, true);
 	}
 	else if (CP_FSMScript::ePlayerStance::Crouch == curStance)
 	{
-		m_PHQ->PlayAnimation(AnimIdleCrouch, true);
+		m_PHQ->PlayAnimation(P_AnimIdleCrouch, true);
 	}
 	else if (CP_FSMScript::ePlayerStance::Aim == curStance)
 	{
-		m_PHQ->PlayAnimation(AnimIdleStand, true);
+		m_PHQ->PlayAnimation(P_AnimIdleStand, true);
 	}
 	else if (CP_FSMScript::ePlayerStance::Normal == curStance)
 	{
-		m_PHQ->PlayAnimation(AnimIdleStand, true);
+		m_PHQ->PlayAnimation(P_AnimIdleStand, true);
 	}
 }
 
@@ -185,9 +185,9 @@ void CP_STATEIdleScript::Enter()
 
 	if (CP_FSMScript::ePlayerStance::Crouch == curStance
 		|| CP_FSMScript::ePlayerStance::CrouchAim == curStance)
-		m_PHQ->PlayAnimation(AnimIdleCrouch, true);
+		m_PHQ->PlayAnimation(P_AnimIdleCrouch, true);
 	else
-		m_PHQ->PlayAnimation(AnimIdleStand, true);
+		m_PHQ->PlayAnimation(P_AnimIdleStand, true);
 }
 
 void CP_STATEIdleScript::Exit()

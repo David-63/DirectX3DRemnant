@@ -20,23 +20,23 @@ void CP_FSMScript::begin()
 
 
 	// 애니메이션
-	GetOwner()->Animator3D()->Add(AnimIdleStand);
-	GetOwner()->Animator3D()->Add(AnimIdleCrouch);
+	GetOwner()->Animator3D()->Add(P_AnimIdleStand);
+	GetOwner()->Animator3D()->Add(P_AnimIdleCrouch);
 
-	GetOwner()->Animator3D()->Add(AnimMoveCrouch);
-	GetOwner()->Animator3D()->Add(AnimMoveCrouchFL);
-	GetOwner()->Animator3D()->Add(AnimMoveCrouchFR);
-	GetOwner()->Animator3D()->Add(AnimMoveCrouchB);
-	GetOwner()->Animator3D()->Add(AnimMoveCrouchBL);
-	GetOwner()->Animator3D()->Add(AnimMoveCrouchBR);
-	GetOwner()->Animator3D()->Add(AnimMoveWalk);
-	GetOwner()->Animator3D()->Add(AnimMoveWalkFL);
-	GetOwner()->Animator3D()->Add(AnimMoveWalkFR);
-	GetOwner()->Animator3D()->Add(AnimMoveWalkB);
-	GetOwner()->Animator3D()->Add(AnimMoveWalkBL);
-	GetOwner()->Animator3D()->Add(AnimMoveWalkBR);
+	GetOwner()->Animator3D()->Add(P_AnimMoveCrouch);
+	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchFL);
+	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchFR);
+	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchB);
+	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchBL);
+	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchBR);
+	GetOwner()->Animator3D()->Add(P_AnimMoveWalk);
+	GetOwner()->Animator3D()->Add(P_AnimMoveWalkFL);
+	GetOwner()->Animator3D()->Add(P_AnimMoveWalkFR);
+	GetOwner()->Animator3D()->Add(P_AnimMoveWalkB);
+	GetOwner()->Animator3D()->Add(P_AnimMoveWalkBL);
+	GetOwner()->Animator3D()->Add(P_AnimMoveWalkBR);
 
-	PlayAnimation(AnimIdleStand, true);
+	PlayAnimation(P_AnimIdleStand, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));
 }
 

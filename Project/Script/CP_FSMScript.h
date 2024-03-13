@@ -2,29 +2,22 @@
 #include "CC_FSMScript.h"
 #include "CP_StatesScript.h"
 
-#define AnimIdleStand L"animclip\\player\\P_IdleStand.animclip"
-#define AnimIdleCrouch L"animclip\\player\\P_IdleCrouch.animclip"
-#define AnimMoveCrouch L"animclip\\player\\P_MoveCrouch.animclip"
-#define AnimMoveCrouchB L"animclip\\player\\P_MoveCrouchB.animclip"
-#define AnimMoveCrouchBL L"animclip\\player\\P_MoveCrouchBL.animclip"
-#define AnimMoveCrouchBR L"animclip\\player\\P_MoveCrouchBR.animclip"
-#define AnimMoveCrouchFL L"animclip\\player\\P_MoveCrouchFL.animclip"
-#define AnimMoveCrouchFR L"animclip\\player\\P_MoveCrouchFR.animclip"
-#define AnimMoveWalk L"animclip\\player\\P_MoveWalk.animclip"
-#define AnimMoveWalkB L"animclip\\player\\P_MoveWalkB.animclip"
-#define AnimMoveWalkBL L"animclip\\player\\P_MoveWalkBL.animclip"
-#define AnimMoveWalkBR L"animclip\\player\\P_MoveWalkBR.animclip"
-#define AnimMoveWalkFL L"animclip\\player\\P_MoveWalkFL.animclip"
-#define AnimMoveWalkFR L"animclip\\player\\P_MoveWalkFR.animclip"
-
-
+#define P_AnimIdleStand L"animclip\\player\\P_IdleStand.animclip"
+#define P_AnimIdleCrouch L"animclip\\player\\P_IdleCrouch.animclip"
+#define P_AnimMoveCrouch L"animclip\\player\\P_MoveCrouch.animclip"
+#define P_AnimMoveCrouchB L"animclip\\player\\P_MoveCrouchB.animclip"
+#define P_AnimMoveCrouchBL L"animclip\\player\\P_MoveCrouchBL.animclip"
+#define P_AnimMoveCrouchBR L"animclip\\player\\P_MoveCrouchBR.animclip"
+#define P_AnimMoveCrouchFL L"animclip\\player\\P_MoveCrouchFL.animclip"
+#define P_AnimMoveCrouchFR L"animclip\\player\\P_MoveCrouchFR.animclip"
+#define P_AnimMoveWalk L"animclip\\player\\P_MoveWalk.animclip"
+#define P_AnimMoveWalkB L"animclip\\player\\P_MoveWalkB.animclip"
+#define P_AnimMoveWalkBL L"animclip\\player\\P_MoveWalkBL.animclip"
+#define P_AnimMoveWalkBR L"animclip\\player\\P_MoveWalkBR.animclip"
+#define P_AnimMoveWalkFL L"animclip\\player\\P_MoveWalkFL.animclip"
+#define P_AnimMoveWalkFR L"animclip\\player\\P_MoveWalkFR.animclip"
 
 // 플레이어는 몬스터와 다르게 장비중인 무기에 따라 스텟이 달라짐
-struct tPlayerAttInfo
-{
-    int a = 0;
-};
-
 
 class CP_FSMScript : public CC_FSMScript
 {
@@ -38,13 +31,6 @@ public:
         CrouchAim,
         Dodge,
         End,
-    };
-    enum class ePlayerMoveDir
-    {
-        LF, F, RF,
-         L, N,  R, 
-        LB, B, RB,
-
     };
 
     struct tPlayerStat

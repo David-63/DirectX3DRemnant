@@ -100,38 +100,38 @@ void CP_STATEMoveScript::CallAnimation()
 		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveCrouchFR, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchFR, true);
 			else if (-0.3 >= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveCrouchFL, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchFL, true);
 			else
-				m_PHQ->PlayAnimation(AnimMoveCrouch, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouch, true);
 		}
 		else if (CP_FSMScript::ePlayerStance::Crouch == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveCrouchFR, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchFR, true);
 			else if (-0.3 >= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveCrouchFL, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchFL, true);
 			else
-				m_PHQ->PlayAnimation(AnimMoveCrouch, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouch, true);
 		}
 		else if (CP_FSMScript::ePlayerStance::Aim == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveWalkFR, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkFR, true);
 			else if (-0.3 >= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveWalkFL, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkFL, true);
 			else
-				m_PHQ->PlayAnimation(AnimMoveWalk, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalk, true);
 		}
 		else if (CP_FSMScript::ePlayerStance::Normal == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveWalkFR, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkFR, true);
 			else if (-0.3 >= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveWalkFL, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkFL, true);
 			else
-				m_PHQ->PlayAnimation(AnimMoveWalk, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalk, true);
 		}
 	}
 	else
@@ -139,38 +139,38 @@ void CP_STATEMoveScript::CallAnimation()
 		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveCrouchBR, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchBR, true);
 			else if (-0.3 >= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveCrouchBL, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchBL, true);
 			else
-				m_PHQ->PlayAnimation(AnimMoveCrouchB, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchB, true);
 		}
 		else if (CP_FSMScript::ePlayerStance::Crouch == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveCrouchBR, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchBR, true);
 			else if (-0.3 >= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveCrouchBL, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchBL, true);
 			else
-				m_PHQ->PlayAnimation(AnimMoveCrouchB, true);
+				m_PHQ->PlayAnimation(P_AnimMoveCrouchB, true);
 		}
 		else if (CP_FSMScript::ePlayerStance::Aim == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveWalkBR, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkBR, true);
 			else if (-0.3 >= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveWalkBL, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkBL, true);
 			else
-				m_PHQ->PlayAnimation(AnimMoveWalkB, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkB, true);
 		}
 		else if (CP_FSMScript::ePlayerStance::Normal == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveWalkBR, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkBR, true);
 			else if (-0.3 >= m_prevDir.x)
-				m_PHQ->PlayAnimation(AnimMoveWalkBL, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkBL, true);
 			else
-				m_PHQ->PlayAnimation(AnimMoveWalkB, true);
+				m_PHQ->PlayAnimation(P_AnimMoveWalkB, true);
 		}
 	}
 }
