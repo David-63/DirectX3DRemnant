@@ -2,29 +2,39 @@
 #include "CC_FSMScript.h"
 #include "CP_StatesScript.h"
 
-#define AnimIdleStand L"animclip\\player\\P_IdleStand.animclip"
-#define AnimIdleCrouch L"animclip\\player\\P_IdleCrouch.animclip"
-#define AnimMoveCrouch L"animclip\\player\\P_MoveCrouch.animclip"
-#define AnimMoveCrouchB L"animclip\\player\\P_MoveCrouchB.animclip"
-#define AnimMoveCrouchBL L"animclip\\player\\P_MoveCrouchBL.animclip"
-#define AnimMoveCrouchBR L"animclip\\player\\P_MoveCrouchBR.animclip"
-#define AnimMoveCrouchFL L"animclip\\player\\P_MoveCrouchFL.animclip"
-#define AnimMoveCrouchFR L"animclip\\player\\P_MoveCrouchFR.animclip"
-#define AnimMoveWalk L"animclip\\player\\P_MoveWalk.animclip"
-#define AnimMoveWalkB L"animclip\\player\\P_MoveWalkB.animclip"
-#define AnimMoveWalkBL L"animclip\\player\\P_MoveWalkBL.animclip"
-#define AnimMoveWalkBR L"animclip\\player\\P_MoveWalkBR.animclip"
-#define AnimMoveWalkFL L"animclip\\player\\P_MoveWalkFL.animclip"
-#define AnimMoveWalkFR L"animclip\\player\\P_MoveWalkFR.animclip"
+#define P_IdleR2                    L"animclip\\player\\P_IdleR2.animclip"
+#define P_IdleR2Aim                 L"animclip\\player\\P_IdleR2Aim.animclip"
+#define P_IdleR2AimCrouch           L"animclip\\player\\P_IdleR2AimCrouch.animclip"
+#define P_IdleR2Crouch              L"animclip\\player\\P_IdleR2Crouch.animclip"
+#define P_MoveR2AimCrouchWalk       L"animclip\\player\\P_MoveR2AimCrouchWalk.animclip"
+#define P_MoveR2AimCrouchWalk_B     L"animclip\\player\\P_MoveR2AimCrouchWalk_B.animclip"
+#define P_MoveR2AimCrouchWalk_BL    L"animclip\\player\\P_MoveR2AimCrouchWalk_BL.animclip"
+#define P_MoveR2AimCrouchWalk_BR    L"animclip\\player\\P_MoveR2AimCrouchWalk_BR.animclip"
+#define P_MoveR2AimCrouchWalk_FL    L"animclip\\player\\P_MoveR2AimCrouchWalk_FL.animclip"
+#define P_MoveR2AimCrouchWalk_FR    L"animclip\\player\\P_MoveR2AimCrouchWalk_FR.animclip"
+#define P_MoveR2AimWalk             L"animclip\\player\\P_MoveR2AimWalk.animclip"
+#define P_MoveR2AimWalk_B           L"animclip\\player\\P_MoveR2AimWalk_B.animclip"
+#define P_MoveR2AimWalk_BL          L"animclip\\player\\P_MoveR2AimWalk_BL.animclip"
+#define P_MoveR2AimWalk_BR          L"animclip\\player\\P_MoveR2AimWalk_BR.animclip"
+#define P_MoveR2AimWalk_FL          L"animclip\\player\\P_MoveR2AimWalk_FL.animclip"
+#define P_MoveR2AimWalk_FR          L"animclip\\player\\P_MoveR2AimWalk_FR.animclip"
+#define P_MoveR2CrouchWalk          L"animclip\\player\\P_MoveR2CrouchWalk.animclip"
+#define P_MoveR2CrouchWalk_B        L"animclip\\player\\P_MoveR2CrouchWalk_B.animclip"
+#define P_MoveR2CrouchWalk_BL       L"animclip\\player\\P_MoveR2CrouchWalk_BL.animclip"
+#define P_MoveR2CrouchWalk_BR       L"animclip\\player\\P_MoveR2CrouchWalk_BR.animclip"
+#define P_MoveR2CrouchWalk_FL       L"animclip\\player\\P_MoveR2CrouchWalk_FL.animclip"
+#define P_MoveR2CrouchWalk_FR       L"animclip\\player\\P_MoveR2CrouchWalk_FR.animclip"
+#define P_MoveR2Jog                 L"animclip\\player\\P_MoveR2Jog.animclip"
+#define P_MoveR2Jog_B               L"animclip\\player\\P_MoveR2Jog_B.animclip"
+#define P_MoveR2Jog_BL              L"animclip\\player\\P_MoveR2Jog_BL.animclip"
+#define P_MoveR2Jog_BR              L"animclip\\player\\P_MoveR2Jog_BR.animclip"
+#define P_MoveR2Jog_FL              L"animclip\\player\\P_MoveR2Jog_FL.animclip"
+#define P_MoveR2Jog_FR              L"animclip\\player\\P_MoveR2Jog_FR.animclip"
+
 
 
 
 // 플레이어는 몬스터와 다르게 장비중인 무기에 따라 스텟이 달라짐
-struct tPlayerAttInfo
-{
-    int a = 0;
-};
-
 
 class CP_FSMScript : public CC_FSMScript
 {
@@ -38,13 +48,6 @@ public:
         CrouchAim,
         Dodge,
         End,
-    };
-    enum class ePlayerMoveDir
-    {
-        LF, F, RF,
-         L, N,  R, 
-        LB, B, RB,
-
     };
 
     struct tPlayerStat

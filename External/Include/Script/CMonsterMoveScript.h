@@ -1,6 +1,7 @@
 #pragma once
 #include <Engine\CScript.h>
 
+// 현재 지금 안봐도 되는 내용임 (길찾기 관련 코드) 
 class CMonsterMoveScript
 	: public CScript
 {
@@ -17,7 +18,7 @@ private:
 
 
     class CPathFinderScript* m_sPathFinder;
-    std::stack<Vec3>* m_Stack;
+    std::stack<Vec3>* m_Stack; // 경로를 stack에 넣어둠
     CGameObject* m_TargetObj;
 
 public:

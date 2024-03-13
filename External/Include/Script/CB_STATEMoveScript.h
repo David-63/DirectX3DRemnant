@@ -9,10 +9,8 @@ private:
     bool        m_IsRanged;
 
 public:
-    virtual void tick() override;
-
-public:
     virtual void Enter() override;
+    virtual void tick() override;
     virtual void Exit() override;
 
 public:

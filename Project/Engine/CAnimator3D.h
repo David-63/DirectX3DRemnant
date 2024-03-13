@@ -106,7 +106,7 @@ private:
 	vector<Matrix>				m_vecFinalBoneMat;			// .
 
 	// blend value
-	tTimeCtrl					m_blendTime;												
+	tTimeCtrl					m_blendTime;
 	int							m_prevFrameIdx;
 	float						m_blendRatio;
 

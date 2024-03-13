@@ -20,23 +20,38 @@ void CP_FSMScript::begin()
 
 
 	// 애니메이션
-	GetOwner()->Animator3D()->Add(P_AnimIdleStand);
-	GetOwner()->Animator3D()->Add(P_AnimIdleCrouch);
+	GetOwner()->Animator3D()->Add(P_IdleR2);
+	GetOwner()->Animator3D()->Add(P_IdleR2Aim);
+	GetOwner()->Animator3D()->Add(P_IdleR2AimCrouch);
+	GetOwner()->Animator3D()->Add(P_IdleR2Crouch);
 
-	GetOwner()->Animator3D()->Add(P_AnimMoveCrouch);
-	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchFL);
-	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchFR);
-	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchB);
-	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchBL);
-	GetOwner()->Animator3D()->Add(P_AnimMoveCrouchBR);
-	GetOwner()->Animator3D()->Add(P_AnimMoveWalk);
-	GetOwner()->Animator3D()->Add(P_AnimMoveWalkFL);
-	GetOwner()->Animator3D()->Add(P_AnimMoveWalkFR);
-	GetOwner()->Animator3D()->Add(P_AnimMoveWalkB);
-	GetOwner()->Animator3D()->Add(P_AnimMoveWalkBL);
-	GetOwner()->Animator3D()->Add(P_AnimMoveWalkBR);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_B);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_BL);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_BR);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_FL);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_FR);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_B);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_BL);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_BR);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_FL);
+	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_FR);
+	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk);
+	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_B);
+	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_BL);
+	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_BR);
+	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_FL);
+	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_FR);
+	GetOwner()->Animator3D()->Add(P_MoveR2Jog);
+	GetOwner()->Animator3D()->Add(P_MoveR2Jog_B);
+	GetOwner()->Animator3D()->Add(P_MoveR2Jog_BL);
+	GetOwner()->Animator3D()->Add(P_MoveR2Jog_BR);
+	GetOwner()->Animator3D()->Add(P_MoveR2Jog_FL);
+	GetOwner()->Animator3D()->Add(P_MoveR2Jog_FR);
 
-	PlayAnimation(P_AnimIdleStand, true);
+
+	PlayAnimation(P_IdleR2, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));
 }
 
