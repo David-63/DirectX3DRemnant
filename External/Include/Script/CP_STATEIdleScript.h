@@ -19,15 +19,9 @@ public:
 
 
 public:
-    void MoveInput();
     void IdleMouseInput();
 
 public:
-    void IdleNormalInput();
-    void IdleAimInput();
-    void IdleCrouchInput();
-    void IdleCrouchAimInput();
-
     void ClearIdleState() { m_isMove = false; m_isMelee = false; }
 
 public:

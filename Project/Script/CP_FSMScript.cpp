@@ -59,6 +59,8 @@ void CP_FSMScript::tick()
 {
 	CC_FSMScript::tick();
 
+	m_Camera.tick();
+
 	if (m_IsChangeStance)
 	{
 		CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());

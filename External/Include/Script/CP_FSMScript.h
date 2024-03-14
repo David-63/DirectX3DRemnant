@@ -1,6 +1,7 @@
 #pragma once
 #include "CC_FSMScript.h"
 #include "CP_StatesScript.h"
+#include "CP_MouseCtrlScript.h"
 
 #define P_IdleR2                    L"animclip\\player\\P_IdleR2.animclip"
 #define P_IdleR2Aim                 L"animclip\\player\\P_IdleR2Aim.animclip"
@@ -53,7 +54,7 @@ public:
     struct tPlayerStat
     {
         float MoveSpeed;
-        tPlayerStat() : MoveSpeed(400.f) {}
+        tPlayerStat() : MoveSpeed(600.f) {}
     };
     struct tP_Info
     {
@@ -75,6 +76,9 @@ private:
 
     // 방향
     Vec2        m_moveDir;
+
+    // 카메라
+    CP_MouseCtrlScript m_Camera;
 
 public:
     virtual void begin() override;
