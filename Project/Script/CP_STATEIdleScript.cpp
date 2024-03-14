@@ -15,10 +15,6 @@ CP_STATEIdleScript::~CP_STATEIdleScript()
 
 void CP_STATEIdleScript::tick()
 {
-
-	// 입력 받기
-	IdleMouseInput();
-	
 	if (KEY_TAP(KEY::RBTN))
 	{
 		m_PHQ->InputAim();

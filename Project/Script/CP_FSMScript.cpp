@@ -63,9 +63,9 @@ void CP_FSMScript::begin()
 
 void CP_FSMScript::tick()
 {
-	CC_FSMScript::tick();
+	CC_FSMScript::tick();	// State에게 tick을 호출
 
-	m_MouseCtrl.tick();
+	m_MouseCtrl.tick();		// 카메라 전용 tick
 
 	// 상태 제어용 딜레이 타임
 	

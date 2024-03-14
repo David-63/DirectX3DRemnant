@@ -6,7 +6,7 @@
 
 CP_MouseCtrlScript::CP_MouseCtrlScript()
 	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr)
-	, m_MouseSensitivity(0.13f), m_vCamOffset{ -170.f, 15.f, 30.f }, m_YPivot(140.f)
+	, m_MouseSensitivity(0.13f), m_vCamOffset{ -200.f, 5.f, 45.f }, m_YPivot(140.f)
 {
 }
 

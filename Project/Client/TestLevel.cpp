@@ -123,6 +123,7 @@ void CreateTestLevel()
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_2RFusionReload.fbx");
 		player = pMeshData->Instantiate();
 		player->SetName(L"Obj");
+		player->MeshRender()->SetFrustumCheck(false);
 		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RFusionReload.animclip");
 		player->AddComponent(new CP_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);

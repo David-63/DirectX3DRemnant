@@ -8,8 +8,8 @@ class CP_MouseCtrlScript : public CScript
 private:
 	CP_FSMScript*	m_PHQ;
 	CCamera*		m_ctrlCam;
-	Vec3			m_vCamPivot;		// 카메라 중심 좌표
 	Vec3			m_vCamOffset;		// 상대 좌표
+	float			m_YPivot;			// 카메라 중심 좌표
 	float			m_MouseSensitivity;
 public:
 	virtual void tick() override;
@@ -23,6 +23,7 @@ public:
 public:
 	void SetOwner(CP_FSMScript* _owner) { m_PHQ = _owner; }
 	void SetMainCam(CCamera* _cam) { m_ctrlCam = _cam; }
+	void SetYPivot(float _pivot) { m_YPivot = _pivot; }
 
 public:
 	CLONE(CP_MouseCtrlScript);
