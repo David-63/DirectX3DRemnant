@@ -10,7 +10,7 @@ CShoulderViewScript::CShoulderViewScript()
 	, m_Target(nullptr)
 	, m_fMouseSensitivity(0.13f)
 	, m_vPitchMinMax(Vec2(-20.f, 40.f)) // y값 원래는 2 
-	, m_vCamPivot{ -51.f, 37.f, 18.f }
+	, m_vCamOffset{ -51.f, 37.f, 18.f }
 	, m_firstTick(true)
 	, m_bIsMouseRock(true)
 	, m_eViewState(VIEW_STATE::NORMAL)
@@ -18,9 +18,9 @@ CShoulderViewScript::CShoulderViewScript()
 	, m_ModifiedFov{}
 	, m_CurrentFov(0.f)
 {
-	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_vCamPivot.x, "Pivot_Y");
-	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_vCamPivot.y, "Pivot_Z");
-	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_vCamPivot.z, "Pivot_X");
+	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_vCamOffset.x, "Pivot_Y");
+	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_vCamOffset.y, "Pivot_Z");
+	AddScriptParam(SCRIPT_PARAM::FLOAT, &m_vCamOffset.z, "Pivot_X");
 
 	AddScriptParam(SCRIPT_PARAM::VEC2, &m_vPitchMinMax, "PitchMinMax");
 
@@ -204,7 +204,7 @@ void CShoulderViewScript::CameraPos()
 
 	//	vPlayerFront (회전되면서 변한 피봇 값을 각 3방향에 적용시켜야함)	
 	// x // 앞뒤로 // 위 아래  // z = 좌우로
-	Vec3 Point = vPlayerPos + CameraFront * m_vCamPivot.x + CameraRight * m_vCamPivot.z + CameraUp * m_vCamPivot.y;
+	Vec3 Point = vPlayerPos + CameraFront * m_vCamOffset.x + CameraRight * m_vCamOffset.z + CameraUp * m_vCamOffset.y;
 
 
 	// 카메라의 위치 설정

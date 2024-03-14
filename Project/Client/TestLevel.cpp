@@ -120,10 +120,10 @@ void CreateTestLevel()
 
 		// 인스턴싱 테스트
 		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_IdleR2.mdat");
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_IdleR2.fbx");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_2RFusionReload.fbx");
 		player = pMeshData->Instantiate();
 		player->SetName(L"Obj");
-		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_IdleR2.animclip");
+		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RFusionReload.animclip");
 		player->AddComponent(new CP_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 	}

@@ -33,7 +33,7 @@
 #define P_MoveR2Jog_FR              L"animclip\\player\\P_MoveR2Jog_FR.animclip"
 
 
-
+#define StanceDelay 0.1f
 
 // 플레이어는 몬스터와 다르게 장비중인 무기에 따라 스텟이 달라짐
 
@@ -54,7 +54,7 @@ public:
     struct tPlayerStat
     {
         float MoveSpeed;
-        tPlayerStat() : MoveSpeed(600.f) {}
+        tPlayerStat() : MoveSpeed(1500.f) {}
     };
     struct tP_Info
     {
@@ -63,22 +63,26 @@ public:
     };
 
 private:
-    tP_Info     m_tPlayerInfo;
+    tP_Info             m_tPlayerInfo;
 
-    // 스탠스와 방향은 버퍼로 관리해야함
-    ePlayerStance   P_Stance;
+    ePlayerStance       P_Stance;
+    tTimeCtrl           m_StanceDelay;
 
     // 토글 입력
-    bool            m_InpCrouch;
-    bool            m_InpAim;
-    bool            m_InpSprint;
-    bool            m_IsChangeStance;
+    bool                m_ableMouse;
+    bool                m_InpCrouch;
+    bool                m_InpAim;
+    bool                m_InpSprint;
+    bool                m_IsChangeStance;
 
     // 방향
-    Vec2        m_moveDir;
+    Vec2                m_moveDir;
 
     // 카메라
-    CP_MouseCtrlScript m_Camera;
+    CP_MouseCtrlScript  m_MouseCtrl;
+public:
+    Vec2                m_MouseAxisInput;
+
 
 public:
     virtual void begin() override;
@@ -92,7 +96,6 @@ public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
     ePlayerStance GetStance() { return P_Stance; }
     tP_Info GetPlayerInfo() { return m_tPlayerInfo; }
-
 public:
     void ClearStanceChange() { m_IsChangeStance = false; }
     void InputCrouch() { m_InpCrouch ? m_InpCrouch = false : m_InpCrouch = true; m_IsChangeStance = true; }
@@ -101,6 +104,10 @@ public:
     bool IsCrouch() { return m_InpCrouch; }
     bool IsAim() { return m_InpAim; }
     bool IsSprint() { return m_InpSprint; }
+
+    void AbleMouse() { m_ableMouse ? m_ableMouse = false : m_ableMouse = true; }
+    bool IsAbleMouse() { return m_ableMouse; }
+
 
     void InputMove(Vec2 _input) { m_moveDir += _input; }
     void InputMove(int _inputX, int _inputY) { m_moveDir += Vec2(_inputX, _inputY); }

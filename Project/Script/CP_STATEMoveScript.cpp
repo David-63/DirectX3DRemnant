@@ -204,7 +204,7 @@ void CP_STATEMoveScript::TranslateInput()
 	if (CP_FSMScript::ePlayerStance::Sprint == curStance)
 		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 1.8f;
 	else
-		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 0.3f;
+		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 0.15f;
 	
 	if (KEY_HOLD(KEY::W))
 	{
@@ -266,6 +266,6 @@ void CP_STATEMoveScript::Enter()
 
 void CP_STATEMoveScript::Exit()
 {
-	m_PHQ->ClearMoveDir();
+	//m_PHQ->ClearMoveDir();
 	m_prevDir = Vec2(0, 0);
 }

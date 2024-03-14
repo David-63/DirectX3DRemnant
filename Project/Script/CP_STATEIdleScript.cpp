@@ -121,7 +121,7 @@ void CP_STATEIdleScript::IdleMouseInput()
 
 void CP_STATEIdleScript::Enter()
 {
-	// 애니메이션 재생
+	//m_PHQ->ClearMoveDir();
 	CallAnimation();
 }
 

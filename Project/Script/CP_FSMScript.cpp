@@ -1,11 +1,12 @@
 #include "pch.h"
 #include "CP_FSMScript.h"
+#include "CP_MouseCtrlScript.h"
+#include <Engine/CRenderMgr.h>
 
 CP_FSMScript::CP_FSMScript()
 	: m_InpCrouch(false), m_InpAim(false), m_InpSprint(false), m_IsChangeStance(true)
-	, P_Stance(ePlayerStance::Normal)
+	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay), m_ableMouse(true)
 {
-	// 생성자 호출 이후에 GameObject에서 Owner 세팅해줌
 }
 
 CP_FSMScript::~CP_FSMScript()
@@ -51,50 +52,60 @@ void CP_FSMScript::begin()
 	GetOwner()->Animator3D()->Add(P_MoveR2Jog_FR);
 
 
+	// GetOwner()->Animator3D()->CompleteEvent(P_MoveR2Jog)
+
 	PlayAnimation(P_IdleR2, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));
+
+	m_MouseCtrl.SetOwner(this);
+	m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
 }
 
 void CP_FSMScript::tick()
 {
 	CC_FSMScript::tick();
 
-	m_Camera.tick();
+	m_MouseCtrl.tick();
+
+	// 상태 제어용 딜레이 타임
+	
 
 	if (m_IsChangeStance)
 	{
-		CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
-		// 우선순위로 스탠스 적용
-		if (m_InpSprint)
-		{
-			ChangeStance(ePlayerStance::Sprint);
-			curState->CallAnimation();			
-		}
-		else if (m_InpCrouch && m_InpAim)
-		{
-			ChangeStance(ePlayerStance::CrouchAim);
-			curState->CallAnimation();
-		}
-		else if (m_InpCrouch)
-		{
-			ChangeStance(ePlayerStance::Crouch);
-			curState->CallAnimation();
-		}
-		else if (m_InpAim)
-		{
-			ChangeStance(ePlayerStance::Aim);
-			curState->CallAnimation();
-		}
-		else
-		{
-			ChangeStance(ePlayerStance::Normal);
-			curState->CallAnimation();
-		}
+		m_StanceDelay.curTime += ScaleDT;
 
-		// 달리기 추가
-		// 회피 추가
-		
-		m_IsChangeStance = false;
+		if (m_StanceDelay.IsFinish())
+		{
+			m_StanceDelay.ResetTime();
+
+			CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
+			if (m_InpSprint)
+			{
+				ChangeStance(ePlayerStance::Sprint);
+				curState->CallAnimation();
+			}
+			else if (m_InpCrouch && m_InpAim)
+			{
+				ChangeStance(ePlayerStance::CrouchAim);
+				curState->CallAnimation();
+			}
+			else if (m_InpCrouch)
+			{
+				ChangeStance(ePlayerStance::Crouch);
+				curState->CallAnimation();
+			}
+			else if (m_InpAim)
+			{
+				ChangeStance(ePlayerStance::Aim);
+				curState->CallAnimation();
+			}
+			else
+			{
+				ChangeStance(ePlayerStance::Normal);
+				curState->CallAnimation();
+			}
+			m_IsChangeStance = false;
+		}
 	}
 }
 
@@ -105,10 +116,6 @@ void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 
 void CP_FSMScript::BeginOverlap(CCollider3D* _Other)
 {
-	// Ray -> CollisionMgr != BeginOverlap
-
-	// Ray -> EventMgr != AddEvent
-
 
 }
 
