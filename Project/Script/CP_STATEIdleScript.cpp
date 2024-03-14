@@ -117,7 +117,6 @@ void CP_STATEIdleScript::IdleMouseInput()
 
 void CP_STATEIdleScript::Enter()
 {
-	//m_PHQ->ClearMoveDir();
 	CallAnimation();
 }
 
