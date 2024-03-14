@@ -1,8 +1,12 @@
 #pragma once
 #include <Engine\CScript.h>
 
-class CCameraMoveScript :
-    public CScript
+// 마우스 움직임 감지
+
+// 카메라 제어
+
+
+class CCameraMoveScript : public CScript
 {
 private:
     float       m_fCamSpeed;

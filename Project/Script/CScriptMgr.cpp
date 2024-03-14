@@ -19,6 +19,7 @@
 #include "CPlayerScript.h"
 #include "CPlayerScriptFsm.h"
 #include "CP_FSMScript.h"
+#include "CP_MouseCtrlScript.h"
 #include "CP_STATEIdleScript.h"
 #include "CP_STATEMoveScript.h"
 #include "CP_StatesScript.h"
@@ -45,6 +46,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"CPlayerScriptFsm");
 	_vec.push_back(L"CP_FSMScript");
+	_vec.push_back(L"CP_MouseCtrlScript");
 	_vec.push_back(L"CP_STATEIdleScript");
 	_vec.push_back(L"CP_STATEMoveScript");
 	_vec.push_back(L"CP_StatesScript");
@@ -90,6 +92,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CPlayerScriptFsm;
 	if (L"CP_FSMScript" == _strScriptName)
 		return new CP_FSMScript;
+	if (L"CP_MouseCtrlScript" == _strScriptName)
+		return new CP_MouseCtrlScript;
 	if (L"CP_STATEIdleScript" == _strScriptName)
 		return new CP_STATEIdleScript;
 	if (L"CP_STATEMoveScript" == _strScriptName)
@@ -160,6 +164,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::P_FSMSCRIPT:
 		return new CP_FSMScript;
+		break;
+	case (UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT:
+		return new CP_MouseCtrlScript;
 		break;
 	case (UINT)SCRIPT_TYPE::P_STATEIDLESCRIPT:
 		return new CP_STATEIdleScript;
@@ -254,6 +261,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::P_FSMSCRIPT:
 		return L"CP_FSMScript";
+		break;
+
+	case SCRIPT_TYPE::P_MOUSECTRLSCRIPT:
+		return L"CP_MouseCtrlScript";
 		break;
 
 	case SCRIPT_TYPE::P_STATEIDLESCRIPT:

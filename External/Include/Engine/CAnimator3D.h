@@ -7,7 +7,7 @@
 #include "CMesh.h"
 #include "CAnimClip.h"
 
-#define BlendEndTime 0.32f
+#define BlendEndTime 0.22f
 
 
 struct Event
@@ -106,7 +106,7 @@ private:
 	vector<Matrix>				m_vecFinalBoneMat;			// .
 
 	// blend value
-	tTimeCtrl					m_blendTime;												
+	tTimeCtrl					m_blendTime;
 	int							m_prevFrameIdx;
 	float						m_blendRatio;
 

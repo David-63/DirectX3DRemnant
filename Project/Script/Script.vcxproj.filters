@@ -76,6 +76,9 @@
     <Filter Include="Script\Creature\Boss\B_States">
       <UniqueIdentifier>{499b86b2-2779-4840-9c91-a7e929e269e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Creature\Player\Module">
+      <UniqueIdentifier>{2681c8c5-5b64-48a8-86f8-ecab848f1cc6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -159,6 +162,9 @@
     <ClInclude Include="CB_StateScript.h">
       <Filter>Script\Creature\Boss\B_States</Filter>
     </ClInclude>
+    <ClInclude Include="CP_MouseCtrlScript.h">
+      <Filter>Script\Creature\Player\Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -241,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="CB_StateScript.cpp">
       <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_MouseCtrlScript.cpp">
+      <Filter>Script\Creature\Player\Module</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
