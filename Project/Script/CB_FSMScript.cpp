@@ -85,19 +85,6 @@ void CB_FSMScript::begin()
 	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BL) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BR) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 
-	GetOwner()->Animator3D()->CompleteEvent(B_Melee_Idle) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-
-
-	// ====================
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_FL) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_FR) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_F) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_B) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BL) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BR) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-
 	//GetOwner()->Animator3D()->CompleteEvent(B_Melee_Idle) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 
 	PlayAnim(B_Melee_Idle, true);

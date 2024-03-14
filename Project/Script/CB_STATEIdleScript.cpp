@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "CB_STATEIdleScript.h"
+#include "CB_FSMScript.h"
 
 CB_STATEIdleScript::CB_STATEIdleScript()
 {

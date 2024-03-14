@@ -6,7 +6,7 @@
 
 CB_STATEMoveScript::CB_STATEMoveScript()
 	: m_MoveTime(50.f)
-	, m_First(false)
+	, m_DirSetCount(0)
 {
 	SetStateType(static_cast<UINT>(eB_States::MOVE));
 }
@@ -42,47 +42,49 @@ void CB_STATEMoveScript::tick()
 		if (curDir == CB_FSMScript::eBossMoveDir::LF)
 		{
 			//m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::LF);
-			m_BHQ->SetPlaying(true);
+		
 			m_BHQ->PlayAnim(B_Walk_FL, false);
+			m_BHQ->SetPlaying(true);
+
 
 
 		}
 		else if (curDir == CB_FSMScript::eBossMoveDir::RF)
 		{
 			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::RF);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_FR, false);
+			m_BHQ->SetPlaying(true);
 		}
 		else if (curDir == CB_FSMScript::eBossMoveDir::F)
 		{
 			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::F);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_F, false);
+			m_BHQ->SetPlaying(true);
 
 		}
 		else if (curDir == CB_FSMScript::eBossMoveDir::B)
 		{
 			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::B);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_B, false);
+			m_BHQ->SetPlaying(true);
 
 		}
 		else if (curDir == CB_FSMScript::eBossMoveDir::LB)
 		{
 			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::LB);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_BL, false);
+			m_BHQ->SetPlaying(true);
 
 		}
 		else if (curDir == CB_FSMScript::eBossMoveDir::RB)
 		{
 			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::RB);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_BR, false);
+			m_BHQ->SetPlaying(true);
 
 		}
 
-		m_First = true;
+		
 	}
 
 	else if (m_MoveTime.IsFinish())// 시간이 다 됐다면
