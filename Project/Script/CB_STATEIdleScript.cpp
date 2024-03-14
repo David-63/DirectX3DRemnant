@@ -18,7 +18,10 @@ void CB_STATEIdleScript::Enter()
 
 void CB_STATEIdleScript::tick()
 {
-
+	if(KEY_TAP(KEY::_5))
+	{
+		m_BHQ->ChangeState(static_cast<UINT>(eB_States::MOVE));
+	}
 
 }
 
