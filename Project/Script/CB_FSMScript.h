@@ -113,7 +113,7 @@ public:
     eBossMoveDir GetMoveDir() { return B_MoveDir; }
     bool IsPlaying() { return m_bPlaying; }
 
-    void SetPlaying(bool _b) { _b = m_bPlaying; }
+    void SetPlaying(bool _b) { m_bPlaying = _b; }
 
     eBossMoveDir RandomDir_SomeExclude();
 

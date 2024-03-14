@@ -14,7 +14,8 @@ private:
     bool        m_IsMelee;
     bool        m_IsRanged;
     tTimeCtrl   m_MoveTime;
-    bool        m_First;
+ 
+    int         m_DirSetCount;
 
 
 public:
