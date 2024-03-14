@@ -22,6 +22,7 @@
 #include <Script/CPathFinderScript.h>
 #include <Script/CMonsterMoveScript.h>
 #include <Script/CP_FSMScript.h>
+#include <Script/CB_FSMScript.h>
 
 
 void CreateTestLevel()
@@ -119,13 +120,13 @@ void CreateTestLevel()
 		CGameObject* player = nullptr;
 
 		// 인스턴싱 테스트
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_IdleR2.mdat");
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Wasteland_Undying_Melee_Idle.mdat");
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_2RFusionReload.fbx");
 		player = pMeshData->Instantiate();
 		player->SetName(L"Obj");
 		player->MeshRender()->SetFrustumCheck(false);
 		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RFusionReload.animclip");
-		player->AddComponent(new CP_FSMScript());
+		player->AddComponent(new CB_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 	}
 }

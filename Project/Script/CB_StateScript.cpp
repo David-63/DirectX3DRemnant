@@ -5,6 +5,7 @@
 
 CB_StateScript::CB_StateScript()
 	: m_BStateType(eB_States::END)
+	//, m_EvadeCoolTime(5.f)
 {
 	SetName(L"CB_StatesScript");
 }

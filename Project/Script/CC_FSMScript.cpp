@@ -78,6 +78,7 @@ void CC_FSMScript::ChangeState(UINT _NextState)
 	if (!m_CurState)
 	{
 		m_CurState = inState;
+		m_CurState->Enter();
 		return;
 	}
 	// 다음 상태가 지금과 같은 경우
