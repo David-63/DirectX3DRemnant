@@ -106,8 +106,12 @@ void CKeyMgr::tick()
 
 		m_vMouseDir = m_vMousePos - m_vPrevMousePos;
 		m_vMouseDir.y *= -1;
-	}
 
+
+		// law input
+		
+	}
+	
 	// Window 가 focus 상태가 아니다
 	else
 	{
@@ -123,5 +127,35 @@ void CKeyMgr::tick()
 				m_vecKey[i].state = KEY_STATE::NONE;
 			}			 
 		}
+	}
+
+	Vec2 outInput(0, 0);
+	if (m_MouseRawInput.empty())
+		m_vMouseRawDir = outInput;
+	else
+	{
+		m_vMouseRawDir = m_MouseRawInput.front();
+		m_MouseRawInput.pop();
 	}	
+}
+
+void CKeyMgr::OnMouseRawInput(int _x, int _y)
+{
+	Vec2 prev;
+	Vec2 input((float)_x, (float)_y);
+	if (!m_MouseRawInput.empty())
+	{
+		prev = m_MouseRawInput.front();
+		// 이전이랑 입력이 다르면 초기화 해주고 갱신
+		if (prev != input)
+		{
+			while (!m_MouseRawInput.empty())
+			{
+				m_MouseRawInput.pop();
+			}
+			m_MouseRawInput.push(input);
+		}
+	}
+	// 입력이 없었으면 갱신
+	m_MouseRawInput.push(input);	
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include <queue>
 
 enum class KEY
 {
@@ -64,10 +65,17 @@ private:
 	Vec2				m_vPrevMousePos;
 	Vec2				m_vMouseDir;
 
+	std::queue<Vec2>	m_MouseRawInput;
+
+	Vec2				m_vMouseRawDir;
+
 public:
 	void init();
 	void tick();
 
+public:
+	void OnMouseRawInput(int _x, int _y);
+	Vec2 GetMouseRaw() { return m_vMouseRawDir; }
 
 public:
 	KEY_STATE GetKeyState(KEY _key) { return m_vecKey[(UINT)_key].state; }

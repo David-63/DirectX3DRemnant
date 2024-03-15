@@ -22,8 +22,6 @@ void CP_MouseCtrlScript::tick()
 	if (!m_PHQ->IsAbleMouse())
 		return;
 	
-	// 마우스 입력 받기
-	CalcMouseAxisInput();
 	// 카메라 이동 시키기
 	MoveCamera();
 
@@ -39,34 +37,8 @@ void CP_MouseCtrlScript::MouseRock()
 	int centerX = screenResoulution.x / 2;
 	int centerY = screenResoulution.y / 2;
 
-	RECT clip;
-	clip.left = centerX - 10;
-	clip.top = centerY - 10;
-	clip.right = centerX + 10;
-	clip.bottom = centerY + 10;
-
-
-	ClipCursor(&clip);
 	// 마우스 커서를 화면 중앙으로 재설정
-	//SetCursorPos(centerX, centerY);
-}
-
-void CP_MouseCtrlScript::CalcMouseAxisInput()
-{
-	// 현재 마우스 위치 얻기
-	POINT mousePos;
-	GetCursorPos(&mousePos);
-
-	Vec2 screenResoulution = CEngine::GetInst()->GetWindowResolution();
-
-	// 화면 중앙 좌표 계산
-	float centerX = screenResoulution.x / 2;
-	float centerY = screenResoulution.y / 2;
-
-	// 마우스의 상대적 이동량 계산(Caluclate the relative movement of the mouse)
-	float deltaX = mousePos.x - centerX;
-	float deltaY = mousePos.y - centerY;
-	m_PHQ->m_MouseAxisInput = Vec2(deltaX, deltaY);
+	SetCursorPos(centerX, centerY);
 }
 
 void CP_MouseCtrlScript::MoveCamera()
@@ -102,7 +74,10 @@ void CP_MouseCtrlScript::MoveCamera()
 
 	Vec3 getCamRot = m_ctrlCam->Transform()->GetRelativeRot();
 	Vec3 getObjRot = m_PHQ->Transform()->GetRelativeRot();
-	Vec2 mouseInput = m_PHQ->m_MouseAxisInput;
+	
+	Vec2 mouseInput = CKeyMgr::GetInst()->GetMouseRaw();
+	mouseInput.Normalize();
+
 	float deltaYaw = XMConvertToRadians(mouseInput.x * m_MouseSensitivity);
 	float deltaPitch = XMConvertToRadians(mouseInput.y * m_MouseSensitivity); // Y축 반전 처리
 	float xRot, yRot;

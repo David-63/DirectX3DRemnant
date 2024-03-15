@@ -24,7 +24,6 @@ public:
 
 public:
 	void MouseRock();
-	void CalcMouseAxisInput();
 	void MoveCamera();
 
 public:
