@@ -216,6 +216,11 @@ bool IsValidObj(CGameObject*& _Target)
 	return true;
 }
 
+float FloatLerp(float _begin, float _end, float ratio)
+{
+	return (1 - ratio) * _begin + ratio * _end;
+}
+
 
 
 const char* ToString(RES_TYPE type)

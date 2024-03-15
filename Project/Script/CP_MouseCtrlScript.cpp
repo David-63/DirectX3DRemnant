@@ -35,13 +35,20 @@ void CP_MouseCtrlScript::tick()
 void CP_MouseCtrlScript::MouseRock()
 {
 	Vec2 screenResoulution = CEngine::GetInst()->GetWindowResolution();
-
 	// 화면 중앙 좌표 계산
 	int centerX = screenResoulution.x / 2;
 	int centerY = screenResoulution.y / 2;
 
+	RECT clip;
+	clip.left = centerX - 10;
+	clip.top = centerY - 10;
+	clip.right = centerX + 10;
+	clip.bottom = centerY + 10;
+
+
+	ClipCursor(&clip);
 	// 마우스 커서를 화면 중앙으로 재설정
-	SetCursorPos(centerX, centerY);
+	//SetCursorPos(centerX, centerY);
 }
 
 void CP_MouseCtrlScript::CalcMouseAxisInput()
@@ -64,6 +71,21 @@ void CP_MouseCtrlScript::CalcMouseAxisInput()
 
 void CP_MouseCtrlScript::MoveCamera()
 {
+	Vec3 objPos = m_PHQ->Transform()->GetRelativePos();
+	Vec3 camF = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 camR = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
+	Vec3 camU = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::UP);
+
+	// y의 위치는 State, stance 마다 다를 수 있음
+	objPos.y += m_YPivot;
+
+
+	// x // 앞뒤로 // 위 아래  // z = 좌우로
+	Vec3 Point = objPos + camF * m_vCamOffset.x + camR * m_vCamOffset.z + camU * m_vCamOffset.y;
+	//Vec3 Point = objPos + camF + camR + camU;
+	m_ctrlCam->Transform()->SetRelativePos(Point);
+
+
 	CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(m_PHQ->GetCurState());
 	eP_States stateType = static_cast<eP_States>(curState->GetStateType());
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
@@ -75,7 +97,6 @@ void CP_MouseCtrlScript::MoveCamera()
 			|| CP_FSMScript::ePlayerStance::Crouch == curStance
 			|| CP_FSMScript::ePlayerStance::Dodge == curStance)
 			justRotCam = true;
-
 	}
 	
 
@@ -85,6 +106,7 @@ void CP_MouseCtrlScript::MoveCamera()
 	float deltaYaw = XMConvertToRadians(mouseInput.x * m_MouseSensitivity);
 	float deltaPitch = XMConvertToRadians(mouseInput.y * m_MouseSensitivity); // Y축 반전 처리
 	float xRot, yRot;
+
 	if (justRotCam)
 	{
 		xRot = getCamRot.x + deltaPitch;
@@ -102,18 +124,6 @@ void CP_MouseCtrlScript::MoveCamera()
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
 
-	Vec3 objPos = m_PHQ->Transform()->GetRelativePos();
-	Vec3 camF = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-	Vec3 camR = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
-	Vec3 camU = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::UP);
 	
-	// y의 위치는 State, stance 마다 다를 수 있음
-	objPos.y += m_YPivot;
-
-
-	// x // 앞뒤로 // 위 아래  // z = 좌우로
-	Vec3 Point = objPos + camF * m_vCamOffset.x + camR * m_vCamOffset.z + camU * m_vCamOffset.y;
-	//Vec3 Point = objPos + camF + camR + camU;
-	m_ctrlCam->Transform()->SetRelativePos(Point);
 
 }

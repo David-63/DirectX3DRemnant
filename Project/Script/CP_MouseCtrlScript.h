@@ -11,6 +11,13 @@ private:
 	Vec3			m_vCamOffset;		// 상대 좌표
 	float			m_YPivot;			// 카메라 중심 좌표
 	float			m_MouseSensitivity;
+
+
+private:
+	float			m_prevX;
+	float			m_prevY;
+
+
 public:
 	virtual void tick() override;
 

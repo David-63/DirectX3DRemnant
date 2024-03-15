@@ -94,7 +94,7 @@ void CreateTestLevel()
 
 		pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 		pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::CUBE);
-		pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\SkyWater.dds"));
+		pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\skybox.dds"));
 
 		SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 	}
@@ -120,13 +120,13 @@ void CreateTestLevel()
 		CGameObject* player = nullptr;
 
 		// 인스턴싱 테스트
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Wasteland_Undying_Melee_Idle.mdat");
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_IdleR2.mdat");
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_2RFusionReload.fbx");
 		player = pMeshData->Instantiate();
 		player->SetName(L"Obj");
 		player->MeshRender()->SetFrustumCheck(false);
 		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RFusionReload.animclip");
-		player->AddComponent(new CB_FSMScript());
+		player->AddComponent(new CP_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 	}
 }
