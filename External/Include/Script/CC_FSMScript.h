@@ -51,6 +51,7 @@ public:
     void AddState(CC_StatesScript* _State);
     CC_StatesScript* FindStateScript(UINT _State);
     CC_StatesScript* GetCurState() { return m_CurState; }
+    UINT GetCurStateType() { return m_CurState->GetStateType(); }
     void ChangeState(UINT _NextState);
 
 

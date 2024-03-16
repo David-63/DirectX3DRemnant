@@ -217,7 +217,7 @@ bool IsValidObj(CGameObject*& _Target)
 }
 
 float FloatLerp(float _begin, float _end, float ratio)
-{
+{	
 	return (1 - ratio) * _begin + ratio * _end;
 }
 

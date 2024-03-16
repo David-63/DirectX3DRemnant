@@ -63,9 +63,15 @@ public:
     };
 
 private:
+    // 카메라
+    CP_MouseCtrlScript  m_MouseCtrl;
+
+    // 스텟
     tP_Info             m_tPlayerInfo;
 
+    // 상태
     ePlayerStance       P_Stance;
+    ePlayerStance       P_PrevStance;
     tTimeCtrl           m_StanceDelay;
 
     // 토글 입력
@@ -78,8 +84,6 @@ private:
     // 방향
     Vec2                m_moveDir;
 
-    // 카메라
-    CP_MouseCtrlScript  m_MouseCtrl;
 public:
     Vec2                m_MouseAxisInput;
 
@@ -88,6 +92,9 @@ public:
     virtual void begin() override;
     virtual void tick() override;
 
+private:
+    void stanceControl();
+
 public:
     void PlayAnimation(wstring _name, bool _repeat);
 
@@ -95,6 +102,7 @@ public:
 public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
     ePlayerStance GetStance() { return P_Stance; }
+    ePlayerStance GetPrevStance() { return P_PrevStance; }
     tP_Info GetPlayerInfo() { return m_tPlayerInfo; }
 public:
     void ClearStanceChange() { m_IsChangeStance = false; }
