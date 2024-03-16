@@ -71,7 +71,6 @@ void CP_FSMScript::tick()
 
 void CP_FSMScript::stanceControl()
 {
-	P_PrevStance = P_Stance;
 	if (m_IsChangeStance)
 	{
 		m_StanceDelay.curTime += ScaleDT;

@@ -104,28 +104,19 @@ void CP_MouseCtrlScript::MoveCameraRot()
 	xCamRot = getCamRot.x + deltaPitch;
 	m_PrevCamRotY = getCamRot.y + deltaYaw;
 	yObjRot = getObjRot.y + deltaYaw;
-	// state::idle
+	
 	if (justRotCam)
 	{
 		Vec3 outCamEuler = Vec3(xCamRot, m_PrevCamRotY, (int)0);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
-	// state::move || stance::Aim
 	else
 	{
-		// 카메라와 오브젝트는 오브젝트의 회전값으로 세팅함
-
-		// 위에서는 카메라의 회전값으로 둘러보다가 Aim 상태로 바꿀때 카메라의 회전값을 임시로 넘겨받는 기능이 필요함
 		Vec3 outObjEuler = Vec3(0, yObjRot, (int)0);
 		Vec3 outCamEuler = Vec3(xCamRot, yObjRot + XM_PI, (int)0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
-}
-
-void CP_MouseCtrlScript::OverrideObjRotY()
-{
-	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_PrevCamRotY + XM_PI, 0.f));
 }
 
 void CP_MouseCtrlScript::MouseRock()
@@ -137,4 +128,9 @@ void CP_MouseCtrlScript::MouseRock()
 
 	// 마우스 커서를 화면 중앙으로 재설정
 	SetCursorPos(centerX, centerY);
+}
+
+void CP_MouseCtrlScript::OverrideObjRotY()
+{
+	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_PrevCamRotY + XM_PI, 0.f));
 }
