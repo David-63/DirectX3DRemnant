@@ -18,7 +18,7 @@ private:
 	CCamera*		m_ctrlCam;
 	Vec3			m_vCamOffset;		// »ó´ë ÁÂÇ¥
 	float			m_MouseSensitivity;
-
+	float			m_PrevCamRotY;
 
 private:
 	bool			m_IsChangeStance;
@@ -38,6 +38,7 @@ private:
 
 
 public:
+	virtual void begin() override;
 	virtual void tick() override;
 
 
@@ -45,6 +46,7 @@ public:
 	void MouseRock();
 	void MoveCameraPos();
 	void MoveCameraRot();
+	void OverrideObjRotY();
 
 public:
 	void SetOwner(CP_FSMScript* _owner) { m_PHQ = _owner; }

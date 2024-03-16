@@ -59,6 +59,7 @@ void CP_FSMScript::begin()
 
 	m_MouseCtrl.SetOwner(this);
 	m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
+	m_MouseCtrl.begin();
 }
 
 void CP_FSMScript::tick()
@@ -93,6 +94,7 @@ void CP_FSMScript::stanceControl()
 				curState->CallAnimation();
 				m_MouseCtrl.SetPivot(PIVOT_MIDDLE);
 				m_MouseCtrl.SetFov(FOV_LOW);				
+				m_MouseCtrl.OverrideObjRotY();
 			}
 			else if (m_InpCrouch)
 			{
@@ -107,6 +109,7 @@ void CP_FSMScript::stanceControl()
 				curState->CallAnimation();
 				m_MouseCtrl.SetPivot(PIVOT_HIGH);
 				m_MouseCtrl.SetFov(FOV_LOW);
+				m_MouseCtrl.OverrideObjRotY();
 			}
 			else
 			{

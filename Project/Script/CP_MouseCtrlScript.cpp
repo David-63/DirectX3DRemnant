@@ -7,11 +7,16 @@
 CP_MouseCtrlScript::CP_MouseCtrlScript()
 	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr), m_curPivot(PIVOT_HIGH), m_curFov(FOV_HIGH)	
 , m_MouseSensitivity(0.4f), m_vCamOffset{ -200.f, 5.f, 45.f }, m_PivotBlend(0.5f), m_FovBlend(0.5f), m_IsChangeStance(false)
-{
+{	
 }
 
 CP_MouseCtrlScript::~CP_MouseCtrlScript()
 {
+}
+
+void CP_MouseCtrlScript::begin()
+{
+	m_ctrlCam->Transform()->SetRelativeRot(Vec3(0.f, XM_PI, 0.f));
 }
 
 void CP_MouseCtrlScript::tick()
@@ -94,26 +99,33 @@ void CP_MouseCtrlScript::MoveCameraRot()
 
 	float deltaYaw = XMConvertToRadians(mouseInput.x * m_MouseSensitivity);
 	float deltaPitch = XMConvertToRadians(mouseInput.y * m_MouseSensitivity); // Y축 반전 처리
-	float xRot, yRot;
+	float xCamRot, yObjRot;
 
+	xCamRot = getCamRot.x + deltaPitch;
+	m_PrevCamRotY = getCamRot.y + deltaYaw;
+	yObjRot = getObjRot.y + deltaYaw;
 	// state::idle
 	if (justRotCam)
 	{
-		xRot = getCamRot.x + deltaPitch;
-		yRot = getCamRot.y + deltaYaw;
-		Vec3 outCamEuler = Vec3(xRot, yRot, (int)0);
+		Vec3 outCamEuler = Vec3(xCamRot, m_PrevCamRotY, (int)0);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
 	// state::move || stance::Aim
 	else
 	{
-		xRot = getCamRot.x + deltaPitch;
-		yRot = getObjRot.y + deltaYaw;
-		Vec3 outObjEuler = Vec3(0, yRot, (int)0);
-		Vec3 outCamEuler = Vec3(xRot, yRot + XM_PI, (int)0);
+		// 카메라와 오브젝트는 오브젝트의 회전값으로 세팅함
+
+		// 위에서는 카메라의 회전값으로 둘러보다가 Aim 상태로 바꿀때 카메라의 회전값을 임시로 넘겨받는 기능이 필요함
+		Vec3 outObjEuler = Vec3(0, yObjRot, (int)0);
+		Vec3 outCamEuler = Vec3(xCamRot, yObjRot + XM_PI, (int)0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
+}
+
+void CP_MouseCtrlScript::OverrideObjRotY()
+{
+	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_PrevCamRotY + XM_PI, 0.f));
 }
 
 void CP_MouseCtrlScript::MouseRock()
