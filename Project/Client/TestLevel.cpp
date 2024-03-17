@@ -94,7 +94,7 @@ void CreateTestLevel()
 
 		pSkyBox->Transform()->SetRelativeScale(Vec3(100.f, 100.f, 100));
 		pSkyBox->SkyBox()->SetSkyBoxType(SKYBOX_TYPE::CUBE);
-		pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\skybox.dds"));
+		pSkyBox->SkyBox()->SetSkyBoxTexture(CResMgr::GetInst()->FindRes<CTexture>(L"texture\\skybox\\SkyWater.dds"));
 
 		SpawnGameObject(pSkyBox, Vec3(0.f, 0.f, 0.f), 0);
 	}
@@ -119,14 +119,20 @@ void CreateTestLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* player = nullptr;
 
-		// 인스턴싱 테스트
 		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_IdleR2.mdat");
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_2RFusionReload.fbx");
 		player = pMeshData->Instantiate();
-		player->SetName(L"Obj");
-		player->MeshRender()->SetFrustumCheck(false);
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\HuntingRifle.mdat");
 		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RFusionReload.animclip");
+		player->SetName(L"Player");
+		player->MeshRender()->SetFrustumCheck(false);
 		player->AddComponent(new CP_FSMScript());
+		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
+
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\HuntingRifle.mdat");
+		player = pMeshData->InstMesh();
+		player->SetName(L"LongGun");
+		player->MeshRender()->SetFrustumCheck(false);
+
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 	}
 }

@@ -21,6 +21,7 @@ public:
 	virtual int Load(const wstring& _strFilePath) override;
 
 	CGameObject* Instantiate();
+	CGameObject* InstMesh();		// Animator를 생성을 강제로 막는 버전
 
 	CLONE_DISABLE(CMeshData)
 public:

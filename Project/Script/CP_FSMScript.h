@@ -98,7 +98,7 @@ private:
 
 public:
     void PlayAnimation(wstring _name, bool _repeat);
-
+    void OverrideObjRotY() { m_MouseCtrl.OverrideObjRotY(); }
 
 public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }

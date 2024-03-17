@@ -6,7 +6,7 @@
 
 CP_MouseCtrlScript::CP_MouseCtrlScript()
 	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr), m_curPivot(PIVOT_HIGH), m_curFov(FOV_HIGH)	
-, m_MouseSensitivity(0.4f), m_vCamOffset{ -200.f, 5.f, 45.f }, m_PivotBlend(0.5f), m_FovBlend(0.5f), m_IsChangeStance(false)
+, m_MouseSensitivity(1.24f), m_vCamOffset{ -300.f, 5.f, 55.f }, m_PivotBlend(0.5f), m_FovBlend(0.5f), m_IsChangeStance(false)
 {	
 }
 

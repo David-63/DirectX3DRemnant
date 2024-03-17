@@ -41,6 +41,22 @@ CGameObject* CMeshData::Instantiate()
 	return pNewObj;
 }
 
+CGameObject* CMeshData::InstMesh()
+{
+	CGameObject* pNewObj = new CGameObject;
+	pNewObj->AddComponent(new CTransform);
+	pNewObj->AddComponent(new CMeshRender);
+	pNewObj->MeshRender()->SetMeshData(this);
+	pNewObj->MeshRender()->SetMesh(m_pMesh);
+
+	for (UINT i = 0; i < m_vecMtrl.size(); ++i)
+	{
+		pNewObj->MeshRender()->SetMaterial(m_vecMtrl[i], i);
+	}
+
+	return pNewObj;
+}
+
 
 CMeshData* CMeshData::LoadFromFBX(const wstring& _strPath)
 {

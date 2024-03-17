@@ -123,4 +123,5 @@ void CP_STATEIdleScript::Enter()
 void CP_STATEIdleScript::Exit()
 {
 	ClearIdleState();
+	m_PHQ->OverrideObjRotY();
 }
