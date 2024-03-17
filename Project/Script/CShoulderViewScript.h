@@ -21,7 +21,7 @@ private:
     VIEW_STATE  m_eViewState;
 
     CGameObject* m_Target;
-    Vector3      m_vCamPivot;
+    Vector3      m_vCamOffset;
 
 
     bool        m_firstTick;

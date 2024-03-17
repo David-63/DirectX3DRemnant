@@ -11,11 +11,10 @@ private:
     int         m_horizontal;
     int         m_vertical;
 
-public:
-    virtual void tick() override;
 
 public:
-    virtual void Enter() override;
+    virtual void Enter() override; 
+    virtual void tick() override;
     virtual void Exit() override;
 
 public:

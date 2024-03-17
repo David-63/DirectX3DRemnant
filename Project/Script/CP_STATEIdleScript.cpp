@@ -15,10 +15,6 @@ CP_STATEIdleScript::~CP_STATEIdleScript()
 
 void CP_STATEIdleScript::tick()
 {
-
-	// 입력 받기
-	IdleMouseInput();
-	
 	if (KEY_TAP(KEY::RBTN))
 	{
 		m_PHQ->InputAim();
@@ -29,29 +25,46 @@ void CP_STATEIdleScript::tick()
 	}
 	if (KEY_TAP(KEY::W))
 	{
-		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::F);
+		m_PHQ->InputMove(0, 1.f);
 	}
 	if (KEY_TAP(KEY::S))
 	{
-		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::B);
+		m_PHQ->InputMove(0, -1.f);
 	}
 	if (KEY_TAP(KEY::A))
 	{
-		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::L);
+		m_PHQ->InputMove(-1.f, 0);
 	}
 	if (KEY_TAP(KEY::D))
 	{
-		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::R);
+		m_PHQ->InputMove(1.f, 0);
 	}
-	if (KEY_TAP(KEY::SPACE))
+	if (KEY_RELEASE(KEY::W))
+	{
+		m_PHQ->InputMove(0, -1.f);
+	}
+	if (KEY_RELEASE(KEY::S))
+	{
+		m_PHQ->InputMove(0, 1.f);
+	}
+	if (KEY_RELEASE(KEY::D))
+	{
+		m_PHQ->InputMove(-1.f, 0);
+	}
+	if (KEY_RELEASE(KEY::A))
+	{
+		m_PHQ->InputMove(1.f, 0);
+	}
+
+	Vec2 moveDir = m_PHQ->GetMoveDir();
+
+	if (Vec2(0, 0) != moveDir)
+		m_isMove = true;
+
+	/*if (KEY_TAP(KEY::SPACE))
 	{
 		m_isMove = true;
-		m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::N);
-	}
+	}*/
 	
 
 	// 상태 변경해주기
@@ -61,9 +74,26 @@ void CP_STATEIdleScript::tick()
 	}	
 }
 
-void CP_STATEIdleScript::MoveInput()
+void CP_STATEIdleScript::CallAnimation()
 {
+	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 
+	if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+	{
+		m_PHQ->PlayAnimation(P_IdleR2AimCrouch, true);
+	}
+	else if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+	{
+		m_PHQ->PlayAnimation(P_IdleR2Crouch, true);
+	}
+	else if (CP_FSMScript::ePlayerStance::Aim == curStance)
+	{
+		m_PHQ->PlayAnimation(P_IdleR2Aim, true);
+	}
+	else if (CP_FSMScript::ePlayerStance::Normal == curStance)
+	{
+		m_PHQ->PlayAnimation(P_IdleR2, true);
+	}
 }
 
 void CP_STATEIdleScript::IdleMouseInput()
@@ -85,70 +115,10 @@ void CP_STATEIdleScript::IdleMouseInput()
 	m_vertical = mousePos.y - centerY;
 }
 
-void CP_STATEIdleScript::IdleNormalInput()
-{
-	// 스텐스 변경
-	
-	// Move Input
-	MoveInput();
-}
-
-void CP_STATEIdleScript::IdleAimInput()
-{
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-	
-	if (KEY_TAP(KEY::LBTN))
-	{
-		// 사격
-	}
-
-	if (KEY_RELEASE(KEY::RBTN))
-	{
-		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
-			m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Crouch);
-		else
-			m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Normal);
-	}
-	
-	if (KEY_TAP(KEY::LCTRL))
-	{
-		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::CrouchAim);
-	}
-	MoveInput();
-}
-
-void CP_STATEIdleScript::IdleCrouchInput()
-{	
-}
-
-void CP_STATEIdleScript::IdleCrouchAimInput()
-{
-	if (KEY_TAP(KEY::LBTN))
-	{
-		// 사격
-	}
-
-	if (KEY_RELEASE(KEY::RBTN))
-	{
-		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Crouch);
-	}
-	if (KEY_RELEASE(KEY::LCTRL))
-	{
-		m_PHQ->ChangeStance(CP_FSMScript::ePlayerStance::Aim);
-	}
-	MoveInput();
-}
-
 void CP_STATEIdleScript::Enter()
 {
-	// 애니메이션 재생
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-
-	if (CP_FSMScript::ePlayerStance::Crouch == curStance
-		|| CP_FSMScript::ePlayerStance::CrouchAim == curStance)
-		m_PHQ->PlayAnimation(AnimIdleCrouch, true);
-	else
-		m_PHQ->PlayAnimation(AnimIdleStand, true);
+	//m_PHQ->ClearMoveDir();
+	CallAnimation();
 }
 
 void CP_STATEIdleScript::Exit()

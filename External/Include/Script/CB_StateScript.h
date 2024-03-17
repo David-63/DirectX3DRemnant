@@ -6,7 +6,7 @@ enum class eB_States
 {
 	IDLE,
 	MOVE,
-	Ranged, // 원거리 공격
+	RANGED, // 원거리 공격
 	MELEE, // 근접 공격
 	DAMAGED,
 	DEAD,

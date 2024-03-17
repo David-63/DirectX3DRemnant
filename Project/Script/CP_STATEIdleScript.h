@@ -15,15 +15,13 @@ public:
 
 
 public:
-    void MoveInput();
+    virtual void CallAnimation() override;
+
+
+public:
     void IdleMouseInput();
 
 public:
-    void IdleNormalInput();
-    void IdleAimInput();
-    void IdleCrouchInput();
-    void IdleCrouchAimInput();
-
     void ClearIdleState() { m_isMove = false; m_isMelee = false; }
 
 public:
