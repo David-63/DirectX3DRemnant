@@ -76,7 +76,6 @@ void CRigidBody::finaltick()
 {
 
 	DrawDebugMesh();
-
 }
 void CRigidBody::Destroy()
 {
@@ -400,6 +399,11 @@ void CRigidBody::AddForce(const Vector3& _force)
 		GetOwner()->Transform()->GetPhysicsPosition(),
 		physx::PxForceMode::eFORCE
 	);
+}
+
+void CRigidBody::SetSleep(bool _isSleep)
+{
+	GetActor()->setActorFlag(PxActorFlag::eDISABLE_SIMULATION, _isSleep);
 }
 
 

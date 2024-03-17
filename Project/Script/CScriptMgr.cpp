@@ -9,11 +9,16 @@
 #include "CCharacterMoveScript.h"
 #include "CC_FSMScript.h"
 #include "CC_StatesScript.h"
+#include "CHitBoxScript.h"
 #include "CIdleStateScript.h"
 #include "CMonsterMoveScript.h"
 #include "CM_Lurker_FSMScript.h"
 #include "CM_Lurker_StatesScript.h"
+#include "CM_Lurker_STATE_Damaged_Script.h"
+#include "CM_Lurker_STATE_Dead_Script.h"
 #include "CM_Lurker_STATE_Idle_Script.h"
+#include "CM_Lurker_STATE_Melee_Script.h"
+#include "CM_Lurker_STATE_Move_Script.h"
 #include "CPathFinderScript.h"
 #include "CPlayerScript.h"
 #include "CPlayerScriptFsm.h"
@@ -34,11 +39,17 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CCharacterMoveScript");
 	_vec.push_back(L"CC_FSMScript");
 	_vec.push_back(L"CC_StatesScript");
+	_vec.push_back(L"CHitBoxScript");
 	_vec.push_back(L"CIdleStateScript");
 	_vec.push_back(L"CMonsterMoveScript");
 	_vec.push_back(L"CM_Lurker_FSMScript");
 	_vec.push_back(L"CM_Lurker_StatesScript");
+	_vec.push_back(L"CM_Lurker_STATE_Damaged_Script");
+	_vec.push_back(L"CM_Lurker_STATE_Dead_Script");
 	_vec.push_back(L"CM_Lurker_STATE_Idle_Script");
+	_vec.push_back(L"CM_Lurker_STATE_Melee_Script");
+	_vec.push_back(L"CM_Lurker_STATE_Move_Script");
+	_vec.push_back(L"CM_Lurker_STATE_Sleep_Script");
 	_vec.push_back(L"CPathFinderScript");
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"CPlayerScriptFsm");
@@ -68,6 +79,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CC_FSMScript;
 	if (L"CC_StatesScript" == _strScriptName)
 		return new CC_StatesScript;
+	if (L"CHitBoxScript" == _strScriptName)
+		return new CHitBoxScript;
 	if (L"CIdleStateScript" == _strScriptName)
 		return new CIdleStateScript;
 	if (L"CMonsterMoveScript" == _strScriptName)
@@ -76,8 +89,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CM_Lurker_FSMScript;
 	if (L"CM_Lurker_StatesScript" == _strScriptName)
 		return new CM_Lurker_StatesScript;
+	if (L"CM_Lurker_STATE_Damaged_Script" == _strScriptName)
+		return new CM_Lurker_STATE_Damaged_Script;
+	if (L"CM_Lurker_STATE_Dead_Script" == _strScriptName)
+		return new CM_Lurker_STATE_Dead_Script;
 	if (L"CM_Lurker_STATE_Idle_Script" == _strScriptName)
 		return new CM_Lurker_STATE_Idle_Script;
+	if (L"CM_Lurker_STATE_Melee_Script" == _strScriptName)
+		return new CM_Lurker_STATE_Melee_Script;
+	if (L"CM_Lurker_STATE_Move_Script" == _strScriptName)
+		return new CM_Lurker_STATE_Move_Script;
 	if (L"CPathFinderScript" == _strScriptName)
 		return new CPathFinderScript;
 	if (L"CPlayerScript" == _strScriptName)
@@ -127,6 +148,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::C_STATESSCRIPT:
 		return new CC_StatesScript;
 		break;
+	case (UINT)SCRIPT_TYPE::HITBOXSCRIPT:
+		return new CHitBoxScript;
+		break;
 	case (UINT)SCRIPT_TYPE::IDLESTATESCRIPT:
 		return new CIdleStateScript;
 		break;
@@ -139,8 +163,20 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::M_LURKER_STATESSCRIPT:
 		return new CM_Lurker_StatesScript;
 		break;
+	case (UINT)SCRIPT_TYPE::M_LURKER_STATE_DAMAGED_SCRIPT:
+		return new CM_Lurker_STATE_Damaged_Script;
+		break;
+	case (UINT)SCRIPT_TYPE::M_LURKER_STATE_DEAD_SCRIPT:
+		return new CM_Lurker_STATE_Dead_Script;
+		break;
 	case (UINT)SCRIPT_TYPE::M_LURKER_STATE_IDLE_SCRIPT:
 		return new CM_Lurker_STATE_Idle_Script;
+		break;
+	case (UINT)SCRIPT_TYPE::M_LURKER_STATE_MELEE_SCRIPT:
+		return new CM_Lurker_STATE_Melee_Script;
+		break;
+	case (UINT)SCRIPT_TYPE::M_LURKER_STATE_MOVE_SCRIPT:
+		return new CM_Lurker_STATE_Move_Script;
 		break;
 	case (UINT)SCRIPT_TYPE::PATHFINDERSCRIPT:
 		return new CPathFinderScript;
@@ -209,6 +245,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CC_StatesScript";
 		break;
 
+	case SCRIPT_TYPE::HITBOXSCRIPT:
+		return L"CHitBoxScript";
+		break;
+
 	case SCRIPT_TYPE::IDLESTATESCRIPT:
 		return L"CIdleStateScript";
 		break;
@@ -225,8 +265,24 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CM_Lurker_StatesScript";
 		break;
 
+	case SCRIPT_TYPE::M_LURKER_STATE_DAMAGED_SCRIPT:
+		return L"CM_Lurker_STATE_Damaged_Script";
+		break;
+
+	case SCRIPT_TYPE::M_LURKER_STATE_DEAD_SCRIPT:
+		return L"CM_Lurker_STATE_Dead_Script";
+		break;
+
 	case SCRIPT_TYPE::M_LURKER_STATE_IDLE_SCRIPT:
 		return L"CM_Lurker_STATE_Idle_Script";
+		break;
+
+	case SCRIPT_TYPE::M_LURKER_STATE_MELEE_SCRIPT:
+		return L"CM_Lurker_STATE_Melee_Script";
+		break;
+
+	case SCRIPT_TYPE::M_LURKER_STATE_MOVE_SCRIPT:
+		return L"CM_Lurker_STATE_Move_Script";
 		break;
 
 	case SCRIPT_TYPE::M_LURKER_STATE_SLEEP_SCRIPT:

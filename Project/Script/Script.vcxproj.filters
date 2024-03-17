@@ -76,6 +76,9 @@
     <Filter Include="Script\Creature\Boss\B_States">
       <UniqueIdentifier>{499b86b2-2779-4840-9c91-a7e929e269e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\System\HitBox">
+      <UniqueIdentifier>{cf1fc889-5049-46f6-b59f-748e3433d697}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -144,9 +147,6 @@
     <ClInclude Include="CM_Lurker_STATE_Idle_Script.h">
       <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClInclude>
-    <ClInclude Include="CM_Lurker_STATE_Sleep_Script.h">
-      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
-    </ClInclude>
     <ClInclude Include="CB_FSMScript.h">
       <Filter>Script\Creature\Boss\B_FSM</Filter>
     </ClInclude>
@@ -158,6 +158,21 @@
     </ClInclude>
     <ClInclude Include="CB_StateScript.h">
       <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_STATE_Melee_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_STATE_Move_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_STATE_Damaged_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Lurker_STATE_Dead_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClInclude>
+    <ClInclude Include="CHitBoxScript.h">
+      <Filter>Script\System\HitBox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -227,9 +242,6 @@
     <ClCompile Include="CM_Lurker_STATE_Idle_Script.cpp">
       <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClCompile>
-    <ClCompile Include="CM_Lurker_STATE_Sleep_Script.cpp">
-      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
-    </ClCompile>
     <ClCompile Include="CB_FSMScript.cpp">
       <Filter>Script\Creature\Boss\B_FSM</Filter>
     </ClCompile>
@@ -241,6 +253,21 @@
     </ClCompile>
     <ClCompile Include="CB_StateScript.cpp">
       <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_STATE_Melee_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_STATE_Move_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_STATE_Damaged_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Lurker_STATE_Dead_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+    </ClCompile>
+    <ClCompile Include="CHitBoxScript.cpp">
+      <Filter>Script\System\HitBox</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

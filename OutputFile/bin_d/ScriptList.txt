@@ -6,11 +6,16 @@ CCameraMoveScript
 CCharacterMoveScript
 CC_FSMScript
 CC_StatesScript
+CHitBoxScript
 CIdleStateScript
 CMonsterMoveScript
 CM_Lurker_FSMScript
 CM_Lurker_StatesScript
+CM_Lurker_STATE_Damaged_Script
+CM_Lurker_STATE_Dead_Script
 CM_Lurker_STATE_Idle_Script
+CM_Lurker_STATE_Melee_Script
+CM_Lurker_STATE_Move_Script
 CM_Lurker_STATE_Sleep_Script
 CPathFinderScript
 CPlayerScript

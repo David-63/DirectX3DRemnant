@@ -338,9 +338,12 @@ enum class AXIS3D_TYPE
 
 enum class LAYER_TYPE
 {
-	Ground,
+	Default,
 	Player,
 	Monster,
+	Ground,
 	Wall,
+	HitBoxPlayer,
+	HitBoxMonster,
 	END,
 };

@@ -21,6 +21,8 @@
 #include <Script/CCharacterMoveScript.h>
 #include <Script/CPathFinderScript.h>
 #include <Script/CMonsterMoveScript.h>
+#include <Script/CM_Lurker_FSMScript.h>
+#include <Script/CHitBoxScript.h>
 
 
 void CreateTestLevel()
@@ -30,19 +32,21 @@ void CreateTestLevel()
 	pCurLevel->SetName(L"TestLevel");
 
 	// Layer 이름설정
-	pCurLevel->GetLayer(0)->SetName(L"Default");
+	pCurLevel->GetLayer((UINT)LAYER_TYPE::Default)->SetName(L"Default");
 	pCurLevel->GetLayer((UINT)LAYER_TYPE::Player)->SetName(L"Player");
 	pCurLevel->GetLayer((UINT)LAYER_TYPE::Monster)->SetName(L"Monster");
 	pCurLevel->GetLayer((UINT)LAYER_TYPE::Wall)->SetName(L"Wall");
 	pCurLevel->GetLayer(4)->SetName(L"Background");
-	pCurLevel->GetLayer(5)->SetName(L"Ground");
+	pCurLevel->GetLayer((UINT)LAYER_TYPE::Ground)->SetName(L"Ground");
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
-	CCollisionMgr::GetInst()->SetColLayer(1, 2);
-	CCollisionMgr::GetInst()->SetColLayer(1, 3);
-	CCollisionMgr::GetInst()->SetColLayer(2, 3);
-	CCollisionMgr::GetInst()->SetColLayer(1, 5);
-	CCollisionMgr::GetInst()->SetColLayer(2, 5);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Player, (UINT)LAYER_TYPE::Monster);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Player, (UINT)LAYER_TYPE::Ground);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Monster, (UINT)LAYER_TYPE::Ground);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Player, (UINT)LAYER_TYPE::Wall);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Monster, (UINT)LAYER_TYPE::Wall);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Player, (UINT)LAYER_TYPE::HitBoxMonster);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Monster, (UINT)LAYER_TYPE::HitBoxPlayer);
 
 	// camera
 
@@ -64,7 +68,7 @@ void CreateTestLevel()
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
 	pMainCam->Camera()->SetFar(20000.f);
-	SpawnGameObject(pMainCam, Vec3(200.f, 133.f, -500.f), 0);
+	SpawnGameObject(pMainCam, Vec3(0.f, 300.f, -1500.f), 0);
 
 	// UI cameara
 	CGameObject* pUICam = new CGameObject;
@@ -82,13 +86,36 @@ void CreateTestLevel()
 	//
 
 	//애니메이션 로드
+	
+	/*{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Turn90_L.fbx");
+		CGameObject* obj = data->Instantiate();
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Turn90_L.animclip");
+		
+	}*/
+	/*{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Turn90_R.fbx");
+		CGameObject* obj = data->Instantiate();
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Turn90_R.animclip");
+		
+	}*/
 	{
-		//Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker_Alert_01.fbx");
-		//CGameObject* obj = data->Instantiate();
-		//obj->Animator3D()->
-		
-		
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Atk_Slash_R.fbx");
+		CGameObject* obj = data->Instantiate();
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R.animclip");
+
 	}
+	{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.fbx");
+		CGameObject* obj = data->Instantiate();
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.animclip");
+		obj->SetName(L"TestObj");
+		obj->AddComponent(new CM_Lurker_FSMScript);
+		obj->AddComponent(new CHitBoxScript);
+
+		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
+	}
+	
 
 	// SkyBox 추가
 	{
@@ -125,17 +152,17 @@ void CreateTestLevel()
 	
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* player = nullptr;
-		
+
 		// 인스턴싱 테스트
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
 		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
 		player = pMeshData->Instantiate();
 		player->AddComponent(new CTestScript());
-		
+
 		player->SetName(L"Player");
 		player->Transform()->SetDebugSphereUse(true);
-		player->SetLayerIdx(2);
+		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
 		player->Transform()->SetRelativePos(Vec3(-1040.f, 0.f, 800.f));
 		player->AddComponent(new CRigidBody);
 
@@ -164,16 +191,16 @@ void CreateTestLevel()
 		int num = player->RigidBody()->GetRigidActor()->getNbShapes();
 		player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
 		player->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-		player->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
-		
+		player->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));
+
 		player->AddComponent(new CCollider3D);
 		player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 
-		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
+		SpawnGameObject(player, Vec3(-400.f, 0.f, 0.f), (UINT)LAYER_TYPE::Player);
 
 
 		//pCamMoveScript->SetCamTarget(pObj); //숄더뷰 용
-
+	
 		
 		
 	//prefab
@@ -240,52 +267,51 @@ void CreateTestLevel()
 	//}
 
 	//monster
-	{
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* pObj = nullptr;
+	//{
+	//	Ptr<CMeshData> pMeshData = nullptr;
+	//	CGameObject* pObj = nullptr;
 
-		// 인스턴싱 테스트
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Wasteland_Lurker_Atk_Dash.fbx");
+	//	// 인스턴싱 테스트
 
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-		pObj = pMeshData->Instantiate();
-		pObj->AddComponent(new CPathFinderScript());
-		pObj->AddComponent(new CMonsterMoveScript());
+	//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
+	//	pObj = pMeshData->Instantiate();
+	//	pObj->AddComponent(new CPathFinderScript());
+	//	pObj->AddComponent(new CMonsterMoveScript());
 
-		pObj->SetName(L"MonsterTrace");
-		pObj->Transform()->SetDebugSphereUse(true);
-		pObj->SetLayerIdx(2);
-		pObj->Transform()->SetRelativePos(Vec3(800.f, 0.f, 0.f));
+	//	pObj->SetName(L"MonsterTrace");
+	//	pObj->Transform()->SetDebugSphereUse(true);
+	//	pObj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+	//	pObj->Transform()->SetRelativePos(Vec3(800.f, 0.f, 0.f));
 
-		pObj->AddComponent(new CRigidBody);
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(15.f, 15.f, 15.f);
-		pObj->RigidBody()->PushBackShapeInfo(info);
+	//	pObj->AddComponent(new CRigidBody);
+	//	tShapeInfo info = {};
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.size = Vector3(15.f, 15.f, 15.f);
+	//	pObj->RigidBody()->PushBackShapeInfo(info);
 
-		tShapeInfo info2 = {};
-		info2.eGeomType = GEOMETRY_TYPE::Sphere;
-		info2.size = Vector3(15.f, 15.f, 15.f);
-		pObj->RigidBody()->PushBackShapeInfo(info2);
+	//	tShapeInfo info2 = {};
+	//	info2.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info2.size = Vector3(15.f, 15.f, 15.f);
+	//	pObj->RigidBody()->PushBackShapeInfo(info2);
 
-		tShapeInfo info3 = {};
-		info3.eGeomType = GEOMETRY_TYPE::Sphere;
-		info3.size = Vector3(8.f, 8.f, 8.f);
-		pObj->RigidBody()->PushBackShapeInfo(info3);
+	//	tShapeInfo info3 = {};
+	//	info3.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info3.size = Vector3(8.f, 8.f, 8.f);
+	//	pObj->RigidBody()->PushBackShapeInfo(info3);
 
-		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-		pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-		pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
+	//	pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+	//	pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+	//	pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+	//	pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
 
-		pObj->AddComponent(new CCollider3D);
+	//	pObj->AddComponent(new CCollider3D);
 
 
-		SpawnGameObject(pObj, Vec3(800.f, 0.f, 0.f), 2);
+	//	SpawnGameObject(pObj, Vec3(800.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
 
-		
-		pObj->GetScript<CMonsterMoveScript>()->SetAndGetPath(player);
-	}
+	//	
+	//	pObj->GetScript<CMonsterMoveScript>()->SetAndGetPath(player);
+	//}
 	//static box
 	{
 		CGameObject* pObj = new CGameObject;
@@ -295,7 +321,7 @@ void CreateTestLevel()
 		pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
 
 		pObj->SetName(L"staticBox");
-		pObj->SetLayerIdx(5);
+		pObj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
 		pObj->Transform()->SetRelativePos(Vec3(500.f, 100.f, 0.f));
 		pObj->Transform()->SetRelativeScale(200.f, 200.f, 200.f);
 
@@ -315,7 +341,7 @@ void CreateTestLevel()
 
 	}
 	//dynamic sphere
-	{
+	/*{
 		CGameObject* pObj = new CGameObject;
 		pObj->AddComponent(new CTransform);
 		pObj->AddComponent(new CMeshRender);
@@ -343,7 +369,7 @@ void CreateTestLevel()
 		SpawnGameObject(pObj, Vec3(-200.f, 700.f, 0.f), 5);
 
 
-	}
+	}*/
 	//// LandScape Object
 	//{
 	//	CGameObject* pLandScape = new CGameObject;
@@ -368,7 +394,7 @@ void CreateTestLevel()
 		pGround->SetName(L"Ground");
 		pGround->AddComponent(new CTransform);
 		pGround->Transform()->SetRelativeScale(10000.f, 10.f, 10000.f);
-		pGround->SetLayerIdx(5);
+		pGround->SetLayerIdx((UINT)LAYER_TYPE::Ground);
 		pGround->Transform()->SetRelativePos(Vec3(0.f, -500.f, 0.f));
 		
 
@@ -392,7 +418,7 @@ void CreateTestLevel()
 
 		PxVec3 pos = pGround->Transform()->GetPhysicsPosition();
 		
-		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), 4);
+		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), (UINT)LAYER_TYPE::Ground);
 	}
 	
 	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);

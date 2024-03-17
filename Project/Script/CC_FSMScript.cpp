@@ -21,10 +21,10 @@ CC_FSMScript::~CC_FSMScript()
 void CC_FSMScript::begin()
 {
 	// 이거 애매하네
-	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::IDLESTATESCRIPT)));
+	//AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::IDLESTATESCRIPT)));
 
-	m_CurState = FindStateScript(STATE_IDLE);
-	ChangeState(m_CurState->GetStateType());
+	//m_CurState = FindStateScript(STATE_IDLE);
+	//ChangeState(m_CurState->GetStateType());
 }
 
 void CC_FSMScript::tick()
@@ -78,6 +78,7 @@ void CC_FSMScript::ChangeState(UINT _NextState)
 	if (!m_CurState)
 	{
 		m_CurState = inState;
+		m_CurState->Enter();
 		return;
 	}
 	// 다음 상태가 지금과 같은 경우

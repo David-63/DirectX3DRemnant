@@ -70,23 +70,72 @@ void CCollider3D::OnCollisionExit(CCollider3D* _otherCollider)
 	const vector<CScript*>& vecScript = GetOwner()->GetScripts();
 	for (size_t i = 0; i < vecScript.size(); ++i)
 	{
-		vecScript[i]->OnOverlap(_otherCollider);
+		vecScript[i]->EndOverlap(_otherCollider);
 	}
 }
 
 void CCollider3D::OnTriggerEnter(CCollider3D* _otherCollider)
 {
-	mCollisionCount++;
+	if (GetOwner()->GetName() == L"HitBoxObject")
+	{
+		const vector<CScript*>& vecScript = GetOwner()->GetParent()->GetScripts();
+
+		for (size_t i = 0; i < vecScript.size(); ++i)
+		{
+			vecScript[i]->BeginOverlap(_otherCollider);
+		}
+	}
+	else
+	{
+		const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+
+		for (size_t i = 0; i < vecScript.size(); ++i)
+		{
+			vecScript[i]->BeginOverlap(_otherCollider);
+		}
+	}
 }
 
 void CCollider3D::OnTriggerStay(CCollider3D* _otherCollider)
 {
+	if (GetOwner()->GetName() == L"HitBoxObject")
+	{
+		const vector<CScript*>& vecScript = GetOwner()->GetParent()->GetScripts();
+
+		for (size_t i = 0; i < vecScript.size(); ++i)
+		{
+			vecScript[i]->OnOverlap(_otherCollider);
+		}
+	}
+	else
+	{
+		const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+
+		for (size_t i = 0; i < vecScript.size(); ++i)
+		{
+			vecScript[i]->OnOverlap(_otherCollider);
+		}
+	}
 }
 
 void CCollider3D::OnTriggerExit(CCollider3D* _otherCollider)
 {
-	mCollisionCount--;
+	if (GetOwner()->GetName() == L"HitBoxObject")
+	{
+		const vector<CScript*>& vecScript = GetOwner()->GetParent()->GetScripts();
 
-	if (0 > mCollisionCount)
-		mCollisionCount = 0;
+		for (size_t i = 0; i < vecScript.size(); ++i)
+		{
+			vecScript[i]->EndOverlap(_otherCollider);
+		}
+	}
+	else
+	{
+		const vector<CScript*>& vecScript = GetOwner()->GetScripts();
+
+		for (size_t i = 0; i < vecScript.size(); ++i)
+		{
+			vecScript[i]->EndOverlap(_otherCollider);
+		}
+	}
 }

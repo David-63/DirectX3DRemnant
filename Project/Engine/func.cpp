@@ -360,6 +360,19 @@ Vec3 DecomposeRotMat(const Matrix& _matRot)
 	return vNewRot;
 }
 
+Vec3 CalculateDir(Vec3 _originPos, Vec3 _targetPos)
+{
+	Vec3 dir;
+	dir.x = _targetPos.x - _originPos.x;
+	dir.y = _targetPos.y - _originPos.y;
+	dir.z = _targetPos.z - _originPos.z;
+
+	dir.Normalize();
+
+	return dir;
+}
+
+
 
 void SaveResRef(Ptr<CRes> _Res, FILE* _File)
 {

@@ -11,6 +11,7 @@ class CMeshRender :
 {
 private:
     Ptr<CMeshData> m_meshData;
+    bool m_bRenderOff;
 
 public:
     virtual void finaltick() override;
@@ -20,6 +21,8 @@ public:
 public:
     void SetMeshData(Ptr<CMeshData> _meshData);
     Ptr<CMeshData> GetMeshData() { return m_meshData; }
+
+    void SetRenderOff(bool _is) { m_bRenderOff = _is; }
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
