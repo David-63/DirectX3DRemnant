@@ -31,6 +31,8 @@ void CM_Lurker_STATE_Melee_Script::begin()
 
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 50.f, 30.f), Vec3(0.f, 100.f, -200.f));
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(0);
+	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 50.f, 30.f), Vec3(0.f, 100.f, -160.f));
+	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(1);
 }
 
 void CM_Lurker_STATE_Melee_Script::tick()
@@ -48,7 +50,7 @@ void CM_Lurker_STATE_Melee_Script::tick()
 		m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetAwake(0);
 	}
 
-	Dash();
+	Heavy1();
 
 }
 
@@ -58,9 +60,6 @@ void CM_Lurker_STATE_Melee_Script::Dash()
 	if (!m_bDashOnce)
 	{
 		m_MHQ->Animator3D()->Play(Lurker_Dash, false);
-		//Vec3 playerPos = GetPlayerPos();
-		//Vec3 myPos = GetMyPos();
-		//m_fDashDist = Vec3::Distance(myPos, playerPos) - 20.f;
 		m_fSpeed = 300.f;
 		m_vAtkDir = -GetMyFront();
 		m_bDashOnce = true;
@@ -76,8 +75,14 @@ void CM_Lurker_STATE_Melee_Script::Dash()
 	{
 		m_bDashOnce = false;
 		m_bAtkComplete = false;
-		//m_MHQ->ChangeState((UINT)eM_States::MOVE);
+		m_MHQ->ChangeState((UINT)eM_States::MOVE);
 	}
+
+}
+
+void CM_Lurker_STATE_Melee_Script::AdjustDashSpeed()
+{
+	m_fSpeed = 30.f;
 
 }
 
@@ -87,11 +92,6 @@ void CM_Lurker_STATE_Melee_Script::AtkComplete()
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(0);
 }
 
-void CM_Lurker_STATE_Melee_Script::AdjustDashSpeed()
-{
-	m_fSpeed = 30.f;
-	
-}
 
 void CM_Lurker_STATE_Melee_Script::Heavy1()
 {
@@ -114,7 +114,7 @@ void CM_Lurker_STATE_Melee_Script::Heavy1()
 	{
 		m_bHeavyOnce = false;
 		m_bAtkComplete = false;
-		m_MHQ->ChangeState((UINT)eM_States::MOVE);
+		//m_MHQ->ChangeState((UINT)eM_States::MOVE);
 	}
 }
 

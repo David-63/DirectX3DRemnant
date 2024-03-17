@@ -4,14 +4,19 @@
 class CB_STATEMoveScript :
     public CB_StateScript
 {
-private:
-    bool        m_IsMelee;
-    bool        m_IsRanged;
 
 public:
     virtual void Enter() override;
     virtual void tick() override;
     virtual void Exit() override;
+
+private:
+    bool        m_IsMelee;
+    bool        m_IsRanged;
+    tTimeCtrl   m_MoveTime;
+ 
+    int         m_DirSetCount;
+
 
 public:
     CLONE(CB_STATEMoveScript);
