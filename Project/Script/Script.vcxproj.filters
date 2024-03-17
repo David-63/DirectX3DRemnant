@@ -79,6 +79,9 @@
     <Filter Include="Script\System\HitBox">
       <UniqueIdentifier>{cf1fc889-5049-46f6-b59f-748e3433d697}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Creature\Player\Module">
+      <UniqueIdentifier>{aac34332-3515-460b-876f-6e781d78e913}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -174,6 +177,9 @@
     <ClInclude Include="CHitBoxScript.h">
       <Filter>Script\System\HitBox</Filter>
     </ClInclude>
+    <ClInclude Include="CP_MouseCtrlScript.h">
+      <Filter>Script\Creature\Player\Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -268,6 +274,9 @@
     </ClCompile>
     <ClCompile Include="CHitBoxScript.cpp">
       <Filter>Script\System\HitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_MouseCtrlScript.cpp">
+      <Filter>Script\Creature\Player\Module</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
