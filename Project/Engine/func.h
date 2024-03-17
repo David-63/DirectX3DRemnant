@@ -38,6 +38,9 @@ void DrawDebugCapsule(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f,
 
 // GameObject 유효성 체크
 bool IsValidObj(CGameObject*& _Target);
+float FloatLerp(float _begin, float _end, float ratio);
+
+
 
 // <To string> Or <To Wstring>
 const char* ToString(RES_TYPE);

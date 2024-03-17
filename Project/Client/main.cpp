@@ -131,12 +131,32 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       return FALSE;
    }
 
+   static bool raw_input_initialized = false;
+   if (raw_input_initialized == false)
+   {
+       RAWINPUTDEVICE rid;
+
+       rid.usUsagePage = 0x01; //Mouse
+       rid.usUsage = 0x02;
+       rid.dwFlags = 0;
+       rid.hwndTarget = NULL;
+
+       if (RegisterRawInputDevices(&rid, 1, sizeof(rid)) == FALSE)
+       {
+           int a = 0;
+       }
+
+       raw_input_initialized = true;
+   }
+
    ShowWindow(g_hWnd, false);
    UpdateWindow(g_hWnd);
 
    return TRUE;
 }
 
+
+#include <Engine/CKeyMgr.h>
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
@@ -155,7 +175,26 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             ::SetWindowPos(hWnd, NULL, suggested_rect->left, suggested_rect->top, suggested_rect->right - suggested_rect->left, suggested_rect->bottom - suggested_rect->top, SWP_NOZORDER | SWP_NOACTIVATE);
         }
         break;
+    case WM_INPUT:
+    {
+        UINT dataSize;
+        GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, NULL, &dataSize, sizeof(RAWINPUTHEADER)); //Need to populate data size first
 
+        if (dataSize > 0)
+        {
+            std::unique_ptr<BYTE[]> rawdata = std::make_unique<BYTE[]>(dataSize);
+            if (GetRawInputData(reinterpret_cast<HRAWINPUT>(lParam), RID_INPUT, rawdata.get(), &dataSize, sizeof(RAWINPUTHEADER)) == dataSize)
+            {
+                RAWINPUT* raw = reinterpret_cast<RAWINPUT*>(rawdata.get());
+                if (raw->header.dwType == RIM_TYPEMOUSE)
+                {
+                    CKeyMgr::GetInst()->OnMouseRawInput(raw->data.mouse.lLastX, raw->data.mouse.lLastY);
+                }
+            }
+        }
+
+        return DefWindowProc(hWnd, message, wParam, lParam); //Need to call DefWindowProc for WM_INPUT messages
+    }
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -173,16 +212,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
-
-
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: 여기에 hdc를 사용하는 그리기 코드를 추가합니다...
-            EndPaint(hWnd, &ps);
-        }
-        break;
+    
     case WM_DESTROY:
         PostQuitMessage(0);
         break;

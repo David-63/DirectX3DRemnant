@@ -59,17 +59,18 @@ void CP_FSMScript::begin()
 
 	m_MouseCtrl.SetOwner(this);
 	m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
+	m_MouseCtrl.begin();
 }
 
 void CP_FSMScript::tick()
 {
-	CC_FSMScript::tick();	// State에게 tick을 호출
+	CC_FSMScript::tick();	// 현재 State의 tick을 호출		
+	stanceControl(); // Stance 변동 감지 및 제어	
+	m_MouseCtrl.tick(); // 상태 적용이 완료된 다음에 마우스 호출
+}
 
-	m_MouseCtrl.tick();		// 카메라 전용 tick
-
-	// 상태 제어용 딜레이 타임
-	
-
+void CP_FSMScript::stanceControl()
+{
 	if (m_IsChangeStance)
 	{
 		m_StanceDelay.curTime += ScaleDT;
@@ -77,32 +78,44 @@ void CP_FSMScript::tick()
 		if (m_StanceDelay.IsFinish())
 		{
 			m_StanceDelay.ResetTime();
-
+			m_MouseCtrl.ChangeCamValue();
 			CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
 			if (m_InpSprint)
 			{
 				ChangeStance(ePlayerStance::Sprint);
 				curState->CallAnimation();
+				m_MouseCtrl.SetPivot(PIVOT_HIGH);
+				m_MouseCtrl.SetFov(FOV_HIGH);
 			}
 			else if (m_InpCrouch && m_InpAim)
 			{
 				ChangeStance(ePlayerStance::CrouchAim);
 				curState->CallAnimation();
+				m_MouseCtrl.SetPivot(PIVOT_MIDDLE);
+				m_MouseCtrl.SetFov(FOV_LOW);				
+				m_MouseCtrl.OverrideObjRotY();
 			}
 			else if (m_InpCrouch)
 			{
 				ChangeStance(ePlayerStance::Crouch);
 				curState->CallAnimation();
+				m_MouseCtrl.SetPivot(PIVOT_LOW);
+				m_MouseCtrl.SetFov(FOV_HIGH);
 			}
 			else if (m_InpAim)
 			{
 				ChangeStance(ePlayerStance::Aim);
 				curState->CallAnimation();
+				m_MouseCtrl.SetPivot(PIVOT_HIGH);
+				m_MouseCtrl.SetFov(FOV_LOW);
+				m_MouseCtrl.OverrideObjRotY();
 			}
 			else
 			{
 				ChangeStance(ePlayerStance::Normal);
 				curState->CallAnimation();
+				m_MouseCtrl.SetPivot(PIVOT_HIGH);
+				m_MouseCtrl.SetFov(FOV_HIGH);
 			}
 			m_IsChangeStance = false;
 		}

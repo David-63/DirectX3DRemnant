@@ -117,11 +117,11 @@ void CP_STATEIdleScript::IdleMouseInput()
 
 void CP_STATEIdleScript::Enter()
 {
-	//m_PHQ->ClearMoveDir();
 	CallAnimation();
 }
 
 void CP_STATEIdleScript::Exit()
 {
 	ClearIdleState();
+	m_PHQ->OverrideObjRotY();
 }

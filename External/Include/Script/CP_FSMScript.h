@@ -61,41 +61,51 @@ public:
         tPlayerStat     P_Stat;
         tHealthStat     P_Health;   // Creature FSM 에 명시되어 있음
     };
+    struct tP_LongGunInfo
+    {
+        int curAmmo;
+        int MaxAmmo;
+        float Damage;
+        float FireLate;
+        float ReloadSpeed;
+
+        tP_LongGunInfo() : curAmmo(12), MaxAmmo(12), Damage(12), FireLate(0.22f), ReloadSpeed(0.22f) {}
+    };
 
 private:
-    tP_Info             m_tPlayerInfo;
-
-    ePlayerStance       P_Stance;
-    tTimeCtrl           m_StanceDelay;
-
-    // 토글 입력
+    CP_MouseCtrlScript  m_MouseCtrl;
     bool                m_ableMouse;
+    
+private:
+    tP_Info             m_PlayerInfo;
+    tP_LongGunInfo      m_LongGunInfo;
+    // 상태
+    ePlayerStance       P_Stance;
+    Vec2                m_moveDir;
+    tTimeCtrl           m_StanceDelay;
+    bool                m_IsChangeStance;
     bool                m_InpCrouch;
     bool                m_InpAim;
     bool                m_InpSprint;
-    bool                m_IsChangeStance;
-
-    // 방향
-    Vec2                m_moveDir;
-
-    // 카메라
-    CP_MouseCtrlScript  m_MouseCtrl;
-public:
-    Vec2                m_MouseAxisInput;
-
+    
 
 public:
     virtual void begin() override;
     virtual void tick() override;
 
+private:
+    void stanceControl();
+
 public:
     void PlayAnimation(wstring _name, bool _repeat);
-
+    void OverrideObjRotY() { m_MouseCtrl.OverrideObjRotY(); }
 
 public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
     ePlayerStance GetStance() { return P_Stance; }
-    tP_Info GetPlayerInfo() { return m_tPlayerInfo; }
+    tP_Info GetPlayerInfo() { return m_PlayerInfo; }
+    tP_LongGunInfo GetLongGunInfo() { return m_LongGunInfo; }
+    
 public:
     void ClearStanceChange() { m_IsChangeStance = false; }
     void InputCrouch() { m_InpCrouch ? m_InpCrouch = false : m_InpCrouch = true; m_IsChangeStance = true; }
