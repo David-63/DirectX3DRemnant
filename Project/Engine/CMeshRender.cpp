@@ -20,6 +20,9 @@ void CMeshRender::finaltick()
 
 void CMeshRender::render()
 {	
+	if (m_bRenderOff)
+		return;
+
 	if (nullptr == GetMesh() || nullptr == GetMaterial(0))
 		return;
 
@@ -68,6 +71,9 @@ void CMeshRender::render()
 
 void CMeshRender::render(UINT _iSubset)
 {
+	if (m_bRenderOff)
+		return;
+
 	if (nullptr == GetMesh() || nullptr == GetMaterial(_iSubset))
 		return;
 

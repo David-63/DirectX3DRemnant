@@ -93,7 +93,7 @@ Ptr<CMeshData> CResMgr::LoadFBX(const wstring& _strPath)
 	if (nullptr != pMeshData)
 		return pMeshData;
 
-	pMeshData = CMeshData::LoadFromFBX(_strPath);
+    pMeshData = CMeshData::LoadFromFBX(_strPath);
 	pMeshData->SetKey(strName);
 	pMeshData->SetRelativePath(strName);
 

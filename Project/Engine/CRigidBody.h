@@ -85,6 +85,9 @@ public:
 
 	void AddForce(const Vector3& _force);
 
+	void SetSleep(bool _isSleep);
+	void SetDrawCollider(bool _is) { mbdrawCollider = _is; }
+
 
 	physx::PxRigidBody* GetRigidBody() { return mActor->is<physx::PxRigidBody>(); }
 	physx::PxRigidActor* GetRigidActor() { return GetActor<physx::PxRigidActor>(); }

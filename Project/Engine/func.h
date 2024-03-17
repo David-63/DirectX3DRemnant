@@ -62,6 +62,9 @@ int GetSizeofFormat(DXGI_FORMAT _eFormat);
 Matrix GetMatrixFromFbxMatrix(FbxAMatrix& _mat);
 Vec3 DecomposeRotMat(const Matrix& matRot);
 
+//방향구하기
+Vec3 CalculateDir(Vec3 _originPos, Vec3 _targetPos);
+
 
 
 class CRes;
