@@ -135,6 +135,7 @@ int ParticleSystemUI::render_update()
 	// ===== Module Data
 	ImGui::Text("Particle Module");
 
+	ImGui::Separator();
 	if (ImGui::BeginTabBar("##tabs", ImGuiTabBarFlags_None))
 	{
 		// ==============
@@ -953,8 +954,10 @@ void ParticleSystemUI::SelectMesh(DWORD_PTR _Key)
 void ParticleSystemUI::SelectMaterial(DWORD_PTR _Key)
 {
 	string strKey = (char*)_Key;
+	m_SelectMtrlName = ToWString(strKey);
+
 	Ptr<CMaterial> pMtrl = CResMgr::GetInst()->
-		FindRes<CMaterial>(wstring(strKey.begin(), strKey.end()));
+		FindRes<CMaterial>(wstring(strKey.begin(), strKey.end())); // material\\ 이런식으로 들어옴 
 
 	// ** 현재 0번에만 있는데 파티클이 여러개일 경우도 한번 생각해보기
 	m_Particle->SetMaterial(pMtrl, 0);

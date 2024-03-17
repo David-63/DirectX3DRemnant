@@ -8,6 +8,7 @@ private:
     bool        m_isMove;
     bool        m_isMelee;
 
+
     int         m_horizontal;
     int         m_vertical;
 

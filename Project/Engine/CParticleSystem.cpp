@@ -450,6 +450,7 @@ Vec3 CParticleSystem::CreateRandomDirection(const Vector3& normal, float openAng
 	return Vector3::Transform(randomDir, rotationMatrix);
 } // 한 방향으로 나가는 것 밖에 안됨 
 
+
 float CParticleSystem::RandomFloat(float min, float max)
 {
 	// 난수 생성 엔진 초기화
@@ -459,6 +460,9 @@ float CParticleSystem::RandomFloat(float min, float max)
 
 	return dis(gen);
 }
+
+
+
 
 //Vec3 CParticleSystem::CreateRandomDirection(const Vector3& normal, const Vector3& up, const Vector3& Front) // 사방으로 퍼져나가는 류 
 //{
