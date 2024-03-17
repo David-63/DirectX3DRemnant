@@ -4,9 +4,11 @@
 
 
 
+
 CB_STATEMoveScript::CB_STATEMoveScript()
-	: m_MoveTime(50.f)
-	, m_First(false)
+	: m_MoveTime(10.f)
+	, m_DirSetCount(0)
+	, m_Phase2(false)
 {
 	SetStateType(static_cast<UINT>(eB_States::MOVE));
 }
@@ -17,14 +19,11 @@ CB_STATEMoveScript::~CB_STATEMoveScript()
 
 void CB_STATEMoveScript::tick()
 {
-	//m_MoveTime.curTime += (float)DT;
+	
 
+
+//====================
 	CB_FSMScript::eBossMoveDir curDir = m_BHQ->GetMoveDir();
-
-
-	// === 랜덤으로 난수를 구하고 해당 난수에 해당하는 Dir로 change한다.
-	// 3-5번이 걸리면 다시한번 난수를 구한다.
-
 	bool IsPlaying = m_BHQ->IsPlaying();
 
 	// 지정한 시간동안 랜덤으로 재생된다. 
@@ -33,71 +32,93 @@ void CB_STATEMoveScript::tick()
 	{
 		m_MoveTime.curTime += (float)DT;
 
+		MoveToDir();
+
+		if (m_MoveTime.IsFinish() && !m_Phase2) // 시간이 다 됐다면
+		{
+			m_Phase2 = true;
+			m_MoveTime.ResetTime();
+			m_MoveTime.Activate();
+		}
+
 		if (IsPlaying)
 			return;
-		//if(m_First)
-		//m_BHQ->RandomDir_SomeExclude();
-
 
 		if (curDir == CB_FSMScript::eBossMoveDir::LF)
 		{
 			//m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::LF);
-			m_BHQ->SetPlaying(true);
+		
 			m_BHQ->PlayAnim(B_Walk_FL, false);
-
+			m_BHQ->SetPlaying(true);
 
 		}
+
+
 		else if (curDir == CB_FSMScript::eBossMoveDir::RF)
 		{
 			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::RF);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_FR, false);
+			m_BHQ->SetPlaying(true);
 		}
+
 		else if (curDir == CB_FSMScript::eBossMoveDir::F)
 		{
 			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::F);
+
+			if (!m_Phase2)
+			{
+				m_BHQ->SetStance(CB_FSMScript::eBossStance::NORMAL_WALK);
+				m_BHQ->PlayAnim(B_Walk_F, false);
+			}
+
+			else
+			{
+				m_BHQ->SetStance(CB_FSMScript::eBossStance::FAST_WALK);
+				m_BHQ->PlayAnim(B_Walk_Fast_F, true);
+
+			}
+
+
 			m_BHQ->SetPlaying(true);
-			m_BHQ->PlayAnim(B_Walk_F, false);
 
 		}
 		else if (curDir == CB_FSMScript::eBossMoveDir::B)
 		{
-			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::B);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_B, false);
+
+
+			m_BHQ->SetPlaying(true);
 
 		}
 		else if (curDir == CB_FSMScript::eBossMoveDir::LB)
 		{
-			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::LB);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_BL, false);
+			m_BHQ->SetPlaying(true);
 
 		}
 		else if (curDir == CB_FSMScript::eBossMoveDir::RB)
 		{
-			//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::RB);
-			m_BHQ->SetPlaying(true);
 			m_BHQ->PlayAnim(B_Walk_BR, false);
+			m_BHQ->SetPlaying(true);
 
 		}
 
-		m_First = true;
+		else if (curDir == CB_FSMScript::eBossMoveDir::R)
+		{
+			m_BHQ->PlayAnim(B_Walk_FR, false);
+			m_BHQ->SetPlaying(true);
+		}
+
+		else if (curDir == CB_FSMScript::eBossMoveDir::L)
+		{
+			m_BHQ->PlayAnim(B_Walk_FL, false);
+			m_BHQ->SetPlaying(true);
+		}
+
+		
 	}
-
-	else if (m_MoveTime.IsFinish())// 시간이 다 됐다면
-	{
-		// 2페이즈로 넘어간다. 
-		// (Q. 근데 idle로 다시 넘어갔을 때 이게 2페이즈에 해당하는지 아닌지를 어떻게 체크할까?)
-		// IDLE에서 BOOL 변수를 하나 만들어서 1페이즈 처음때 들어갔으면 TRUE 해놓고, FALSE일 때 2페이즈로 넘어가게하자
-		//m_BHQ->ChangeState(static_cast<UINT>(eB_States::IDLE));
-
-				// 이동 상태를 IDLE 상태로 변경한다. 
-		//m_BHQ->ChangeState(static_cast<UINT>(eB_States::IDLE));
-	}
-
-
-
+	
+	
 
 	// ============= 회피
 	// 쿨타임이 다 됐고, 마침 플레이어의 조준점이 캐릭터를 바라보고 있는 상황이라면?(레이캐스트가 TRUE라면)
@@ -111,11 +132,87 @@ void CB_STATEMoveScript::tick()
 
 void CB_STATEMoveScript::Enter()
 {
-	m_MoveTime.Activate(); // 
+	m_MoveTime.Activate(); 
 }
 
 void CB_STATEMoveScript::Exit()
 {
 }
+
+void CB_STATEMoveScript::MoveToDir()
+{
+	Vec3 vFront = m_BHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 vUp = m_BHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::UP);
+	Vec3 vRight = m_BHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
+
+
+	Vec3 rf = vRight + vFront;
+	rf.Normalize(); //  방향 가리키는 용도이므로 벡터 정규화
+
+	Vec3 lf = -vRight + vFront;
+	lf.Normalize(); // 방향 가리키는 용도이므로 벡터 정규화
+
+
+
+
+	// ==== stance별 이동 속도
+	float Force = 0.f;
+	CB_FSMScript::tB_Info BossInfo = m_BHQ->GetBossInfo();
+	CB_FSMScript::eBossStance curStance = m_BHQ->GetStance();
+
+	if (CB_FSMScript::eBossStance::NORMAL_WALK == curStance)
+		Force = BossInfo.B_Stat.MoveSpeed * ScaleDT;
+
+	else if (CB_FSMScript::eBossStance::FAST_WALK == curStance)
+		Force = BossInfo.B_Stat.MoveSpeed * ScaleDT * 1.5f;
+
+
+	// ===== 직접적인 이동
+
+	Vec3 vCurPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
+	CB_FSMScript::eBossMoveDir curDir = m_BHQ->GetMoveDir();
+
+	switch (curDir)
+	{
+	case CB_FSMScript::eBossMoveDir::F:		
+		vCurPos -= vFront * Force;
+		break;
+
+	case CB_FSMScript::eBossMoveDir::B:
+		vCurPos += vFront * Force;
+		break;
+		
+	case CB_FSMScript::eBossMoveDir::R:
+		vCurPos -= vRight * Force;
+		break;
+
+	case CB_FSMScript::eBossMoveDir::RF:
+		vCurPos -= rf * Force; 
+		break;
+
+	case CB_FSMScript::eBossMoveDir::RB:
+		vCurPos += lf * Force;
+		break;
+
+	case CB_FSMScript::eBossMoveDir::L:
+		vCurPos += vRight * Force;
+		break;
+
+	case CB_FSMScript::eBossMoveDir::LF: 
+		vCurPos -= lf * Force;
+		break;
+
+	case CB_FSMScript::eBossMoveDir::LB:
+		vCurPos += rf * Force;
+		break;
+
+
+	}
+
+	m_BHQ->GetOwner()->Transform()->SetRelativePos(vCurPos);
+}
+
+
+
 
 

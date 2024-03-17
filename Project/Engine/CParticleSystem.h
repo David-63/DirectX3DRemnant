@@ -47,17 +47,6 @@ public:
 
 
 public:
-    //void ActiveModule(PARTICLE_MODULE _ModuleType) { m_ModuleData.ModuleCheck[(UINT)_ModuleType] = true; }
-    //void DeactivateModule(PARTICLE_MODULE _ModuleType) { m_ModuleData.ModuleCheck[(UINT)_ModuleType] = false; }
-
-    //// 초당 생성 개수 설정
-    //void SetSpawnRate(int _SpawnRate) { m_ModuleData.SpawnRate = _SpawnRate; }
-
-    //// 생성 시 초기 색상 설정1
-    //void SetSpawnInitialColor(Vec3 _vInitialColor) { m_ModuleData.vSpawnColor = _vInitialColor; }
-
-  //  Vec3 CreateRandomDirection(const Vector3& normal, float openAngle);
-
     float RandomFloat(float min, float max);
 
     void SetParticleTex(Ptr<CTexture> _Tex)

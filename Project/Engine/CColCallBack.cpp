@@ -45,19 +45,19 @@ void CColCallBack::onContact(const PxContactPairHeader& pairHeader, const PxCont
                     {
                         pOther->Collider3D()->OnCollisionStay(pContact->Collider3D());
 
-                        if (pOther->Collider3D()->GetType() == COLLIDER3D_TYPE::Wall 
-                            && pContact->Collider3D()->GetType() == COLLIDER3D_TYPE::Player)
-                        {
-
-							const PxU32 count = cp.contactCount;
-							PxContactPairPoint point;
-							cp.extractContacts(&point, count);
-							PxVec3 normal = point.normal;
-                            //AssertEx(normal == PxVec3(0.f,0.f,0.f), L"Wall충돌면의 normal을 받아오지 못함.");
-							Vec3 vec = { normal.x, normal.y, normal.z };
-                            
-                            pOther->Collider3D()->SetOhterNormal(vec);
-                        }
+                        //if (pOther->Collider3D()->GetType() == COLLIDER3D_TYPE::Wall 
+                        //    && pContact->Collider3D()->GetType() == COLLIDER3D_TYPE::Player)
+                        //{
+                        //
+						//	const PxU32 count = cp.contactCount;
+						//	PxContactPairPoint point;
+						//	cp.extractContacts(&point, count);
+						//	PxVec3 normal = point.normal;
+                        //    //AssertEx(normal == PxVec3(0.f,0.f,0.f), L"Wall충돌면의 normal을 받아오지 못함.");
+						//	Vec3 vec = { normal.x, normal.y, normal.z };
+                        //    
+                        //    pOther->Collider3D()->SetOhterNormal(vec);
+                        //}
                     }
 
                     if (pContact->Collider3D())

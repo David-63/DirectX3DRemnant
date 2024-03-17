@@ -7,7 +7,7 @@
 #include "CMesh.h"
 #include "CAnimClip.h"
 
-#define BlendEndTime 0.32f
+#define BlendEndTime 0.22f // 
 
 
 struct Event

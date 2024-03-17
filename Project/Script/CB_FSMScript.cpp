@@ -3,6 +3,8 @@
 
 CB_FSMScript::CB_FSMScript()
 	: m_bPlaying(false)
+	, m_iAnimCount(0)
+	, m_eStance(eBossStance::NORMAL_WALK)
 {
 }
 
@@ -85,22 +87,10 @@ void CB_FSMScript::begin()
 	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BL) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BR) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 
-	GetOwner()->Animator3D()->CompleteEvent(B_Melee_Idle) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-
-
-	// ====================
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_FL) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_FR) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_F) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_B) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BL) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BR) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
-
 	//GetOwner()->Animator3D()->CompleteEvent(B_Melee_Idle) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 
-	PlayAnim(B_Melee_Idle, true);
+	//PlayAnim(B_Melee_Idle, true);
+	PlayAnim(B_Walk_FL, true);
 	ChangeState(static_cast<UINT>(eB_States::IDLE)); // 원래는 IDLE인데 작업중일 때만 MOVE로 해놓기 
 
 
@@ -150,22 +140,37 @@ CB_FSMScript::eBossMoveDir CB_FSMScript::RandomDir_SomeExclude()
 	B_MoveDir =
 		static_cast<eBossMoveDir>(rand() % static_cast<UINT>(eBossMoveDir::END));
 
-	if (B_MoveDir == eBossMoveDir::L || B_MoveDir == eBossMoveDir::N || B_MoveDir == eBossMoveDir::R)
+	if (B_MoveDir == eBossMoveDir::L || B_MoveDir == eBossMoveDir::R)
 		return RandomDir_SomeExclude();
 
 	return B_MoveDir;
 }
 
-void CB_FSMScript::Phase1_AnimStart()
+CB_FSMScript::eBossMoveDir CB_FSMScript::RandomDir()
 {
-	//m_bPlaying = true;
+
+	B_MoveDir = static_cast<eBossMoveDir>(rand() % static_cast<UINT>(eBossMoveDir::END));
+
+	return eBossMoveDir();
 }
+
 
 void CB_FSMScript::Phase1_AnimEnd()
 {
-	RandomDir_SomeExclude();
+	++m_iAnimCount;
 
 	m_bPlaying = false;
+
+	if (m_iAnimCount == 1)
+	{
+		B_MoveDir = B_MoveDir;
+	}
+
+	else if (m_iAnimCount == 2)
+	{
+		RandomDir();
+		m_iAnimCount = 0;
+	}
 
 
 

@@ -1,12 +1,41 @@
 #include "pch.h"
 #include "CM_Lurker_FSMScript.h"
+#include "CM_Lurker_StatesScript.h"
 
 void CM_Lurker_FSMScript::begin()
 {
-	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_SLEEP_SCRIPT)));
-	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_IDLE_SCRIPT)));
+	GetOwner()->Animator3D()->Add(Lurker_ALERT01);
+	GetOwner()->Animator3D()->Add(Lurker_ALERT03);
+	GetOwner()->Animator3D()->Add(Lurker_IDLESTAND);
+	GetOwner()->Animator3D()->Add(Lurker_IDLEDOWN);
+	GetOwner()->Animator3D()->Add(Lurker_IDLEDOWNDOO);
+	GetOwner()->Animator3D()->Add(Lurker_WALL_EMERGE);
+	GetOwner()->Animator3D()->Add(Lurker_WALL_EMERGE2);
+	GetOwner()->Animator3D()->Add(Lurker_EMERGE);
+	GetOwner()->Animator3D()->Add(Lurker_Turn180);
+	GetOwner()->Animator3D()->Add(Lurker_Turn90L);
+	GetOwner()->Animator3D()->Add(Lurker_Turn90R);
+	GetOwner()->Animator3D()->Add(Lurker_Turn135L);
+	GetOwner()->Animator3D()->Add(Lurker_Turn135R);
+	GetOwner()->Animator3D()->Add(Lurker_Dash);
+	GetOwner()->Animator3D()->Add(Lurker_Heavy1);
+	GetOwner()->Animator3D()->Add(Lurker_SlashR);
+	GetOwner()->Animator3D()->Add(Lurker_SlashRCombo);
 
-	ChangeState(static_cast<UINT>(eLurkerState::Sleep));
+
+	//局聪刚历 积己秦具窃
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_IDLE_SCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_MELEE_SCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_MOVE_SCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_DAMAGED_SCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_DEAD_SCRIPT)));
+
+
+
+
+
+	//ChangeState(static_cast<UINT>(eLurkerState::Idle));
+	ChangeState(static_cast<UINT>(eLurkerState::Melee));
 }
 
 void CM_Lurker_FSMScript::tick()
