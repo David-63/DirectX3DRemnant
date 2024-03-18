@@ -38,6 +38,7 @@ public:
 	int init(HWND _hWnd, UINT _iWidth, UINT _iHeight);	
 	void Present()	{ m_SwapChain->Present(0, 0); }
 	Vec2 GetRenderResolution() { return m_vRenderResolution; }
+	HWND GetHandle() { return m_hWnd; }
 
 private:
 	int CreateSwapChain();

@@ -13,8 +13,13 @@ public:
 private:
     bool        m_IsMelee;
     bool        m_IsRanged;
+    bool        m_Phase2;
     tTimeCtrl   m_MoveTime;
-    bool        m_First;
+ 
+    int         m_DirSetCount;
+
+public:
+    void MoveToDir();
 
 
 public:

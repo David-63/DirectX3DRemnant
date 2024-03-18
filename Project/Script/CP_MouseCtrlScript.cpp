@@ -5,9 +5,9 @@
 #include "CP_FSMScript.h"
 
 CP_MouseCtrlScript::CP_MouseCtrlScript()
-	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr), m_curPivot(PIVOT_HIGH), m_curFov(FOV_HIGH)	
-, m_MouseSensitivity(1.24f), m_vCamOffset{ -300.f, 5.f, 55.f }, m_PivotBlend(0.5f), m_FovBlend(0.5f), m_IsChangeStance(false)
-{	
+	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr)
+	, m_CamInfo({ -180.f, 5.f, 55.f }, 0.54f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
+{
 }
 
 CP_MouseCtrlScript::~CP_MouseCtrlScript()
@@ -26,7 +26,7 @@ void CP_MouseCtrlScript::tick()
 
 	if (!m_PHQ->IsAbleMouse())
 		return;
-	
+
 	MoveCameraPos();
 	MoveCameraRot();
 	MouseRock();
@@ -44,36 +44,31 @@ void CP_MouseCtrlScript::MoveCameraPos()
 	Vec3 camU = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::UP);
 
 	// lerp 진행 (FSM에서 활성화 시킴)
-	if (m_PivotBlend.IsActivate())
+	if (m_PivotValue.BlendTime.IsActivate())
 	{
-		m_PivotBlend.curTime += ScaleDT;
-		if (m_PivotBlend.IsFinish())
+		m_PivotValue.BlendTime.curTime += ScaleDT;
+		if (m_PivotValue.BlendTime.IsFinish())
 		{
-			m_PivotBlend.ResetTime();
-			m_pivotRatio = 0.f;
+			m_PivotValue.Reset();
 		}
-
-		m_pivotRatio = m_PivotBlend.curTime / m_PivotBlend.maxTime;
-
-		m_curPivot = FloatLerp(m_curPivot, m_pivotValue, m_pivotRatio);
+		m_PivotValue.GetRatio();
+		m_PivotValue.CurValue = FloatLerp(m_PivotValue.CurValue, m_PivotValue.TargetValue, m_PivotValue.Ratio);
 	}
-	if (m_FovBlend.IsActivate())
+	if (m_FovValue.BlendTime.IsActivate())
 	{
-		m_FovBlend.curTime += ScaleDT;
-		if (m_FovBlend.IsFinish())
+		m_FovValue.BlendTime.curTime += ScaleDT;
+		if (m_FovValue.BlendTime.IsFinish())
 		{
-			m_FovBlend.ResetTime();
-			m_fovRatio = 0.f;
+			m_FovValue.Reset();
 		}
-		m_fovRatio = m_FovBlend.curTime / m_FovBlend.maxTime;
-
-		m_curFov = FloatLerp(m_curFov, m_fovValue, m_fovRatio);
-		m_ctrlCam->SetFov(m_curFov);
+		m_FovValue.GetRatio();
+		m_FovValue.CurValue = FloatLerp(m_FovValue.CurValue, m_FovValue.TargetValue, m_FovValue.Ratio);
+		m_ctrlCam->SetFov(m_FovValue.CurValue);
 	}
 
 	// 변경사항 적용
-	objPos.y = m_curPivot;
-	Vec3 Point = objPos + camF * m_vCamOffset.x + camR * m_vCamOffset.z + camU * m_vCamOffset.y; // OffX : front, offZ : right, offY : Up
+	objPos.y = m_PivotValue.CurValue;
+	Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
 	m_ctrlCam->Transform()->SetRelativePos(Point);
 }
 
@@ -97,17 +92,17 @@ void CP_MouseCtrlScript::MoveCameraRot()
 	Vec2 mouseInput = CKeyMgr::GetInst()->GetMouseRaw();
 	mouseInput.Normalize();
 
-	float deltaYaw = XMConvertToRadians(mouseInput.x * m_MouseSensitivity);
-	float deltaPitch = XMConvertToRadians(mouseInput.y * m_MouseSensitivity); // Y축 반전 처리
+	float deltaYaw = XMConvertToRadians(mouseInput.x * m_CamInfo.MouseSensitivity);
+	float deltaPitch = XMConvertToRadians(mouseInput.y * m_CamInfo.MouseSensitivity); // Y축 반전 처리
 	float xCamRot, yObjRot;
 
 	xCamRot = getCamRot.x + deltaPitch;
-	m_PrevCamRotY = getCamRot.y + deltaYaw;
+	m_CamInfo.PrevCamRotY = getCamRot.y + deltaYaw;
 	yObjRot = getObjRot.y + deltaYaw;
-	
+
 	if (justRotCam)
 	{
-		Vec3 outCamEuler = Vec3(xCamRot, m_PrevCamRotY, (int)0);
+		Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, (int)0);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
 	else
@@ -132,5 +127,5 @@ void CP_MouseCtrlScript::MouseRock()
 
 void CP_MouseCtrlScript::OverrideObjRotY()
 {
-	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_PrevCamRotY + XM_PI, 0.f));
+	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_CamInfo.PrevCamRotY + XM_PI, 0.f));
 }

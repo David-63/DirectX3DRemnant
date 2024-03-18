@@ -180,6 +180,9 @@
     <ClInclude Include="CP_MouseCtrlScript.h">
       <Filter>Script\Creature\Player\Module</Filter>
     </ClInclude>
+    <ClInclude Include="CP_WeaponScript.h">
+      <Filter>Script\Creature\Player\Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -276,6 +279,9 @@
       <Filter>Script\System\HitBox</Filter>
     </ClCompile>
     <ClCompile Include="CP_MouseCtrlScript.cpp">
+      <Filter>Script\Creature\Player\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_WeaponScript.cpp">
       <Filter>Script\Creature\Player\Module</Filter>
     </ClCompile>
   </ItemGroup>

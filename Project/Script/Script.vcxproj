@@ -197,6 +197,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CP_STATEIdleScript.h" />
     <ClInclude Include="CP_STATEMoveScript.h" />
     <ClInclude Include="CP_StatesScript.h" />
+    <ClInclude Include="CP_WeaponScript.h" />
     <ClInclude Include="CScriptMgr.h" />
     <ClInclude Include="CShoulderViewScript.h" />
     <ClInclude Include="CStateScript.h" />
@@ -231,6 +232,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CP_STATEIdleScript.cpp" />
     <ClCompile Include="CP_STATEMoveScript.cpp" />
     <ClCompile Include="CP_StatesScript.cpp" />
+    <ClCompile Include="CP_WeaponScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
     <ClCompile Include="CShoulderViewScript.cpp" />
     <ClCompile Include="CStateScript.cpp" />

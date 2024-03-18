@@ -128,11 +128,11 @@ void CreateTestLevel()
 		player->AddComponent(new CP_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\HuntingRifle.mdat");
+		/*pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\HuntingRifle.mdat");
 		player = pMeshData->InstMesh();
 		player->SetName(L"LongGun");
 		player->MeshRender()->SetFrustumCheck(false);
 
-		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
+		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);*/
 	}
 }

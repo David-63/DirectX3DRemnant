@@ -4,8 +4,8 @@
 #include <Engine/CRenderMgr.h>
 
 CP_FSMScript::CP_FSMScript()
-	: m_InpCrouch(false), m_InpAim(false), m_InpSprint(false), m_IsChangeStance(true)
-	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay), m_ableMouse(true)
+	: m_InpStance{ false, false, false, true }, m_IsChangeStance(true)
+	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay)
 {
 }
 
@@ -60,13 +60,28 @@ void CP_FSMScript::begin()
 	m_MouseCtrl.SetOwner(this);
 	m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
 	m_MouseCtrl.begin();
+
+	Ptr<CMeshData> pMeshData = nullptr;
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\HuntingRifle.mdat");
+
+	CGameObject* player = nullptr;
+	player = pMeshData->InstMesh();
+	player->SetName(L"LongGun");
+	player->MeshRender()->SetFrustumCheck(false);
+	player->AddComponent(new CP_WeaponScript());
+	SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
+	player->GetScript<CP_WeaponScript>();
+	m_Weapon = player->GetScript<CP_WeaponScript>();
+	m_Weapon->SetOwner(this);
+	m_Weapon->begin();
 }
 
 void CP_FSMScript::tick()
 {
 	CC_FSMScript::tick();	// 현재 State의 tick을 호출		
-	stanceControl(); // Stance 변동 감지 및 제어	
+	stanceControl(); // Stance 변동 감지 및 제어
 	m_MouseCtrl.tick(); // 상태 적용이 완료된 다음에 마우스 호출
+	m_Weapon->tick();
 }
 
 void CP_FSMScript::stanceControl()
@@ -80,29 +95,29 @@ void CP_FSMScript::stanceControl()
 			m_StanceDelay.ResetTime();
 			m_MouseCtrl.ChangeCamValue();
 			CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
-			if (m_InpSprint)
+			if (m_InpStance[(UINT)eInpStance::Sprint])
 			{
 				ChangeStance(ePlayerStance::Sprint);
 				curState->CallAnimation();
 				m_MouseCtrl.SetPivot(PIVOT_HIGH);
 				m_MouseCtrl.SetFov(FOV_HIGH);
 			}
-			else if (m_InpCrouch && m_InpAim)
+			else if (m_InpStance[(UINT)eInpStance::Crouch] && m_InpStance[(UINT)eInpStance::Aim])
 			{
 				ChangeStance(ePlayerStance::CrouchAim);
 				curState->CallAnimation();
 				m_MouseCtrl.SetPivot(PIVOT_MIDDLE);
-				m_MouseCtrl.SetFov(FOV_LOW);				
+				m_MouseCtrl.SetFov(FOV_LOW);
 				m_MouseCtrl.OverrideObjRotY();
 			}
-			else if (m_InpCrouch)
+			else if (m_InpStance[(UINT)eInpStance::Crouch])
 			{
 				ChangeStance(ePlayerStance::Crouch);
 				curState->CallAnimation();
 				m_MouseCtrl.SetPivot(PIVOT_LOW);
 				m_MouseCtrl.SetFov(FOV_HIGH);
 			}
-			else if (m_InpAim)
+			else if (m_InpStance[(UINT)eInpStance::Aim])
 			{
 				ChangeStance(ePlayerStance::Aim);
 				curState->CallAnimation();

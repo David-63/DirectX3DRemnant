@@ -16,7 +16,6 @@ CM_Lurker_STATE_Dead_Script
 CM_Lurker_STATE_Idle_Script
 CM_Lurker_STATE_Melee_Script
 CM_Lurker_STATE_Move_Script
-CM_Lurker_STATE_Sleep_Script
 CPathFinderScript
 CPlayerScript
 CPlayerScriptFsm
@@ -25,5 +24,6 @@ CP_MouseCtrlScript
 CP_STATEIdleScript
 CP_STATEMoveScript
 CP_StatesScript
+CP_WeaponScript
 CShoulderViewScript
 CTestScript
