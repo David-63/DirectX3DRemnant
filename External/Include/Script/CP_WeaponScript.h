@@ -9,6 +9,7 @@ private:
 	CP_FSMScript* m_PHQ;
 	CAnimator3D* m_OwnerAnimator;
 	CTransform* m_OwnerTransform;
+	tMTBone m_HandBoneData;
 	Matrix m_HandMatrix;
 	
 public:

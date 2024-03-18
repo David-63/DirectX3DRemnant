@@ -18,10 +18,34 @@ void CP_WeaponScript::begin()
 
 void CP_WeaponScript::tick()
 {
-	m_HandMatrix = m_OwnerAnimator->GetBoneMatrix(168);
+	m_HandBoneData = m_OwnerAnimator->GetMTBoneData(168);
+	int frameIdx = m_OwnerAnimator->GetCurFrame();
+	m_HandBoneData.matOffset;
+	// 결국 프레임을 가져와야함
+	Vec3 trans = m_HandBoneData.vecKeyFrame[frameIdx].vTranslate;
+	Vec4 rotQ = m_HandBoneData.vecKeyFrame[frameIdx].qRot;
+	Vec3 Scaling = m_HandBoneData.vecKeyFrame[frameIdx].vScale;
+	Matrix MScaling = { 0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0, };
+	MScaling._11 = Scaling.x;
+	MScaling._22 = Scaling.y;
+	MScaling._33 = Scaling.z;
+	Matrix MRotation = XMMatrixRotationQuaternion(rotQ);
+
+	Matrix frameMat = MScaling;	// Scale
+	frameMat *= MRotation;		// Rotation
+	frameMat._41 += trans.x;	// Transform
+	frameMat._42 += trans.y;
+	frameMat._43 += trans.z;
+	frameMat._44 += 0.f;
 	
 
-	Vec3 bonePos(m_HandMatrix._41, m_HandMatrix._42, m_HandMatrix._43);
-	m_HandMatrix.Translation(bonePos);
+	m_HandMatrix = frameMat * m_HandBoneData.matOffset;
+	Matrix OwnerMat = m_OwnerTransform->GetWorldMat();
+	Matrix finalMat = OwnerMat * m_HandMatrix;
 
+
+	// 상대적인 위치
+	Vec3 bonePos = finalMat.Translation();
+	Transform()->SetRelativePos(bonePos);
+	int a = 0;
 }
