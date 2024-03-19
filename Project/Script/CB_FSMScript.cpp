@@ -4,7 +4,8 @@
 CB_FSMScript::CB_FSMScript()
 	: m_bPlaying(false)
 	, m_iAnimCount(0)
-	, m_eStance(eBossStance::NORMAL_WALK)
+	, m_eNoWeapon_Stance(eBossStance_NoWeapon::NORMAL_WALK)
+	, m_iRatio(0.f)
 {
 }
 
@@ -14,8 +15,7 @@ CB_FSMScript::~CB_FSMScript()
 
 void CB_FSMScript::begin()
 {
-	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEIDLESCRIPT)));
-	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEMOVESCRIPT)));
+
 
 	GetOwner()->Animator3D()->Add(B_Alert);
 
@@ -71,8 +71,12 @@ void CB_FSMScript::begin()
 	GetOwner()->Animator3D()->Add(B_NC_Disagree);
 
 
-
-
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEIDLESCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEMOVESCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEDAMAGEDSCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEDEADSCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATERANGEDSCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEMELEESCRIPT)));
 
 	// =====================
 
@@ -87,10 +91,8 @@ void CB_FSMScript::begin()
 	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BL) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 	GetOwner()->Animator3D()->CompleteEvent(B_Walk_BR) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 
-	//GetOwner()->Animator3D()->CompleteEvent(B_Melee_Idle) = std::bind(&CB_FSMScript::Phase1_AnimEnd, this);
 
-	//PlayAnim(B_Melee_Idle, true);
-	PlayAnim(B_Walk_FL, true);
+	PlayAnim(B_Melee_Idle, true);
 	ChangeState(static_cast<UINT>(eB_States::IDLE)); // 원래는 IDLE인데 작업중일 때만 MOVE로 해놓기 
 
 
@@ -123,6 +125,18 @@ void CB_FSMScript::EndOverlap(CCollider3D* _Other)
 void CB_FSMScript::PlayAnim(wstring _name, bool _repeat)
 {
 	GetOwner()->Animator3D()->Play(_name, _repeat);
+}
+
+Vec3 CB_FSMScript::GetPlayerPos()
+{
+	vector<CGameObject*> vec = CLevelMgr::GetInst()->GetCurLevel()->GetLayer((UINT)LAYER_TYPE::Player)->GetParentObject();
+
+	for (CGameObject* obj : vec)
+	{
+		return obj->Transform()->GetRelativePos();
+	}
+
+	return Vec3(0.f, 0.f, 0.f);
 }
 
 
@@ -175,3 +189,4 @@ void CB_FSMScript::Phase1_AnimEnd()
 
 
 }
+

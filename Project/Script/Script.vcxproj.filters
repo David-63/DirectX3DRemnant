@@ -180,6 +180,18 @@
     <ClInclude Include="CP_MouseCtrlScript.h">
       <Filter>Script\Creature\Player\Module</Filter>
     </ClInclude>
+    <ClInclude Include="CB_STATEMeleeScript.h">
+      <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CB_STATERangedScript.h">
+      <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CB_STATEDamagedScript.h">
+      <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CB_STATEDeadScript.h">
+      <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -277,6 +289,18 @@
     </ClCompile>
     <ClCompile Include="CP_MouseCtrlScript.cpp">
       <Filter>Script\Creature\Player\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="CB_STATEMeleeScript.cpp">
+      <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CB_STATERangedScript.cpp">
+      <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CB_STATEDamagedScript.cpp">
+      <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CB_STATEDeadScript.cpp">
+      <Filter>Script\Creature\Boss\B_States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
