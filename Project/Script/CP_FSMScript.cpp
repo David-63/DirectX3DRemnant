@@ -65,6 +65,7 @@ void CP_FSMScript::begin()
 void CP_FSMScript::tick()
 {
 	CC_FSMScript::tick();	// 현재 State의 tick을 호출		
+
 	stanceControl(); // Stance 변동 감지 및 제어	
 	m_MouseCtrl.tick(); // 상태 적용이 완료된 다음에 마우스 호출
 }

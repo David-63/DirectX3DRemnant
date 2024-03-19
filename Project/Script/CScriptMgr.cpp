@@ -2,8 +2,12 @@
 #include "CScriptMgr.h"
 
 #include "CB_FSMScript.h"
+#include "CB_STATEDamagedScript.h"
+#include "CB_STATEDeadScript.h"
 #include "CB_STATEIdleScript.h"
+#include "CB_STATEMeleeScript.h"
 #include "CB_STATEMoveScript.h"
+#include "CB_STATERangedScript.h"
 #include "CB_StateScript.h"
 #include "CCameraMoveScript.h"
 #include "CCharacterMoveScript.h"
@@ -33,8 +37,12 @@
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
 	_vec.push_back(L"CB_FSMScript");
+	_vec.push_back(L"CB_STATEDamagedScript");
+	_vec.push_back(L"CB_STATEDeadScript");
 	_vec.push_back(L"CB_STATEIdleScript");
+	_vec.push_back(L"CB_STATEMeleeScript");
 	_vec.push_back(L"CB_STATEMoveScript");
+	_vec.push_back(L"CB_STATERangedScript");
 	_vec.push_back(L"CB_StateScript");
 	_vec.push_back(L"CCameraMoveScript");
 	_vec.push_back(L"CCharacterMoveScript");
@@ -50,7 +58,6 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CM_Lurker_STATE_Idle_Script");
 	_vec.push_back(L"CM_Lurker_STATE_Melee_Script");
 	_vec.push_back(L"CM_Lurker_STATE_Move_Script");
-	_vec.push_back(L"CM_Lurker_STATE_Sleep_Script");
 	_vec.push_back(L"CPathFinderScript");
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"CPlayerScriptFsm");
@@ -67,10 +74,18 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
 	if (L"CB_FSMScript" == _strScriptName)
 		return new CB_FSMScript;
+	if (L"CB_STATEDamagedScript" == _strScriptName)
+		return new CB_STATEDamagedScript;
+	if (L"CB_STATEDeadScript" == _strScriptName)
+		return new CB_STATEDeadScript;
 	if (L"CB_STATEIdleScript" == _strScriptName)
 		return new CB_STATEIdleScript;
+	if (L"CB_STATEMeleeScript" == _strScriptName)
+		return new CB_STATEMeleeScript;
 	if (L"CB_STATEMoveScript" == _strScriptName)
 		return new CB_STATEMoveScript;
+	if (L"CB_STATERangedScript" == _strScriptName)
+		return new CB_STATERangedScript;
 	if (L"CB_StateScript" == _strScriptName)
 		return new CB_StateScript;
 	if (L"CCameraMoveScript" == _strScriptName)
@@ -131,11 +146,23 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::B_FSMSCRIPT:
 		return new CB_FSMScript;
 		break;
+	case (UINT)SCRIPT_TYPE::B_STATEDAMAGEDSCRIPT:
+		return new CB_STATEDamagedScript;
+		break;
+	case (UINT)SCRIPT_TYPE::B_STATEDEADSCRIPT:
+		return new CB_STATEDeadScript;
+		break;
 	case (UINT)SCRIPT_TYPE::B_STATEIDLESCRIPT:
 		return new CB_STATEIdleScript;
 		break;
+	case (UINT)SCRIPT_TYPE::B_STATEMELEESCRIPT:
+		return new CB_STATEMeleeScript;
+		break;
 	case (UINT)SCRIPT_TYPE::B_STATEMOVESCRIPT:
 		return new CB_STATEMoveScript;
+		break;
+	case (UINT)SCRIPT_TYPE::B_STATERANGEDSCRIPT:
+		return new CB_STATERangedScript;
 		break;
 	case (UINT)SCRIPT_TYPE::B_STATESCRIPT:
 		return new CB_StateScript;
@@ -224,12 +251,28 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CB_FSMScript";
 		break;
 
+	case SCRIPT_TYPE::B_STATEDAMAGEDSCRIPT:
+		return L"CB_STATEDamagedScript";
+		break;
+
+	case SCRIPT_TYPE::B_STATEDEADSCRIPT:
+		return L"CB_STATEDeadScript";
+		break;
+
 	case SCRIPT_TYPE::B_STATEIDLESCRIPT:
 		return L"CB_STATEIdleScript";
 		break;
 
+	case SCRIPT_TYPE::B_STATEMELEESCRIPT:
+		return L"CB_STATEMeleeScript";
+		break;
+
 	case SCRIPT_TYPE::B_STATEMOVESCRIPT:
 		return L"CB_STATEMoveScript";
+		break;
+
+	case SCRIPT_TYPE::B_STATERANGEDSCRIPT:
+		return L"CB_STATERangedScript";
 		break;
 
 	case SCRIPT_TYPE::B_STATESCRIPT:
