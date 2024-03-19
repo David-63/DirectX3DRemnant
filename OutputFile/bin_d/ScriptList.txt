@@ -20,7 +20,6 @@ CM_Lurker_STATE_Dead_Script
 CM_Lurker_STATE_Idle_Script
 CM_Lurker_STATE_Melee_Script
 CM_Lurker_STATE_Move_Script
-CM_Lurker_STATE_Sleep_Script
 CPathFinderScript
 CPlayerScript
 CPlayerScriptFsm

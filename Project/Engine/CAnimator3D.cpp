@@ -123,6 +123,8 @@ void CAnimator3D::animaTick()
 
 	m_AnimRatio = (float)(dFrameIdx - (double)m_NextFrameIdx);
 
+	if (m_CurFrameIdx >= m_pCurrentAnim->GetMTAnimClips().at(m_CurAnimData.AnimClipIdx).iFrameLength - 1)
+		m_CurFrameIdx = m_pCurrentAnim->GetMTAnimClips().at(m_CurAnimData.AnimClipIdx).iFrameLength - 1;
 	UINT frameIndex = m_CurFrameIdx - (m_CurAnimData.BeginTime * 30);
 	m_isFinalMatUpdate = false;
 

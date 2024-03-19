@@ -335,10 +335,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CM_Lurker_STATE_Move_Script";
 		break;
 
-	case SCRIPT_TYPE::M_LURKER_STATE_SLEEP_SCRIPT:
-		return L"CM_Lurker_STATE_Sleep_Script";
-		break;
-
 	case SCRIPT_TYPE::PATHFINDERSCRIPT:
 		return L"CPathFinderScript";
 		break;

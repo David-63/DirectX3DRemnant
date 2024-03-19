@@ -411,7 +411,7 @@ void CRigidBody::SetShapeLocalPos(int _idx, CTransform* _transform)
 {
 	Vec3 vecPos = _transform->GetRelativePos();
 	Vec3 vecRot = _transform->GetRelativeRot();
-	XMFLOAT4 quat = Transform()->EulerToQuat(vecRot.x, vecRot.y, vecRot.z);
+	XMFLOAT4 quat = EulerToQuat(vecRot.x, vecRot.y, vecRot.z);
 
 	PxTransform pxTransform;
 	pxTransform.p.x = vecPos.x;

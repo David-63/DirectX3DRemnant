@@ -204,7 +204,7 @@ void CP_STATEMoveScript::TranslateInput()
 	if (CP_FSMScript::ePlayerStance::Sprint == curStance)
 		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 1.8f;
 	else
-		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 0.15f;
+		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 0.1f;
 	
 	if (KEY_HOLD(KEY::W))
 	{
