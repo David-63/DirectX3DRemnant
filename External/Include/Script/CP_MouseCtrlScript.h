@@ -56,6 +56,9 @@ private:
 	tSwapValue		m_PivotValue;
 	tSwapValue		m_FovValue;
 
+private:
+	CGameObject*	m_Weapon;
+
 public:
 	virtual void begin() override;
 	virtual void tick() override;
@@ -70,6 +73,7 @@ public:
 public:
 	void SetOwner(CP_FSMScript* _owner) { m_PHQ = _owner; }
 	void SetMainCam(CCamera* _cam) { m_ctrlCam = _cam; }
+	void SetWeaponObj(CGameObject* _obj) { m_Weapon = _obj; }
 	void ChangeCamValue() { m_IsChangeStance = true; }
 
 	void SetPivot(float _value) { m_PivotValue.SetValue(_value); }

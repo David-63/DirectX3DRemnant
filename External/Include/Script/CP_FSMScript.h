@@ -2,7 +2,6 @@
 #include "CC_FSMScript.h"
 #include "CP_StatesScript.h"
 #include "CP_MouseCtrlScript.h"
-#include "CP_WeaponScript.h"
 
 #define P_IdleR2                    L"animclip\\player\\P_IdleR2.animclip"
 #define P_IdleR2Aim                 L"animclip\\player\\P_IdleR2Aim.animclip"
@@ -89,7 +88,7 @@ private:
 
 private:
     CP_MouseCtrlScript  m_MouseCtrl;
-    CP_WeaponScript*    m_Weapon;
+    CGameObject*        m_Weapon;
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
     bool                m_InpStance[(UINT)eInpStance::End];

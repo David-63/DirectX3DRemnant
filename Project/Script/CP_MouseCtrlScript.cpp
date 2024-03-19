@@ -6,7 +6,7 @@
 
 CP_MouseCtrlScript::CP_MouseCtrlScript()
 	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr)
-	, m_CamInfo({ -180.f, 5.f, 55.f }, 0.54f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
+	, m_CamInfo({ -180.f, 5.f, 35.f }, 0.54f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
 {
 }
 
@@ -30,6 +30,22 @@ void CP_MouseCtrlScript::tick()
 	MoveCameraPos();
 	MoveCameraRot();
 	MouseRock();
+
+	
+	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(168);
+	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
+	// SetPos
+	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
+	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
+	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
+	Matrix finalMat = OwnerMat * matTranslation;
+	Vec3 bonePos = finalMat.Translation();
+	m_Weapon->Transform()->SetRelativePos(bonePos);
+	// SetRot
+	Vec3 boneRot = m_PHQ->Transform()->GetRelativeRot();
+	boneRot.y += XM_PI;
+	m_Weapon->Transform()->SetRelativeRot(boneRot);
+
 }
 
 void CP_MouseCtrlScript::MoveCameraPos()

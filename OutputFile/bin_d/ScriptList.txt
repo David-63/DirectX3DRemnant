@@ -24,6 +24,5 @@ CP_MouseCtrlScript
 CP_STATEIdleScript
 CP_STATEMoveScript
 CP_StatesScript
-CP_WeaponScript
 CShoulderViewScript
 CTestScript

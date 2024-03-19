@@ -27,7 +27,6 @@
 #include "CP_STATEIdleScript.h"
 #include "CP_STATEMoveScript.h"
 #include "CP_StatesScript.h"
-#include "CP_WeaponScript.h"
 #include "CShoulderViewScript.h"
 #include "CTestScript.h"
 
@@ -59,7 +58,6 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CP_STATEIdleScript");
 	_vec.push_back(L"CP_STATEMoveScript");
 	_vec.push_back(L"CP_StatesScript");
-	_vec.push_back(L"CP_WeaponScript");
 	_vec.push_back(L"CShoulderViewScript");
 	_vec.push_back(L"CTestScript");
 }
@@ -118,8 +116,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CP_STATEMoveScript;
 	if (L"CP_StatesScript" == _strScriptName)
 		return new CP_StatesScript;
-	if (L"CP_WeaponScript" == _strScriptName)
-		return new CP_WeaponScript;
 	if (L"CShoulderViewScript" == _strScriptName)
 		return new CShoulderViewScript;
 	if (L"CTestScript" == _strScriptName)
@@ -208,9 +204,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::P_STATESSCRIPT:
 		return new CP_StatesScript;
-		break;
-	case (UINT)SCRIPT_TYPE::P_WEAPONSCRIPT:
-		return new CP_WeaponScript;
 		break;
 	case (UINT)SCRIPT_TYPE::SHOULDERVIEWSCRIPT:
 		return new CShoulderViewScript;
@@ -328,10 +321,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::P_STATESSCRIPT:
 		return L"CP_StatesScript";
-		break;
-
-	case SCRIPT_TYPE::P_WEAPONSCRIPT:
-		return L"CP_WeaponScript";
 		break;
 
 	case SCRIPT_TYPE::SHOULDERVIEWSCRIPT:
