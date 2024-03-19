@@ -14,13 +14,15 @@ private:
 
 
 public:
+    virtual void begin() override;
+public:
     virtual void Enter() override; 
     virtual void tick() override;
     virtual void Exit() override;
 
 public:
     CLONE(CB_STATEIdleScript);
-
+     
     CB_STATEIdleScript();
     virtual ~CB_STATEIdleScript();
 

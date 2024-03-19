@@ -1,6 +1,10 @@
 CB_FSMScript
+CB_STATEDamagedScript
+CB_STATEDeadScript
 CB_STATEIdleScript
+CB_STATEMeleeScript
 CB_STATEMoveScript
+CB_STATERangedScript
 CB_StateScript
 CCameraMoveScript
 CCharacterMoveScript
