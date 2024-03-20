@@ -32,6 +32,11 @@
 #define P_MoveR2Jog_FL              L"animclip\\player\\P_MoveR2Jog_FL.animclip"
 #define P_MoveR2Jog_FR              L"animclip\\player\\P_MoveR2Jog_FR.animclip"
 
+#define P_2RFire                    L"animclip\\player\\P_2RFire.animclip"
+#define P_2RFire_Crouch             L"animclip\\player\\P_2RFire_Crouch.animclip"
+#define P_2RRifleReload             L"animclip\\player\\P_2RRifleReload.animclip"
+#define P_2RRifleReloadCrouch       L"animclip\\player\\P_2RRifleReloadCrouch.animclip"
+
 
 #define StanceDelay 0.1f
 
@@ -58,8 +63,6 @@ public:
         Dodge,
         End,
     };
-
-
     struct tPlayerStat
     {
         float MoveSpeed;
@@ -72,13 +75,39 @@ public:
     };
     struct tP_LongGunInfo
     {
-        int curAmmo;
+        int CurAmmo;
         int MaxAmmo;
         float Damage;
         float FireLate;
         float ReloadSpeed;
 
-        tP_LongGunInfo() : curAmmo(12), MaxAmmo(12), Damage(12), FireLate(0.22f), ReloadSpeed(0.22f) {}
+        tP_LongGunInfo() : CurAmmo(12), MaxAmmo(12), Damage(12), FireLate(0.22f), ReloadSpeed(0.22f) {}
+
+        bool IsAble() { return (0 < CurAmmo) ? true : false; }
+
+        bool Fire()
+        {
+            if (0 >= CurAmmo)
+                return false;
+
+            CurAmmo--;
+            return true;
+        }
+
+        bool Reload()
+        {
+            if (MaxAmmo <= CurAmmo)
+                return false;
+            CurAmmo++;
+            return true;
+        }
+        bool ReloadMag()
+        {
+            if (MaxAmmo <= CurAmmo)
+                return false;
+            CurAmmo = MaxAmmo;
+            return true;
+        }
     };
 
 
@@ -111,7 +140,7 @@ public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
     ePlayerStance GetStance() { return P_Stance; }
     tP_Info GetPlayerInfo() { return m_PlayerInfo; }
-    tP_LongGunInfo GetLongGunInfo() { return m_LongGunInfo; }
+    tP_LongGunInfo* GetLongGunInfo() { return &m_LongGunInfo; }
 
 public:
     void ClearStanceChange() { m_IsChangeStance = false; }
@@ -131,6 +160,9 @@ public:
     void InputMove(int _inputX, int _inputY) { m_moveDir += Vec2(_inputX, _inputY); }
     void ClearMoveDir() { m_moveDir = Vec2(0, 0); }
     Vec2 GetMoveDir() { return m_moveDir; }
+
+public:
+    void GotoIdle();
 
 public:
     virtual void BeginOverlap(CCollider3D* _Other) override;

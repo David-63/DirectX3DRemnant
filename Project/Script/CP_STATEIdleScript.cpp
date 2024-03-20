@@ -61,11 +61,43 @@ void CP_STATEIdleScript::tick()
 	if (Vec2(0, 0) != moveDir)
 		m_isMove = true;
 
-	/*if (KEY_TAP(KEY::SPACE))
+
+	CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
+
+	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
+	if (KEY_TAP(KEY::LBTN))
 	{
-		m_isMove = true;
-	}*/
-	
+		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+		{
+			if (gun->Fire())
+			{
+				//m_PHQ->PlayAnimation(P_2RFire_Crouch, false);
+			}
+		}
+		else if (CP_FSMScript::ePlayerStance::Aim == curStance)
+		{
+			if (gun->Fire())
+			{
+			//	m_PHQ->PlayAnimation(P_2RFire, false);
+			}
+		}		
+	}
+	if (KEY_TAP(KEY::R))
+	{
+		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance
+			|| CP_FSMScript::ePlayerStance::Crouch == curStance)
+		{
+			if (gun->ReloadMag())
+			{
+				m_PHQ->PlayAnimation(P_2RRifleReloadCrouch, false);
+			}
+		}
+		else
+			if (gun->ReloadMag())
+			{
+				m_PHQ->PlayAnimation(P_2RRifleReload, false);
+			}
+	}
 
 	// 상태 변경해주기
 	if (m_isMove)

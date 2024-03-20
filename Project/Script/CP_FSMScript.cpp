@@ -51,6 +51,11 @@ void CP_FSMScript::begin()
 	GetOwner()->Animator3D()->Add(P_MoveR2Jog_FL);
 	GetOwner()->Animator3D()->Add(P_MoveR2Jog_FR);
 
+	GetOwner()->Animator3D()->Add(P_2RRifleReload);
+	GetOwner()->Animator3D()->Add(P_2RRifleReloadCrouch);
+	
+	GetOwner()->Animator3D()->CompleteEvent(P_2RRifleReload) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_2RRifleReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
 
 	// GetOwner()->Animator3D()->CompleteEvent(P_MoveR2Jog)
 
@@ -59,8 +64,9 @@ void CP_FSMScript::begin()
 
 
 	Ptr<CMeshData> pMeshData = nullptr;
-	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\HuntingRifle.mdat");
-
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\HuntingRifle.mdat");
+	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\HuntingRifle.fbx");
+	
 	m_Weapon = nullptr;
 	m_Weapon = pMeshData->InstMesh();
 	m_Weapon->SetName(L"LongGun");
@@ -137,6 +143,11 @@ void CP_FSMScript::stanceControl()
 void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 {
 	GetOwner()->Animator3D()->Play(_name, _repeat);
+}
+
+void CP_FSMScript::GotoIdle()
+{
+	PlayAnimation(P_IdleR2, true);
 }
 
 void CP_FSMScript::BeginOverlap(CCollider3D* _Other)

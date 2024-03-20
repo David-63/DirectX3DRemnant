@@ -77,7 +77,21 @@ void CP_STATEMoveScript::tick()
 
 	// 애니메이션을 변경해주려면 이동 방향이 바뀐걸 확인 할 수 있어야함
 
+	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 
+	if (CP_FSMScript::ePlayerStance::CrouchAim == curStance
+		|| CP_FSMScript::ePlayerStance::Aim == curStance)
+	{
+		CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
+
+		if (gun->IsAble())
+		{
+			if (KEY_TAP(KEY::LBTN))
+			{
+				gun->Fire();
+			}
+		}
+	}
 
 
 	// 이동량이 없으면 Idle로 변경
