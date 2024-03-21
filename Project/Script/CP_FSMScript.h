@@ -32,10 +32,11 @@
 #define P_MoveR2Jog_FL              L"animclip\\player\\P_MoveR2Jog_FL.animclip"
 #define P_MoveR2Jog_FR              L"animclip\\player\\P_MoveR2Jog_FR.animclip"
 
-#define P_2RFire                    L"animclip\\player\\P_2RFire.animclip"
-#define P_2RFire_Crouch             L"animclip\\player\\P_2RFire_Crouch.animclip"
-#define P_2RRifleReload             L"animclip\\player\\P_2RRifleReload.animclip"
-#define P_2RRifleReloadCrouch       L"animclip\\player\\P_2RRifleReloadCrouch.animclip"
+//#define P_2RFire                    L"animclip\\player\\P_2RFire.animclip"    // 다시 만들예정
+#define P_ReloadRifle               L"animclip\\player\\P_ReloadRifle.animclip"
+#define P_ReloadRifleCrouch         L"animclip\\player\\P_ReloadRifleCrouch.animclip"
+
+#define P_2RDodge                   L"animclip\\player\\P_Dodge.animclip"
 
 
 #define StanceDelay 0.1f

@@ -67,43 +67,56 @@ void CP_STATEIdleScript::tick()
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 	if (KEY_TAP(KEY::LBTN))
 	{
-		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance
+			|| CP_FSMScript::ePlayerStance::Aim == curStance)
 		{
 			if (gun->Fire())
 			{
-				//m_PHQ->PlayAnimation(P_2RFire_Crouch, false);
-			}
-		}
-		else if (CP_FSMScript::ePlayerStance::Aim == curStance)
-		{
-			if (gun->Fire())
-			{
-			//	m_PHQ->PlayAnimation(P_2RFire, false);
+				if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+				{
+					// TogleInput 호출해서 강제로 일어서게 만들기					
+				}
+				//m_PHQ->PlayAnimation(P_2RFire, false);
 			}
 		}		
 	}
 	if (KEY_TAP(KEY::R))
 	{
-		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance
-			|| CP_FSMScript::ePlayerStance::Crouch == curStance)
+		if (gun->ReloadMag())
 		{
-			if (gun->ReloadMag())
+			if (CP_FSMScript::ePlayerStance::CrouchAim == curStance
+				|| CP_FSMScript::ePlayerStance::Crouch == curStance)
 			{
-				m_PHQ->PlayAnimation(P_2RRifleReloadCrouch, false);
-			}
-		}
-		else
-			if (gun->ReloadMag())
-			{
-				m_PHQ->PlayAnimation(P_2RRifleReload, false);
-			}
-	}
+				m_PHQ->PlayAnimation(P_ReloadRifleCrouch, false);
 
+			}
+			else
+			{
+				m_PHQ->PlayAnimation(P_ReloadRifle, false);
+			}
+
+			// Reload 상태로 변경
+			m_isReload = true;
+		}		
+	}
+	if (KEY_TAP(KEY::SPACE))
+	{
+
+		m_isDodge = true;
+	}
 	// 상태 변경해주기
-	if (m_isMove)
+	if (m_isDodge)
 	{
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
-	}	
+	}
+	else if (m_isReload)
+	{
+		//m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
+	}
+	else if (m_isMove)
+	{
+		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
+	}
 }
 
 void CP_STATEIdleScript::CallAnimation()

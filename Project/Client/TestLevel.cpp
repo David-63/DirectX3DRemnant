@@ -119,23 +119,16 @@ void CreateTestLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* player = nullptr;
 
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_2RRifleReloadCrouch.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_IdleR2.mdat");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_2RDodge.fbx");
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_IdleR2.mdat");
+		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_2RRifleReloadCrouch.mdat");
 		player = pMeshData->Instantiate();
 		//player = pMeshData->InstMesh();
 		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RHuntReload_End.animclip");
 		player->SetName(L"Player");
 		player->MeshRender()->SetFrustumCheck(false);
-		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RFusionReload.animclip");
-
-		player->AddComponent(new CP_FSMScript());
+		
+		//player->AddComponent(new CP_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
-
-		/*pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\HuntingRifle.mdat");
-		player = pMeshData->InstMesh();
-		player->SetName(L"LongGun");
-		player->MeshRender()->SetFrustumCheck(false);
-
-		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);*/
 	}
 }
