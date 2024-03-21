@@ -17,10 +17,16 @@ void CP_STATEIdleScript::tick()
 {
 	if (KEY_TAP(KEY::RBTN))
 	{
+		if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+			m_PHQ->InputCrouch();
+		
 		m_PHQ->InputAim();
 	}
 	if (KEY_TAP(KEY::LCTRL))
 	{
+		if (m_PHQ->IsInput((UINT)eInpStance::Aim))
+			m_PHQ->InputAim();
+
 		m_PHQ->InputCrouch();
 	}
 	if (KEY_TAP(KEY::W))
@@ -67,15 +73,11 @@ void CP_STATEIdleScript::tick()
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 	if (KEY_TAP(KEY::LBTN))
 	{
-		if (CP_FSMScript::ePlayerStance::CrouchAim == curStance
-			|| CP_FSMScript::ePlayerStance::Aim == curStance)
+		if (CP_FSMScript::ePlayerStance::Aim == curStance)
 		{
 			if (gun->Fire())
 			{
-				if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
-				{
-					// TogleInput 호출해서 강제로 일어서게 만들기					
-				}
+				m_isFire = true;
 				//m_PHQ->PlayAnimation(P_2RFire, false);
 			}
 		}		
@@ -84,15 +86,13 @@ void CP_STATEIdleScript::tick()
 	{
 		if (gun->ReloadMag())
 		{
-			if (CP_FSMScript::ePlayerStance::CrouchAim == curStance
-				|| CP_FSMScript::ePlayerStance::Crouch == curStance)
+			if (CP_FSMScript::ePlayerStance::Crouch == curStance)
 			{
-				m_PHQ->PlayAnimation(P_ReloadRifleCrouch, false);
-
+				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false);
 			}
 			else
 			{
-				m_PHQ->PlayAnimation(P_ReloadRifle, false);
+				m_PHQ->PlayAnimation(P_R2Reload, false);
 			}
 
 			// Reload 상태로 변경
@@ -104,40 +104,33 @@ void CP_STATEIdleScript::tick()
 
 		m_isDodge = true;
 	}
+	
 	// 상태 변경해주기
 	if (m_isDodge)
-	{
-		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
-	}
+		m_PHQ->ChangeState(static_cast<UINT>(eP_States::DODGE));
+	else if (m_isFire)
+		m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
 	else if (m_isReload)
-	{
-		//m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
-	}
+		m_PHQ->ChangeState(static_cast<UINT>(eP_States::RELOAD));
 	else if (m_isMove)
-	{
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
-	}
 }
 
 void CP_STATEIdleScript::CallAnimation()
 {
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 
-	if (CP_FSMScript::ePlayerStance::CrouchAim == curStance)
+	if (CP_FSMScript::ePlayerStance::Crouch == curStance)
 	{
-		m_PHQ->PlayAnimation(P_IdleR2AimCrouch, true);
-	}
-	else if (CP_FSMScript::ePlayerStance::Crouch == curStance)
-	{
-		m_PHQ->PlayAnimation(P_IdleR2Crouch, true);
+		m_PHQ->PlayAnimation(P_R2IdleCrouch, true);
 	}
 	else if (CP_FSMScript::ePlayerStance::Aim == curStance)
 	{
-		m_PHQ->PlayAnimation(P_IdleR2Aim, true);
+		m_PHQ->PlayAnimation(P_R2IdleAim, true);
 	}
 	else if (CP_FSMScript::ePlayerStance::Normal == curStance)
 	{
-		m_PHQ->PlayAnimation(P_IdleR2, true);
+		m_PHQ->PlayAnimation(P_R2Idle, true);
 	}
 }
 
@@ -168,5 +161,4 @@ void CP_STATEIdleScript::Enter()
 void CP_STATEIdleScript::Exit()
 {
 	ClearIdleState();
-	m_PHQ->OverrideObjRotY();
 }

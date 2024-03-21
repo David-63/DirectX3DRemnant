@@ -25,7 +25,14 @@ public:
     void IdleMouseInput();
 
 public:
-    void ClearIdleState() { m_isMove = false; m_isMelee = false; m_isReload = false; m_isDodge = false; }
+    void ClearIdleState()
+    {
+        m_isDodge = false;
+        m_isMelee = false;
+        m_isFire = false;
+        m_isReload = false;
+        m_isMove = false;
+    }
 
 public:
     virtual void Enter() override;

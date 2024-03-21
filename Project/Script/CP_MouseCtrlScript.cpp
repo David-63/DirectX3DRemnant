@@ -16,7 +16,6 @@ CP_MouseCtrlScript::~CP_MouseCtrlScript()
 
 void CP_MouseCtrlScript::begin()
 {
-	m_ctrlCam->Transform()->SetRelativeRot(Vec3(0.f, XM_PI, 0.f));
 }
 
 void CP_MouseCtrlScript::tick()
@@ -72,7 +71,7 @@ void CP_MouseCtrlScript::CtrlMovePos()
 	m_ctrlCam->Transform()->SetRelativePos(Point);
 
 	// Weapon
-	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(168);
+	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
 	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
 	// SetPos
 	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
@@ -119,13 +118,12 @@ void CP_MouseCtrlScript::CtrlMoveRot()
 	else
 	{
 		Vec3 outObjEuler = Vec3(0, yObjRot, (int)0);
-		Vec3 outCamEuler = Vec3(xCamRot, yObjRot + XM_PI, (int)0);
+		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, (int)0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
 
 	Vec3 boneRot = m_PHQ->Transform()->GetRelativeRot();
-	boneRot.y += XM_PI;
 	m_Weapon->Transform()->SetRelativeRot(boneRot);
 }
 

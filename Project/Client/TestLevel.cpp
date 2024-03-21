@@ -55,12 +55,6 @@ void CreateTestLevel()
 		pMainCam->AddComponent(new CTransform);
 		pMainCam->AddComponent(new CCamera);
 		pMainCam->AddComponent(new CCameraMoveScript);
-		
-		
-		// 숄더뷰용
-		//pMainCam->AddComponent(new CShoulderViewScript);
-		//CShoulderViewScript* pCamMoveScript = pMainCam->GetScript<CShoulderViewScript>(); 
-
 		pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 		pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 		pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
@@ -119,16 +113,15 @@ void CreateTestLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* player = nullptr;
 
-		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_2RDodge.fbx");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_IdleR2.mdat");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_2RRifleReloadCrouch.mdat");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_R2ReloadCrouch.fbx");
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
 		player = pMeshData->Instantiate();
 		//player = pMeshData->InstMesh();
 		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RHuntReload_End.animclip");
 		player->SetName(L"Player");
 		player->MeshRender()->SetFrustumCheck(false);
 		
-		//player->AddComponent(new CP_FSMScript());
+		player->AddComponent(new CP_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
 	}
 }

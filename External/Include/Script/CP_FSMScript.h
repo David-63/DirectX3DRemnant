@@ -3,41 +3,37 @@
 #include "CP_StatesScript.h"
 #include "CP_MouseCtrlScript.h"
 
-#define P_IdleR2                    L"animclip\\player\\P_IdleR2.animclip"
-#define P_IdleR2Aim                 L"animclip\\player\\P_IdleR2Aim.animclip"
-#define P_IdleR2AimCrouch           L"animclip\\player\\P_IdleR2AimCrouch.animclip"
-#define P_IdleR2Crouch              L"animclip\\player\\P_IdleR2Crouch.animclip"
-#define P_MoveR2AimCrouchWalk       L"animclip\\player\\P_MoveR2AimCrouchWalk.animclip"
-#define P_MoveR2AimCrouchWalk_B     L"animclip\\player\\P_MoveR2AimCrouchWalk_B.animclip"
-#define P_MoveR2AimCrouchWalk_BL    L"animclip\\player\\P_MoveR2AimCrouchWalk_BL.animclip"
-#define P_MoveR2AimCrouchWalk_BR    L"animclip\\player\\P_MoveR2AimCrouchWalk_BR.animclip"
-#define P_MoveR2AimCrouchWalk_FL    L"animclip\\player\\P_MoveR2AimCrouchWalk_FL.animclip"
-#define P_MoveR2AimCrouchWalk_FR    L"animclip\\player\\P_MoveR2AimCrouchWalk_FR.animclip"
-#define P_MoveR2AimWalk             L"animclip\\player\\P_MoveR2AimWalk.animclip"
-#define P_MoveR2AimWalk_B           L"animclip\\player\\P_MoveR2AimWalk_B.animclip"
-#define P_MoveR2AimWalk_BL          L"animclip\\player\\P_MoveR2AimWalk_BL.animclip"
-#define P_MoveR2AimWalk_BR          L"animclip\\player\\P_MoveR2AimWalk_BR.animclip"
-#define P_MoveR2AimWalk_FL          L"animclip\\player\\P_MoveR2AimWalk_FL.animclip"
-#define P_MoveR2AimWalk_FR          L"animclip\\player\\P_MoveR2AimWalk_FR.animclip"
-#define P_MoveR2CrouchWalk          L"animclip\\player\\P_MoveR2CrouchWalk.animclip"
-#define P_MoveR2CrouchWalk_B        L"animclip\\player\\P_MoveR2CrouchWalk_B.animclip"
-#define P_MoveR2CrouchWalk_BL       L"animclip\\player\\P_MoveR2CrouchWalk_BL.animclip"
-#define P_MoveR2CrouchWalk_BR       L"animclip\\player\\P_MoveR2CrouchWalk_BR.animclip"
-#define P_MoveR2CrouchWalk_FL       L"animclip\\player\\P_MoveR2CrouchWalk_FL.animclip"
-#define P_MoveR2CrouchWalk_FR       L"animclip\\player\\P_MoveR2CrouchWalk_FR.animclip"
-#define P_MoveR2Jog                 L"animclip\\player\\P_MoveR2Jog.animclip"
-#define P_MoveR2Jog_B               L"animclip\\player\\P_MoveR2Jog_B.animclip"
-#define P_MoveR2Jog_BL              L"animclip\\player\\P_MoveR2Jog_BL.animclip"
-#define P_MoveR2Jog_BR              L"animclip\\player\\P_MoveR2Jog_BR.animclip"
-#define P_MoveR2Jog_FL              L"animclip\\player\\P_MoveR2Jog_FL.animclip"
-#define P_MoveR2Jog_FR              L"animclip\\player\\P_MoveR2Jog_FR.animclip"
-
-//#define P_2RFire                    L"animclip\\player\\P_2RFire.animclip"    // 다시 만들예정
-#define P_ReloadRifle               L"animclip\\player\\P_ReloadRifle.animclip"
-#define P_ReloadRifleCrouch         L"animclip\\player\\P_ReloadRifleCrouch.animclip"
-
-#define P_2RDodge                   L"animclip\\player\\P_Dodge.animclip"
-
+#define P_R2Dodge                       L"animclip\\player\\P_R2Dodge.animclip"
+#define P_R2Dodge_B                     L"animclip\\player\\P_R2Dodge_B.animclip"   // 이건 안쓰는게 맞을듯
+#define P_R2Dodge_L                     L"animclip\\player\\P_R2Dodge_L.animclip"   
+#define P_R2Dodge_N                     L"animclip\\player\\P_R2Dodge_N.animclip"
+#define P_R2Dodge_R                     L"animclip\\player\\P_R2Dodge_R.animclip"
+#define P_R2Reload                      L"animclip\\player\\P_R2Reload.animclip"
+#define P_R2ReloadCrouch                L"animclip\\player\\P_R2ReloadCrouch.animclip"
+#define P_R2Idle                        L"animclip\\player\\P_R2Idle.animclip"
+#define P_R2IdleAim                     L"animclip\\player\\P_R2IdleAim.animclip"
+#define P_R2IdleCrouch                  L"animclip\\player\\P_R2IdleCrouch.animclip"
+#define P_R2MoveWalk                    L"animclip\\player\\P_R2MoveWalk.animclip"
+#define P_R2MoveWalk_B                  L"animclip\\player\\P_R2MoveWalk_B.animclip"
+#define P_R2MoveWalk_BL                 L"animclip\\player\\P_R2MoveWalk_BL.animclip"
+#define P_R2MoveWalk_BR                 L"animclip\\player\\P_R2MoveWalk_BR.animclip"
+#define P_R2MoveWalk_FL                 L"animclip\\player\\P_R2MoveWalk_FL.animclip"
+#define P_R2MoveWalk_FR                 L"animclip\\player\\P_R2MoveWalk_FR.animclip"
+#define P_R2MoveWalkAim                 L"animclip\\player\\P_R2MoveWalkAim.animclip"
+#define P_R2MoveWalkAim_B               L"animclip\\player\\P_R2MoveWalkAim_B.animclip"
+#define P_R2MoveWalkAim_BL              L"animclip\\player\\P_R2MoveWalkAim_BL.animclip"
+#define P_R2MoveWalkAim_BR              L"animclip\\player\\P_R2MoveWalkAim_BR.animclip"
+#define P_R2MoveWalkAim_FL              L"animclip\\player\\P_R2MoveWalkAim_FL.animclip"
+#define P_R2MoveWalkAim_FR              L"animclip\\player\\P_R2MoveWalkAim_FR.animclip"
+#define P_R2MoveWalkCrouch              L"animclip\\player\\P_R2MoveWalkCrouch.animclip"
+#define P_R2MoveWalkCrouch_B            L"animclip\\player\\P_R2MoveWalkCrouch_B.animclip"
+#define P_R2MoveWalkCrouch_BL           L"animclip\\player\\P_R2MoveWalkCrouch_BL.animclip"
+#define P_R2MoveWalkCrouch_BR           L"animclip\\player\\P_R2MoveWalkCrouch_BR.animclip"
+#define P_R2MoveWalkCrouch_FL           L"animclip\\player\\P_R2MoveWalkCrouch_FL.animclip"
+#define P_R2MoveWalkCrouch_FR           L"animclip\\player\\P_R2MoveWalkCrouch_FR.animclip"
+#define P_R2MoveSprint                  L"animclip\\player\\P_R2MoveSprint.animclip"
+#define P_R2MoveSprint_L                L"animclip\\player\\P_R2MoveSprint_L.animclip"
+#define P_R2MoveSprint_R                L"animclip\\player\\P_R2MoveSprint_R.animclip"
 
 #define StanceDelay 0.1f
 
@@ -60,7 +56,6 @@ public:
         Sprint,
         Crouch,
         Aim,
-        CrouchAim,
         Dodge,
         End,
     };

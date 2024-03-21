@@ -21,46 +21,45 @@ void CP_FSMScript::begin()
 
 
 	// 애니메이션
-	GetOwner()->Animator3D()->Add(P_IdleR2);
-	GetOwner()->Animator3D()->Add(P_IdleR2Aim);
-	GetOwner()->Animator3D()->Add(P_IdleR2AimCrouch);
-	GetOwner()->Animator3D()->Add(P_IdleR2Crouch);
+	GetOwner()->Animator3D()->Add(P_R2Dodge);
+	GetOwner()->Animator3D()->Add(P_R2Dodge_B);
+	GetOwner()->Animator3D()->Add(P_R2Dodge_L);
+	GetOwner()->Animator3D()->Add(P_R2Dodge_N);
+	GetOwner()->Animator3D()->Add(P_R2Dodge_R);
+	GetOwner()->Animator3D()->Add(P_R2Reload);
+	GetOwner()->Animator3D()->Add(P_R2ReloadCrouch);
+	GetOwner()->Animator3D()->Add(P_R2Idle);
+	GetOwner()->Animator3D()->Add(P_R2IdleAim);
+	GetOwner()->Animator3D()->Add(P_R2IdleCrouch);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalk);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalk_B);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalk_BL);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalk_BR);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalk_FL);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalk_FR);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_B);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_BL);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_BR);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_FL);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_FR);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_B);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_BL);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_BR);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_FL);
+	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_FR);
+	GetOwner()->Animator3D()->Add(P_R2MoveSprint);
+	GetOwner()->Animator3D()->Add(P_R2MoveSprint_L);
+	GetOwner()->Animator3D()->Add(P_R2MoveSprint_R);
 
-	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_B);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_BL);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_BR);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_FL);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimCrouchWalk_FR);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_B);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_BL);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_BR);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_FL);
-	GetOwner()->Animator3D()->Add(P_MoveR2AimWalk_FR);
-	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk);
-	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_B);
-	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_BL);
-	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_BR);
-	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_FL);
-	GetOwner()->Animator3D()->Add(P_MoveR2CrouchWalk_FR);
-	GetOwner()->Animator3D()->Add(P_MoveR2Jog);
-	GetOwner()->Animator3D()->Add(P_MoveR2Jog_B);
-	GetOwner()->Animator3D()->Add(P_MoveR2Jog_BL);
-	GetOwner()->Animator3D()->Add(P_MoveR2Jog_BR);
-	GetOwner()->Animator3D()->Add(P_MoveR2Jog_FL);
-	GetOwner()->Animator3D()->Add(P_MoveR2Jog_FR);
-
-	GetOwner()->Animator3D()->Add(P_ReloadRifle);
-	GetOwner()->Animator3D()->Add(P_ReloadRifleCrouch);
-
-	GetOwner()->Animator3D()->CompleteEvent(P_ReloadRifle) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_ReloadRifleCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
 
 
 	// GetOwner()->Animator3D()->CompleteEvent(P_MoveR2Jog)
 
-	PlayAnimation(P_IdleR2, true);
+	PlayAnimation(P_R2Idle, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));
 
 
@@ -106,13 +105,12 @@ void CP_FSMScript::stanceControl()
 				m_MouseCtrl.SetPivot(PIVOT_HIGH);
 				m_MouseCtrl.SetFov(FOV_HIGH);
 			}
-			else if (m_InpStance[(UINT)eInpStance::Crouch] && m_InpStance[(UINT)eInpStance::Aim])
+			else if (m_InpStance[(UINT)eInpStance::Aim])
 			{
-				ChangeStance(ePlayerStance::CrouchAim);
+				ChangeStance(ePlayerStance::Aim);
 				curState->CallAnimation();
-				m_MouseCtrl.SetPivot(PIVOT_MIDDLE);
-				m_MouseCtrl.SetFov(FOV_LOW);
-				m_MouseCtrl.OverrideObjRotY();
+				m_MouseCtrl.SetPivot(PIVOT_HIGH);
+				m_MouseCtrl.SetFov(FOV_LOW);				
 			}
 			else if (m_InpStance[(UINT)eInpStance::Crouch])
 			{
@@ -120,14 +118,6 @@ void CP_FSMScript::stanceControl()
 				curState->CallAnimation();
 				m_MouseCtrl.SetPivot(PIVOT_LOW);
 				m_MouseCtrl.SetFov(FOV_HIGH);
-			}
-			else if (m_InpStance[(UINT)eInpStance::Aim])
-			{
-				ChangeStance(ePlayerStance::Aim);
-				curState->CallAnimation();
-				m_MouseCtrl.SetPivot(PIVOT_HIGH);
-				m_MouseCtrl.SetFov(FOV_LOW);
-				m_MouseCtrl.OverrideObjRotY();
 			}
 			else
 			{
