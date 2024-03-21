@@ -18,11 +18,13 @@ void CP_FSMScript::begin()
 	// State 넣어주기
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEIDLESCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEMOVESCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEDODGESCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATERELOADSCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEFIRESCRIPT)));
 
 
 	// 애니메이션
 	GetOwner()->Animator3D()->Add(P_R2Dodge);
-	GetOwner()->Animator3D()->Add(P_R2Dodge_B);
 	GetOwner()->Animator3D()->Add(P_R2Dodge_L);
 	GetOwner()->Animator3D()->Add(P_R2Dodge_N);
 	GetOwner()->Animator3D()->Add(P_R2Dodge_R);
@@ -55,7 +57,12 @@ void CP_FSMScript::begin()
 
 	GetOwner()->Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
 	GetOwner()->Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
-
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_L) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_N) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
 
 	// GetOwner()->Animator3D()->CompleteEvent(P_MoveR2Jog)
 
@@ -134,6 +141,7 @@ void CP_FSMScript::stanceControl()
 void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 {
 	GetOwner()->Animator3D()->Play(_name, _repeat);
+	
 }
 
 void CP_FSMScript::GotoIdle()

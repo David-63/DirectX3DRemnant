@@ -28,8 +28,11 @@
 #include "CPlayerScriptFsm.h"
 #include "CP_FSMScript.h"
 #include "CP_MouseCtrlScript.h"
+#include "CP_STATEDodgeScript.h"
+#include "CP_STATEFireScript.h"
 #include "CP_STATEIdleScript.h"
 #include "CP_STATEMoveScript.h"
+#include "CP_STATEReloadScript.h"
 #include "CP_StatesScript.h"
 #include "CShoulderViewScript.h"
 #include "CTestScript.h"
@@ -63,8 +66,11 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CPlayerScriptFsm");
 	_vec.push_back(L"CP_FSMScript");
 	_vec.push_back(L"CP_MouseCtrlScript");
+	_vec.push_back(L"CP_STATEDodgeScript");
+	_vec.push_back(L"CP_STATEFireScript");
 	_vec.push_back(L"CP_STATEIdleScript");
 	_vec.push_back(L"CP_STATEMoveScript");
+	_vec.push_back(L"CP_STATEReloadScript");
 	_vec.push_back(L"CP_StatesScript");
 	_vec.push_back(L"CShoulderViewScript");
 	_vec.push_back(L"CTestScript");
@@ -126,10 +132,16 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CP_FSMScript;
 	if (L"CP_MouseCtrlScript" == _strScriptName)
 		return new CP_MouseCtrlScript;
+	if (L"CP_STATEDodgeScript" == _strScriptName)
+		return new CP_STATEDodgeScript;
+	if (L"CP_STATEFireScript" == _strScriptName)
+		return new CP_STATEFireScript;
 	if (L"CP_STATEIdleScript" == _strScriptName)
 		return new CP_STATEIdleScript;
 	if (L"CP_STATEMoveScript" == _strScriptName)
 		return new CP_STATEMoveScript;
+	if (L"CP_STATEReloadScript" == _strScriptName)
+		return new CP_STATEReloadScript;
 	if (L"CP_StatesScript" == _strScriptName)
 		return new CP_StatesScript;
 	if (L"CShoulderViewScript" == _strScriptName)
@@ -224,11 +236,20 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT:
 		return new CP_MouseCtrlScript;
 		break;
+	case (UINT)SCRIPT_TYPE::P_STATEDODGESCRIPT:
+		return new CP_STATEDodgeScript;
+		break;
+	case (UINT)SCRIPT_TYPE::P_STATEFIRESCRIPT:
+		return new CP_STATEFireScript;
+		break;
 	case (UINT)SCRIPT_TYPE::P_STATEIDLESCRIPT:
 		return new CP_STATEIdleScript;
 		break;
 	case (UINT)SCRIPT_TYPE::P_STATEMOVESCRIPT:
 		return new CP_STATEMoveScript;
+		break;
+	case (UINT)SCRIPT_TYPE::P_STATERELOADSCRIPT:
+		return new CP_STATEReloadScript;
 		break;
 	case (UINT)SCRIPT_TYPE::P_STATESSCRIPT:
 		return new CP_StatesScript;
@@ -355,12 +376,24 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CP_MouseCtrlScript";
 		break;
 
+	case SCRIPT_TYPE::P_STATEDODGESCRIPT:
+		return L"CP_STATEDodgeScript";
+		break;
+
+	case SCRIPT_TYPE::P_STATEFIRESCRIPT:
+		return L"CP_STATEFireScript";
+		break;
+
 	case SCRIPT_TYPE::P_STATEIDLESCRIPT:
 		return L"CP_STATEIdleScript";
 		break;
 
 	case SCRIPT_TYPE::P_STATEMOVESCRIPT:
 		return L"CP_STATEMoveScript";
+		break;
+
+	case SCRIPT_TYPE::P_STATERELOADSCRIPT:
+		return L"CP_STATEReloadScript";
 		break;
 
 	case SCRIPT_TYPE::P_STATESSCRIPT:

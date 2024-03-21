@@ -113,7 +113,7 @@ void CreateTestLevel()
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* player = nullptr;
 
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_R2ReloadCrouch.fbx");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_R2MoveWalkAim_FR.fbx");
 		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
 		player = pMeshData->Instantiate();
 		//player = pMeshData->InstMesh();

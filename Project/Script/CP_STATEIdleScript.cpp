@@ -69,19 +69,19 @@ void CP_STATEIdleScript::tick()
 
 
 	CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
-
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-	if (KEY_TAP(KEY::LBTN))
+	if (CP_FSMScript::ePlayerStance::Aim == curStance)
 	{
-		if (CP_FSMScript::ePlayerStance::Aim == curStance)
+		if (KEY_HOLD(KEY::LBTN))
 		{
 			if (gun->Fire())
 			{
 				m_isFire = true;
 				//m_PHQ->PlayAnimation(P_2RFire, false);
 			}
-		}		
+		}
 	}
+	
 	if (KEY_TAP(KEY::R))
 	{
 		if (gun->ReloadMag())
@@ -101,7 +101,11 @@ void CP_STATEIdleScript::tick()
 	}
 	if (KEY_TAP(KEY::SPACE))
 	{
-
+		if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+			m_PHQ->InputCrouch();
+		if (m_PHQ->IsInput((UINT)eInpStance::Aim))
+			m_PHQ->InputAim();
+		m_PHQ->PlayAnimation(P_R2Dodge_N, false);
 		m_isDodge = true;
 	}
 	

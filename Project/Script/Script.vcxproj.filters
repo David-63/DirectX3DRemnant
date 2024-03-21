@@ -192,6 +192,15 @@
     <ClInclude Include="CB_STATEDeadScript.h">
       <Filter>Script\Creature\Boss\B_States</Filter>
     </ClInclude>
+    <ClInclude Include="CP_STATEDodgeScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEReloadScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEFireScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -301,6 +310,15 @@
     </ClCompile>
     <ClCompile Include="CB_STATEDeadScript.cpp">
       <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEDodgeScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEReloadScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEFireScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
