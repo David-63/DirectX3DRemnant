@@ -14,17 +14,29 @@ CP_STATEMoveScript::~CP_STATEMoveScript()
 
 void CP_STATEMoveScript::tick()
 {
-	// 스탠스 변경 키 : AIM
 	if (KEY_TAP(KEY::RBTN))
 	{
+		if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+			m_PHQ->InputCrouch();
+
 		m_PHQ->InputAim();
 	}
-	// 스탠스 변경 키 : CROUCH
 	if (KEY_TAP(KEY::LCTRL))
 	{
+		if (m_PHQ->IsInput((UINT)eInpStance::Aim))
+			m_PHQ->InputAim();
+
 		m_PHQ->InputCrouch();
 	}
-	// 스탠스 변경 키 : DODGE
+
+	if (KEY_TAP(KEY::LSHIFT))
+		m_PHQ->InputSprint(true);
+	if (KEY_RELEASE(KEY::LSHIFT))
+		m_PHQ->InputSprint(false);
+	
+
+
+
 
 	// 방향 입력
 	if (KEY_TAP(KEY::W))
@@ -73,21 +85,38 @@ void CP_STATEMoveScript::tick()
 		CallAnimation();
 	}
 	// 이동
-	TranslateInput();
+	translateInput();
 
 	// 애니메이션을 변경해주려면 이동 방향이 바뀐걸 확인 할 수 있어야함
 
+	CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-
-	if (CP_FSMScript::ePlayerStance::Aim == curStance)
+	if (KEY_TAP(KEY::R))
 	{
-		CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
-
-		if (gun->IsAble())
+		if (gun->ReloadMag())
 		{
-			if (KEY_TAP(KEY::LBTN))
+			if (CP_FSMScript::ePlayerStance::Crouch == curStance)
 			{
-				gun->Fire();
+				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false);
+			}
+			else
+			{
+				m_PHQ->PlayAnimation(P_R2Reload, false);
+			}
+		}
+	}
+	if (!m_PHQ->IsSprint())
+	{
+		if (CP_FSMScript::ePlayerStance::Aim == curStance)
+		{
+			CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
+
+			if (gun->IsAble())
+			{
+				if (KEY_TAP(KEY::LBTN))
+				{
+					gun->Fire();
+				}
 			}
 		}
 	}
@@ -110,6 +139,15 @@ void CP_STATEMoveScript::CallAnimation()
 
 	if (m_isFront)
 	{
+		if (CP_FSMScript::ePlayerStance::Sprint == curStance)
+		{
+			if (0.3 <= m_prevDir.x)
+				m_PHQ->PlayAnimation(P_R2MoveSprint_R, true);
+			else if (-0.3 >= m_prevDir.x)
+				m_PHQ->PlayAnimation(P_R2MoveSprint_L, true);
+			else
+				m_PHQ->PlayAnimation(P_R2MoveSprint, true);
+		}
 		if (CP_FSMScript::ePlayerStance::Crouch == curStance)
 		{
 			if (0.3 <= m_prevDir.x)
@@ -170,16 +208,7 @@ void CP_STATEMoveScript::CallAnimation()
 	}
 }
 
-void CP_STATEMoveScript::MoveKeyInput()
-{
-	
-}
-
-void CP_STATEMoveScript::MoveMouseInput()
-{
-}
-
-void CP_STATEMoveScript::TranslateInput()
+void CP_STATEMoveScript::translateInput()
 {
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 
@@ -191,16 +220,17 @@ void CP_STATEMoveScript::TranslateInput()
 
 	// 이동량 구하기
 
-	float moveMagnitude = 0.f;
 	CP_FSMScript::tP_Info playerInfo = m_PHQ->GetPlayerInfo();
 	
-	if (CP_FSMScript::ePlayerStance::Normal == curStance)
-		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT;
-	if (CP_FSMScript::ePlayerStance::Sprint == curStance)
-		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 1.8f;
-	else
+	float moveMagnitude = 0.f;
+	if (CP_FSMScript::ePlayerStance::Crouch == curStance)
 		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 0.1f;
-	
+	else if (CP_FSMScript::ePlayerStance::Sprint == curStance && m_isFront)
+		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 2.8f;
+	else
+		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT;
+
+
 	if (KEY_HOLD(KEY::W))
 	{
 		vCurPos -= vFront * moveMagnitude;
@@ -218,42 +248,10 @@ void CP_STATEMoveScript::TranslateInput()
 		vCurPos -= vRight * moveMagnitude;
 	}
 
+
 	m_PHQ->GetOwner()->Transform()->SetRelativePos(vCurPos);
-
 }
 
-void CP_STATEMoveScript::MoveNormalInput()
-{
-	//if (KEY_HOLD(KEY::W))
-	//{
-	//	// 이동
-	//	m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::Front);
-	//}
-	//if (KEY_HOLD(KEY::S))
-	//{
-	//	m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::Back);
-	//}
-	//if (KEY_HOLD(KEY::A))
-	//{
-	//	m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::Left);
-	//}
-	//if (KEY_HOLD(KEY::D))
-	//{
-	//	m_PHQ->ChangeMoveDir(CP_FSMScript::ePlayerMoveDir::Right);
-	//}
-}
-
-void CP_STATEMoveScript::MoveAimInput()
-{
-}
-
-void CP_STATEMoveScript::MoveCrouchInput()
-{
-}
-
-void CP_STATEMoveScript::MoveCrouchAimInput()
-{
-}
 
 void CP_STATEMoveScript::Enter()
 {
@@ -263,4 +261,5 @@ void CP_STATEMoveScript::Exit()
 {
 	//m_PHQ->ClearMoveDir();
 	m_prevDir = Vec2(0, 0);
+	m_PHQ->InputSprint(false);
 }

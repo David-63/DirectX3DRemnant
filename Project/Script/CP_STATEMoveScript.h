@@ -15,19 +15,9 @@ public:
 public:
     virtual void CallAnimation() override;
 
-public:
-    // Input Buffer로 관리해야함
-    void MoveKeyInput();
-    void MoveMouseInput();
+private:
+    void translateInput();
 
-
-    void TranslateInput();
-
-
-    void MoveNormalInput();
-    void MoveAimInput();
-    void MoveCrouchInput();
-    void MoveCrouchAimInput();
 
 
 public:

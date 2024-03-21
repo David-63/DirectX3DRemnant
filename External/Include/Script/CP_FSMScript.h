@@ -142,9 +142,10 @@ public:
     void ClearStanceChange() { m_IsChangeStance = false; }
     void InputCrouch() { m_InpStance[(UINT)eInpStance::Crouch] ? m_InpStance[(UINT)eInpStance::Crouch] = false : m_InpStance[(UINT)eInpStance::Crouch] = true; m_IsChangeStance = true; }
     void InputAim() { m_InpStance[(UINT)eInpStance::Aim] ? m_InpStance[(UINT)eInpStance::Aim] = false : m_InpStance[(UINT)eInpStance::Aim] = true; m_IsChangeStance = true; }
-    void InputSprint() { m_InpStance[(UINT)eInpStance::Sprint] ? m_InpStance[(UINT)eInpStance::Sprint] = false : m_InpStance[(UINT)eInpStance::Sprint] = true; m_IsChangeStance = true; }
-    bool IsCrouch() { return m_InpStance[(UINT)eInpStance::Crouch]; }
-    bool IsAim() { return m_InpStance[(UINT)eInpStance::Aim]; }
+    bool IsInput(UINT _stance) { return m_InpStance[_stance]; }
+
+    
+    void InputSprint(bool _isHold) { m_InpStance[(UINT)eInpStance::Sprint] = _isHold;  m_IsChangeStance = true; }
     bool IsSprint() { return m_InpStance[(UINT)eInpStance::Sprint]; }
 
     void AbleMouse() { m_InpStance[(UINT)eInpStance::Mouse] ? m_InpStance[(UINT)eInpStance::Mouse] = false : m_InpStance[(UINT)eInpStance::Mouse] = true; }

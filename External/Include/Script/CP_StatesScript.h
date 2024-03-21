@@ -5,8 +5,9 @@ enum class eP_States
 {
     IDLE,
     MOVE,
-    Fire,
-    Reload,
+    DODGE,
+    FIRE,
+    RELOAD,
     MELEE,
     DAMAGED,
     DEAD,
