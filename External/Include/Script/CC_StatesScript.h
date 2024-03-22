@@ -15,6 +15,15 @@ public:
     virtual void SetStateType(UINT _StateType) { m_StateType = _StateType; }
     virtual UINT GetStateType()	const { return m_StateType; }
 
+    Vec3 GetPlayerPos();
+    CGameObject* GetPlayer();
+    Vec3 GetMyPos();
+    void SetMyPos(Vec3 _pos);
+    Vec3 GetMyFront();
+    Vec3 GetToPlayerDir();
+    float DistBetwPlayer();
+    float CalTurnDegree(Vec3 _dir);
+
 public:
     CLONE(CC_StatesScript);
 

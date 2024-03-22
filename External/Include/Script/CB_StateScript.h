@@ -21,6 +21,7 @@ class CB_StateScript :
 {
 protected:
 	CB_FSMScript*	m_BHQ;
+	float           m_ratio;
 	
 private:
 	eB_States		m_BStateType;
@@ -29,8 +30,12 @@ public:
 	virtual void begin() override;
 
 public:
+	Vec3 GetPlayerPos();
+
 	virtual void SetStateType(UINT _StateType) override { m_BStateType = static_cast<eB_States>(_StateType); }
 	virtual UINT GetStateType() const override { return static_cast<UINT>(m_BStateType); }
+
+
 
 public:
 	CLONE(CB_StateScript);

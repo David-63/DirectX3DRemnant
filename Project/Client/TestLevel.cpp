@@ -118,9 +118,36 @@ void CreateTestLevel()
 		obj->SetName(L"TestObj");
 		obj->AddComponent(new CM_Lurker_FSMScript);
 		obj->AddComponent(new CHitBoxScript);
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
 
 		obj->AddComponent(new CPathFinderScript());
 		obj->AddComponent(new CMonsterMoveScript());
+		//obj->AddComponent(new CRigidBody());
+
+		//tShapeInfo info = {};
+		//info.eGeomType = GEOMETRY_TYPE::Sphere;
+		//info.size = Vector3(15.f, 15.f, 15.f);
+		//obj->RigidBody()->PushBackShapeInfo(info);
+
+		//tShapeInfo info2 = {};
+		//info2.eGeomType = GEOMETRY_TYPE::Sphere;
+		//info2.size = Vector3(15.f, 15.f, 15.f);
+		//obj->RigidBody()->PushBackShapeInfo(info2);
+
+		//tShapeInfo info3 = {};
+		//info3.eGeomType = GEOMETRY_TYPE::Sphere;
+		//info3.size = Vector3(8.f, 8.f, 8.f);
+		//obj->RigidBody()->PushBackShapeInfo(info3);
+
+		//obj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		////obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		//obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+
+		//obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		//obj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+		//obj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));
 
 		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
 	}

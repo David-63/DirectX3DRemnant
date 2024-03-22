@@ -63,15 +63,23 @@ class CB_FSMScript :
     public CC_FSMScript
 {
 public:
-    enum class eBossStance
+    enum class eBossStance_NoWeapon
     {
         NORMAL_WALK, // 1페이즈
-        FAST_WALK, // 2페이즈
-        Aim,
-        CrouchAim,
-        Dodge,
+        SPAWN_SPELL,
         End,
     };
+
+    enum class eBossStance_Weapon
+    {
+        FAST_WALK, // 1페이즈
+        EVADE,
+        MELEE_ATK,
+        AOE,
+        BLOOD_DRINK,
+        END,
+    };
+
     enum class eBossMoveDir
     {
         LF, F, RF,
@@ -90,15 +98,19 @@ public:
     struct tB_Info
     {
         tBossStat     B_Stat;
-        tHealthStat   B_Health;   // Creature FSM 에 명시되어 있음
+        tHealthStat   B_Health = 10000.f;
     };
 
+
 private:
-    tB_Info         m_tBossInfo;
-    eBossMoveDir    B_MoveDir;
-    bool            m_bPlaying;
-    int             m_iAnimCount;
-    eBossStance     m_eStance;
+    tB_Info                  m_tBossInfo;
+    eBossMoveDir             B_MoveDir;
+    bool                     m_bPlaying;
+    int                      m_iAnimCount;
+    eBossStance_NoWeapon     m_eNoWeapon_Stance;
+    eBossStance_Weapon	     m_eWeapon_Stance;
+    float                    m_iRatio;
+    tBossStat				 m_tMoveSpeed;
 
 public:
     virtual void begin() override;
@@ -112,12 +124,22 @@ public:
 
 public:
     void PlayAnim(wstring _name, bool _repeat);
+    Vec3 GetPlayerPos();
+
+    void SetRatio(float _f) { m_iRatio = _f; }
+    float GetRatio() { return m_iRatio; }
 
     eBossMoveDir GetMoveDir() { return B_MoveDir; }
     tB_Info GetBossInfo() { return m_tBossInfo; }
 
-    void SetStance(eBossStance _e) { m_eStance = _e; }
-    eBossStance GetStance() { return m_eStance;  }
+    void SetStance_NoWeapon(eBossStance_NoWeapon _e) { m_eNoWeapon_Stance = _e; }
+    eBossStance_NoWeapon GetStance_NoWeapon() { return m_eNoWeapon_Stance;  }
+
+    void SetStance_Weapon(eBossStance_Weapon _e) { m_eWeapon_Stance = _e; }
+    eBossStance_Weapon GetStance_Weapon() { return m_eWeapon_Stance; }
+
+    void SetMoveSpeed(float _f) { m_tMoveSpeed.MoveSpeed = _f; }
+
     bool IsPlaying() { return m_bPlaying; }
 
     void SetPlaying(bool _b) { m_bPlaying = _b; }
