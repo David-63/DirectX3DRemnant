@@ -38,6 +38,12 @@ void DrawDebugCapsule(const Matrix& _matWorld, Vec4 _vColor, float _fTime = 0.f,
 
 // GameObject 유효성 체크
 bool IsValidObj(CGameObject*& _Target);
+float FloatLerp(float _begin, float _end, float ratio);
+
+XMFLOAT4 EulerToQuat(float x, float y, float z);
+XMFLOAT4 EulerToQuat(Vec3 _euler);
+void QuatToEuler(const XMFLOAT4& quaternion, Vec3& euler);
+Vec3 QuatToEuler(const XMFLOAT4& quaternion);
 
 // <To string> Or <To Wstring>
 const char* ToString(RES_TYPE);

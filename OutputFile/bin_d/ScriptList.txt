@@ -1,6 +1,10 @@
 CB_FSMScript
+CB_STATEDamagedScript
+CB_STATEDeadScript
 CB_STATEIdleScript
+CB_STATEMeleeScript
 CB_STATEMoveScript
+CB_STATERangedScript
 CB_StateScript
 CCameraMoveScript
 CCharacterMoveScript
@@ -16,7 +20,6 @@ CM_Lurker_STATE_Dead_Script
 CM_Lurker_STATE_Idle_Script
 CM_Lurker_STATE_Melee_Script
 CM_Lurker_STATE_Move_Script
-CM_Lurker_STATE_Sleep_Script
 CPathFinderScript
 CPlayerScript
 CPlayerScriptFsm

@@ -6,12 +6,17 @@
 
 CP_MouseCtrlScript::CP_MouseCtrlScript()
 	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr)
-	, m_MouseSensitivity(0.13f), m_vCamOffset{ -200.f, 5.f, 45.f }, m_YPivot(140.f)
+	, m_CamInfo({ -180.f, 5.f, 35.f }, 0.54f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
 {
 }
 
 CP_MouseCtrlScript::~CP_MouseCtrlScript()
 {
+}
+
+void CP_MouseCtrlScript::begin()
+{
+	m_ctrlCam->Transform()->SetRelativeRot(Vec3(0.f, XM_PI, 0.f));
 }
 
 void CP_MouseCtrlScript::tick()
@@ -21,52 +26,73 @@ void CP_MouseCtrlScript::tick()
 
 	if (!m_PHQ->IsAbleMouse())
 		return;
-	
-	// 마우스 입력 받기
-	CalcMouseAxisInput();
-	// 카메라 이동 시키기
-	MoveCamera();
 
-	// 마우스 가두기
+	MoveCameraPos();
+	MoveCameraRot();
 	MouseRock();
+
 	
+	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(168);
+	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
+	// SetPos
+	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
+	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
+	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
+	Matrix finalMat = OwnerMat * matTranslation;
+	Vec3 bonePos = finalMat.Translation();
+	m_Weapon->Transform()->SetRelativePos(bonePos);
+	// SetRot
+	Vec3 boneRot = m_PHQ->Transform()->GetRelativeRot();
+	boneRot.y += XM_PI;
+	m_Weapon->Transform()->SetRelativeRot(boneRot);
+
 }
 
-void CP_MouseCtrlScript::MouseRock()
+void CP_MouseCtrlScript::MoveCameraPos()
 {
-	Vec2 screenResoulution = CEngine::GetInst()->GetWindowResolution();
-
-	// 화면 중앙 좌표 계산
-	int centerX = screenResoulution.x / 2;
-	int centerY = screenResoulution.y / 2;
-
-	// 마우스 커서를 화면 중앙으로 재설정
-	SetCursorPos(centerX, centerY);
-}
-
-void CP_MouseCtrlScript::CalcMouseAxisInput()
-{
-	// 현재 마우스 위치 얻기
-	POINT mousePos;
-	GetCursorPos(&mousePos);
-
-	Vec2 screenResoulution = CEngine::GetInst()->GetWindowResolution();
-
-	// 화면 중앙 좌표 계산
-	float centerX = screenResoulution.x / 2;
-	float centerY = screenResoulution.y / 2;
-
-	// 마우스의 상대적 이동량 계산(Caluclate the relative movement of the mouse)
-	float deltaX = mousePos.x - centerX;
-	float deltaY = mousePos.y - centerY;
-	m_PHQ->m_MouseAxisInput = Vec2(deltaX, deltaY);
-}
-
-void CP_MouseCtrlScript::MoveCamera()
-{
-	CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(m_PHQ->GetCurState());
-	eP_States stateType = static_cast<eP_States>(curState->GetStateType());
+	// 자세 가져오기
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
+
+	// Transform 정보 가져오기
+	Vec3 objPos = m_PHQ->Transform()->GetRelativePos();
+	Vec3 camF = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 camR = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
+	Vec3 camU = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::UP);
+
+	// lerp 진행 (FSM에서 활성화 시킴)
+	if (m_PivotValue.BlendTime.IsActivate())
+	{
+		m_PivotValue.BlendTime.curTime += ScaleDT;
+		if (m_PivotValue.BlendTime.IsFinish())
+		{
+			m_PivotValue.Reset();
+		}
+		m_PivotValue.GetRatio();
+		m_PivotValue.CurValue = FloatLerp(m_PivotValue.CurValue, m_PivotValue.TargetValue, m_PivotValue.Ratio);
+	}
+	if (m_FovValue.BlendTime.IsActivate())
+	{
+		m_FovValue.BlendTime.curTime += ScaleDT;
+		if (m_FovValue.BlendTime.IsFinish())
+		{
+			m_FovValue.Reset();
+		}
+		m_FovValue.GetRatio();
+		m_FovValue.CurValue = FloatLerp(m_FovValue.CurValue, m_FovValue.TargetValue, m_FovValue.Ratio);
+		m_ctrlCam->SetFov(m_FovValue.CurValue);
+	}
+
+	// 변경사항 적용
+	objPos.y = m_PivotValue.CurValue;
+	Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
+	m_ctrlCam->Transform()->SetRelativePos(Point);
+}
+
+void CP_MouseCtrlScript::MoveCameraRot()
+{
+
+	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
+	eP_States stateType = static_cast<eP_States>(m_PHQ->GetCurStateType());
 
 	bool justRotCam = false;
 	if (eP_States::IDLE == stateType)
@@ -75,45 +101,47 @@ void CP_MouseCtrlScript::MoveCamera()
 			|| CP_FSMScript::ePlayerStance::Crouch == curStance
 			|| CP_FSMScript::ePlayerStance::Dodge == curStance)
 			justRotCam = true;
-
 	}
-	
 
 	Vec3 getCamRot = m_ctrlCam->Transform()->GetRelativeRot();
 	Vec3 getObjRot = m_PHQ->Transform()->GetRelativeRot();
-	Vec2 mouseInput = m_PHQ->m_MouseAxisInput;
-	float deltaYaw = XMConvertToRadians(mouseInput.x * m_MouseSensitivity);
-	float deltaPitch = XMConvertToRadians(mouseInput.y * m_MouseSensitivity); // Y축 반전 처리
-	float xRot, yRot;
+	Vec2 mouseInput = CKeyMgr::GetInst()->GetMouseRaw();
+	mouseInput.Normalize();
+
+	float deltaYaw = XMConvertToRadians(mouseInput.x * m_CamInfo.MouseSensitivity);
+	float deltaPitch = XMConvertToRadians(mouseInput.y * m_CamInfo.MouseSensitivity); // Y축 반전 처리
+	float xCamRot, yObjRot;
+
+	xCamRot = getCamRot.x + deltaPitch;
+	m_CamInfo.PrevCamRotY = getCamRot.y + deltaYaw;
+	yObjRot = getObjRot.y + deltaYaw;
+
 	if (justRotCam)
 	{
-		xRot = getCamRot.x + deltaPitch;
-		yRot = getCamRot.y + deltaYaw;
-		Vec3 outCamEuler = Vec3(xRot, yRot, (int)0);
+		Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, (int)0);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
 	else
 	{
-		xRot = getCamRot.x + deltaPitch;
-		yRot = getObjRot.y + deltaYaw;
-		Vec3 outObjEuler = Vec3(0, yRot, (int)0);
-		Vec3 outCamEuler = Vec3(xRot, yRot + XM_PI, (int)0);
+		Vec3 outObjEuler = Vec3(0, yObjRot, (int)0);
+		Vec3 outCamEuler = Vec3(xCamRot, yObjRot + XM_PI, (int)0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
+}
 
-	Vec3 objPos = m_PHQ->Transform()->GetRelativePos();
-	Vec3 camF = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-	Vec3 camR = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
-	Vec3 camU = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::UP);
-	
-	// y의 위치는 State, stance 마다 다를 수 있음
-	objPos.y += m_YPivot;
+void CP_MouseCtrlScript::MouseRock()
+{
+	Vec2 screenResoulution = CEngine::GetInst()->GetWindowResolution();
+	// 화면 중앙 좌표 계산
+	int centerX = screenResoulution.x / 2;
+	int centerY = screenResoulution.y / 2;
 
+	// 마우스 커서를 화면 중앙으로 재설정
+	SetCursorPos(centerX, centerY);
+}
 
-	// x // 앞뒤로 // 위 아래  // z = 좌우로
-	Vec3 Point = objPos + camF * m_vCamOffset.x + camR * m_vCamOffset.z + camU * m_vCamOffset.y;
-	//Vec3 Point = objPos + camF + camR + camU;
-	m_ctrlCam->Transform()->SetRelativePos(Point);
-
+void CP_MouseCtrlScript::OverrideObjRotY()
+{
+	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_CamInfo.PrevCamRotY + XM_PI, 0.f));
 }

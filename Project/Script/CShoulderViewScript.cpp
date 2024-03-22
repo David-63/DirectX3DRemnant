@@ -79,7 +79,7 @@ void CShoulderViewScript::tick()
 		Transform()->SetRelativeRot(vRot);
 		m_firstTick = false;
 	}
-
+	
 	else
 	{
 		if (m_bIsMouseRock)

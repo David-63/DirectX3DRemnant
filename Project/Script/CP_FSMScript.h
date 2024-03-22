@@ -36,6 +36,14 @@
 #define StanceDelay 0.1f
 
 // 플레이어는 몬스터와 다르게 장비중인 무기에 따라 스텟이 달라짐
+enum class eInpStance
+{
+    Crouch,
+    Aim,
+    Sprint,
+    Mouse,
+    End,
+};
 
 class CP_FSMScript : public CC_FSMScript
 {
@@ -51,6 +59,7 @@ public:
         End,
     };
 
+
     struct tPlayerStat
     {
         float MoveSpeed;
@@ -61,54 +70,63 @@ public:
         tPlayerStat     P_Stat;
         tHealthStat     P_Health;   // Creature FSM 에 명시되어 있음
     };
+    struct tP_LongGunInfo
+    {
+        int curAmmo;
+        int MaxAmmo;
+        float Damage;
+        float FireLate;
+        float ReloadSpeed;
+
+        tP_LongGunInfo() : curAmmo(12), MaxAmmo(12), Damage(12), FireLate(0.22f), ReloadSpeed(0.22f) {}
+    };
+
 
 private:
-    tP_Info             m_tPlayerInfo;
+    tP_Info             m_PlayerInfo;
+    tP_LongGunInfo      m_LongGunInfo;
 
+private:
+    CP_MouseCtrlScript  m_MouseCtrl;
+    CGameObject*        m_Weapon;
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
-
-    // 토글 입력
-    bool                m_ableMouse;
-    bool                m_InpCrouch;
-    bool                m_InpAim;
-    bool                m_InpSprint;
+    bool                m_InpStance[(UINT)eInpStance::End];
     bool                m_IsChangeStance;
-
-    // 방향
     Vec2                m_moveDir;
-
-    // 카메라
-    CP_MouseCtrlScript  m_MouseCtrl;
-public:
-    Vec2                m_MouseAxisInput;
 
 
 public:
     virtual void begin() override;
     virtual void tick() override;
 
+private:
+    void stanceControl();
+
 public:
     void PlayAnimation(wstring _name, bool _repeat);
-
+    void OverrideObjRotY() { m_MouseCtrl.OverrideObjRotY(); }
 
 public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
     ePlayerStance GetStance() { return P_Stance; }
-    tP_Info GetPlayerInfo() { return m_tPlayerInfo; }
+    tP_Info GetPlayerInfo() { return m_PlayerInfo; }
+    tP_LongGunInfo GetLongGunInfo() { return m_LongGunInfo; }
+
 public:
     void ClearStanceChange() { m_IsChangeStance = false; }
-    void InputCrouch() { m_InpCrouch ? m_InpCrouch = false : m_InpCrouch = true; m_IsChangeStance = true; }
-    void InputAim() { m_InpAim ? m_InpAim = false : m_InpAim = true; m_IsChangeStance = true; }
-    void InputSprint() { m_InpSprint ? m_InpSprint = false : m_InpSprint = true; m_IsChangeStance = true; }
-    bool IsCrouch() { return m_InpCrouch; }
-    bool IsAim() { return m_InpAim; }
-    bool IsSprint() { return m_InpSprint; }
+    void InputCrouch() { m_InpStance[(UINT)eInpStance::Crouch] ? m_InpStance[(UINT)eInpStance::Crouch] = false : m_InpStance[(UINT)eInpStance::Crouch] = true; m_IsChangeStance = true; }
+    void InputAim() { m_InpStance[(UINT)eInpStance::Aim] ? m_InpStance[(UINT)eInpStance::Aim] = false : m_InpStance[(UINT)eInpStance::Aim] = true; m_IsChangeStance = true; }
+    void InputSprint() { m_InpStance[(UINT)eInpStance::Sprint] ? m_InpStance[(UINT)eInpStance::Sprint] = false : m_InpStance[(UINT)eInpStance::Sprint] = true; m_IsChangeStance = true; }
+    bool IsCrouch() { return m_InpStance[(UINT)eInpStance::Crouch]; }
+    bool IsAim() { return m_InpStance[(UINT)eInpStance::Aim]; }
+    bool IsSprint() { return m_InpStance[(UINT)eInpStance::Sprint]; }
 
-    void AbleMouse() { m_ableMouse ? m_ableMouse = false : m_ableMouse = true; }
-    bool IsAbleMouse() { return m_ableMouse; }
+    void AbleMouse() { m_InpStance[(UINT)eInpStance::Mouse] ? m_InpStance[(UINT)eInpStance::Mouse] = false : m_InpStance[(UINT)eInpStance::Mouse] = true; }
+    bool IsAbleMouse() { return m_InpStance[(UINT)eInpStance::Mouse]; }
 
 
+public:
     void InputMove(Vec2 _input) { m_moveDir += _input; }
     void InputMove(int _inputX, int _inputY) { m_moveDir += Vec2(_inputX, _inputY); }
     void ClearMoveDir() { m_moveDir = Vec2(0, 0); }

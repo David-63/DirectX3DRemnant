@@ -21,4 +21,3 @@ public:
     CC_StatesScript();
     virtual ~CC_StatesScript();
 };
-

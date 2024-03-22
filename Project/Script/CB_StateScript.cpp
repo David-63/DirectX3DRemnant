@@ -5,6 +5,7 @@
 
 CB_StateScript::CB_StateScript()
 	: m_BStateType(eB_States::END)
+	, m_ratio(0.f)
 	//, m_EvadeCoolTime(5.f)
 {
 	SetName(L"CB_StatesScript");
@@ -21,6 +22,18 @@ void CB_StateScript::begin()
 	m_BHQ = dynamic_cast<CB_FSMScript*>(m_FSMHQ);
 }
 
+Vec3 CB_StateScript::GetPlayerPos()
+{
+
+	vector<CGameObject*> vec = CLevelMgr::GetInst()->GetCurLevel()->GetLayer((UINT)LAYER_TYPE::Player)->GetParentObject();
+
+	for (CGameObject* obj : vec)
+	{
+		return obj->Transform()->GetRelativePos();
+	}
+
+	return Vec3(0.f, 0.f, 0.f);
+}
 
 void CB_StateScript::SaveToScene(FILE* _pFile)
 {

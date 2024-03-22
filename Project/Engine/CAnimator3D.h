@@ -126,6 +126,8 @@ public:
 public:
 	void SimpleGen();
 	void SimpleGen(wstring _name);
+	const Matrix& GetBoneMatrix(int _idx) { return m_vecFinalBoneMat[_idx]; }		// Player Hand (168)
+	const tMTBone& GetMTBoneData(int _idx) { return m_pCurrentAnim->GetMTBones().at(_idx); }		// Player Hand (168)
 
 
 private:

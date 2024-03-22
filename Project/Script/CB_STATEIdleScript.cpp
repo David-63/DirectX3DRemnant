@@ -12,6 +12,11 @@ CB_STATEIdleScript::~CB_STATEIdleScript()
 }
 
 
+void CB_STATEIdleScript::begin()
+{
+	CB_StateScript::begin();
+}
+
 void CB_STATEIdleScript::Enter()
 {
 
