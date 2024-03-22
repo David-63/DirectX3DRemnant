@@ -74,8 +74,8 @@ void CRigidBody::tick()
 }
 void CRigidBody::finaltick()
 {
-
 	DrawDebugMesh();
+
 }
 void CRigidBody::Destroy()
 {
@@ -611,7 +611,9 @@ void CRigidBody::InitializeActor()
 	physx::PxVec3 myPos = physx::PxVec3(trPos.x, trPos.y, trPos.z);
 	pActor->setGlobalPose(physx::PxTransform(myPos));
 
+	//ccd, 회전관성 0
 	//GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+	//GetRigidBody()->setAngularDamping(0);
 
 	switch (mActorType)
 	{

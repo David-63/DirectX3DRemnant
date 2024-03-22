@@ -3,22 +3,22 @@
 
 class CM_Lurker_STATE_Melee_Script : public CM_Lurker_StatesScript
 {
-	
 private:
 	//common
-	Vec3 m_vAtkDir;
-	bool m_bAtkComplete;
-	float m_fSpeed;
+	Vec3			 m_vAtkDir;
+	static bool		 m_bAtkComplete;
+	float			 m_fSpeed;
+	bool			 m_bNearPlayer;
 
 	//dash
-	bool m_bDashOnce;
-	float m_fDashDist;
+	bool			 m_bDashOnce;
+	float			 m_fDashDist;
 
 	//Heavy
-	bool m_bHeavyOnce;
+	bool			 m_bHeavyOnce;
 
 	//Slash
-	bool m_bSlashOnce;
+	bool			 m_bSlashOnce;
 	
 
 public:
@@ -40,6 +40,13 @@ private:
 	void SlashCombo();
 
 	void DashHitBoxOn();
+	void HeavyHitBoxOn();
+	void SlashHitBoxOn();
+	void SlashHitBoxOff();
+	void SlashComboBoxOn();
+	void SlashComboBoxOff();
+
+	void DistCheck();
 
 public:
 	virtual void Enter() override;

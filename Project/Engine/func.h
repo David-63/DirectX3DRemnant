@@ -71,6 +71,9 @@ Vec3 DecomposeRotMat(const Matrix& matRot);
 //방향구하기
 Vec3 CalculateDir(Vec3 _originPos, Vec3 _targetPos);
 
+//degree 벡터 <-> 라디안벡터
+Vec3 TransDegreeToRadVector(Vec3 _degreeVector);
+Vec3 TransRadToDegreeVector(Vec3 _radVector);
 
 
 class CRes;

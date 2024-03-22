@@ -445,6 +445,24 @@ Vec3 CalculateDir(Vec3 _originPos, Vec3 _targetPos)
 	return dir;
 }
 
+Vec3 TransDegreeToRadVector(Vec3 _degreeVector)
+{
+	_degreeVector.x = XMConvertToRadians(_degreeVector.x);
+	_degreeVector.y = XMConvertToRadians(_degreeVector.y);
+	_degreeVector.z = XMConvertToRadians(_degreeVector.z);
+
+	return _degreeVector;
+}
+
+Vec3 TransRadToDegreeVector(Vec3 _radVector)
+{
+	_radVector.x = XMConvertToDegrees(_radVector.x);
+	_radVector.y = XMConvertToDegrees(_radVector.y);
+	_radVector.z = XMConvertToDegrees(_radVector.z);
+
+	return _radVector;
+}
+
 
 
 void SaveResRef(Ptr<CRes> _Res, FILE* _File)

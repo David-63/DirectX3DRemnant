@@ -4,7 +4,7 @@
 #include "Engine/CLevelMgr.h"
 #include "Engine\CLevel.h"
 
-bool CM_Lurker_StatesScript::m_bAniComplete = false;
+eMeleeState  CM_Lurker_StatesScript::m_eMeleeState = eMeleeState::Heavy1;
 
 CM_Lurker_StatesScript::CM_Lurker_StatesScript()
 	: m_StateType(eM_States::END)
@@ -18,211 +18,6 @@ CM_Lurker_StatesScript::~CM_Lurker_StatesScript()
 void CM_Lurker_StatesScript::begin()
 {
 	m_MHQ = dynamic_cast<CM_Lurker_FSMScript*>(m_FSMHQ);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn180) = std::bind(&CM_Lurker_StatesScript::TurnComplete, this);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn90L) = std::bind(&CM_Lurker_StatesScript::TurnComplete, this);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn90R) = std::bind(&CM_Lurker_StatesScript::TurnComplete, this);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn135L) = std::bind(&CM_Lurker_StatesScript::TurnComplete, this);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn135R) = std::bind(&CM_Lurker_StatesScript::TurnComplete, this);
-}
-
-bool CM_Lurker_StatesScript::Turn180()
-{
-	if (!m_bTurnBtn)
-	{
-
-		m_MHQ->Animator3D()->Play(Lurker_Turn180, false);
-
-		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
-		m_vFinalRot = m_vInitialRot;
-		m_vFinalRot.y -= 180;
-		m_fFinishTime = m_MHQ->Animator3D()->GetFinishTime();
-		m_fElapsedTime = 0.f;
-
-		m_bTurnBtn = true;
-	}
-
-	m_fElapsedTime += DT * 0.01717f;
-
-
-	if (!m_bAniComplete)
-	{
-		Vec3 vecRot = Vector3::Lerp(m_vInitialRot, m_vFinalRot, m_fElapsedTime / m_fFinishTime);
-		m_MHQ->Transform()->SetRelativeRot(vecRot);
-	}
-	else
-	{
-		m_bAniComplete = false;
-		m_bTurnBtn = false;
-		m_vInitialRot = {0.f, 0.f, 0.f};
-		m_vFinalRot = {0.f,0.f,0.f};
-		m_fFinishTime = 0.f;
-		m_fElapsedTime = 0.f;
-
-		return true;
-	}
-
-	return false;
-}
-
-bool CM_Lurker_StatesScript::Turn90L()
-{
-	if (!m_bTurnBtn)
-	{
-
-		m_MHQ->Animator3D()->Play(Lurker_Turn90L, false);
-
-		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
-		m_vFinalRot = m_vInitialRot;
-		m_vFinalRot.y -= 90;
-		m_vInitialPos = m_MHQ->Transform()->GetRelativePos();
-		m_fFinishTime = m_MHQ->Animator3D()->GetFinishTime();
-		m_fElapsedTime = 0.f;
-
-		m_bTurnBtn = true;
-	}
-
-	m_fElapsedTime += DT * 0.01717f;
-
-
-	if (!m_bAniComplete)
-	{
-		Vec3 vecRot = Vector3::Lerp(m_vInitialRot, m_vFinalRot, m_fElapsedTime / m_fFinishTime);
-		m_MHQ->Transform()->SetRelativeRot(vecRot);
-	}
-	else
-	{
-		m_bAniComplete = false;
-		m_bTurnBtn = false;
-		m_vInitialRot = { 0.f, 0.f, 0.f };
-		m_vFinalRot = { 0.f,0.f,0.f };
-		m_fFinishTime = 0.f;
-		m_fElapsedTime = 0.f;
-
-		return true;
-	}
-
-	return false;
-}
-
-bool CM_Lurker_StatesScript::Turn90R()
-{
-
-	if (!m_bTurnBtn)
-	{
-
-		m_MHQ->Animator3D()->Play(Lurker_Turn90R, false);
-
-		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
-		m_vFinalRot = m_vInitialRot;
-		m_vFinalRot.y += 90;
-		m_vInitialPos = m_MHQ->Transform()->GetRelativePos();
-		m_fFinishTime = m_MHQ->Animator3D()->GetFinishTime();
-		m_fElapsedTime = 0.f;
-
-		m_bTurnBtn = true;
-	}
-
-	m_fElapsedTime += DT * 0.01717f;
-
-
-	if (!m_bAniComplete)
-	{
-		Vec3 vecRot = Vector3::Lerp(m_vInitialRot, m_vFinalRot, m_fElapsedTime / m_fFinishTime);
-		m_MHQ->Transform()->SetRelativeRot(vecRot);
-	}
-	else
-	{
-		m_bAniComplete = false;
-		m_bTurnBtn = false;
-		m_vInitialRot = { 0.f, 0.f, 0.f };
-		m_vFinalRot = { 0.f,0.f,0.f };
-		m_fFinishTime = 0.f;
-		m_fElapsedTime = 0.f;
-
-		return true;
-	}
-
-	return false;
-}
-
-bool CM_Lurker_StatesScript::Turn135L()
-{
-	if (!m_bTurnBtn)
-	{
-
-		m_MHQ->Animator3D()->Play(Lurker_Turn135L, false);
-
-		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
-		m_vFinalRot = m_vInitialRot;
-		m_vFinalRot.y -= 135;
-		m_vInitialPos = m_MHQ->Transform()->GetRelativePos();
-		m_fFinishTime = m_MHQ->Animator3D()->GetFinishTime();
-		m_fElapsedTime = 0.f;
-
-		m_bTurnBtn = true;
-	}
-
-	m_fElapsedTime += DT * 0.01717f;
-
-
-	if (!m_bAniComplete)
-	{
-		Vec3 vecRot = Vector3::Lerp(m_vInitialRot, m_vFinalRot, m_fElapsedTime / m_fFinishTime);
-		m_MHQ->Transform()->SetRelativeRot(vecRot);
-	}
-	else
-	{
-		m_bAniComplete = false;
-		m_bTurnBtn = false;
-		m_vInitialRot = { 0.f, 0.f, 0.f };
-		m_vFinalRot = { 0.f,0.f,0.f };
-		m_fFinishTime = 0.f;
-		m_fElapsedTime = 0.f;
-
-		return true;
-	}
-
-	return false;
-}
-
-bool CM_Lurker_StatesScript::Turn135R()
-{
-	if (!m_bTurnBtn)
-	{
-
-		m_MHQ->Animator3D()->Play(Lurker_Turn135R, false);
-
-		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
-		m_vFinalRot = m_vInitialRot;
-		m_vFinalRot.y += 135;
-		m_vInitialPos = m_MHQ->Transform()->GetRelativePos();
-		m_fFinishTime = m_MHQ->Animator3D()->GetFinishTime();
-		m_fElapsedTime = 0.f;
-
-		m_bTurnBtn = true;
-	}
-
-	m_fElapsedTime += DT * 0.01717f;
-
-
-	if (!m_bAniComplete)
-	{
-		Vec3 vecRot = Vector3::Lerp(m_vInitialRot, m_vFinalRot, m_fElapsedTime / m_fFinishTime);
-		m_MHQ->Transform()->SetRelativeRot(vecRot);
-	}
-	else
-	{
-		m_bAniComplete = false;
-		m_bTurnBtn = false;
-		m_vInitialRot = { 0.f, 0.f, 0.f };
-		m_vFinalRot = { 0.f,0.f,0.f };
-		m_fFinishTime = 0.f;
-		m_fElapsedTime = 0.f;
-
-		return true;
-	}
-
-	return false;
 }
 
 Vec3 CM_Lurker_StatesScript::GetPlayerPos()
@@ -235,6 +30,18 @@ Vec3 CM_Lurker_StatesScript::GetPlayerPos()
 	}
 
 	return Vec3(0.f,0.f,0.f);
+}
+
+CGameObject* CM_Lurker_StatesScript::GetPlayer()
+{
+	vector<CGameObject*> vec = CLevelMgr::GetInst()->GetCurLevel()->GetLayer((UINT)LAYER_TYPE::Player)->GetParentObject();
+
+	for (CGameObject* obj : vec)
+	{
+		return obj;
+	}
+
+	return nullptr;
 }
 
 Vec3 CM_Lurker_StatesScript::GetMyPos()
@@ -254,9 +61,36 @@ Vec3 CM_Lurker_StatesScript::GetMyFront()
 	return m_MHQ->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 }
 
-void CM_Lurker_StatesScript::TurnComplete()
+Vec3 CM_Lurker_StatesScript::GetToPlayerDir()
 {
-	m_bAniComplete = true;
+	Vec3 dir = GetPlayerPos() - GetMyPos();
+	dir.y = 0;
+	dir = dir.Normalize();
+	return dir;
+}
+
+float CM_Lurker_StatesScript::DistBetwPlayer()
+{
+	float dist = Vector3::Distance(GetMyPos(), GetPlayerPos());
+
+	return dist;
+}
+
+
+float CM_Lurker_StatesScript::CalTurnDegree(Vec3 _dir)
+{
+	Vec3 front = -GetMyFront();
+
+	float cosTheta = front.Dot(_dir);
+	float Degree = acosf(cosTheta);
+
+	Degree = Degree * 180.f / 3.1415926535f;
+	float CrossResult = front.Cross(_dir).y;
+
+	if (CrossResult > 0)
+		return Degree;
+	else
+		return -Degree;
 }
 
 void CM_Lurker_StatesScript::SaveToScene(FILE* _pFile)

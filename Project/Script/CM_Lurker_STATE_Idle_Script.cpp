@@ -23,33 +23,20 @@ void CM_Lurker_STATE_Idle_Script::begin()
 
 void CM_Lurker_STATE_Idle_Script::tick()
 {
-	if (KEY_TAP(KEY::Y))
+	/*if (KEY_TAP(KEY::Y))
 	{
 		mKey = true;
 	}
 
 	if (mKey)
 	{
-		if (Turn90L())
+		if (Turn90L(-30.f))
 		{
 			mKey = false;
 		}
-	}
-
-	/*if (KEY_TAP(KEY::I))
-	{
-		m_MHQ->Animator3D()->Play(Lurker_ALERT01, false);
-	}
-
-	if (KEY_TAP(KEY::U))
-	{
-		SetInitialPose(3);
 	}*/
 
-	/*if (KEY_TAP(KEY::Y))
-	{
-		m_bAlert = true;
-	}*/
+	
 
 	if (m_bAlert && !m_bAlertOnce)
 	{

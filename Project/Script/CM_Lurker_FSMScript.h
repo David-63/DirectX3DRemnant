@@ -41,6 +41,9 @@ public:
 	virtual void OnOverlap(CCollider3D* _Other) override;
 	virtual void EndOverlap(CCollider3D* _Other) override;
 
+private:
+	void DeathCheck();
+
 public:
 	CLONE(CM_Lurker_FSMScript);
 	virtual void SaveToScene(FILE* _pFile);
@@ -68,3 +71,18 @@ public:
 #define Lurker_Heavy1          L"animclip\\Lurker\\Wasteland_Lurker_Atk_Heavy_01.animclip"
 #define Lurker_SlashR          L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R.animclip"
 #define Lurker_SlashRCombo	   L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.animclip"
+
+//Move
+#define Lurker_MoveFront	   L"animclip\\Lurker\\Wasteland_Lurker_Walk_F.animclip"
+
+//Death
+#define Lurker_Death    	   L"animclip\\Lurker\\Wasteland_Lurker_Death_F_01.animclip"
+#define Lurker_DeathGround     L"animclip\\Lurker\\Wasteland_Lurker_Death_Ground_B.animclip"
+
+//attacked impact
+#define Lurker_ImpactLegs      L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_Legs.animclip"
+#define Lurker_ImpactLegL      L"animclip\\Lurker\\Wasteland_Lurker_Impact_LegL_01.animclip"
+#define Lurker_ImpactLegR      L"animclip\\Lurker\\Wasteland_Lurker_Impact_LegR_01.animclip"
+#define Lurker_ImpactTorso     L"animclip\\Lurker\\Wasteland_Lurker_Impact_Torso_F.animclip"
+#define Lurker_ImpactFront     L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.animclip"
+
