@@ -200,7 +200,7 @@ void CP_STATEMoveScript::CallAnimation()
 				m_PHQ->PlayAnimation(P_R2Dodge_N, false);
 		}
 		// 방향 Release 해주기
-		Vec2 moveDir = m_PHQ->GetMoveDir();
+		/*Vec2 moveDir = m_PHQ->GetMoveDir();
 		if (0 != moveDir.y)
 		{
 			if (m_isFront)
@@ -211,7 +211,8 @@ void CP_STATEMoveScript::CallAnimation()
 		if (0.3 <= m_prevDir.x)
 			m_PHQ->InputMove(-1.f, 0.f);
 		else if (-0.3 >= m_prevDir.x)
-			m_PHQ->InputMove(1.f, 0.f);
+			m_PHQ->InputMove(1.f, 0.f);*/
+
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::DODGE));
 	}
 	// 현재 방향 구하기
@@ -295,7 +296,6 @@ void CP_STATEMoveScript::Enter()
 void CP_STATEMoveScript::Exit()
 {
 	//m_PHQ->ClearMoveDir();
-	m_PHQ->InputSprint(false);
-	m_prevDir = Vec2(0, 0);
+	m_PHQ->InputSprint(false);	
 	m_isDodge = false;
 }
