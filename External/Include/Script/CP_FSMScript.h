@@ -35,6 +35,8 @@
 #define P_R2MoveSprint_L                L"animclip\\player\\P_R2MoveSprint_L.animclip"
 #define P_R2MoveSprint_R                L"animclip\\player\\P_R2MoveSprint_R.animclip"
 
+#define P_R2Fire                L"animclip\\player\\P_R2Fire.animclip"
+
 #define StanceDelay 0.1f
 
 // 플레이어는 몬스터와 다르게 장비중인 무기에 따라 스텟이 달라짐

@@ -28,11 +28,15 @@ void CP_FSMScript::begin()
 	GetOwner()->Animator3D()->Add(P_R2Dodge_L);
 	GetOwner()->Animator3D()->Add(P_R2Dodge_N);
 	GetOwner()->Animator3D()->Add(P_R2Dodge_R);
-	GetOwner()->Animator3D()->Add(P_R2Reload);
-	GetOwner()->Animator3D()->Add(P_R2ReloadCrouch);
+		
 	GetOwner()->Animator3D()->Add(P_R2Idle);
 	GetOwner()->Animator3D()->Add(P_R2IdleAim);
 	GetOwner()->Animator3D()->Add(P_R2IdleCrouch);
+	
+	GetOwner()->Animator3D()->Add(P_R2Fire);
+	GetOwner()->Animator3D()->Add(P_R2Reload);
+	GetOwner()->Animator3D()->Add(P_R2ReloadCrouch);
+	
 	GetOwner()->Animator3D()->Add(P_R2MoveWalk);
 	GetOwner()->Animator3D()->Add(P_R2MoveWalk_B);
 	GetOwner()->Animator3D()->Add(P_R2MoveWalk_BL);
@@ -55,14 +59,16 @@ void CP_FSMScript::begin()
 	GetOwner()->Animator3D()->Add(P_R2MoveSprint_L);
 	GetOwner()->Animator3D()->Add(P_R2MoveSprint_R);
 
+	
+
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::GotoIdle, this);
 	GetOwner()->Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
 	GetOwner()->Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
+
 	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge) = std::bind(&CP_FSMScript::GotoIdle, this);
 	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_L) = std::bind(&CP_FSMScript::GotoIdle, this);
 	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_N) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoIdle, this);	
 
 	// GetOwner()->Animator3D()->CompleteEvent(P_MoveR2Jog)
 
@@ -71,8 +77,8 @@ void CP_FSMScript::begin()
 
 
 	Ptr<CMeshData> pMeshData = nullptr;
-	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\HuntingRifle.mdat");
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_AssaultRifle.fbx");
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_AssaultRifle.fbx");
 	
 	m_Weapon = nullptr;
 	m_Weapon = pMeshData->InstMesh();

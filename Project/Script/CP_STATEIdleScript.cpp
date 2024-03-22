@@ -77,7 +77,7 @@ void CP_STATEIdleScript::tick()
 			if (gun->Fire())
 			{
 				m_isFire = true;
-				//m_PHQ->PlayAnimation(P_2RFire, false);
+				m_PHQ->PlayAnimation(P_R2Fire, false);
 			}
 		}
 	}
