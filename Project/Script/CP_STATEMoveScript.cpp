@@ -167,19 +167,6 @@ void CP_STATEMoveScript::CallAnimation()
 			else
 				m_PHQ->PlayAnimation(P_R2Dodge_N, false);
 		}
-		// 방향 Release 해주기
-		/*Vec2 moveDir = m_PHQ->GetMoveDir();
-		if (0 != moveDir.y)
-		{
-			if (m_isFront)
-				m_PHQ->InputMove(0, -1.f);
-			else
-				m_PHQ->InputMove(0, 1.f);
-		}
-		if (0.3 <= m_prevDir.x)
-			m_PHQ->InputMove(-1.f, 0.f);
-		else if (-0.3 >= m_prevDir.x)
-			m_PHQ->InputMove(1.f, 0.f);*/
 
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::DODGE));
 	}
@@ -259,6 +246,7 @@ void CP_STATEMoveScript::CallAnimation()
 
 void CP_STATEMoveScript::Enter()
 {
+	CallAnimation();
 }
 
 void CP_STATEMoveScript::Exit()

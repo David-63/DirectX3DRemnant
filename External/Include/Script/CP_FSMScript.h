@@ -163,6 +163,7 @@ public:
 
 public:
     void GotoIdle();
+    void GotoMove();
 
 public:
     virtual void BeginOverlap(CCollider3D* _Other) override;

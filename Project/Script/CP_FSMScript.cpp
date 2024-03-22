@@ -65,10 +65,10 @@ void CP_FSMScript::begin()
 	GetOwner()->Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
 	GetOwner()->Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
 
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_L) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_N) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoIdle, this);	
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge) = std::bind(&CP_FSMScript::GotoMove, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_L) = std::bind(&CP_FSMScript::GotoMove, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_N) = std::bind(&CP_FSMScript::GotoMove, this);
+	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoMove, this);
 
 	// GetOwner()->Animator3D()->CompleteEvent(P_MoveR2Jog)
 
@@ -190,6 +190,11 @@ void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 void CP_FSMScript::GotoIdle()
 {
 	ChangeState(static_cast<UINT>(eP_States::IDLE));
+}
+
+void CP_FSMScript::GotoMove()
+{
+	ChangeState(static_cast<UINT>(eP_States::MOVE));
 }
 
 void CP_FSMScript::BeginOverlap(CCollider3D* _Other)
