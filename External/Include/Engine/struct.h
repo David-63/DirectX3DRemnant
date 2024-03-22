@@ -478,6 +478,7 @@ struct tShapeInfo
 	Vector3 offset;
 	bool isPlayer;
 	int boneIdx;
+	Vector3 boneOffset;
 };
 
 struct tRayCastInfo
