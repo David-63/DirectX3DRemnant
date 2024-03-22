@@ -55,6 +55,7 @@ private:
 
 	std::unordered_map<UINT, tPNode*> m_ArrNode;
 	std::stack<Vec3> m_Stack;
+	std::stack<tYX> m_StraightTestStack;
 
 	//from Mgr
 	vector<tRangeYX> m_vStaticMap;
