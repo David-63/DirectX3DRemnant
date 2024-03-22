@@ -88,30 +88,39 @@ void CreateTestLevel()
 	//애니메이션 로드
 	
 	/*{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Turn90_L.fbx");
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_Heavy_Legs.fbx");
 		CGameObject* obj = data->Instantiate();
-		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Turn90_L.animclip");
-		
-	}*/
-	/*{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Turn90_R.fbx");
-		CGameObject* obj = data->Instantiate();
-		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Turn90_R.animclip");
-		
-	}*/
-	{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Atk_Slash_R.fbx");
-		CGameObject* obj = data->Instantiate();
-		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R.animclip");
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_Legs.animclip");
 
 	}
 	{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.fbx");
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_LegL_01.fbx");
 		CGameObject* obj = data->Instantiate();
-		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.animclip");
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_LegL_01.animclip");
+		
+	}
+	{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_LegR_01.fbx");
+		CGameObject* obj = data->Instantiate();
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_LegR_01.animclip");
+		
+	}
+	{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_Torso_F.fbx");
+		CGameObject* obj = data->Instantiate();
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_Torso_F.animclip");
+
+	}*/
+	{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.fbx");
+		CGameObject* obj = data->Instantiate();
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.animclip");
 		obj->SetName(L"TestObj");
 		obj->AddComponent(new CM_Lurker_FSMScript);
 		obj->AddComponent(new CHitBoxScript);
+
+		obj->AddComponent(new CPathFinderScript());
+		obj->AddComponent(new CMonsterMoveScript());
 
 		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
 	}
@@ -163,7 +172,7 @@ void CreateTestLevel()
 		player->SetName(L"Player");
 		player->Transform()->SetDebugSphereUse(true);
 		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
-		player->Transform()->SetRelativePos(Vec3(-1040.f, 0.f, 800.f));
+		player->Transform()->SetRelativePos(Vec3(900.f, 0.f, 50.f));
 		player->AddComponent(new CRigidBody);
 
 		tShapeInfo info = {};
@@ -196,7 +205,7 @@ void CreateTestLevel()
 		player->AddComponent(new CCollider3D);
 		player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 
-		SpawnGameObject(player, Vec3(-400.f, 0.f, 0.f), (UINT)LAYER_TYPE::Player);
+		SpawnGameObject(player, Vec3(900, 0.f, 50.f), (UINT)LAYER_TYPE::Player);
 
 
 		//pCamMoveScript->SetCamTarget(pObj); //숄더뷰 용
@@ -266,52 +275,7 @@ void CreateTestLevel()
 	//	SpawnGameObject(cloneObj2, Vec3(300.f, 0.f, 400.f), L"Player");
 	//}
 
-	//monster
-	//{
-	//	Ptr<CMeshData> pMeshData = nullptr;
-	//	CGameObject* pObj = nullptr;
-
-	//	// 인스턴싱 테스트
-
-	//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-	//	pObj = pMeshData->Instantiate();
-	//	pObj->AddComponent(new CPathFinderScript());
-	//	pObj->AddComponent(new CMonsterMoveScript());
-
-	//	pObj->SetName(L"MonsterTrace");
-	//	pObj->Transform()->SetDebugSphereUse(true);
-	//	pObj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
-	//	pObj->Transform()->SetRelativePos(Vec3(800.f, 0.f, 0.f));
-
-	//	pObj->AddComponent(new CRigidBody);
-	//	tShapeInfo info = {};
-	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info.size = Vector3(15.f, 15.f, 15.f);
-	//	pObj->RigidBody()->PushBackShapeInfo(info);
-
-	//	tShapeInfo info2 = {};
-	//	info2.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info2.size = Vector3(15.f, 15.f, 15.f);
-	//	pObj->RigidBody()->PushBackShapeInfo(info2);
-
-	//	tShapeInfo info3 = {};
-	//	info3.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info3.size = Vector3(8.f, 8.f, 8.f);
-	//	pObj->RigidBody()->PushBackShapeInfo(info3);
-
-	//	pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-	//	pObj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-	//	pObj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-	//	pObj->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
-
-	//	pObj->AddComponent(new CCollider3D);
-
-
-	//	SpawnGameObject(pObj, Vec3(800.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
-
-	//	
-	//	pObj->GetScript<CMonsterMoveScript>()->SetAndGetPath(player);
-	//}
+	
 	//static box
 	{
 		CGameObject* pObj = new CGameObject;

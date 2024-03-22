@@ -65,8 +65,8 @@ class CB_FSMScript :
 public:
     enum class eBossStance
     {
-        Normal,
-        Crouch,
+        NORMAL_WALK, // 1페이즈
+        FAST_WALK, // 2페이즈
         Aim,
         CrouchAim,
         Dodge,
@@ -75,7 +75,7 @@ public:
     enum class eBossMoveDir
     {
         LF, F, RF,
-        L, N, R,
+        L, R,
         LB, B, RB,
         END,
 
@@ -83,19 +83,22 @@ public:
 
     struct tBossStat
     {
-        float MoveSpeed;
+        float MoveSpeed = 100.f;
 
     };
-    struct tP_Info
+
+    struct tB_Info
     {
-        tBossStat     P_Stat;
-        tHealthStat     P_Health;   // Creature FSM 에 명시되어 있음
+        tBossStat     B_Stat;
+        tHealthStat   B_Health;   // Creature FSM 에 명시되어 있음
     };
 
 private:
-    tP_Info         m_tPlayerInfo;
+    tB_Info         m_tBossInfo;
     eBossMoveDir    B_MoveDir;
     bool            m_bPlaying;
+    int             m_iAnimCount;
+    eBossStance     m_eStance;
 
 public:
     virtual void begin() override;
@@ -111,13 +114,17 @@ public:
     void PlayAnim(wstring _name, bool _repeat);
 
     eBossMoveDir GetMoveDir() { return B_MoveDir; }
+    tB_Info GetBossInfo() { return m_tBossInfo; }
+
+    void SetStance(eBossStance _e) { m_eStance = _e; }
+    eBossStance GetStance() { return m_eStance;  }
     bool IsPlaying() { return m_bPlaying; }
 
     void SetPlaying(bool _b) { m_bPlaying = _b; }
 
-    eBossMoveDir RandomDir_SomeExclude();
+    eBossMoveDir RandomDir_SomeExclude(); // 안씀
+    eBossMoveDir RandomDir();
 
-    void Phase1_AnimStart();
     void Phase1_AnimEnd();
 
 

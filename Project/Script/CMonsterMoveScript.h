@@ -1,20 +1,21 @@
 #pragma once
 #include <Engine\CScript.h>
 
-// 현재 지금 안봐도 되는 내용임 (길찾기 관련 코드) 
 class CMonsterMoveScript
 	: public CScript
 {
 private:
-    float m_Speed;
+    float m_fSpeed;
     float m_Pad;
     float m_XDiff;
     float m_YDiff;
     int   m_RenewCount;
     Vec3  m_finalDst;
 
-    bool m_bCatch;
     bool m_bTargetOn;
+    bool m_bMoveOn;
+    int  m_iJustTurned;
+    bool m_bNearPlayer;
 
 
     class CPathFinderScript* m_sPathFinder;
@@ -33,10 +34,19 @@ public:
 public:
     void MoveTo(Vec3 _dstPos);
     void SetAndGetPath(CGameObject* _pObject);
+    void MoveOn(bool _is);
+    std::stack<Vec3>* GetStack() { return m_Stack; }
+    bool RenewPath();
+    int  IsJustTurned() { return m_iJustTurned; }
+    void SetNearPlayer(bool is) { m_bNearPlayer = is; }
+
+    void SetSpeed(float _speed) { m_fSpeed = _speed; }
+    void Clear();
 
 private:
     void Trace();
-    bool RenewPath();
+
+
 
 };
 

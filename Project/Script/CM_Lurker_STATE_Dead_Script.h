@@ -8,6 +8,9 @@ class CM_Lurker_STATE_Dead_Script : public CM_Lurker_StatesScript
 {
 
 private:
+	bool m_bdeath;
+	bool m_bAfterDeath;
+	float m_fTime;
 
 
 public:
@@ -18,7 +21,9 @@ public:
 
 
 private:
-
+	void EraseThis();
+	void AniStop();
+	void PlayDeathGround();
 
 public:
 	virtual void Enter() override;
