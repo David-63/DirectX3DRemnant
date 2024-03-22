@@ -76,6 +76,22 @@ void CRigidBody::finaltick()
 {
 	DrawDebugMesh();
 
+	Vec3 rot = GetOwner()->Transform()->GetRelativeRot();
+	PxTransform tr = GetPhysicsTransform();
+
+	tr.q.x = rot.x;
+	tr.q.y = rot.y;
+	tr.q.z = rot.z;
+	
+	SetPhysicsTransform(tr);
+
+
+
+	/*for (int i = 0; i < mShapeInfos.size(); ++i)
+	{
+		SetShapeLocalPosByBone(i, mShapeInfos[i].boneIdx);
+	}*/
+
 }
 void CRigidBody::Destroy()
 {
@@ -468,6 +484,30 @@ Vec3 CRigidBody::GetShapePosition(int _shapeIdx)
 	pos.z = worldTr.p.z + localTr.p.z;
 
 	return pos;
+}
+
+void CRigidBody::SetShapeLocalPosByBone(int _idx, UINT _boneIdx)
+{
+	tMTBone bone = GetOwner()->Animator3D()->GetMTBoneData(_boneIdx);
+	int FrameIdx = GetOwner()->Animator3D()->GetCurFrame();
+
+	Vec3 trans = bone.vecKeyFrame[FrameIdx].vTranslate;
+	//Matrix OwnerMat = GetOwner()->Transform()->GetWorldMat();
+	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
+	//Matrix finalMat = OwnerMat * matTranslation;
+	Matrix finalMat = matTranslation;
+	Vec3 bonePos = finalMat.Translation();
+
+	PxTransform localpose(PxVec3(bonePos.x, bonePos.y, bonePos.z));
+	localpose.q = GetPhysicsTransform().q;
+
+	mShapes[_idx]->setLocalPose(localpose);
+	mShapeInfos[_idx].offset = bonePos;
+}
+
+void CRigidBody::SetBoneIdx(int _shapeIdx, int _boneIdx)
+{
+	mShapeInfos[_shapeIdx].boneIdx = _boneIdx;
 }
 
 
