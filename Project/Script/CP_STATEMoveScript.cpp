@@ -36,40 +36,6 @@ void CP_STATEMoveScript::tick()
 	
 	
 
-	// 방향 입력
-	if (KEY_TAP(KEY::W))
-	{
-		m_PHQ->InputMove(0, 1.f);
-	}
-	if (KEY_TAP(KEY::S))
-	{
-		m_PHQ->InputMove(0, -1.f);
-	}
-	if (KEY_TAP(KEY::A))
-	{
-		m_PHQ->InputMove(-1.f, 0);
-	}
-	if (KEY_TAP(KEY::D))
-	{
-		m_PHQ->InputMove(1.f, 0);
-	}
-	if (KEY_RELEASE(KEY::W))
-	{
-		m_PHQ->InputMove(0, -1.f);
-	}
-	if (KEY_RELEASE(KEY::S))
-	{
-		m_PHQ->InputMove(0, 1.f);
-	}
-	if (KEY_RELEASE(KEY::D))
-	{
-		m_PHQ->InputMove(-1.f, 0);
-	}
-	if (KEY_RELEASE(KEY::A))
-	{
-		m_PHQ->InputMove(1.f, 0);
-	}
-
 	Vec2 moveDir = m_PHQ->GetMoveDir();
 	// 앞 뒤 구분
 	if (0 <= moveDir.y)
@@ -113,6 +79,7 @@ void CP_STATEMoveScript::tick()
 			{
 				m_PHQ->PlayAnimation(P_R2Reload, false);
 			}
+			m_PHQ->ChangeState(static_cast<UINT>(eP_States::RELOAD));
 		}
 	}
 	if (!m_PHQ->IsSprint())
@@ -125,6 +92,7 @@ void CP_STATEMoveScript::tick()
 				if (gun->Fire())
 				{
 					m_PHQ->PlayAnimation(P_R2Fire, false);
+					m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
 				}
 			}
 		}
@@ -295,7 +263,6 @@ void CP_STATEMoveScript::Enter()
 
 void CP_STATEMoveScript::Exit()
 {
-	//m_PHQ->ClearMoveDir();
 	m_PHQ->InputSprint(false);	
 	m_isDodge = false;
 }

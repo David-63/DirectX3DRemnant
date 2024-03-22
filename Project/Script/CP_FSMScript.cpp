@@ -95,7 +95,8 @@ void CP_FSMScript::begin()
 
 void CP_FSMScript::tick()
 {
-	CC_FSMScript::tick();	// 현재 State의 tick을 호출		
+	CC_FSMScript::tick();	// 현재 State의 tick을 호출	
+	dirInput();
 	stanceControl(); // Stance 변동 감지 및 제어
 	m_MouseCtrl.tick(); // 상태 적용이 완료된 다음에 마우스 호출
 }
@@ -141,6 +142,42 @@ void CP_FSMScript::stanceControl()
 			}
 			m_IsChangeStance = false;
 		}
+	}
+}
+
+void CP_FSMScript::dirInput()
+{
+	if (KEY_TAP(KEY::W))
+	{
+		InputMove(0, 1.f);
+	}
+	if (KEY_TAP(KEY::S))
+	{
+		InputMove(0, -1.f);
+	}
+	if (KEY_TAP(KEY::A))
+	{
+		InputMove(-1.f, 0);
+	}
+	if (KEY_TAP(KEY::D))
+	{
+		InputMove(1.f, 0);
+	}
+	if (KEY_RELEASE(KEY::W))
+	{
+		InputMove(0, -1.f);
+	}
+	if (KEY_RELEASE(KEY::S))
+	{
+		InputMove(0, 1.f);
+	}
+	if (KEY_RELEASE(KEY::D))
+	{
+		InputMove(-1.f, 0);
+	}
+	if (KEY_RELEASE(KEY::A))
+	{
+		InputMove(1.f, 0);
 	}
 }
 

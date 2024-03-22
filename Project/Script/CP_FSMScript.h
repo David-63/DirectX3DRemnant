@@ -129,6 +129,7 @@ public:
 
 private:
     void stanceControl();
+    void dirInput();
 
 public:
     void PlayAnimation(wstring _name, bool _repeat);

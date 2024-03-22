@@ -29,38 +29,7 @@ void CP_STATEIdleScript::tick()
 
 		m_PHQ->InputCrouch();
 	}
-	if (KEY_TAP(KEY::W))
-	{
-		m_PHQ->InputMove(0, 1.f);
-	}
-	if (KEY_TAP(KEY::S))
-	{
-		m_PHQ->InputMove(0, -1.f);
-	}
-	if (KEY_TAP(KEY::A))
-	{
-		m_PHQ->InputMove(-1.f, 0);
-	}
-	if (KEY_TAP(KEY::D))
-	{
-		m_PHQ->InputMove(1.f, 0);
-	}
-	if (KEY_RELEASE(KEY::W))
-	{
-		m_PHQ->InputMove(0, -1.f);
-	}
-	if (KEY_RELEASE(KEY::S))
-	{
-		m_PHQ->InputMove(0, 1.f);
-	}
-	if (KEY_RELEASE(KEY::D))
-	{
-		m_PHQ->InputMove(-1.f, 0);
-	}
-	if (KEY_RELEASE(KEY::A))
-	{
-		m_PHQ->InputMove(1.f, 0);
-	}
+	
 
 	Vec2 moveDir = m_PHQ->GetMoveDir();
 
