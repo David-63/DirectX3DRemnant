@@ -91,11 +91,18 @@ public:
 
 	physx::PxRigidBody* GetRigidBody() { return mActor->is<physx::PxRigidBody>(); }
 	physx::PxRigidActor* GetRigidActor() { return GetActor<physx::PxRigidActor>(); }
-	void SetShapeLocalPos(int _idx, CTransform* _transform);
-	//void SetShapeLocalPos(int _idx, Vec3 _localPos, UINT _boneIdx);
+
+
 	void SetShapeLocalPos(int _idx, Vec3 _localPos);
+
+	void SetShapeLocalPosByBone(int _idx, UINT _boneIdx);
+	void SetBoneSoket(int _shapeIdx, int _boneIdx, Vec3 _offset);
+
+
 	void AttachShape(int _idx);
 	Vec3 GetShapePosition(int _shapeIdx);
+
+
 	float GetRad() { return mShapeInfos[0].size.x / 2.f; }
 	Vector3 GetShapeSize() { return mShapeInfos[0].size; }
 	GEOMETRY_TYPE GetGeomType() { return mShapeInfos[0].eGeomType; }
@@ -141,5 +148,7 @@ private:
 	Vec3 mTempSize;
 	Vec3 mTempOffset;
 	bool mTempGeomType; //true: Sphere, false: Box
+	
+	bool m_bSoketUse;
 };
 

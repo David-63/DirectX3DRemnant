@@ -76,6 +76,13 @@ void CRigidBody::finaltick()
 {
 	DrawDebugMesh();
 
+	//if(!m_bSoketUse)
+
+	for (int i = 0; i < mShapeInfos.size(); ++i)
+	{
+		SetShapeLocalPosByBone(i, mShapeInfos[i].boneIdx);
+	}
+
 }
 void CRigidBody::Destroy()
 {
@@ -407,43 +414,6 @@ void CRigidBody::SetSleep(bool _isSleep)
 }
 
 
-void CRigidBody::SetShapeLocalPos(int _idx, CTransform* _transform)
-{
-	Vec3 vecPos = _transform->GetRelativePos();
-	Vec3 vecRot = _transform->GetRelativeRot();
-	XMFLOAT4 quat = EulerToQuat(vecRot.x, vecRot.y, vecRot.z);
-
-	PxTransform pxTransform;
-	pxTransform.p.x = vecPos.x;
-	pxTransform.p.y = vecPos.y;
-	pxTransform.p.z = vecPos.z;
-
-	pxTransform.q.x = quat.x;
-	pxTransform.q.y = quat.y;
-	pxTransform.q.z = quat.z;
-	pxTransform.q.w = quat.w;
-
-	mShapes[_idx]->setLocalPose(pxTransform);
-}
-
-//void CRigidBody::SetShapeLocalPos(int _idx, Vec3 _localPos, UINT _boneIdx)
-//{
-//	//Matrix soketMat = GetOwner()->Animator3D()->GetBoneSocket(32);
-//
-//	PxTransform tr = GetPhysicsTransform();
-//	Matrix trMat = Matrix::CreateTranslation({ tr.p.x, tr.p.y, tr.p.z });
-//
-//	//Matrix finalMat = trMat * soketMat;
-//	
-//	//XMVECTOR vec = XMVectorGetX(finalMat.);
-//
-//	PxTransform localpose(PxVec3(_localPos.x, _localPos.y, _localPos.z));
-//	localpose.q = GetPhysicsTransform().q;
-//
-//	mShapes[_idx]->setLocalPose(localpose);
-//	mShapeInfos[_idx].offset = _localPos;
-//}
-
 void CRigidBody::AttachShape(int _idx)
 {
 	GetRigidActor()->attachShape(*mShapes[_idx]);
@@ -468,6 +438,36 @@ Vec3 CRigidBody::GetShapePosition(int _shapeIdx)
 	pos.z = worldTr.p.z + localTr.p.z;
 
 	return pos;
+}
+
+void CRigidBody::SetShapeLocalPosByBone(int _idx, UINT _boneIdx)
+{
+	if (nullptr == GetOwner()->Animator3D() || nullptr == GetOwner()->Animator3D()->GetCurAnim())
+		return;
+
+	tMTBone bone = GetOwner()->Animator3D()->GetMTBoneData(_boneIdx);
+	int FrameIdx = GetOwner()->Animator3D()->GetCurFrame();
+
+	if (bone.vecKeyFrame.size() == 0)
+		return;
+
+	Vec3 trans = bone.vecKeyFrame[FrameIdx].vTranslate;
+	Vec3 offset = mShapeInfos[_idx].boneOffset;
+	
+	Vec3 bonePos = trans + offset;
+
+	PxTransform localpose(PxVec3(bonePos.x, bonePos.y, bonePos.z));
+	localpose.q = GetPhysicsTransform().q;
+
+	mShapes[_idx]->setLocalPose(localpose);
+	mShapeInfos[_idx].offset = bonePos;
+}
+
+void CRigidBody::SetBoneSoket(int _shapeIdx, int _boneIdx, Vec3 _offset)
+{
+	mShapeInfos[_shapeIdx].boneIdx = _boneIdx;
+	mShapeInfos[_shapeIdx].boneOffset = _offset;
+	m_bSoketUse = true;
 }
 
 

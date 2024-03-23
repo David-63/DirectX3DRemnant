@@ -441,14 +441,15 @@ void CM_Lurker_STATE_Move_Script::RotationReset()
 {
 	Vec3 rot = m_MHQ->Transform()->GetRelativeRot();
 	TransRadToDegreeVector(rot);
-	if (rot.y > 1080.f) 
+	if (rot.y > 360.f) 
 	{
 		rot.y = fmod(rot.y, 360.f);
+
 
 		rot = TransDegreeToRadVector(rot);
 		m_MHQ->Transform()->SetRelativeRot(rot);
 	}
-	else if (rot.y < -1080.f)
+	else if (rot.y < -360.f)
 	{
 		rot.y = fmod(rot.y, 360.f);
 

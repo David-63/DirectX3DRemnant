@@ -468,6 +468,7 @@ struct tShapeInfo
 		, filterData{}
 		, offset(0.f,0.f,0.f)
 		, isPlayer(false)
+		, boneIdx(0)
 	{}
 
 	GEOMETRY_TYPE eGeomType;
@@ -476,6 +477,8 @@ struct tShapeInfo
 	physx::PxFilterData filterData;
 	Vector3 offset;
 	bool isPlayer;
+	int boneIdx;
+	Vector3 boneOffset;
 };
 
 struct tRayCastInfo

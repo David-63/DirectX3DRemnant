@@ -52,8 +52,8 @@ void CM_Lurker_FSMScript::begin()
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_DEAD_SCRIPT)));
 
 
-	//ChangeState(static_cast<UINT>(eLurkerState::Idle));
-	ChangeState(static_cast<UINT>(eLurkerState::Move));
+	ChangeState(static_cast<UINT>(eLurkerState::Idle));
+	//ChangeState(static_cast<UINT>(eLurkerState::Move));
 }
 
 void CM_Lurker_FSMScript::tick()
