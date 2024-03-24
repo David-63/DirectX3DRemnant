@@ -129,26 +129,30 @@ void CP_STATEMoveScript::translateInput()
 	else
 		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT;
 
+	moveMagnitude *= 50.f;
+	Vec3 vMoveVector(0.f, 0.f, 0.f);
 	//vMoveVector += DT * vFront * fSpeed;
 	//GetOwner()->RigidBody()->SetVelocity(vMoveVector);
 	if (KEY_HOLD(KEY::W))
 	{
-		vCurPos += vFront * moveMagnitude;
+		vMoveVector += vFront * moveMagnitude;
 	}
 	if (KEY_HOLD(KEY::S))
 	{
-		vCurPos -= vFront * moveMagnitude;
+		vMoveVector -= vFront * moveMagnitude;
 	}
 	if (KEY_HOLD(KEY::A))
 	{
-		vCurPos -= vRight * moveMagnitude;
+		vMoveVector -= vRight * moveMagnitude;
 	}
 	if (KEY_HOLD(KEY::D))
 	{
-		vCurPos += vRight * moveMagnitude;
+		vMoveVector += vRight * moveMagnitude;
 	}
 
-	m_PHQ->GetOwner()->Transform()->SetRelativePos(vCurPos);
+	m_PHQ->GetOwner()->RigidBody()->SetVelocity(vMoveVector);
+
+	//m_PHQ->GetOwner()->Transform()->SetRelativePos(vCurPos);
 }
 
 void CP_STATEMoveScript::CallAnimation()

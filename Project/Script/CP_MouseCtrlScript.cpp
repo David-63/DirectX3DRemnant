@@ -66,14 +66,14 @@ void CP_MouseCtrlScript::CtrlMovePos()
 	}
 
 	// 변경사항 적용
-	objPos.y = m_PivotValue.CurValue;
+	objPos.y += m_PivotValue.CurValue;
 	Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
 	m_ctrlCam->Transform()->SetRelativePos(Point);
 
 	// Weapon
 	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
 	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
-	// SetPos
+
 	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
 	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
 	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
@@ -124,6 +124,17 @@ void CP_MouseCtrlScript::CtrlMoveRot()
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
+
+	// Weapon
+	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
+	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
+
+	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
+	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
+	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
+	Matrix finalMat = OwnerMat * matTranslation;
+	Vec3 bonePos = finalMat.Translation();
+	m_Weapon->Transform()->SetRelativePos(bonePos);
 
 	Vec3 boneRot = m_PHQ->Transform()->GetRelativeRot();
 	m_Weapon->Transform()->SetRelativeRot(boneRot);

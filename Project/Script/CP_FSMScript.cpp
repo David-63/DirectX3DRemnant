@@ -2,6 +2,7 @@
 #include "CP_FSMScript.h"
 #include "CP_MouseCtrlScript.h"
 #include <Engine/CRenderMgr.h>
+#include <Engine/Physics.h>
 
 CP_FSMScript::CP_FSMScript()
 	: m_InpStance{ false, false, false, true }, m_IsChangeStance(true), m_Weapon(nullptr)
@@ -91,7 +92,34 @@ void CP_FSMScript::begin()
 		m_MouseCtrl.SetOwner(this);
 		m_MouseCtrl.SetWeaponObj(m_Weapon);
 		m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
-	}	
+	}
+
+	GetOwner()->AddComponent(new CCollider3D);
+	GetOwner()->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+	GetOwner()->AddComponent(new CRigidBody);
+
+	tShapeInfo info = {};
+	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	info.size = Vector3(15.f, 15.f, 15.f);
+	GetOwner()->RigidBody()->PushBackShapeInfo(info);
+	tShapeInfo info2 = {};
+	info2.eGeomType = GEOMETRY_TYPE::Sphere;
+	info2.size = Vector3(15.f, 15.f, 15.f);
+	GetOwner()->RigidBody()->PushBackShapeInfo(info2);
+	tShapeInfo info3 = {};
+	info3.eGeomType = GEOMETRY_TYPE::Sphere;
+	info3.size = Vector3(8.f, 8.f, 8.f);
+	GetOwner()->RigidBody()->PushBackShapeInfo(info3);
+
+	GetOwner()->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+	GetOwner()->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+	GetOwner()->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+	GetOwner()->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+	GetOwner()->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+
+	GetOwner()->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+	GetOwner()->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+	GetOwner()->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));
 }
 
 void CP_FSMScript::tick()

@@ -32,22 +32,22 @@ void CTestScript::tick()
 	float fSpeed = 10000.f;
 
 
-	if (KEY_HOLD(KEY::W))
+	if (KEY_HOLD(KEY::NUM_8))
 	{
 		vMoveVector += DT * vFront * fSpeed;
 	}
 
-	if (KEY_HOLD(KEY::S))
+	if (KEY_HOLD(KEY::NUM_5))
 	{
 		vMoveVector -= DT * vFront * fSpeed;
 	}
 
-	if (KEY_HOLD(KEY::A))
+	if (KEY_HOLD(KEY::NUM_4))
 	{
 		vMoveVector -= DT * vRight * fSpeed;
 	}
 
-	if (KEY_HOLD(KEY::D))
+	if (KEY_HOLD(KEY::NUM_6))
 	{
 		vMoveVector += DT * vRight * fSpeed;
 	}

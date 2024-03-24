@@ -466,8 +466,9 @@ void CAnimator3D::Add(wstring _name)
 	// 없으면 clip에 대한 새 이벤트 생성 후 map에 추가하기
 	if (!events)
 	{
+		tAnim3DData thisAnimData = newAnim.Get()->GetAnimData();
 		events = new Events();
-		int maxFrame = (m_CurAnimData.EndTime - m_CurAnimData.BeginTime) * 30 + 1;
+		int maxFrame = (thisAnimData.EndTime - thisAnimData.BeginTime) * 30 + 1;
 		events->ActionEvents.resize(maxFrame);
 		m_Events.insert(std::make_pair(_name, events));
 	}

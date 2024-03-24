@@ -108,7 +108,28 @@ void CreateTestLevel()
 
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}
-
+	// Test obj
+	{
+		CGameObject* pObj = new CGameObject;
+		pObj->SetName(L"test Obj");
+		pObj->AddComponent(new CTransform);
+		pObj->AddComponent(new CTestScript);
+		
+		pObj->AddComponent(new CRigidBody);
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(15.f, 15.f, 15.f);
+		pObj->Transform()->SetRelativePos(Vec3(200.f, 100.f, 0.f));
+		pObj->SetLayerIdx(0);
+		pObj->RigidBody()->PushBackShapeInfo(info);
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+		
+		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
+	}
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		CGameObject* player = nullptr;
@@ -121,37 +142,12 @@ void CreateTestLevel()
 		player->SetName(L"Player");
 		player->MeshRender()->SetFrustumCheck(false);
 
-		/*player->SetLayerIdx((UINT)LAYER_TYPE::Player);
-		player->Transform()->SetRelativePos(Vec3(200.f, 0.f, 0.f));
-		player->AddComponent(new CCollider3D);
-		player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
-		player->AddComponent(new CRigidBody);
-
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(15.f, 15.f, 15.f);
-		player->RigidBody()->PushBackShapeInfo(info);
-		tShapeInfo info2 = {};
-		info2.eGeomType = GEOMETRY_TYPE::Sphere;
-		info2.size = Vector3(15.f, 15.f, 15.f);
-		player->RigidBody()->PushBackShapeInfo(info2);
-		tShapeInfo info3 = {};
-		info3.eGeomType = GEOMETRY_TYPE::Sphere;
-		info3.size = Vector3(8.f, 8.f, 8.f);
-		player->RigidBody()->PushBackShapeInfo(info3);
-
-		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-
-		player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-		player->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-		player->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));*/
+		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
+		player->Transform()->SetRelativePos(Vec3(200.f, 1000.f, 0.f));
+		
 
 		player->AddComponent(new CP_FSMScript());
-		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
+		SpawnGameObject(player, Vec3(200.f, 1000.f, 0.f), 1);
 	}
 
 	{
