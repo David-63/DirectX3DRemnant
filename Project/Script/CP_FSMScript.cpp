@@ -4,7 +4,7 @@
 #include <Engine/CRenderMgr.h>
 
 CP_FSMScript::CP_FSMScript()
-	: m_InpStance{ false, false, false, true }, m_IsChangeStance(true)
+	: m_InpStance{ false, false, false, true }, m_IsChangeStance(true), m_Weapon(nullptr)
 	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay)
 {
 }
@@ -76,21 +76,22 @@ void CP_FSMScript::begin()
 	ChangeState(static_cast<UINT>(eP_States::IDLE));
 
 
-	Ptr<CMeshData> pMeshData = nullptr;
-	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
-	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_AssaultRifle.fbx");
-	
-	m_Weapon = nullptr;
-	m_Weapon = pMeshData->InstMesh();
-	m_Weapon->SetName(L"LongGun");
-	m_Weapon->MeshRender()->SetFrustumCheck(false);
-	SpawnGameObject(m_Weapon, Vec3(200.f, 0.f, 0.f), 1);
-	
 
-	m_MouseCtrl.SetOwner(this);
-	m_MouseCtrl.SetWeaponObj(m_Weapon);
-	m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
-	m_MouseCtrl.begin();
+	if (nullptr == m_Weapon)
+	{
+		Ptr<CMeshData> pMeshData = nullptr;
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_AssaultRifle.fbx");
+
+		m_Weapon = pMeshData->InstMesh();
+		m_Weapon->SetName(L"LongGun");
+		m_Weapon->MeshRender()->SetFrustumCheck(false);
+		SpawnGameObject(m_Weapon, Vec3(200.f, 0.f, 0.f), 1);
+
+		m_MouseCtrl.SetOwner(this);
+		m_MouseCtrl.SetWeaponObj(m_Weapon);
+		m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
+	}	
 }
 
 void CP_FSMScript::tick()
@@ -124,7 +125,8 @@ void CP_FSMScript::stanceControl()
 				ChangeStance(ePlayerStance::Aim);
 				curState->CallAnimation();
 				m_MouseCtrl.SetPivot(PIVOT_HIGH);
-				m_MouseCtrl.SetFov(FOV_LOW);				
+				m_MouseCtrl.SetFov(FOV_LOW);
+				OverrideObjRotY();
 			}
 			else if (m_InpStance[(UINT)eInpStance::Crouch])
 			{

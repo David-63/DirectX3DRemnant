@@ -120,8 +120,65 @@ void CreateTestLevel()
 		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RHuntReload_End.animclip");
 		player->SetName(L"Player");
 		player->MeshRender()->SetFrustumCheck(false);
-		
+
+		/*player->SetLayerIdx((UINT)LAYER_TYPE::Player);
+		player->Transform()->SetRelativePos(Vec3(200.f, 0.f, 0.f));
+		player->AddComponent(new CCollider3D);
+		player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+		player->AddComponent(new CRigidBody);
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(15.f, 15.f, 15.f);
+		player->RigidBody()->PushBackShapeInfo(info);
+		tShapeInfo info2 = {};
+		info2.eGeomType = GEOMETRY_TYPE::Sphere;
+		info2.size = Vector3(15.f, 15.f, 15.f);
+		player->RigidBody()->PushBackShapeInfo(info2);
+		tShapeInfo info3 = {};
+		info3.eGeomType = GEOMETRY_TYPE::Sphere;
+		info3.size = Vector3(8.f, 8.f, 8.f);
+		player->RigidBody()->PushBackShapeInfo(info3);
+
+		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+
+		player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		player->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+		player->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));*/
+
 		player->AddComponent(new CP_FSMScript());
 		SpawnGameObject(player, Vec3(200.f, 0.f, 0.f), 1);
+	}
+
+	{
+		CGameObject* pGround = new CGameObject;
+		pGround->SetName(L"Ground");
+		pGround->AddComponent(new CTransform);
+		pGround->Transform()->SetRelativeScale(10000.f, 10.f, 10000.f);
+		pGround->SetLayerIdx((UINT)LAYER_TYPE::Ground);
+		pGround->Transform()->SetRelativePos(Vec3(0.f, -500.f, 0.f));
+
+		pGround->AddComponent(new CCollider3D);
+		pGround->AddComponent(new CRigidBody);
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Box;
+		info.size = Vector3(10000.f, 1000.f, 10000.f);
+		info.massProperties.restitution = 0.2f;
+		info.massProperties.dynamicFriction = 0.3f;
+		info.massProperties.staticFriction = 0.3f;
+		pGround->RigidBody()->PushBackShapeInfo(info);
+		pGround->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
+
+		pGround->AddComponent(new CMeshRender);
+		Ptr<CMesh> mesh = CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug");
+		Ptr<CMaterial> mater = CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl");
+		pGround->MeshRender()->SetMesh(mesh);
+		pGround->MeshRender()->SetMaterial(mater, 0);
+
+		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), (UINT)LAYER_TYPE::Ground);
 	}
 }

@@ -80,6 +80,8 @@ void CP_MouseCtrlScript::CtrlMovePos()
 	Matrix finalMat = OwnerMat * matTranslation;
 	Vec3 bonePos = finalMat.Translation();
 	m_Weapon->Transform()->SetRelativePos(bonePos);
+
+
 }
 
 void CP_MouseCtrlScript::CtrlMoveRot()
@@ -140,5 +142,5 @@ void CP_MouseCtrlScript::MouseRock()
 
 void CP_MouseCtrlScript::OverrideObjRotY()
 {
-	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_CamInfo.PrevCamRotY + XM_PI, 0.f));
+	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_CamInfo.PrevCamRotY, 0.f));
 }

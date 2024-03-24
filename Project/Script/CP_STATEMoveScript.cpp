@@ -129,22 +129,23 @@ void CP_STATEMoveScript::translateInput()
 	else
 		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT;
 
-
+	//vMoveVector += DT * vFront * fSpeed;
+	//GetOwner()->RigidBody()->SetVelocity(vMoveVector);
 	if (KEY_HOLD(KEY::W))
-	{
-		vCurPos -= vFront * moveMagnitude;
-	}
-	if (KEY_HOLD(KEY::S))
 	{
 		vCurPos += vFront * moveMagnitude;
 	}
+	if (KEY_HOLD(KEY::S))
+	{
+		vCurPos -= vFront * moveMagnitude;
+	}
 	if (KEY_HOLD(KEY::A))
 	{
-		vCurPos += vRight * moveMagnitude;
+		vCurPos -= vRight * moveMagnitude;
 	}
 	if (KEY_HOLD(KEY::D))
 	{
-		vCurPos -= vRight * moveMagnitude;
+		vCurPos += vRight * moveMagnitude;
 	}
 
 	m_PHQ->GetOwner()->Transform()->SetRelativePos(vCurPos);

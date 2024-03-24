@@ -48,6 +48,9 @@ void CTransform::finaltick()
 		//matRot = Matrix::CreateFromQuaternion(quat);
 
 		m_matWorld = m_matWorldScale * matRot * matTranslation;
+
+		GetOwner()->RigidBody()->SetPhysicsTransform(transform);
+
 	}
 	else
 	{
@@ -208,9 +211,7 @@ void CTransform::SetRelativeRot(Vec3 _vRot)
 {
 	m_vRelativeRot = _vRot;
 
-	auto quat = Quaternion::CreateFromYawPitchRoll(XMConvertToRadians(m_vRelativeRot.y)
-												 , XMConvertToRadians(m_vRelativeRot.x)
-										         , XMConvertToRadians(m_vRelativeRot.z));
+	auto quat = Quaternion::CreateFromYawPitchRoll(m_vRelativeRot.y, m_vRelativeRot.x, m_vRelativeRot.z);
 
 	if (IsPhysicsObject())
 	{
