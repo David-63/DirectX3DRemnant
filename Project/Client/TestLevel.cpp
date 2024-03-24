@@ -142,12 +142,8 @@ void CreateTestLevel()
 		player->SetName(L"Player");
 		player->MeshRender()->SetFrustumCheck(false);
 
-		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
-		player->Transform()->SetRelativePos(Vec3(200.f, 1000.f, 0.f));
-		
-
 		player->AddComponent(new CP_FSMScript());
-		SpawnGameObject(player, Vec3(200.f, 1000.f, 0.f), 1);
+		SpawnGameObject(player, Vec3(0.f, 0.f, 0.f), 1);
 	}
 
 	{

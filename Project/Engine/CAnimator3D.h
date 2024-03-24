@@ -103,6 +103,7 @@ private:
     float						m_AnimRatio;				// . 
 	bool						m_isFinalMatUpdate;			// buffer ctrl
 	CStructuredBuffer*			m_BoneFinalMatBuffer;		//
+	CStructuredBuffer*			m_BoneRetMatBuffer;			//
 	vector<Matrix>				m_vecFinalBoneMat;			// .
 
 	// blend value
@@ -126,8 +127,8 @@ public:
 public:
 	void SimpleGen();
 	void SimpleGen(wstring _name);
-	const Matrix& GetBoneMatrix(int _idx) { return m_vecFinalBoneMat[_idx]; }		// Player Hand (168)
-	const tMTBone& GetMTBoneData(int _idx) { return m_pCurrentAnim->GetMTBones().at(_idx); }		// Player Hand (168)
+	const Matrix& GetBoneMatrix(int _idx) { return m_vecFinalBoneMat[_idx]; }		// Player Hand (176)
+	const tMTBone& GetMTBoneData(int _idx) { return m_pCurrentAnim->GetMTBones().at(_idx); }		// Player Hand (176)
 
 
 private:
