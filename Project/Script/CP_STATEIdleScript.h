@@ -5,6 +5,9 @@ class CP_STATEIdleScript : public CP_StatesScript
 {
 private:
     bool        m_isMove;
+    bool        m_isDodge;
+    bool        m_isReload;
+    bool        m_isFire;       // 공격 이동 애니메이션이 없으니 이렇게 할수밖에 없음
     bool        m_isMelee;
 
     int         m_horizontal;
@@ -22,7 +25,14 @@ public:
     void IdleMouseInput();
 
 public:
-    void ClearIdleState() { m_isMove = false; m_isMelee = false; }
+    void ClearIdleState()
+    {
+        m_isDodge = false;
+        m_isMelee = false;
+        m_isFire = false;
+        m_isReload = false;
+        m_isMove = false;
+    }
 
 public:
     virtual void Enter() override;

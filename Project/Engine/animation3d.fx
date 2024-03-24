@@ -364,9 +364,7 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
                 float4 vtTrans = lerp(g_arrFrameTrans[PiFrameDataIndex].vTranslate, g_arrFrameTrans_next[PiNextFrameDataIdx].vTranslate, Ratio);
                 float4 qtRot = QuternionLerp(g_arrFrameTrans[PiFrameDataIndex].qRot, g_arrFrameTrans_next[PiNextFrameDataIdx].qRot, Ratio);
                 
-                
                 MatrixAffineTransformation(vtScale, vtQZero, qtRot, vtTrans, targetBoneMat);
-                
                 
                 break;
             }
@@ -383,7 +381,7 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     {
         MatrixAffineTransformation(vScale, vQZero, qRot, vTrans, matBone);        
     }
-    // 최종 본행렬 연산    
+    // 최종 본행렬 연산
     //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
 
     // 담당하는 뼈의 위치를 offset(기본) 위치로 이동시킴
