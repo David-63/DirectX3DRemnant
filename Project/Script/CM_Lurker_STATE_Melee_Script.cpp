@@ -4,7 +4,6 @@
 #include "Engine/func.h"
 #include "CHitBoxScript.h"
 
-bool CM_Lurker_STATE_Melee_Script::m_bAtkComplete = false;
 
 CM_Lurker_STATE_Melee_Script::CM_Lurker_STATE_Melee_Script()
 {

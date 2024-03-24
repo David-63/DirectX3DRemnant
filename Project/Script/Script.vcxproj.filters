@@ -67,9 +67,6 @@
     <Filter Include="Script\Creature\Monster\M_States">
       <UniqueIdentifier>{cf06d97b-88fd-4c9c-a213-cde583175940}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Creature\Monster\M_States\Common">
-      <UniqueIdentifier>{fc928bb5-7790-4bc5-841f-291a2b9a8b9c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\Creature\Monster\M_States\Lurker">
       <UniqueIdentifier>{4d5ccecb-b2c3-4208-82df-d75da8352fc9}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,15 @@
     </Filter>
     <Filter Include="Script\Creature\Player\Module">
       <UniqueIdentifier>{aac34332-3515-460b-876f-6e781d78e913}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_FSM\Annointed">
+      <UniqueIdentifier>{c83abffa-f3e3-4884-b5dc-fbb081490a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\Common">
+      <UniqueIdentifier>{fc928bb5-7790-4bc5-841f-291a2b9a8b9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_States\Annointed">
+      <UniqueIdentifier>{ab488290-e825-4ed6-a3e6-bb2bab4ee84a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -142,7 +148,7 @@
       <Filter>Script\Creature\Monster\M_FSM\Lurker</Filter>
     </ClInclude>
     <ClInclude Include="CMonsterMoveScript.h">
-      <Filter>Script\Creature\Monster\M_States\Common</Filter>
+      <Filter>Script\Creature\Monster\Common</Filter>
     </ClInclude>
     <ClInclude Include="CM_Lurker_StatesScript.h">
       <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
@@ -191,6 +197,27 @@
     </ClInclude>
     <ClInclude Include="CB_STATEDeadScript.h">
       <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Annointed_FSMScript.h">
+      <Filter>Script\Creature\Monster\M_FSM\Annointed</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Annointed_StatesScript.h">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Annointed_STATE_Atk_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Annointed_STATE_Damaged_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Annointed_STATE_Dead_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Annointed_STATE_Idle_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Annointed_STATE_Move_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -252,7 +279,7 @@
       <Filter>Script\Creature\Monster\M_FSM\Lurker</Filter>
     </ClCompile>
     <ClCompile Include="CMonsterMoveScript.cpp">
-      <Filter>Script\Creature\Monster\M_States\Common</Filter>
+      <Filter>Script\Creature\Monster\Common</Filter>
     </ClCompile>
     <ClCompile Include="CM_Lurker_StatesScript.cpp">
       <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
@@ -301,6 +328,27 @@
     </ClCompile>
     <ClCompile Include="CB_STATEDeadScript.cpp">
       <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Annointed_FSMScript.cpp">
+      <Filter>Script\Creature\Monster\M_FSM\Annointed</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Annointed_StatesScript.cpp">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Annointed_STATE_Atk_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Annointed_STATE_Damaged_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Annointed_STATE_Dead_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Annointed_STATE_Idle_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Annointed_STATE_Move_Script.cpp">
+      <Filter>Script\Creature\Monster\M_States\Annointed</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

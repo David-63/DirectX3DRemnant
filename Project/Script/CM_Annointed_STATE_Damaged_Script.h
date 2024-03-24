@@ -1,10 +1,10 @@
 #pragma once
-#include "CM_Lurker_StatesScript.h"
+#include "CM_Annointed_StatesScript.h"
 
 
-class CM_Lurker_STATE_Damaged_Script : public CM_Lurker_StatesScript
+class CM_Annointed_STATE_Damaged_Script : public CM_Annointed_StatesScript
 {
-	enum class eLDPart
+	enum class eADPart
 	{
 		Legs,
 		LegL,
@@ -14,7 +14,7 @@ class CM_Lurker_STATE_Damaged_Script : public CM_Lurker_StatesScript
 	};
 
 private:
-	eLDPart m_ePart;
+	eADPart m_ePart;
 	bool m_bAniComplete;
 	float m_fBackSpeed;
 	Vec3 m_vBackDir;
@@ -24,7 +24,7 @@ public:
 	virtual void begin() override;
 
 public:
-	void SetPart(eLDPart _part) { m_ePart = _part; }
+	void SetPart(eADPart _part) { m_ePart = _part; }
 
 private:
 	void AniComplete();
@@ -35,10 +35,10 @@ public:
 	virtual void Exit() override;
 
 public:
-	CLONE(CM_Lurker_STATE_Damaged_Script);
+	CLONE(CM_Annointed_STATE_Damaged_Script);
 
-	CM_Lurker_STATE_Damaged_Script();
-	virtual ~CM_Lurker_STATE_Damaged_Script();
+	CM_Annointed_STATE_Damaged_Script();
+	virtual ~CM_Annointed_STATE_Damaged_Script();
 
 };
 

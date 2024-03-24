@@ -1,7 +1,7 @@
 #pragma once
-#include "CM_Lurker_StatesScript.h"
+#include "CM_Annointed_StatesScript.h"
 
-class CM_Lurker_STATE_Melee_Script : public CM_Lurker_StatesScript
+class CM_Annointed_STATE_Atk_Script : public CM_Annointed_StatesScript
 {
 private:
 	//common
@@ -9,7 +9,7 @@ private:
 	bool		     m_bAtkComplete;
 	float			 m_fSpeed;
 	bool			 m_bNearPlayer;
-	eMeleeState      m_eMeleeState;
+	eAtkState        m_eAtkState;
 
 	//dash
 	bool			 m_bDashOnce;
@@ -20,14 +20,14 @@ private:
 
 	//Slash
 	bool			 m_bSlashOnce;
-	
+
 
 public:
 	virtual void tick() override;
 	virtual void begin() override;
 
 public:
-	void SetMeleeState(eMeleeState _state) { m_eMeleeState = _state; }
+	void SetAtkState(eAtkState _state) { m_eAtkState = _state; }
 
 private:
 	void Dash();
@@ -48,17 +48,16 @@ private:
 	void SlashComboBoxOff();
 
 	void DistCheck();
-	
 
 public:
 	virtual void Enter() override;
 	virtual void Exit() override;
 
 public:
-	CLONE(CM_Lurker_STATE_Melee_Script);
+	CLONE(CM_Annointed_STATE_Atk_Script);
 
-	CM_Lurker_STATE_Melee_Script();
-	virtual ~CM_Lurker_STATE_Melee_Script();
+	CM_Annointed_STATE_Atk_Script();
+	virtual ~CM_Annointed_STATE_Atk_Script();
 
 };
 

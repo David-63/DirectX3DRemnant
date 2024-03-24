@@ -1,10 +1,8 @@
 #pragma once
-#include "CM_Lurker_StatesScript.h"
-
-//#define Lurker_ALERT01         L"animclip\\Lurker\\Lurker_Alert_01.animclip"
+#include "CM_Annointed_StatesScript.h"
 
 
-class CM_Lurker_STATE_Move_Script : public CM_Lurker_StatesScript
+class CM_Annointed_STATE_Move_Script : public CM_Annointed_StatesScript
 {
 	enum class eTurnAni
 	{
@@ -63,14 +61,14 @@ private:
 	bool       m_bEnterDistCheck;
 
 	class CMonsterMoveScript* m_CMoveScript;
-	eMeleeState m_eMoveMelee;
+	eAtkState m_eAtkInMove;
 
 public:
 	virtual void tick() override;
 	virtual void begin() override;
 
 public:
-	
+
 
 private:
 	void Clear();
@@ -102,10 +100,10 @@ public:
 	virtual void Exit() override;
 
 public:
-	CLONE(CM_Lurker_STATE_Move_Script);
+	CLONE(CM_Annointed_STATE_Move_Script);
 
-	CM_Lurker_STATE_Move_Script();
-	virtual ~CM_Lurker_STATE_Move_Script();
+	CM_Annointed_STATE_Move_Script();
+	virtual ~CM_Annointed_STATE_Move_Script();
 
 };
 

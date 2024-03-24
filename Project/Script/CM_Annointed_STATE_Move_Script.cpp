@@ -1,42 +1,42 @@
 #include "pch.h"
-#include "CM_Lurker_STATE_Melee_Script.h"
-#include "CM_Lurker_STATE_Move_Script.h"
-#include "CM_Lurker_FSMScript.h"
+#include "CM_Annointed_STATE_Atk_Script.h"
+#include "CM_Annointed_STATE_Move_Script.h"
+#include "CM_Annointed_FSMScript.h"
 #include "CPathFinderScript.h"
 #include "CMonsterMoveScript.h"
 #include <random>
 
 
-CM_Lurker_STATE_Move_Script::CM_Lurker_STATE_Move_Script()
+CM_Annointed_STATE_Move_Script::CM_Annointed_STATE_Move_Script()
 	: m_iCatchStage(0)
 	, m_fAniTurnSpeed(1.f)
 	, m_fJustTurnSpeed(2.f)
 	, m_iGetBackStage(0)
 
 {
-	SetStateType(static_cast<UINT>(eM_States::MOVE));
+	SetStateType(static_cast<UINT>(eM_A_States::MOVE));
 }
 
-CM_Lurker_STATE_Move_Script::~CM_Lurker_STATE_Move_Script()
+CM_Annointed_STATE_Move_Script::~CM_Annointed_STATE_Move_Script()
 {
 
 }
 
-void CM_Lurker_STATE_Move_Script::begin()
+void CM_Annointed_STATE_Move_Script::begin()
 {
-	CM_Lurker_StatesScript::begin();
+	CM_Annointed_StatesScript::begin();
 
 	m_CMoveScript = m_MHQ->GetOwner()->GetScript<CMonsterMoveScript>();
 	m_CMoveScript->SetSpeed(200.f);
 
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn180) = std::bind(&CM_Lurker_STATE_Move_Script::TurnComplete180, this);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn90L) = std::bind(&CM_Lurker_STATE_Move_Script::TurnComplete90L, this);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn90R) = std::bind(&CM_Lurker_STATE_Move_Script::TurnComplete90R, this);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn135L) = std::bind(&CM_Lurker_STATE_Move_Script::TurnComplete135L, this);
-	m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn135R) = std::bind(&CM_Lurker_STATE_Move_Script::TurnComplete135R, this);
+	//m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn180) = std::bind(&CM_Annointed_STATE_Move_Script::TurnComplete180, this);
+	//m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn90L) = std::bind(&CM_Annointed_STATE_Move_Script::TurnComplete90L, this);
+	//m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn90R) = std::bind(&CM_Annointed_STATE_Move_Script::TurnComplete90R, this);
+	//m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn135L) = std::bind(&CM_Annointed_STATE_Move_Script::TurnComplete135L, this);
+	//m_MHQ->Animator3D()->CompleteEvent(Lurker_Turn135R) = std::bind(&CM_Annointed_STATE_Move_Script::TurnComplete135R, this);
 }
 
-void CM_Lurker_STATE_Move_Script::tick()
+void CM_Annointed_STATE_Move_Script::tick()
 {
 	/*if (KEY_TAP(KEY::Y))
 	{
@@ -45,7 +45,7 @@ void CM_Lurker_STATE_Move_Script::tick()
 
 	if (mKey)
 	{
-		
+
 		if (JustTurn(Vec3(1.0, 0.f, 0.f)))
 		{
 			mKey = false;
@@ -85,7 +85,7 @@ void CM_Lurker_STATE_Move_Script::tick()
 	}
 }
 
-void CM_Lurker_STATE_Move_Script::Clear()
+void CM_Annointed_STATE_Move_Script::Clear()
 {
 	m_bTurnSet = false;
 	m_BTurned180 = false;
@@ -104,7 +104,7 @@ void CM_Lurker_STATE_Move_Script::Clear()
 	m_iCatchStage = 0;
 }
 
-bool CM_Lurker_STATE_Move_Script::AniTurn(Vec3 _dir)
+bool CM_Annointed_STATE_Move_Script::AniTurn(Vec3 _dir)
 {
 	if (!m_bTurnSet)
 	{
@@ -133,35 +133,35 @@ bool CM_Lurker_STATE_Move_Script::AniTurn(Vec3 _dir)
 
 	switch (m_eTurnAni)
 	{
-	case CM_Lurker_STATE_Move_Script::eTurnAni::R90:
+	case CM_Annointed_STATE_Move_Script::eTurnAni::R90:
 		if (Turn90R(m_fTurnDegree))
 		{
 			m_bTurnSet = false;
 			return true;
 		}
 		break;
-	case CM_Lurker_STATE_Move_Script::eTurnAni::R135:
+	case CM_Annointed_STATE_Move_Script::eTurnAni::R135:
 		if (Turn135R(m_fTurnDegree))
 		{
 			m_bTurnSet = false;
 			return true;
 		}
 		break;
-	case CM_Lurker_STATE_Move_Script::eTurnAni::L90:
+	case CM_Annointed_STATE_Move_Script::eTurnAni::L90:
 		if (Turn90L(m_fTurnDegree))
 		{
 			m_bTurnSet = false;
 			return true;
 		}
 		break;
-	case CM_Lurker_STATE_Move_Script::eTurnAni::L135:
+	case CM_Annointed_STATE_Move_Script::eTurnAni::L135:
 		if (Turn135L(m_fTurnDegree))
 		{
 			m_bTurnSet = false;
 			return true;
 		}
 		break;
-	case CM_Lurker_STATE_Move_Script::eTurnAni::L180:
+	case CM_Annointed_STATE_Move_Script::eTurnAni::L180:
 		if (Turn180(m_fTurnDegree))
 		{
 			m_bTurnSet = false;
@@ -175,7 +175,7 @@ bool CM_Lurker_STATE_Move_Script::AniTurn(Vec3 _dir)
 	return false;
 }
 
-bool CM_Lurker_STATE_Move_Script::JustTurn(Vec3 _dir)
+bool CM_Annointed_STATE_Move_Script::JustTurn(Vec3 _dir)
 {
 	if (!m_bJustTurnSet)
 	{
@@ -213,12 +213,12 @@ bool CM_Lurker_STATE_Move_Script::JustTurn(Vec3 _dir)
 
 		return true;
 	}
-	
+
 
 	return false;
 }
 
-Vec3 CM_Lurker_STATE_Move_Script::CalMoveDir()
+Vec3 CM_Annointed_STATE_Move_Script::CalMoveDir()
 {
 	std::stack<Vec3>* stack = m_CMoveScript->GetStack();
 
@@ -236,7 +236,7 @@ Vec3 CM_Lurker_STATE_Move_Script::CalMoveDir()
 	return dir;
 }
 
-bool CM_Lurker_STATE_Move_Script::MoveStart()
+bool CM_Annointed_STATE_Move_Script::MoveStart()
 {
 	if (!m_bMoveStartOnce)
 	{
@@ -256,7 +256,7 @@ bool CM_Lurker_STATE_Move_Script::MoveStart()
 
 		if (diff < 10.f && DistBetwPlayer() < 200.f)
 			return true;
-		
+
 		m_bMoveStartOnce = true;
 	}
 
@@ -286,27 +286,27 @@ bool CM_Lurker_STATE_Move_Script::MoveStart()
 	return false;
 }
 
-void CM_Lurker_STATE_Move_Script::CatchCheck()
+void CM_Annointed_STATE_Move_Script::CatchCheck()
 {
 	if (m_iCatchStage == 0)
 	{
-		switch (m_eMoveMelee)
+		switch (m_eAtkInMove)
 		{
-		case eMeleeState::Dash:
+		case eAtkState::Dash:
 			if (DistBetwPlayer() < 450.f)
 			{
 				m_vToPlayerDir = GetToPlayerDir();
 				m_iCatchStage++;
 			}
 			break;
-		case eMeleeState::Heavy1:
+		case eAtkState::Heavy1:
 			if (DistBetwPlayer() < 350.f)
 			{
 				m_vToPlayerDir = GetToPlayerDir();
 				m_iCatchStage++;
 			}
 			break;
-		case eMeleeState::Slash:
+		case eAtkState::Slash:
 			if (DistBetwPlayer() < 250.f)
 			{
 				m_vToPlayerDir = GetToPlayerDir();
@@ -319,17 +319,17 @@ void CM_Lurker_STATE_Move_Script::CatchCheck()
 	}
 	else if (m_iCatchStage == 1)
 	{
-		switch (m_eMoveMelee)
+		switch (m_eAtkInMove)
 		{
-		case eMeleeState::Dash:
-			if(JustTurn(m_vToPlayerDir))
-				m_iCatchStage++;
-			break;
-		case eMeleeState::Heavy1:
+		case eAtkState::Dash:
 			if (JustTurn(m_vToPlayerDir))
 				m_iCatchStage++;
 			break;
-		case eMeleeState::Slash:
+		case eAtkState::Heavy1:
+			if (JustTurn(m_vToPlayerDir))
+				m_iCatchStage++;
+			break;
+		case eAtkState::Slash:
 			if (JustTurn(m_vToPlayerDir))
 				m_iCatchStage++;
 			break;
@@ -339,22 +339,22 @@ void CM_Lurker_STATE_Move_Script::CatchCheck()
 	}
 	else if (m_iCatchStage == 2)
 	{
-		switch (m_eMoveMelee)
+		switch (m_eAtkInMove)
 		{
-		case eMeleeState::Dash:
-				m_CMoveScript->MoveOn(false);
-				m_MHQ->ChangeState((UINT)eM_States::MELEE);
-				m_iCatchStage = 0;
+		case eAtkState::Dash:
+			m_CMoveScript->MoveOn(false);
+			m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
+			m_iCatchStage = 0;
 			break;
-		case eMeleeState::Heavy1:
-				m_CMoveScript->MoveOn(false);
-				m_MHQ->ChangeState((UINT)eM_States::MELEE);
-				m_iCatchStage = 0;
+		case eAtkState::Heavy1:
+			m_CMoveScript->MoveOn(false);
+			m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
+			m_iCatchStage = 0;
 			break;
-		case eMeleeState::Slash:
-				m_CMoveScript->MoveOn(false);
-				m_MHQ->ChangeState((UINT)eM_States::MELEE);
-				m_iCatchStage = 0;
+		case eAtkState::Slash:
+			m_CMoveScript->MoveOn(false);
+			m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
+			m_iCatchStage = 0;
 			break;
 		default:
 			break;
@@ -362,7 +362,7 @@ void CM_Lurker_STATE_Move_Script::CatchCheck()
 	}
 }
 
-void CM_Lurker_STATE_Move_Script::RenewPath()
+void CM_Annointed_STATE_Move_Script::RenewPath()
 {
 	if (m_CMoveScript->RenewPath())
 	{
@@ -386,7 +386,7 @@ void CM_Lurker_STATE_Move_Script::RenewPath()
 	}
 }
 
-void CM_Lurker_STATE_Move_Script::DecidePattern()
+void CM_Annointed_STATE_Move_Script::DecidePattern()
 {
 	float dist = DistBetwPlayer();
 	if (dist > 450.f)
@@ -395,8 +395,8 @@ void CM_Lurker_STATE_Move_Script::DecidePattern()
 		std::mt19937_64 gen(rd());
 		std::uniform_int_distribution<int> distribution(0, 2);
 
-		m_eMoveMelee = (eMeleeState)distribution(gen);
-		dynamic_cast<CM_Lurker_STATE_Melee_Script*>(m_MHQ->FindStateScript(1))->SetMeleeState(m_eMoveMelee);
+		m_eAtkInMove = (eAtkState)distribution(gen);
+		dynamic_cast<CM_Annointed_STATE_Atk_Script*>(m_MHQ->FindStateScript(1))->SetAtkState(m_eAtkInMove);
 	}
 	else
 	{
@@ -404,12 +404,12 @@ void CM_Lurker_STATE_Move_Script::DecidePattern()
 		std::mt19937_64 gen(rd());
 		std::uniform_int_distribution<int> distribution(1, 2);
 
-		m_eMoveMelee = (eMeleeState)distribution(gen);
-		dynamic_cast<CM_Lurker_STATE_Melee_Script*>(m_MHQ->FindStateScript(1))->SetMeleeState(m_eMoveMelee);
+		m_eAtkInMove = (eAtkState)distribution(gen);
+		dynamic_cast<CM_Annointed_STATE_Atk_Script*>(m_MHQ->FindStateScript(1))->SetAtkState(m_eAtkInMove);
 	}
 }
 
-bool CM_Lurker_STATE_Move_Script::DistCheck()
+bool CM_Annointed_STATE_Move_Script::DistCheck()
 {
 	if (DistBetwPlayer() < 200.f)
 		return true;
@@ -417,7 +417,7 @@ bool CM_Lurker_STATE_Move_Script::DistCheck()
 		return false;
 }
 
-void CM_Lurker_STATE_Move_Script::GetBack()
+void CM_Annointed_STATE_Move_Script::GetBack()
 {
 	if (m_iGetBackStage == 0)
 	{
@@ -439,11 +439,11 @@ void CM_Lurker_STATE_Move_Script::GetBack()
 	}
 }
 
-void CM_Lurker_STATE_Move_Script::RotationReset()
+void CM_Annointed_STATE_Move_Script::RotationReset()
 {
 	Vec3 rot = m_MHQ->Transform()->GetRelativeRot();
 	TransRadToDegreeVector(rot);
-	if (rot.y > 360.f) 
+	if (rot.y > 360.f)
 	{
 		rot.y = fmod(rot.y, 360.f);
 
@@ -458,58 +458,58 @@ void CM_Lurker_STATE_Move_Script::RotationReset()
 		rot = TransDegreeToRadVector(rot);
 		m_MHQ->Transform()->SetRelativeRot(rot);
 	}
-	
-	
+
+
 }
 
-void CM_Lurker_STATE_Move_Script::Enter()
+void CM_Annointed_STATE_Move_Script::Enter()
 {
 	m_bEnterSign = true;
 	DecidePattern();
-	m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
+	//m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
 	if (DistCheck())
 		m_bEnterDistCheck = true;
 }
 
-void CM_Lurker_STATE_Move_Script::Exit()
+void CM_Annointed_STATE_Move_Script::Exit()
 {
 	Clear();
 	m_CMoveScript->Clear();
 }
 
-void CM_Lurker_STATE_Move_Script::TurnComplete180()
+void CM_Annointed_STATE_Move_Script::TurnComplete180()
 {
 	m_BTurned180 = true;
 
-	m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
+	//m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
 }
-void CM_Lurker_STATE_Move_Script::TurnComplete90L()
+void CM_Annointed_STATE_Move_Script::TurnComplete90L()
 {
 	m_BTurned90L = true;
-	m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
+	//m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
 }
-void CM_Lurker_STATE_Move_Script::TurnComplete90R()
+void CM_Annointed_STATE_Move_Script::TurnComplete90R()
 {
 	m_BTurned90R = true;
-	m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
+	//m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
 }
-void CM_Lurker_STATE_Move_Script::TurnComplete135L()
+void CM_Annointed_STATE_Move_Script::TurnComplete135L()
 {
 	m_BTurned135L = true;
-	m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
+	//m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
 }
-void CM_Lurker_STATE_Move_Script::TurnComplete135R()
+void CM_Annointed_STATE_Move_Script::TurnComplete135R()
 {
 	m_BTurned135R = true;
-	m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
+	//m_MHQ->Animator3D()->Play(Lurker_MoveFront, true);
 }
 
-bool CM_Lurker_STATE_Move_Script::Turn180(float _degree)
+bool CM_Annointed_STATE_Move_Script::Turn180(float _degree)
 {
 	if (!m_bTurnBtn)
 	{
 
-		m_MHQ->Animator3D()->Play(Lurker_Turn180, false);
+		//m_MHQ->Animator3D()->Play(Lurker_Turn180, false);
 
 		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
 		m_vInitialRot = TransRadToDegreeVector(m_vInitialRot);
@@ -563,12 +563,12 @@ bool CM_Lurker_STATE_Move_Script::Turn180(float _degree)
 
 	return false;
 }
-bool CM_Lurker_STATE_Move_Script::Turn90L(float _degree)
+bool CM_Annointed_STATE_Move_Script::Turn90L(float _degree)
 {
 	if (!m_bTurnBtn)
 	{
 
-		m_MHQ->Animator3D()->Play(Lurker_Turn90L, false);
+		//m_MHQ->Animator3D()->Play(Lurker_Turn90L, false);
 
 		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
 		m_vInitialRot = TransRadToDegreeVector(m_vInitialRot);
@@ -622,11 +622,11 @@ bool CM_Lurker_STATE_Move_Script::Turn90L(float _degree)
 
 	return false;
 }
-bool CM_Lurker_STATE_Move_Script::Turn90R(float _degree)
+bool CM_Annointed_STATE_Move_Script::Turn90R(float _degree)
 {
 	if (!m_bTurnBtn)
 	{
-		m_MHQ->Animator3D()->Play(Lurker_Turn90R, false);
+		//m_MHQ->Animator3D()->Play(Lurker_Turn90R, false);
 
 		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
 		m_vInitialRot = TransRadToDegreeVector(m_vInitialRot);
@@ -679,11 +679,11 @@ bool CM_Lurker_STATE_Move_Script::Turn90R(float _degree)
 
 	return false;
 }
-bool CM_Lurker_STATE_Move_Script::Turn135L(float _degree)
+bool CM_Annointed_STATE_Move_Script::Turn135L(float _degree)
 {
 	if (!m_bTurnBtn)
 	{
-		m_MHQ->Animator3D()->Play(Lurker_Turn135L, false);
+		//m_MHQ->Animator3D()->Play(Lurker_Turn135L, false);
 
 		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
 		m_vInitialRot = TransRadToDegreeVector(m_vInitialRot);
@@ -737,12 +737,12 @@ bool CM_Lurker_STATE_Move_Script::Turn135L(float _degree)
 
 	return false;
 }
-bool CM_Lurker_STATE_Move_Script::Turn135R(float _degree)
+bool CM_Annointed_STATE_Move_Script::Turn135R(float _degree)
 {
 	if (!m_bTurnBtn)
 	{
 
-		m_MHQ->Animator3D()->Play(Lurker_Turn135R, false);
+		//m_MHQ->Animator3D()->Play(Lurker_Turn135R, false);
 
 		m_vInitialRot = m_MHQ->Transform()->GetRelativeRot();
 		m_vInitialRot = TransRadToDegreeVector(m_vInitialRot);
