@@ -38,12 +38,12 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	m_modifyIndicesBuffer = new CStructuredBuffer();
 
 
-	if (_origin.m_Events.empty())
+	if (!_origin.m_Events.empty())
 	{
 		m_Events = _origin.m_Events;
 	}
 
-	if (_origin.m_mapAnim.empty())
+	if (!_origin.m_mapAnim.empty())
 	{
 		m_mapAnim.insert(_origin.m_mapAnim.begin(), _origin.m_mapAnim.end());
 	}
