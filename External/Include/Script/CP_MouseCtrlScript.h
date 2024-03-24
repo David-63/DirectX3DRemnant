@@ -65,8 +65,8 @@ public:
 
 
 public:
-	void MoveCameraPos();
-	void MoveCameraRot();
+	void CtrlMovePos();
+	void CtrlMoveRot();
 	void MouseRock();
 	void OverrideObjRotY();
 

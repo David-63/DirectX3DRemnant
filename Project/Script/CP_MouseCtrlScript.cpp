@@ -16,7 +16,6 @@ CP_MouseCtrlScript::~CP_MouseCtrlScript()
 
 void CP_MouseCtrlScript::begin()
 {
-	m_ctrlCam->Transform()->SetRelativeRot(Vec3(0.f, XM_PI, 0.f));
 }
 
 void CP_MouseCtrlScript::tick()
@@ -27,28 +26,12 @@ void CP_MouseCtrlScript::tick()
 	if (!m_PHQ->IsAbleMouse())
 		return;
 
-	MoveCameraPos();
-	MoveCameraRot();
+	CtrlMovePos();
+	CtrlMoveRot();
 	MouseRock();
-
-	
-	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(168);
-	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
-	// SetPos
-	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
-	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
-	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
-	Matrix finalMat = OwnerMat * matTranslation;
-	Vec3 bonePos = finalMat.Translation();
-	m_Weapon->Transform()->SetRelativePos(bonePos);
-	// SetRot
-	Vec3 boneRot = m_PHQ->Transform()->GetRelativeRot();
-	boneRot.y += XM_PI;
-	m_Weapon->Transform()->SetRelativeRot(boneRot);
-
 }
 
-void CP_MouseCtrlScript::MoveCameraPos()
+void CP_MouseCtrlScript::CtrlMovePos()
 {
 	// 자세 가져오기
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
@@ -83,12 +66,25 @@ void CP_MouseCtrlScript::MoveCameraPos()
 	}
 
 	// 변경사항 적용
-	objPos.y = m_PivotValue.CurValue;
+	objPos.y += m_PivotValue.CurValue;
 	Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
 	m_ctrlCam->Transform()->SetRelativePos(Point);
+
+	// Weapon
+	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
+	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
+
+	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
+	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
+	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
+	Matrix finalMat = OwnerMat * matTranslation;
+	Vec3 bonePos = finalMat.Translation();
+	m_Weapon->Transform()->SetRelativePos(bonePos);
+
+
 }
 
-void CP_MouseCtrlScript::MoveCameraRot()
+void CP_MouseCtrlScript::CtrlMoveRot()
 {
 
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
@@ -124,10 +120,24 @@ void CP_MouseCtrlScript::MoveCameraRot()
 	else
 	{
 		Vec3 outObjEuler = Vec3(0, yObjRot, (int)0);
-		Vec3 outCamEuler = Vec3(xCamRot, yObjRot + XM_PI, (int)0);
+		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, (int)0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
+
+	// Weapon
+	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
+	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
+
+	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
+	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
+	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
+	Matrix finalMat = OwnerMat * matTranslation;
+	Vec3 bonePos = finalMat.Translation();
+	m_Weapon->Transform()->SetRelativePos(bonePos);
+
+	Vec3 boneRot = m_PHQ->Transform()->GetRelativeRot();
+	m_Weapon->Transform()->SetRelativeRot(boneRot);
 }
 
 void CP_MouseCtrlScript::MouseRock()
@@ -143,5 +153,5 @@ void CP_MouseCtrlScript::MouseRock()
 
 void CP_MouseCtrlScript::OverrideObjRotY()
 {
-	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_CamInfo.PrevCamRotY + XM_PI, 0.f));
+	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_CamInfo.PrevCamRotY, 0.f));
 }

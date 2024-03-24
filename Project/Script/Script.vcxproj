@@ -198,8 +198,11 @@ call CodeGen.exe</Command>
     <ClInclude Include="CPlayerScriptFsm.h" />
     <ClInclude Include="CP_FSMScript.h" />
     <ClInclude Include="CP_MouseCtrlScript.h" />
+    <ClInclude Include="CP_STATEDodgeScript.h" />
+    <ClInclude Include="CP_STATEFireScript.h" />
     <ClInclude Include="CP_STATEIdleScript.h" />
     <ClInclude Include="CP_STATEMoveScript.h" />
+    <ClInclude Include="CP_STATEReloadScript.h" />
     <ClInclude Include="CP_StatesScript.h" />
     <ClInclude Include="CScriptMgr.h" />
     <ClInclude Include="CShoulderViewScript.h" />
@@ -236,8 +239,11 @@ call CodeGen.exe</Command>
     <ClCompile Include="CPlayerScriptFsm.cpp" />
     <ClCompile Include="CP_FSMScript.cpp" />
     <ClCompile Include="CP_MouseCtrlScript.cpp" />
+    <ClCompile Include="CP_STATEDodgeScript.cpp" />
+    <ClCompile Include="CP_STATEFireScript.cpp" />
     <ClCompile Include="CP_STATEIdleScript.cpp" />
     <ClCompile Include="CP_STATEMoveScript.cpp" />
+    <ClCompile Include="CP_STATEReloadScript.cpp" />
     <ClCompile Include="CP_StatesScript.cpp" />
     <ClCompile Include="CScriptMgr.cpp" />
     <ClCompile Include="CShoulderViewScript.cpp" />
