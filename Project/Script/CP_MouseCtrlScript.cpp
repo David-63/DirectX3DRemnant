@@ -26,12 +26,14 @@ void CP_MouseCtrlScript::tick()
 	if (!m_PHQ->IsAbleMouse())
 		return;
 
-	CtrlMovePos();
-	CtrlMoveRot();
-	MouseRock();
+	ctrlMovePos();
+	ctrlMoveRot();
+	mouseRock();
+
+	updateWeaponMatrix();
 }
 
-void CP_MouseCtrlScript::CtrlMovePos()
+void CP_MouseCtrlScript::ctrlMovePos()
 {
 	// 자세 가져오기
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
@@ -69,22 +71,9 @@ void CP_MouseCtrlScript::CtrlMovePos()
 	objPos.y += m_PivotValue.CurValue;
 	Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
 	m_ctrlCam->Transform()->SetRelativePos(Point);
-
-	// Weapon
-	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
-	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
-
-	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
-	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
-	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
-	Matrix finalMat = OwnerMat * matTranslation;
-	Vec3 bonePos = finalMat.Translation();
-	m_Weapon->Transform()->SetRelativePos(bonePos);
-
-
 }
 
-void CP_MouseCtrlScript::CtrlMoveRot()
+void CP_MouseCtrlScript::ctrlMoveRot()
 {
 
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
@@ -125,22 +114,9 @@ void CP_MouseCtrlScript::CtrlMoveRot()
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
 
-	// Weapon
-	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
-	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
-
-	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
-	Matrix OwnerMat = m_PHQ->Transform()->GetWorldMat();
-	Matrix matTranslation = XMMatrixTranslation(trans.x, trans.y, trans.z);
-	Matrix finalMat = OwnerMat * matTranslation;
-	Vec3 bonePos = finalMat.Translation();
-	m_Weapon->Transform()->SetRelativePos(bonePos);
-
-	Vec3 boneRot = m_PHQ->Transform()->GetRelativeRot();
-	m_Weapon->Transform()->SetRelativeRot(boneRot);
 }
 
-void CP_MouseCtrlScript::MouseRock()
+void CP_MouseCtrlScript::mouseRock()
 {
 	Vec2 screenResoulution = CEngine::GetInst()->GetWindowResolution();
 	// 화면 중앙 좌표 계산
@@ -150,6 +126,45 @@ void CP_MouseCtrlScript::MouseRock()
 	// 마우스 커서를 화면 중앙으로 재설정
 	SetCursorPos(centerX, centerY);
 }
+
+void CP_MouseCtrlScript::updateWeaponMatrix()
+{
+	// Get Bone FrameData
+	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
+	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
+	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
+	Vec3 scale = handBoneData.vecKeyFrame[frameIdx].vScale;
+	Vec4 qRot = handBoneData.vecKeyFrame[frameIdx].qRot;
+
+	// bone Matrix 구성하기
+	Matrix keyScaleMat = XMMatrixIdentity();
+	keyScaleMat = XMMatrixScaling(scale.x, scale.y, scale.z);
+
+	Vec3 oRot = QuatToEuler(qRot);
+	Matrix keyRotMat = XMMatrixIdentity();
+	keyRotMat = XMMatrixRotationX(oRot.x);
+	keyRotMat *= XMMatrixRotationY(oRot.y);
+	keyRotMat *= XMMatrixRotationZ(oRot.z);
+
+	Matrix keyTranMat = XMMatrixTranslation(trans.x, trans.y, trans.z);
+
+	Matrix boneMat = keyScaleMat * keyRotMat * keyTranMat;
+
+	// Owner Mat 과 bone Mat 곱하기
+	Matrix ownerMat = m_PHQ->Transform()->GetWorldMat();
+	Matrix totalMat = ownerMat * boneMat;
+
+	// total Mat 으로부터 위치값 가져오기
+	Vec3 bonePosition = boneMat.Translation();
+	m_Weapon->Transform()->SetRelativePos(bonePosition);
+
+	// total Mat 으로부터 회전값 가져오기
+	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(boneMat);
+	Vec3 boneRot = QuatToEuler(boneQRot);
+	m_Weapon->Transform()->SetRelativeRot(boneRot);
+
+}
+
 
 void CP_MouseCtrlScript::OverrideObjRotY()
 {
