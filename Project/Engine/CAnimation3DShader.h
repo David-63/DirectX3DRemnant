@@ -13,6 +13,7 @@ private:
 	CStructuredBuffer* m_pModifyIndicesBuffer;		// t19
 	
 	CStructuredBuffer* m_pOutputBuffer;				// u0
+	CStructuredBuffer* m_pRetBuffer;				// u1
 
 
 
@@ -21,6 +22,7 @@ public:
 	void SetOffsetMatBuffer(CStructuredBuffer* _buffer) { m_pOffsetMatBuffer = _buffer; }
 	void SetFrameDataBuffer_next(CStructuredBuffer* _buffer) { m_pFrameDataBuffer_next = _buffer; }
 	void SetOutputBuffer(CStructuredBuffer* _buffer) { m_pOutputBuffer = _buffer; }
+	void SetRetBuffer(CStructuredBuffer* _buffer) { m_pRetBuffer = _buffer; }
 	void SetModifyIdxBuffer(CStructuredBuffer* _buffer) { m_pModifyIndicesBuffer = _buffer; }
 
 	// g_int_0 : BonCount, g_int_1 : Frame Index

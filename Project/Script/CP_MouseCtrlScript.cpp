@@ -103,13 +103,13 @@ void CP_MouseCtrlScript::ctrlMoveRot()
 
 	if (justRotCam)
 	{
-		Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, (int)0);
+		Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, 0);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
 	else
 	{
-		Vec3 outObjEuler = Vec3(0, yObjRot, (int)0);
-		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, (int)0);
+		Vec3 outObjEuler = Vec3(0, yObjRot, 0);
+		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, 0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
@@ -129,40 +129,25 @@ void CP_MouseCtrlScript::mouseRock()
 
 void CP_MouseCtrlScript::updateWeaponMatrix()
 {
-	// Get Bone FrameData
-	tMTBone handBoneData = m_PHQ->Animator3D()->GetMTBoneData(176);
-	int frameIdx = m_PHQ->Animator3D()->GetCurFrame();
-	Vec3 trans = handBoneData.vecKeyFrame[frameIdx].vTranslate;
-	Vec3 scale = handBoneData.vecKeyFrame[frameIdx].vScale;
-	Vec4 qRot = handBoneData.vecKeyFrame[frameIdx].qRot;
+	Matrix retBoneMat = m_PHQ->Animator3D()->GetBoneMatrix(176);
+	retBoneMat._44 = 1;
 
-	// bone Matrix 구성하기
-	Matrix keyScaleMat = XMMatrixIdentity();
-	keyScaleMat = XMMatrixScaling(scale.x, scale.y, scale.z);
-
-	Vec3 oRot = QuatToEuler(qRot);
-	Matrix keyRotMat = XMMatrixIdentity();
-	keyRotMat = XMMatrixRotationX(oRot.x);
-	keyRotMat *= XMMatrixRotationY(oRot.y);
-	keyRotMat *= XMMatrixRotationZ(oRot.z);
-
-	Matrix keyTranMat = XMMatrixTranslation(trans.x, trans.y, trans.z);
-
-	Matrix boneMat = keyScaleMat * keyRotMat * keyTranMat;
 
 	// Owner Mat 과 bone Mat 곱하기
 	Matrix ownerMat = m_PHQ->Transform()->GetWorldMat();
-	Matrix totalMat = ownerMat * boneMat;
-
-	// total Mat 으로부터 위치값 가져오기
-	Vec3 bonePosition = boneMat.Translation();
+	//Matrix smapleMat = boneMat.Transpose();
+	Matrix totalMat = retBoneMat * ownerMat;
+	//====================================================
+	Vec3 bonePosition = totalMat.Translation();
 	m_Weapon->Transform()->SetRelativePos(bonePosition);
 
 	// total Mat 으로부터 회전값 가져오기
-	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(boneMat);
+	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(totalMat);
 	Vec3 boneRot = QuatToEuler(boneQRot);
+	boneRot.x += XM_PI;
+	boneRot.y -= XM_PIDIV2;
+	boneRot.z *= -1;
 	m_Weapon->Transform()->SetRelativeRot(boneRot);
-
 }
 
 
