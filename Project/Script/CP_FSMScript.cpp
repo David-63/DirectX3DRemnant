@@ -78,21 +78,7 @@ void CP_FSMScript::begin()
 
 
 
-	if (nullptr == m_Weapon)
-	{
-		Ptr<CMeshData> pMeshData = nullptr;
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_AssaultRifle.fbx");
 
-		m_Weapon = pMeshData->InstMesh();
-		m_Weapon->SetName(L"LongGun");
-		m_Weapon->MeshRender()->SetFrustumCheck(false);
-		SpawnGameObject(m_Weapon, Vec3(0.f, 0.f, 0.f), 1);
-
-		m_MouseCtrl.SetOwner(this);
-		m_MouseCtrl.SetWeaponObj(m_Weapon);
-		m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
-	}
 
 	GetOwner()->AddComponent(new CCollider3D);
 	Collider3D()->SetType(COLLIDER3D_TYPE::Player);
@@ -120,6 +106,36 @@ void CP_FSMScript::begin()
 	RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
 	RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
 	RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));
+
+
+	if (nullptr == m_Weapon)
+	{
+		Ptr<CMeshData> pMeshData = nullptr;
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
+		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_AssaultRifle.fbx");
+
+		//순서 생각해보자
+
+		// m_Weapon : 부모 오브젝트로 본인은 아무것도 없음
+		// m_Weapon_C : 실질적인 렌더링 부분
+
+
+		// - 깡통 하나 만들기 -
+		m_Weapon = new CGameObject();
+		m_Weapon->AddComponent(new CTransform());
+		m_Weapon->SetName(L"LongGun");
+		SpawnGameObject(m_Weapon, Vec3(0.f, 0.f, 0.f), 1);
+
+		// - 본체 만들기 -
+		m_LongGun = pMeshData->InstMesh();
+		m_LongGun->MeshRender()->SetFrustumCheck(false);
+		m_Weapon->AddChild(m_LongGun);
+
+		// - 마우스 제어 스크립트
+		m_MouseCtrl.SetOwner(this);
+		m_MouseCtrl.SetWeaponObj(m_Weapon, m_LongGun);
+		m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
+	}
 }
 
 void CP_FSMScript::tick()

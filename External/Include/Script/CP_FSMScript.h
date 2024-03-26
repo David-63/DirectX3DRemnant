@@ -116,6 +116,8 @@ private:
 private:
     CP_MouseCtrlScript  m_MouseCtrl;
     CGameObject*        m_Weapon;
+    CGameObject*        m_LongGun;
+
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
     bool                m_InpStance[(UINT)eInpStance::End];

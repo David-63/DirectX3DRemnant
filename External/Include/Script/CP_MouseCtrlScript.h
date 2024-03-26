@@ -58,6 +58,11 @@ private:
 
 private:
 	CGameObject*	m_Weapon;
+	CGameObject*	m_LongGun;
+
+	Matrix			m_IdleRotMat;
+	Matrix			m_AimRotMat;
+	Matrix			m_CurRotMat;
 
 public:
 	virtual void begin() override;
@@ -76,7 +81,7 @@ public:
 public:
 	void SetOwner(CP_FSMScript* _owner) { m_PHQ = _owner; }
 	void SetMainCam(CCamera* _cam) { m_ctrlCam = _cam; }
-	void SetWeaponObj(CGameObject* _obj) { m_Weapon = _obj; }
+	void SetWeaponObj(CGameObject* _parent, CGameObject* _child) { m_Weapon = _parent; m_LongGun = _child; }
 	void ChangeCamValue() { m_IsChangeStance = true; }
 
 	void SetPivot(float _value) { m_PivotValue.SetValue(_value); }

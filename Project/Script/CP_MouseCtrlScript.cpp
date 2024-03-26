@@ -5,9 +5,20 @@
 #include "CP_FSMScript.h"
 
 CP_MouseCtrlScript::CP_MouseCtrlScript()
-	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr)
+	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr), m_Weapon(nullptr), m_LongGun(nullptr)
 	, m_CamInfo({ -180.f, 5.f, 35.f }, 0.54f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
+	
 {
+	m_IdleRotMat = XMMatrixIdentity();
+	m_IdleRotMat = XMMatrixRotationX(0);
+	m_IdleRotMat *= XMMatrixRotationY(0);
+	m_IdleRotMat *= XMMatrixRotationZ(3.3f);
+
+	m_AimRotMat = XMMatrixIdentity();
+	m_AimRotMat = XMMatrixRotationX(0);
+	m_AimRotMat *= XMMatrixRotationY(4.9f);
+	m_AimRotMat *= XMMatrixRotationZ(3.3f);
+	
 }
 
 CP_MouseCtrlScript::~CP_MouseCtrlScript()
@@ -112,6 +123,7 @@ void CP_MouseCtrlScript::ctrlMoveRot()
 		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, 0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
+		m_Weapon->Transform()->SetRelativeRot(outObjEuler);
 	}
 
 }
@@ -129,25 +141,64 @@ void CP_MouseCtrlScript::mouseRock()
 
 void CP_MouseCtrlScript::updateWeaponMatrix()
 {
+	// 부모 오브젝트 이동시키기
+	//Vec3 weaponPos = m_PHQ->Transform()->GetRelativePos();
+	//m_Weapon->Transform()->SetRelativePos(weaponPos);
+
+
+
 	Matrix retBoneMat = m_PHQ->Animator3D()->GetBoneMatrix(176);
 	retBoneMat._44 = 1;
-
+	CAnimClip* curAnim = m_PHQ->Animator3D()->GetCurAnim();
 
 	// Owner Mat 과 bone Mat 곱하기
 	Matrix ownerMat = m_PHQ->Transform()->GetWorldMat();
 	//Matrix smapleMat = boneMat.Transpose();
 	Matrix totalMat = retBoneMat * ownerMat;
+
+	
 	//====================================================
-	Vec3 bonePosition = totalMat.Translation();
+	Vec3 bonePosition = totalMat.Translation();	
 	m_Weapon->Transform()->SetRelativePos(bonePosition);
+	
+
+	// test
+	//Vec3 childPos = retBoneMat.Translation();
+	//m_LongGun->Transform()->SetRelativePos(childPos);
+
+
+
+
+
 
 	// total Mat 으로부터 회전값 가져오기
-	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(totalMat);
+
+	
+	// 이건 임시로 만든 오프셋 회전 
+	
+	// 최종행렬에 회전 오프셋 행렬을 곱한다면?
+
+	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
+
+	if (CP_FSMScript::ePlayerStance::Aim == curStance)
+	{
+		m_CurRotMat = m_AimRotMat;
+	}
+	else
+	{
+		m_CurRotMat = m_IdleRotMat;
+	}
+
+
+	Matrix weaponMat = retBoneMat * m_CurRotMat;
+
+	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(weaponMat);
 	Vec3 boneRot = QuatToEuler(boneQRot);
-	boneRot.x += XM_PI;
-	boneRot.y -= XM_PIDIV2;
-	boneRot.z *= -1;
-	m_Weapon->Transform()->SetRelativeRot(boneRot);
+
+	
+	// 리빙포인트 : 회전은 행렬곱의 순서와 상관이 없음
+
+	m_LongGun->Transform()->SetRelativeRot(boneRot);
 }
 
 
