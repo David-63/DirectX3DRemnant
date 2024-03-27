@@ -186,6 +186,13 @@ call CodeGen.exe</Command>
     <ClInclude Include="CC_StatesScript.h" />
     <ClInclude Include="CHitBoxScript.h" />
     <ClInclude Include="CIdleStateScript.h" />
+    <ClInclude Include="CM_Spider_FSMScript.h" />
+    <ClInclude Include="CM_Spider_StatesScript.h" />
+    <ClInclude Include="CM_Spider_STATE_Atk_Script.h" />
+    <ClInclude Include="CM_Spider_STATE_Damaged_Script.h" />
+    <ClInclude Include="CM_Spider_STATE_Dead_Script.h" />
+    <ClInclude Include="CM_Spider_STATE_Idle_Script.h" />
+    <ClInclude Include="CM_Spider_STATE_Move_Script.h" />
     <ClInclude Include="CM_Lurker_STATE_Damaged_Script.h" />
     <ClInclude Include="CM_Lurker_STATE_Dead_Script.h" />
     <ClInclude Include="CM_Lurker_STATE_Idle_Script.h" />
@@ -227,6 +234,13 @@ call CodeGen.exe</Command>
     <ClCompile Include="CC_StatesScript.cpp" />
     <ClCompile Include="CHitBoxScript.cpp" />
     <ClCompile Include="CIdleStateScript.cpp" />
+    <ClCompile Include="CM_Spider_FSMScript.cpp" />
+    <ClCompile Include="CM_Spider_StatesScript.cpp" />
+    <ClCompile Include="CM_Spider_STATE_Atk_Script.cpp" />
+    <ClCompile Include="CM_Spider_STATE_Damaged_Script.cpp" />
+    <ClCompile Include="CM_Spider_STATE_Dead_Script.cpp" />
+    <ClCompile Include="CM_Spider_STATE_Idle_Script.cpp" />
+    <ClCompile Include="CM_Spider_STATE_Move_Script.cpp" />
     <ClCompile Include="CM_Lurker_STATE_Damaged_Script.cpp" />
     <ClCompile Include="CM_Lurker_STATE_Dead_Script.cpp" />
     <ClCompile Include="CM_Lurker_STATE_Idle_Script.cpp" />

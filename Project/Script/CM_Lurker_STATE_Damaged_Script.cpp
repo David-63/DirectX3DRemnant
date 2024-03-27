@@ -50,7 +50,6 @@ void CM_Lurker_STATE_Damaged_Script::SetStop()
 
 void CM_Lurker_STATE_Damaged_Script::Enter()
 {
-	m_ePart = eLDPart::Heavy;
 	switch (m_ePart)
 	{
 	case eLDPart::Legs:

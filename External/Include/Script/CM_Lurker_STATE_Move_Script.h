@@ -63,6 +63,7 @@ private:
 	bool       m_bEnterDistCheck;
 
 	class CMonsterMoveScript* m_CMoveScript;
+	eMeleeState m_eMoveMelee;
 
 public:
 	virtual void tick() override;

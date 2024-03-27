@@ -592,16 +592,22 @@ void CRigidBody::InitializeActor()
 	{
 		mShapes[i]->setSimulationFilterData(mShapeInfos[i].filterData);
 
-		if (mShapeInfos[i].isPlayer)
+		if (mShapeInfos[i].CollideType == 1)
 		{
 			PxFilterData data;
-			data.word0 = 1 << 3;
+			data.word0 = 1 << 1;
 			mShapes[i]->setQueryFilterData(data);
 		}
-		else
+		else if (mShapeInfos[i].CollideType == 2)
 		{
 			PxFilterData data;
 			data.word0 = 1 << 2;
+			mShapes[i]->setQueryFilterData(data);
+		}
+		else if (mShapeInfos[i].CollideType == 3)
+		{
+			PxFilterData data;
+			data.word0 = 1 << 3;
 			mShapes[i]->setQueryFilterData(data);
 		}
 	}

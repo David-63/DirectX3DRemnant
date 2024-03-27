@@ -49,7 +49,6 @@ public:
     void SetDebugSphereUse(bool _use) { m_DebugSphereUse = _use; }
     float GetSphereRadius() { return m_SphereRadius; }
 
-    void Move(const Vector3& _velocity);
     physx::PxVec3 GetPhysicsPosition();
 
 public:

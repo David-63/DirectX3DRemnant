@@ -6,9 +6,10 @@ class CM_Lurker_STATE_Melee_Script : public CM_Lurker_StatesScript
 private:
 	//common
 	Vec3			 m_vAtkDir;
-	static bool		 m_bAtkComplete;
+	bool		     m_bAtkComplete;
 	float			 m_fSpeed;
 	bool			 m_bNearPlayer;
+	eMeleeState      m_eMeleeState;
 
 	//dash
 	bool			 m_bDashOnce;
@@ -26,7 +27,7 @@ public:
 	virtual void begin() override;
 
 public:
-	
+	void SetMeleeState(eMeleeState _state) { m_eMeleeState = _state; }
 
 private:
 	void Dash();
@@ -47,6 +48,7 @@ private:
 	void SlashComboBoxOff();
 
 	void DistCheck();
+	
 
 public:
 	virtual void Enter() override;

@@ -23,6 +23,13 @@
 #include "CM_Lurker_STATE_Idle_Script.h"
 #include "CM_Lurker_STATE_Melee_Script.h"
 #include "CM_Lurker_STATE_Move_Script.h"
+#include "CM_Spider_FSMScript.h"
+#include "CM_Spider_StatesScript.h"
+#include "CM_Spider_STATE_Atk_Script.h"
+#include "CM_Spider_STATE_Damaged_Script.h"
+#include "CM_Spider_STATE_Dead_Script.h"
+#include "CM_Spider_STATE_Idle_Script.h"
+#include "CM_Spider_STATE_Move_Script.h"
 #include "CPathFinderScript.h"
 #include "CPlayerScript.h"
 #include "CPlayerScriptFsm.h"
@@ -61,6 +68,13 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CM_Lurker_STATE_Idle_Script");
 	_vec.push_back(L"CM_Lurker_STATE_Melee_Script");
 	_vec.push_back(L"CM_Lurker_STATE_Move_Script");
+	_vec.push_back(L"CM_Spider_FSMScript");
+	_vec.push_back(L"CM_Spider_StatesScript");
+	_vec.push_back(L"CM_Spider_STATE_Atk_Script");
+	_vec.push_back(L"CM_Spider_STATE_Damaged_Script");
+	_vec.push_back(L"CM_Spider_STATE_Dead_Script");
+	_vec.push_back(L"CM_Spider_STATE_Idle_Script");
+	_vec.push_back(L"CM_Spider_STATE_Move_Script");
 	_vec.push_back(L"CPathFinderScript");
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"CPlayerScriptFsm");
@@ -122,6 +136,20 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CM_Lurker_STATE_Melee_Script;
 	if (L"CM_Lurker_STATE_Move_Script" == _strScriptName)
 		return new CM_Lurker_STATE_Move_Script;
+	if (L"CM_Spider_FSMScript" == _strScriptName)
+		return new CM_Spider_FSMScript;
+	if (L"CM_Spider_StatesScript" == _strScriptName)
+		return new CM_Spider_StatesScript;
+	if (L"CM_Spider_STATE_Atk_Script" == _strScriptName)
+		return new CM_Spider_STATE_Atk_Script;
+	if (L"CM_Spider_STATE_Damaged_Script" == _strScriptName)
+		return new CM_Spider_STATE_Damaged_Script;
+	if (L"CM_Spider_STATE_Dead_Script" == _strScriptName)
+		return new CM_Spider_STATE_Dead_Script;
+	if (L"CM_Spider_STATE_Idle_Script" == _strScriptName)
+		return new CM_Spider_STATE_Idle_Script;
+	if (L"CM_Spider_STATE_Move_Script" == _strScriptName)
+		return new CM_Spider_STATE_Move_Script;
 	if (L"CPathFinderScript" == _strScriptName)
 		return new CPathFinderScript;
 	if (L"CPlayerScript" == _strScriptName)
@@ -220,6 +248,27 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::M_LURKER_STATE_MOVE_SCRIPT:
 		return new CM_Lurker_STATE_Move_Script;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_FSMSCRIPT:
+		return new CM_Spider_FSMScript;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_STATESSCRIPT:
+		return new CM_Spider_StatesScript;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_STATE_ATK_SCRIPT:
+		return new CM_Spider_STATE_Atk_Script;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_STATE_DAMAGED_SCRIPT:
+		return new CM_Spider_STATE_Damaged_Script;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_STATE_DEAD_SCRIPT:
+		return new CM_Spider_STATE_Dead_Script;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_STATE_IDLE_SCRIPT:
+		return new CM_Spider_STATE_Idle_Script;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_STATE_MOVE_SCRIPT:
+		return new CM_Spider_STATE_Move_Script;
 		break;
 	case (UINT)SCRIPT_TYPE::PATHFINDERSCRIPT:
 		return new CPathFinderScript;
@@ -354,6 +403,34 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::M_LURKER_STATE_MOVE_SCRIPT:
 		return L"CM_Lurker_STATE_Move_Script";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_FSMSCRIPT:
+		return L"CM_Spider_FSMScript";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_STATESSCRIPT:
+		return L"CM_Spider_StatesScript";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_STATE_ATK_SCRIPT:
+		return L"CM_Spider_STATE_Atk_Script";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_STATE_DAMAGED_SCRIPT:
+		return L"CM_Spider_STATE_Damaged_Script";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_STATE_DEAD_SCRIPT:
+		return L"CM_Spider_STATE_Dead_Script";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_STATE_IDLE_SCRIPT:
+		return L"CM_Spider_STATE_Idle_Script";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_STATE_MOVE_SCRIPT:
+		return L"CM_Spider_STATE_Move_Script";
 		break;
 
 	case SCRIPT_TYPE::PATHFINDERSCRIPT:

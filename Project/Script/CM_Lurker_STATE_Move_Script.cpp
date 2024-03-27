@@ -45,7 +45,6 @@ void CM_Lurker_STATE_Move_Script::tick()
 
 	if (mKey)
 	{
-		
 		if (JustTurn(Vec3(1.0, 0.f, 0.f)))
 		{
 			mKey = false;
@@ -290,7 +289,7 @@ void CM_Lurker_STATE_Move_Script::CatchCheck()
 {
 	if (m_iCatchStage == 0)
 	{
-		switch (m_eMeleeState)
+		switch (m_eMoveMelee)
 		{
 		case eMeleeState::Dash:
 			if (DistBetwPlayer() < 450.f)
@@ -319,7 +318,7 @@ void CM_Lurker_STATE_Move_Script::CatchCheck()
 	}
 	else if (m_iCatchStage == 1)
 	{
-		switch (m_eMeleeState)
+		switch (m_eMoveMelee)
 		{
 		case eMeleeState::Dash:
 			if(JustTurn(m_vToPlayerDir))
@@ -339,7 +338,7 @@ void CM_Lurker_STATE_Move_Script::CatchCheck()
 	}
 	else if (m_iCatchStage == 2)
 	{
-		switch (m_eMeleeState)
+		switch (m_eMoveMelee)
 		{
 		case eMeleeState::Dash:
 				m_CMoveScript->MoveOn(false);
@@ -395,7 +394,8 @@ void CM_Lurker_STATE_Move_Script::DecidePattern()
 		std::mt19937_64 gen(rd());
 		std::uniform_int_distribution<int> distribution(0, 2);
 
-		m_eMeleeState = (eMeleeState)distribution(gen);
+		m_eMoveMelee = (eMeleeState)distribution(gen);
+		dynamic_cast<CM_Lurker_STATE_Melee_Script*>(m_MHQ->FindStateScript(1))->SetMeleeState(m_eMoveMelee);
 	}
 	else
 	{
@@ -403,7 +403,8 @@ void CM_Lurker_STATE_Move_Script::DecidePattern()
 		std::mt19937_64 gen(rd());
 		std::uniform_int_distribution<int> distribution(1, 2);
 
-		m_eMeleeState = (eMeleeState)distribution(gen);
+		m_eMoveMelee = (eMeleeState)distribution(gen);
+		dynamic_cast<CM_Lurker_STATE_Melee_Script*>(m_MHQ->FindStateScript(1))->SetMeleeState(m_eMoveMelee);
 	}
 }
 
@@ -770,7 +771,7 @@ bool CM_Lurker_STATE_Move_Script::Turn135R(float _degree)
 			vecRot = TransDegreeToRadVector(vecRot);
 			m_MHQ->Transform()->SetRelativeRot(vecRot);
 
-			m_BTurned135L = false;
+			m_BTurned135R = false;
 			m_bTurnBtn = false;
 			m_vInitialRot = { 0.f, 0.f, 0.f };
 			m_vFinalRot = { 0.f,0.f,0.f };
@@ -782,7 +783,7 @@ bool CM_Lurker_STATE_Move_Script::Turn135R(float _degree)
 	}
 	else
 	{
-		m_BTurned135L = false;
+		m_BTurned135R = false;
 		m_bTurnBtn = false;
 		m_vInitialRot = { 0.f, 0.f, 0.f };
 		m_vFinalRot = { 0.f,0.f,0.f };

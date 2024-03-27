@@ -1,18 +1,17 @@
 #pragma once
 #include "CM_Lurker_StatesScript.h"
 
-//#define Lurker_ALERT01         L"animclip\\Lurker\\Lurker_Alert_01.animclip"
 
-enum class eLDPart
-{
-	Legs,
-	LegL,
-	LegR,
-	Torso,
-	Heavy,
-};
 class CM_Lurker_STATE_Damaged_Script : public CM_Lurker_StatesScript
 {
+	enum class eLDPart
+	{
+		Legs,
+		LegL,
+		LegR,
+		Torso,
+		Heavy,
+	};
 
 private:
 	eLDPart m_ePart;
@@ -25,7 +24,7 @@ public:
 	virtual void begin() override;
 
 public:
-	void SetPart(eLDPart _part) { m_ePart = _part; }
+	void SetPart(UINT _part) { m_ePart = (eLDPart)_part; }
 
 private:
 	void AniComplete();
