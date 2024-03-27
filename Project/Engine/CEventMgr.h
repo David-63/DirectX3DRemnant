@@ -12,6 +12,7 @@ private:
     vector<CGameObject*>    m_vecGC;
 
     bool                    m_LevelChanged;
+    CGameObject* m_Obj;
 
 public:
     void AddEvent(const tEvent& _evn); //{ m_vecEvent.push_back(_evn); }

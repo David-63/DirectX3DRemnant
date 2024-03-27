@@ -3,9 +3,11 @@
 #include <Engine\CPrefab.h>
 #include <Engine\CResMgr.h>
 #include <Engine\CGameObject.h>
+#include <Engine\CResMgr.h>
 
 PrefabUI::PrefabUI()
     :ResUI(RES_TYPE::PREFAB)
+    , obj(nullptr)
 {
     SetName("Prefab");
 }
@@ -30,6 +32,9 @@ int PrefabUI::render_update()
     ImGui::SameLine();
     ImGui::DragFloat3("##Size", mPosition);
 
+    // ===== Material
+    ImGui::Text("Material");
+    ImGui::SameLine();
 
     ImGui::Text("Name  ");
     ImGui::SameLine();

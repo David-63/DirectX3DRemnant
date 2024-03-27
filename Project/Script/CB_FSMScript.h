@@ -58,6 +58,13 @@
 #define B_NC_Disagree           L"animclip\\B_NC_Disagree.animclip"
 #define B_NC_Idle               L"animclip\\B_NC_Idle.animclip"
 
+#define B_Turn90_L              L"animclip\\Undying_Turn90_L.animclip"
+#define B_Turn90_R              L"animclip\\Undying_Turn90_R.animclip"
+#define B_Turn135_L              L"animclip\\Undying_Turn135_L.animclip"
+#define B_Turn135_R              L"animclip\\Undying_Turn135_R.animclip"
+#define B_Turn180_L              L"animclip\\Undying_Turn180_L.animclip"
+#define B_Turn180_R              L"animclip\\Undying_Turn180_R.animclip"
+
 
 class CB_FSMScript :
     public CC_FSMScript
@@ -76,7 +83,9 @@ public:
         EVADE,
         MELEE_ATK,
         AOE,
-        BLOOD_DRINK,
+        BLOOD_DRINK_START,
+        BLOOD_DRINK_LOOP,
+        BLOOD_DRINK_END,
         END,
     };
 

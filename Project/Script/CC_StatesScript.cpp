@@ -76,9 +76,9 @@ float CC_StatesScript::DistBetwPlayer()
 }
 
 
-float CC_StatesScript::CalTurnDegree(Vec3 _dir)
+float CC_StatesScript::CalTurnDegree(Vec3 _dir) 
 {
-	Vec3 front = -GetMyFront();
+	Vec3 front = -GetMyFront(); // 성수님 몬스터의 front가 등뒤라서 -를 붙여주심.
 
 	float cosTheta = front.Dot(_dir);
 	float Degree = acosf(cosTheta);
