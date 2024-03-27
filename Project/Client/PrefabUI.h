@@ -8,6 +8,8 @@ private:
     int mLayerIdx;
     char mName[32];
 
+    CGameObject* obj;
+
 public:
     virtual int render_update() override;
 

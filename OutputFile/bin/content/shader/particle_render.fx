@@ -75,6 +75,7 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
     
     if (ModuleData.Render)
     {        
+       
         if (ModuleData.VelocityScale)
         {
             // 현재 파티클의 속력을 알아낸다.
@@ -123,7 +124,8 @@ void GS_ParticleRender (point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outst
             {
                 NewPos[i] = mul(NewPos[i], matRotZ);
             }
-        }        
+        }  
+
     }
     
     
@@ -163,12 +165,81 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
 {   
     float4 vOutColor = float4(1.f, 0.f, 1.f, 1.f);
     
-    if(g_btex_0)
+    if (g_btex_0)
     {
-        vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);        
-        vOutColor.rgb *= ParticleBuffer[_in.iInstID].vColor.rgb;
+        //Render Module 내에 Animaion활성화 기능이 있다.
+        if (ModuleData.Render)
+        {
+    
+            if (ModuleData.AnimUse)
+            {
+    
+                if (ModuleData.AnimLoop)
+                {
+                    int totalFrm = ModuleData.iAnimXCount * ModuleData.iAnimYCount;
+                    float CurFrmTime = fmod(ParticleBuffer[_in.iInstID].Age, ModuleData.fAnimFrmTime);
+                    float NormalizedTime = CurFrmTime / ModuleData.fAnimFrmTime;
+    
+                    // 빨리 움직이게 하고 싶다면 재생시간을 줄이면 됨 UI에서 
+                    float timePerFrm = 1.f / totalFrm;
+                    int CurFrm = int(NormalizedTime / timePerFrm) + 1;
+                    if (CurFrm > totalFrm)
+                        CurFrm = totalFrm;
+    
+                    int CurFrmY = CurFrm / ModuleData.iAnimXCount;
+                    int CurFrmX = CurFrm % ModuleData.iAnimXCount;
+    
+                    float2 LeftTop = float2(float(CurFrmX - 1) / float(ModuleData.iAnimXCount), float(CurFrmY) / float(ModuleData.iAnimYCount));
+                    float2 Size = float2(1.0 / float(ModuleData.iAnimXCount), 1.0 / float(ModuleData.iAnimYCount));
+    
+    
+                    float2 vUV = LeftTop + _in.vUV * Size;
+                    vOutColor = g_tex_0.Sample(g_sam_0, vUV);
+                }
+    
+                // 반복 x 
+                else
+                {
+    
+                    int totalFrm = ModuleData.iAnimXCount * ModuleData.iAnimYCount;
+                    float timePerFrm = ModuleData.fAnimSpeed / totalFrm;
+                    int CurFrm = int(ParticleBuffer[_in.iInstID].NomalizedAge / timePerFrm) + 1;
+                    if (CurFrm > totalFrm)
+                        CurFrm = totalFrm - 1;
+    
+    
+                    int CurFrmY = CurFrm / ModuleData.iAnimXCount;
+                    int CurFrmX = CurFrm % ModuleData.iAnimXCount;
+    
+                    float2 LeftTop = float2(float(CurFrmX - 1) / float(ModuleData.iAnimXCount), float(CurFrmY) / float(ModuleData.iAnimYCount));
+                    float2 Size = float2(1.0 / float(ModuleData.iAnimXCount), 1.0 / float(ModuleData.iAnimYCount));
+    
+    
+                    float2 vUV = LeftTop + _in.vUV * Size;
+                    vOutColor = g_tex_0.Sample(g_sam_0, vUV);
+                }
+            }
+    
+            // 애니메이션 사용을 안한다면
+            else
+            {
+                vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+
+            }
+        }
+
+        // 렌더 기능이 꺼져있다면
+        else
+        {
+            vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+        }
+
+
+        vOutColor *= ParticleBuffer[_in.iInstID].vColor;
+
     }
     
+
     return vOutColor;
 }
 

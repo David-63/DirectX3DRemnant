@@ -17,7 +17,9 @@ CPrefab::CPrefab()
 CPrefab::~CPrefab()
 {
 	if (nullptr != m_ProtoObj)
-	{
+	{		
+		m_ProtoObj->~CGameObject();
+
 		delete m_ProtoObj;
 		m_ProtoObj = nullptr;
 	}

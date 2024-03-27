@@ -132,6 +132,21 @@ int ParticleSystemUI::render_update()
 		ImGui::Image(TexView, ImVec2(100.f, 100.f));
 	}
 
+
+	bool bFoward = m_Particle->IsFoward();
+
+	// ==== 재질이 파티클인지 아닌지 
+	ImGui::Text("Is FowardRendering?");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##FowardOrNo", &bFoward))
+	{
+		m_Particle->SetFoward(bFoward);
+
+	}
+
+
+
+
 	// ===== Module Data
 	ImGui::Text("Particle Module");
 
@@ -603,14 +618,15 @@ int ParticleSystemUI::render_update()
 		// ============
 		if (ImGui::BeginTabItem("ADD_VELOCITY"))
 		{
-			// On/Off
-			bool OnOff = tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY];
-			ImGui::Text("Add Velocity Module ON/OFF");
-			ImGui::SameLine();
-			if (ImGui::Checkbox("##ON/OFF", &OnOff))
-			{
-				tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = OnOff;
-			}
+			// ===== 아래 기능은 필수여야해서 뺌 
+			//// On/Off
+			//bool OnOff = tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY];
+			//ImGui::Text("Add Velocity Module ON/OFF");
+			//ImGui::SameLine();
+			//if (ImGui::Checkbox("##ON/OFF", &OnOff))
+			//{
+			//	tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::ADD_VELOCITY] = OnOff;
+			//}
 
 
 			// Speed (필수 옵션)
@@ -930,6 +946,66 @@ int ParticleSystemUI::render_update()
 				}
 			}
 
+			// ===== 애니메이션
+			bool UseAnim = tParticleData.AnimUse;
+			bool Loop = tParticleData.AnimLoop;
+
+			ImGui::Text("AnimUse");
+			if (ImGui::Checkbox("##AnimationUse", &UseAnim)) 
+			{
+				tParticleData.AnimUse = UseAnim;
+			}
+
+			if (UseAnim) 
+			{
+				ImGui::Text("AnimLoop");
+				if (ImGui::Checkbox("##AnimLooop", &Loop))
+				{
+					tParticleData.AnimLoop = Loop;
+				}
+
+
+				if (Loop)
+				{
+					ImGui::Text("AnimTime");
+					ImGui::SameLine();
+					float time = tParticleData.fAnimFrmTime;
+
+					if (ImGui::DragFloat("##PrcAnimTime", &time, 0.03f, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+					{
+						tParticleData.fAnimFrmTime = time;
+					}
+				}
+
+				else
+				{
+					ImGui::Text("AnimSpeed");
+					ImGui::SameLine();
+					float ftime = tParticleData.fAnimSpeed;
+
+					if (ImGui::DragFloat("##PrcAnimSpeed", &ftime, 0.03f, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+					{
+						tParticleData.fAnimSpeed = ftime;
+					}
+				}
+
+
+				int AnimYCount = tParticleData.iAnimYCount;
+				int AnimXCount = tParticleData.iAnimXCount;
+				ImGui::Text("AnimXCount");
+				ImGui::SameLine();
+				ImGui::InputInt("##AnimXCount", &AnimXCount);
+				{
+					tParticleData.iAnimXCount = AnimXCount;
+				}
+
+				ImGui::Text("AnimYCount");
+				ImGui::SameLine();
+				ImGui::InputInt("##AnimYCount", &AnimYCount);
+				{
+					tParticleData.iAnimYCount = AnimYCount;
+				}
+			}
 
 			ImGui::EndTabItem();
 		}
@@ -938,6 +1014,7 @@ int ParticleSystemUI::render_update()
 	}
 
 	m_Particle->SetModuleData(tParticleData);
+	
 
 
 	return TRUE;
@@ -967,10 +1044,12 @@ void ParticleSystemUI::SelectMaterial(DWORD_PTR _Key)
 void ParticleSystemUI::SelectTexture(DWORD_PTR _Key)
 {
 	string strKey = (char*)_Key;
-
 	m_ParticleTex =
 		CResMgr::GetInst()->FindRes<CTexture>(wstring(strKey.begin(), strKey.end()));
 
+	wstring wstrKey = wstring(strKey.begin(), strKey.end());
+
+	m_Particle->SetTexName(wstrKey);
 	m_Particle->SetParticleTex(m_ParticleTex);
 
 
