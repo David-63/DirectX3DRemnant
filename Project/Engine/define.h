@@ -341,6 +341,7 @@ enum class LAYER_TYPE
 	Default,
 	Player,
 	Monster,
+	Effect,
 	Ground,
 	Wall,
 	HitBoxPlayer,

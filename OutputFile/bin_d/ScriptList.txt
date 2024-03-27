@@ -1,6 +1,7 @@
 CB_FSMScript
 CB_STATEDamagedScript
 CB_STATEDeadScript
+CB_STATEHealScript
 CB_STATEIdleScript
 CB_STATEMeleeScript
 CB_STATEMoveScript
