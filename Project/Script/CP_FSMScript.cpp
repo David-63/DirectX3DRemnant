@@ -5,7 +5,7 @@
 #include <Engine/Physics.h>
 
 CP_FSMScript::CP_FSMScript()
-	: m_InpStance{ false, false, false, true }, m_IsChangeStance(true), m_Weapon(nullptr)
+	: m_TogleInput{ false, false, false, true }, m_StanceCheck{ false, true }, m_Weapon(nullptr)
 	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay)
 {
 }
@@ -77,61 +77,21 @@ void CP_FSMScript::begin()
 	ChangeState(static_cast<UINT>(eP_States::IDLE));
 
 
-
-
-
-	GetOwner()->AddComponent(new CCollider3D);
-	Collider3D()->SetType(COLLIDER3D_TYPE::Player);
-	GetOwner()->AddComponent(new CRigidBody);
-
-	tShapeInfo info = {};
-	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	info.size = Vector3(15.f, 15.f, 15.f);
-	RigidBody()->PushBackShapeInfo(info);
-	tShapeInfo info2 = {};
-	info2.eGeomType = GEOMETRY_TYPE::Sphere;
-	info2.size = Vector3(15.f, 15.f, 15.f);
-	RigidBody()->PushBackShapeInfo(info2);
-	tShapeInfo info3 = {};
-	info3.eGeomType = GEOMETRY_TYPE::Sphere;
-	info3.size = Vector3(8.f, 8.f, 8.f);
-	RigidBody()->PushBackShapeInfo(info3);
-
-	RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-	RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-	RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-	RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-	RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-
-	RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-	RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-	RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));
-
-
 	if (nullptr == m_Weapon)
 	{
 		Ptr<CMeshData> pMeshData = nullptr;
 		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\player\\P_AssaultRifle.fbx");
 
-		//순서 생각해보자
-
-		// m_Weapon : 부모 오브젝트로 본인은 아무것도 없음
-		// m_Weapon_C : 실질적인 렌더링 부분
-
-
-		// - 깡통 하나 만들기 -
 		m_Weapon = new CGameObject();
 		m_Weapon->AddComponent(new CTransform());
 		m_Weapon->SetName(L"LongGun");
 		SpawnGameObject(m_Weapon, Vec3(0.f, 0.f, 0.f), 1);
 
-		// - 본체 만들기 -
 		m_LongGun = pMeshData->InstMesh();
 		m_LongGun->MeshRender()->SetFrustumCheck(false);
+		m_LongGun->SetName(L"AR");
 		m_Weapon->AddChild(m_LongGun);
 
-		// - 마우스 제어 스크립트
 		m_MouseCtrl.SetOwner(this);
 		m_MouseCtrl.SetWeaponObj(m_Weapon, m_LongGun);
 		m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
@@ -140,31 +100,35 @@ void CP_FSMScript::begin()
 
 void CP_FSMScript::tick()
 {
-	CC_FSMScript::tick();	// 현재 State의 tick을 호출	
-	dirInput();
-	stanceControl(); // Stance 변동 감지 및 제어
-	m_MouseCtrl.tick(); // 상태 적용이 완료된 다음에 마우스 호출
+	stanceControl();
+	CC_FSMScript::tick();
+	m_MouseCtrl.tick();
+
+	if (m_TogleInput[(UINT)eInpStance::Mouse])
+	{
+		dirInput();
+		stanceInput();
+	}
 }
 
 void CP_FSMScript::stanceControl()
 {
-	if (m_IsChangeStance)
+	if (m_StanceCheck[(UINT)eStanceCheck::IsChange])
 	{
 		m_StanceDelay.curTime += ScaleDT;
 
 		if (m_StanceDelay.IsFinish())
 		{
 			m_StanceDelay.ResetTime();
-			m_MouseCtrl.ChangeCamValue();
 			CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
-			if (m_InpStance[(UINT)eInpStance::Sprint])
+			if (m_TogleInput[(UINT)eInpStance::Sprint])
 			{
 				ChangeStance(ePlayerStance::Sprint);
 				curState->CallAnimation();
 				m_MouseCtrl.SetPivot(PIVOT_HIGH);
 				m_MouseCtrl.SetFov(FOV_HIGH);
 			}
-			else if (m_InpStance[(UINT)eInpStance::Aim])
+			else if (m_TogleInput[(UINT)eInpStance::Aim])
 			{
 				ChangeStance(ePlayerStance::Aim);
 				curState->CallAnimation();
@@ -172,7 +136,7 @@ void CP_FSMScript::stanceControl()
 				m_MouseCtrl.SetFov(FOV_LOW);
 				OverrideObjRotY();
 			}
-			else if (m_InpStance[(UINT)eInpStance::Crouch])
+			else if (m_TogleInput[(UINT)eInpStance::Crouch])
 			{
 				ChangeStance(ePlayerStance::Crouch);
 				curState->CallAnimation();
@@ -186,7 +150,7 @@ void CP_FSMScript::stanceControl()
 				m_MouseCtrl.SetPivot(PIVOT_HIGH);
 				m_MouseCtrl.SetFov(FOV_HIGH);
 			}
-			m_IsChangeStance = false;
+			m_StanceCheck[(UINT)eStanceCheck::IsChange] = false;
 		}
 	}
 }
@@ -227,10 +191,64 @@ void CP_FSMScript::dirInput()
 	}
 }
 
+void CP_FSMScript::stanceInput()
+{
+	if (KEY_TAP(KEY::RBTN))
+	{
+		if (IsInput((UINT)eInpStance::Crouch))
+			InputCrouch();
+
+		InputAim();
+	}
+	if (KEY_TAP(KEY::LCTRL))
+	{
+		if (IsInput((UINT)eInpStance::Aim))
+			InputAim();
+
+		InputCrouch();
+	}
+
+	if (KEY_TAP(KEY::LSHIFT))
+		InputSprint(true);
+	if (KEY_RELEASE(KEY::LSHIFT))
+		InputSprint(false);
+
+	if (KEY_TAP(KEY::SPACE))
+	{
+		if (IsInput((UINT)eInpStance::Crouch))
+			InputCrouch();
+		if (IsInput((UINT)eInpStance::Aim))
+			InputAim();
+		InputSprint(false);
+
+		DoDodge();
+	}
+}
+
 void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 {
 	GetOwner()->Animator3D()->Play(_name, _repeat);
 	
+}
+
+void CP_FSMScript::DoDodge()
+{
+	(0 <= m_moveDir.y) ? m_StanceCheck[(UINT)eStanceCheck::IsFrontDir] = true : m_StanceCheck[(UINT)eStanceCheck::IsFrontDir] = false;
+
+	// 방향에 맞는 애니메이션 재생
+	if (0.3 <= m_moveDir.x)
+		PlayAnimation(P_R2Dodge_R, false);
+	else if (-0.3 >= m_moveDir.x)
+		PlayAnimation(P_R2Dodge_L, false);
+	else
+	{
+		if (m_StanceCheck[(UINT)eStanceCheck::IsFrontDir])
+			PlayAnimation(P_R2Dodge, false);
+		else
+			PlayAnimation(P_R2Dodge_N, false);
+	}
+
+	ChangeState(static_cast<UINT>(eP_States::DODGE));
 }
 
 void CP_FSMScript::GotoIdle()

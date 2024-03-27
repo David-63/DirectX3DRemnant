@@ -9,15 +9,43 @@ CP_MouseCtrlScript::CP_MouseCtrlScript()
 	, m_CamInfo({ -180.f, 5.f, 35.f }, 0.54f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
 	
 {
-	m_IdleRotMat = XMMatrixIdentity();
-	m_IdleRotMat = XMMatrixRotationX(0);
-	m_IdleRotMat *= XMMatrixRotationY(0);
-	m_IdleRotMat *= XMMatrixRotationZ(3.3f);
+	m_RotMat[(UINT)eRotMat::Normal] = XMMatrixIdentity();
+	m_RotMat[(UINT)eRotMat::Normal] = XMMatrixRotationX(0);
+	m_RotMat[(UINT)eRotMat::Normal] *= XMMatrixRotationY(0);
+	m_RotMat[(UINT)eRotMat::Normal] *= XMMatrixRotationZ(-2.7f);
 
-	m_AimRotMat = XMMatrixIdentity();
-	m_AimRotMat = XMMatrixRotationX(0);
-	m_AimRotMat *= XMMatrixRotationY(4.9f);
-	m_AimRotMat *= XMMatrixRotationZ(3.3f);
+	m_RotMat[(UINT)eRotMat::MoveLeft] = XMMatrixIdentity();
+	m_RotMat[(UINT)eRotMat::MoveLeft] = XMMatrixRotationX(0.6f);
+	m_RotMat[(UINT)eRotMat::MoveLeft] *= XMMatrixRotationY(1.4f);
+	m_RotMat[(UINT)eRotMat::MoveLeft] *= XMMatrixRotationZ(-2.2f);
+
+	// 문제있음
+	m_RotMat[(UINT)eRotMat::MoveRight] = XMMatrixIdentity();
+	m_RotMat[(UINT)eRotMat::MoveRight] = XMMatrixRotationX(-1.4f);
+	m_RotMat[(UINT)eRotMat::MoveRight] *= XMMatrixRotationY(-0.2f);
+	m_RotMat[(UINT)eRotMat::MoveRight] *= XMMatrixRotationZ(2.8f);
+	
+	m_RotMat[(UINT)eRotMat::Crouch] = XMMatrixIdentity();
+	m_RotMat[(UINT)eRotMat::Crouch] = XMMatrixRotationX(-0.35f);
+	m_RotMat[(UINT)eRotMat::Crouch] *= XMMatrixRotationY(0.18f);
+	m_RotMat[(UINT)eRotMat::Crouch] *= XMMatrixRotationZ(3.3f);
+
+	// 문제있음
+	m_RotMat[(UINT)eRotMat::CrouchLeft] = XMMatrixIdentity();
+	m_RotMat[(UINT)eRotMat::CrouchLeft] = XMMatrixRotationX(0);
+	m_RotMat[(UINT)eRotMat::CrouchLeft] *= XMMatrixRotationY(0);
+	m_RotMat[(UINT)eRotMat::CrouchLeft] *= XMMatrixRotationZ(0);
+
+	// 문제있음
+	m_RotMat[(UINT)eRotMat::CrouchRight] = XMMatrixIdentity();
+	m_RotMat[(UINT)eRotMat::CrouchRight] = XMMatrixRotationX(0);
+	m_RotMat[(UINT)eRotMat::CrouchRight] *= XMMatrixRotationY(0);
+	m_RotMat[(UINT)eRotMat::CrouchRight] *= XMMatrixRotationZ(0);
+
+	m_RotMat[(UINT)eRotMat::Aim] = XMMatrixIdentity();
+	m_RotMat[(UINT)eRotMat::Aim] = XMMatrixRotationX(0.1f);
+	m_RotMat[(UINT)eRotMat::Aim] *= XMMatrixRotationY(4.8f);
+	m_RotMat[(UINT)eRotMat::Aim] *= XMMatrixRotationZ(3.3f);
 	
 }
 
@@ -46,16 +74,11 @@ void CP_MouseCtrlScript::tick()
 
 void CP_MouseCtrlScript::ctrlMovePos()
 {
-	// 자세 가져오기
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-
-	// Transform 정보 가져오기
 	Vec3 objPos = m_PHQ->Transform()->GetRelativePos();
 	Vec3 camF = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 	Vec3 camR = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
 	Vec3 camU = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::UP);
 
-	// lerp 진행 (FSM에서 활성화 시킴)
 	if (m_PivotValue.BlendTime.IsActivate())
 	{
 		m_PivotValue.BlendTime.curTime += ScaleDT;
@@ -78,7 +101,6 @@ void CP_MouseCtrlScript::ctrlMovePos()
 		m_ctrlCam->SetFov(m_FovValue.CurValue);
 	}
 
-	// 변경사항 적용
 	objPos.y += m_PivotValue.CurValue;
 	Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
 	m_ctrlCam->Transform()->SetRelativePos(Point);
@@ -86,7 +108,7 @@ void CP_MouseCtrlScript::ctrlMovePos()
 
 void CP_MouseCtrlScript::ctrlMoveRot()
 {
-
+	// Find stance or state about Rotation Mode
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 	eP_States stateType = static_cast<eP_States>(m_PHQ->GetCurStateType());
 
@@ -99,19 +121,21 @@ void CP_MouseCtrlScript::ctrlMoveRot()
 			justRotCam = true;
 	}
 
+	// Find transform value
 	Vec3 getCamRot = m_ctrlCam->Transform()->GetRelativeRot();
 	Vec3 getObjRot = m_PHQ->Transform()->GetRelativeRot();
 	Vec2 mouseInput = CKeyMgr::GetInst()->GetMouseRaw();
 	mouseInput.Normalize();
 
+	// Calculate move magnitude
 	float deltaYaw = XMConvertToRadians(mouseInput.x * m_CamInfo.MouseSensitivity);
 	float deltaPitch = XMConvertToRadians(mouseInput.y * m_CamInfo.MouseSensitivity); // Y축 반전 처리
 	float xCamRot, yObjRot;
-
 	xCamRot = getCamRot.x + deltaPitch;
 	m_CamInfo.PrevCamRotY = getCamRot.y + deltaYaw;
 	yObjRot = getObjRot.y + deltaYaw;
 
+	// Apply change according to Rotation Mode
 	if (justRotCam)
 	{
 		Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, 0);
@@ -125,79 +149,35 @@ void CP_MouseCtrlScript::ctrlMoveRot()
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 		m_Weapon->Transform()->SetRelativeRot(outObjEuler);
 	}
-
 }
 
 void CP_MouseCtrlScript::mouseRock()
 {
 	Vec2 screenResoulution = CEngine::GetInst()->GetWindowResolution();
-	// 화면 중앙 좌표 계산
 	int centerX = screenResoulution.x / 2;
 	int centerY = screenResoulution.y / 2;
 
-	// 마우스 커서를 화면 중앙으로 재설정
+	// Force cursor to move
 	SetCursorPos(centerX, centerY);
 }
 
 void CP_MouseCtrlScript::updateWeaponMatrix()
 {
-	// 부모 오브젝트 이동시키기
-	//Vec3 weaponPos = m_PHQ->Transform()->GetRelativePos();
-	//m_Weapon->Transform()->SetRelativePos(weaponPos);
-
-
-
+	// Get BoneMatrix
 	Matrix retBoneMat = m_PHQ->Animator3D()->GetBoneMatrix(176);
 	retBoneMat._44 = 1;
 	CAnimClip* curAnim = m_PHQ->Animator3D()->GetCurAnim();
 
-	// Owner Mat 과 bone Mat 곱하기
+	// Apply parent position
 	Matrix ownerMat = m_PHQ->Transform()->GetWorldMat();
-	//Matrix smapleMat = boneMat.Transpose();
-	Matrix totalMat = retBoneMat * ownerMat;
-
-	
-	//====================================================
+	Matrix totalMat = retBoneMat * ownerMat;	
 	Vec3 bonePosition = totalMat.Translation();	
 	m_Weapon->Transform()->SetRelativePos(bonePosition);
-	
 
-	// test
-	//Vec3 childPos = retBoneMat.Translation();
-	//m_LongGun->Transform()->SetRelativePos(childPos);
-
-
-
-
-
-
-	// total Mat 으로부터 회전값 가져오기
-
-	
-	// 이건 임시로 만든 오프셋 회전 
-	
-	// 최종행렬에 회전 오프셋 행렬을 곱한다면?
-
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-
-	if (CP_FSMScript::ePlayerStance::Aim == curStance)
-	{
-		m_CurRotMat = m_AimRotMat;
-	}
-	else
-	{
-		m_CurRotMat = m_IdleRotMat;
-	}
-
-
+	// Apply child rotation (CurRotMat was changed by FSM)
 	Matrix weaponMat = retBoneMat * m_CurRotMat;
-
 	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(weaponMat);
 	Vec3 boneRot = QuatToEuler(boneQRot);
-
-	
-	// 리빙포인트 : 회전은 행렬곱의 순서와 상관이 없음
-
 	m_LongGun->Transform()->SetRelativeRot(boneRot);
 }
 

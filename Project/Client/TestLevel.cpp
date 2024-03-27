@@ -108,7 +108,7 @@ void CreateTestLevel()
 
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}
-	// Test obj
+	// Test obj (rigidbody)
 	{
 		CGameObject* pObj = new CGameObject;
 		pObj->SetName(L"test Obj");
@@ -137,12 +137,31 @@ void CreateTestLevel()
 		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_R2Fire.fbx");
 		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
 		player = pMeshData->Instantiate();
-		//player = pMeshData->InstMesh();
-		//player->Animator3D()->SimpleGen(L"animclip\\player\\P_2RHuntReload_End.animclip");
+
 		player->SetName(L"Player");
 		player->MeshRender()->SetFrustumCheck(false);
-
 		player->AddComponent(new CP_FSMScript());
+
+		player->AddComponent(new CRigidBody);
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(15.f, 15.f, 15.f);
+		player->RigidBody()->PushBackShapeInfo(info);
+		player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+		player->SetLayerIdx(1);
+
+		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+
+		player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+
+		player->AddComponent(new CCollider3D);
+		player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+
 		SpawnGameObject(player, Vec3(0.f, 0.f, 0.f), 1);
 	}
 
