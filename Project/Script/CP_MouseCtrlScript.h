@@ -14,7 +14,22 @@
 class CP_FSMScript;
 class CP_MouseCtrlScript : public CScript
 {
+public:
+	enum class eRotMat
+	{
+		Normal,
+		MoveLeft,
+		MoveRight,
+		
+		Crouch,
+		CrouchLeft,
+		CrouchRight,
+
+		Aim,
+		End,
+	};
 private:
+
 	struct tCameraInfo
 	{
 		Vec3			CamOffset;
@@ -58,6 +73,10 @@ private:
 
 private:
 	CGameObject*	m_Weapon;
+	CGameObject*	m_LongGun;
+		
+	Matrix			m_RotMat[(UINT)eRotMat::End];	// 리빙포인트 : 회전은 행렬곱의 순서와 상관이 없음
+	Matrix			m_CurRotMat;
 
 public:
 	virtual void begin() override;
@@ -76,8 +95,8 @@ public:
 public:
 	void SetOwner(CP_FSMScript* _owner) { m_PHQ = _owner; }
 	void SetMainCam(CCamera* _cam) { m_ctrlCam = _cam; }
-	void SetWeaponObj(CGameObject* _obj) { m_Weapon = _obj; }
-	void ChangeCamValue() { m_IsChangeStance = true; }
+	void SetWeaponObj(CGameObject* _parent, CGameObject* _child) { m_Weapon = _parent; m_LongGun = _child; }
+	void ChangeWeaponMatrix(UINT _rotMat) { m_CurRotMat = m_RotMat[_rotMat]; }
 
 	void SetPivot(float _value) { m_PivotValue.SetValue(_value); }
 	void SetFov(float _value) { m_FovValue.SetValue(_value); }

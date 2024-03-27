@@ -4,10 +4,7 @@
 
 #define STATE_IDLE 0
 
-class CC_FSMScript : public CScript
-{
-public:
-    struct tHealthStat
+struct tHealthStat
     {
         float MaxHp;
         float CurHp;
@@ -33,6 +30,10 @@ public:
         tHealthStat() : MaxHp(10), CurHp(10), IsDead(false) {}
         tHealthStat(float _in) : MaxHp(_in), CurHp(_in), IsDead(false) {}
     };
+
+class CC_FSMScript : public CScript
+{
+public:
     // 함수에 의해 제어되므로 protected 를 사용할 필요 없음
 private:
     std::map<UINT, CC_StatesScript*>    m_States;

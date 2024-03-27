@@ -35,7 +35,7 @@
 #define P_R2MoveSprint_L                L"animclip\\player\\P_R2MoveSprint_L.animclip"
 #define P_R2MoveSprint_R                L"animclip\\player\\P_R2MoveSprint_R.animclip"
 
-#define P_R2Fire                L"animclip\\player\\P_R2Fire.animclip"
+#define P_R2Fire                        L"animclip\\player\\P_R2Fire.animclip"
 
 #define StanceDelay 0.1f
 
@@ -46,6 +46,13 @@ enum class eInpStance
     Aim,
     Sprint,
     Mouse,
+    End,
+};
+
+enum class eStanceCheck
+{
+    IsChange,
+    IsFrontDir,
     End,
 };
 
@@ -116,12 +123,13 @@ private:
 private:
     CP_MouseCtrlScript  m_MouseCtrl;
     CGameObject*        m_Weapon;
+    CGameObject*        m_LongGun;
+
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
-    bool                m_InpStance[(UINT)eInpStance::End];
-    bool                m_IsChangeStance;
+    bool                m_TogleInput[(UINT)eInpStance::End];
+    bool                m_StanceCheck[(UINT)eStanceCheck::End];
     Vec2                m_moveDir;
-
 
 public:
     virtual void begin() override;
@@ -130,29 +138,33 @@ public:
 private:
     void stanceControl();
     void dirInput();
+    void stanceInput();
 
 public:
     void PlayAnimation(wstring _name, bool _repeat);
     void OverrideObjRotY() { m_MouseCtrl.OverrideObjRotY(); }
+    void DoDodge();
+
 
 public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
     ePlayerStance GetStance() { return P_Stance; }
     tP_Info GetPlayerInfo() { return m_PlayerInfo; }
     tP_LongGunInfo* GetLongGunInfo() { return &m_LongGunInfo; }
-
+    CP_MouseCtrlScript* GetMouseController() { return &m_MouseCtrl; }
 public:
-    void ClearStanceChange() { m_IsChangeStance = false; }
-    void InputCrouch() { m_InpStance[(UINT)eInpStance::Crouch] ? m_InpStance[(UINT)eInpStance::Crouch] = false : m_InpStance[(UINT)eInpStance::Crouch] = true; m_IsChangeStance = true; }
-    void InputAim() { m_InpStance[(UINT)eInpStance::Aim] ? m_InpStance[(UINT)eInpStance::Aim] = false : m_InpStance[(UINT)eInpStance::Aim] = true; m_IsChangeStance = true; }
-    bool IsInput(UINT _stance) { return m_InpStance[_stance]; }
+    void ClearStanceChange() { m_StanceCheck[(UINT)eStanceCheck::IsChange] = false; }
+    void InputCrouch() { m_TogleInput[(UINT)eInpStance::Crouch] ? m_TogleInput[(UINT)eInpStance::Crouch] = false : m_TogleInput[(UINT)eInpStance::Crouch] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
+    void InputAim() { m_TogleInput[(UINT)eInpStance::Aim] ? m_TogleInput[(UINT)eInpStance::Aim] = false : m_TogleInput[(UINT)eInpStance::Aim] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
+    bool IsInput(UINT _stance) { return m_TogleInput[_stance]; }
+    bool IsFrontDir() { return m_StanceCheck[m_StanceCheck[(UINT)eStanceCheck::IsFrontDir]]; }
 
     
-    void InputSprint(bool _isHold) { m_InpStance[(UINT)eInpStance::Sprint] = _isHold;  m_IsChangeStance = true; }
-    bool IsSprint() { return m_InpStance[(UINT)eInpStance::Sprint]; }
+    void InputSprint(bool _isHold) { m_TogleInput[(UINT)eInpStance::Sprint] = _isHold;  m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
+    bool IsSprint() { return m_TogleInput[(UINT)eInpStance::Sprint]; }
 
-    void AbleMouse() { m_InpStance[(UINT)eInpStance::Mouse] ? m_InpStance[(UINT)eInpStance::Mouse] = false : m_InpStance[(UINT)eInpStance::Mouse] = true; }
-    bool IsAbleMouse() { return m_InpStance[(UINT)eInpStance::Mouse]; }
+    void AbleMouse() { m_TogleInput[(UINT)eInpStance::Mouse] ? m_TogleInput[(UINT)eInpStance::Mouse] = false : m_TogleInput[(UINT)eInpStance::Mouse] = true; }
+    bool IsAbleMouse() { return m_TogleInput[(UINT)eInpStance::Mouse]; }
 
 
 public:
