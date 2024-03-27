@@ -45,7 +45,6 @@ void CM_Lurker_STATE_Move_Script::tick()
 
 	if (mKey)
 	{
-		
 		if (JustTurn(Vec3(1.0, 0.f, 0.f)))
 		{
 			mKey = false;
@@ -772,7 +771,7 @@ bool CM_Lurker_STATE_Move_Script::Turn135R(float _degree)
 			vecRot = TransDegreeToRadVector(vecRot);
 			m_MHQ->Transform()->SetRelativeRot(vecRot);
 
-			m_BTurned135L = false;
+			m_BTurned135R = false;
 			m_bTurnBtn = false;
 			m_vInitialRot = { 0.f, 0.f, 0.f };
 			m_vFinalRot = { 0.f,0.f,0.f };
@@ -784,7 +783,7 @@ bool CM_Lurker_STATE_Move_Script::Turn135R(float _degree)
 	}
 	else
 	{
-		m_BTurned135L = false;
+		m_BTurned135R = false;
 		m_bTurnBtn = false;
 		m_vInitialRot = { 0.f, 0.f, 0.f };
 		m_vFinalRot = { 0.f,0.f,0.f };

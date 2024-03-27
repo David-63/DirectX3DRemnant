@@ -13,13 +13,6 @@ CC_StatesScript
 CHitBoxScript
 CIdleStateScript
 CMonsterMoveScript
-CM_Annointed_FSMScript
-CM_Annointed_StatesScript
-CM_Annointed_STATE_Atk_Script
-CM_Annointed_STATE_Damaged_Script
-CM_Annointed_STATE_Dead_Script
-CM_Annointed_STATE_Idle_Script
-CM_Annointed_STATE_Move_Script
 CM_Lurker_FSMScript
 CM_Lurker_StatesScript
 CM_Lurker_STATE_Damaged_Script
@@ -27,6 +20,13 @@ CM_Lurker_STATE_Dead_Script
 CM_Lurker_STATE_Idle_Script
 CM_Lurker_STATE_Melee_Script
 CM_Lurker_STATE_Move_Script
+CM_Spider_FSMScript
+CM_Spider_StatesScript
+CM_Spider_STATE_Atk_Script
+CM_Spider_STATE_Damaged_Script
+CM_Spider_STATE_Dead_Script
+CM_Spider_STATE_Idle_Script
+CM_Spider_STATE_Move_Script
 CPathFinderScript
 CPlayerScript
 CPlayerScriptFsm

@@ -87,7 +87,7 @@ void Physics::RemoveActor(CGameObject* _gameObject)
 	AssertEx(_gameObject->RigidBody()->IsAppliedPhysics(), L"Physics::RemoveActor() - Is not applied physics");
 	mCurScene->removeActor(*_gameObject->RigidBody()->GetActor());
 }
-tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLength)
+tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLength, bool _isMonster)
 {
 	tRayCastInfo info = {};
 	PxVec3 rayOrigin = { _rayOrigin.x, _rayOrigin.y, _rayOrigin.z };
@@ -95,8 +95,18 @@ tRayCastInfo* Physics::RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLe
 	
 	PxRaycastBuffer hitBuffer;
 	PxQueryFilterData data;
-	data.data.word0 = 0xffffff ^ (1 << 3);
-	bool hit = mCurScene->raycast(rayOrigin, rayDir, _rayLength, hitBuffer,PxHitFlag::eDEFAULT, data);
+
+	if (_isMonster)
+	{
+		data.data.word0 = 6;
+
+	}
+	else
+	{
+		data.data.word0 = 10;
+	}
+
+	bool hit = mCurScene->raycast(rayOrigin, rayDir, _rayLength, hitBuffer, PxHitFlag::eDEFAULT, data);
 
 	if (hit)
 	{

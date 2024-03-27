@@ -180,6 +180,10 @@ void CTransform::SetRelativeRot(Vec3 _vRot)
 {
 	if (isnan(_vRot.y))
 		_vRot.y = 0.f;
+	if (isnan(_vRot.x))
+		_vRot.x = 0.f;
+	if (isnan(_vRot.z))
+		_vRot.z = 0.f;
 
 	if (_vRot.y > 2 * 3.141592 || _vRot.y < -2 * 3.141592)
 	{

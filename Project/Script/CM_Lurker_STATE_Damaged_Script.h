@@ -24,7 +24,7 @@ public:
 	virtual void begin() override;
 
 public:
-	void SetPart(eLDPart _part) { m_ePart = _part; }
+	void SetPart(UINT _part) { m_ePart = (eLDPart)_part; }
 
 private:
 	void AniComplete();

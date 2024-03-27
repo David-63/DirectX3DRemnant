@@ -347,3 +347,11 @@ enum class LAYER_TYPE
 	HitBoxMonster,
 	END,
 };
+
+enum class COLLIDE_TYPE
+{
+	None,
+	Other,
+	Player,
+	Monster,
+};
