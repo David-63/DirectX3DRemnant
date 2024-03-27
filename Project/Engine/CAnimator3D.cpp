@@ -15,33 +15,35 @@
 CAnimator3D::CAnimator3D()
 	: CComponent(COMPONENT_TYPE::ANIMATOR3D)
 	, m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(false), m_isRun(false)
-	, m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr)
+	, m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr), m_BoneRetMatBuffer(nullptr)
 	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_AnimRatio(0.f)
 	, m_blendTime(BlendEndTime), m_blendRatio(0.f), m_prevFrameIdx(0)
 	, m_isModifyUse(false), m_modifyRotScalar(180.f)
 {
 	m_BoneFinalMatBuffer = new CStructuredBuffer();
+	m_BoneRetMatBuffer = new CStructuredBuffer();
 	m_modifyIndicesBuffer = new CStructuredBuffer();
 }
 
 CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: CComponent(_origin)
 	, m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(_origin.m_bRepeat), m_isRun(false)
-	, m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr)
+	, m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr), m_BoneRetMatBuffer(nullptr)
 	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_AnimRatio(0.f)
 	, m_blendTime(_origin.m_blendTime), m_blendRatio(0.f), m_prevFrameIdx(0)
 	, m_isModifyUse(_origin.m_isModifyUse), m_modifyRotScalar(180.f)
 {
 	m_BoneFinalMatBuffer = new CStructuredBuffer();
+	m_BoneRetMatBuffer = new CStructuredBuffer();
 	m_modifyIndicesBuffer = new CStructuredBuffer();
 
 
-	if (_origin.m_Events.empty())
+	if (!_origin.m_Events.empty())
 	{
 		m_Events = _origin.m_Events;
 	}
 
-	if (_origin.m_mapAnim.empty())
+	if (!_origin.m_mapAnim.empty())
 	{
 		m_mapAnim.insert(_origin.m_mapAnim.begin(), _origin.m_mapAnim.end());
 	}
@@ -66,6 +68,11 @@ CAnimator3D::~CAnimator3D()
 	{
 		delete m_BoneFinalMatBuffer;
 		m_BoneFinalMatBuffer = nullptr;
+	}
+	if (nullptr != m_BoneRetMatBuffer)
+	{
+		delete m_BoneRetMatBuffer;
+		m_BoneRetMatBuffer = nullptr;
 	}
 	if (nullptr != m_modifyIndicesBuffer)
 	{
@@ -179,6 +186,7 @@ void CAnimator3D::UpdateData()
 			pUpdateShader->SetFrameDataBuffer_next(pCurMesh.Get()->GetBoneFrameDataBuffer());
 			pUpdateShader->SetOffsetMatBuffer(pCurMesh.Get()->GetBoneOffsetBuffer());
 			pUpdateShader->SetOutputBuffer(m_BoneFinalMatBuffer);
+			pUpdateShader->SetRetBuffer(m_BoneRetMatBuffer);
 
 			pUpdateShader->SetBoneCount(iBoneCount);
 			pUpdateShader->SetFrameIndex(m_prevFrameIdx);
@@ -191,6 +199,7 @@ void CAnimator3D::UpdateData()
 			pUpdateShader->SetFrameDataBuffer_next(pCurMesh.Get()->GetBoneFrameDataBuffer());
 			pUpdateShader->SetOffsetMatBuffer(pCurMesh.Get()->GetBoneOffsetBuffer());
 			pUpdateShader->SetOutputBuffer(m_BoneFinalMatBuffer);
+			pUpdateShader->SetRetBuffer(m_BoneRetMatBuffer);
 
 			pUpdateShader->SetBoneCount(iBoneCount);
 			pUpdateShader->SetFrameIndex(m_CurFrameIdx);
@@ -217,13 +226,13 @@ void CAnimator3D::UpdateData()
 	// t30 레지스터에 최종행렬 데이터(구조버퍼) 바인딩		
 	m_BoneFinalMatBuffer->UpdateData(30, PIPELINE_STAGE::PS_VERTEX);
 
-	m_BoneFinalMatBuffer->GetData(m_vecFinalBoneMat);
+	m_BoneRetMatBuffer->GetData(m_vecFinalBoneMat);
 }
 
 void CAnimator3D::ClearData()
 {
 	m_BoneFinalMatBuffer->Clear();
-
+	m_BoneRetMatBuffer->Clear();
 	UINT iMtrlCount = MeshRender()->GetMtrlCount();
 	Ptr<CMaterial> pMtrl = nullptr;
 	for (UINT i = 0; i < iMtrlCount; ++i)
@@ -334,6 +343,10 @@ void CAnimator3D::check_mesh(Ptr<CMesh> _pMesh)
 	if (m_BoneFinalMatBuffer->GetElementCount() != iBoneCount)
 	{
 		m_BoneFinalMatBuffer->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, true, nullptr);
+	}
+	if (m_BoneRetMatBuffer->GetElementCount() != iBoneCount)
+	{
+		m_BoneRetMatBuffer->Create(sizeof(Matrix), iBoneCount, SB_TYPE::READ_WRITE, true, nullptr);
 	}
 }
 
@@ -658,6 +671,8 @@ void CAnimator3D::LoadFromLevelFile(FILE* _pFile)
 	
 	if (nullptr == m_BoneFinalMatBuffer)
 		m_BoneFinalMatBuffer = new CStructuredBuffer();
+	if (nullptr == m_BoneRetMatBuffer)
+		m_BoneRetMatBuffer = new CStructuredBuffer();
 	if (nullptr == m_modifyIndicesBuffer)
 		m_modifyIndicesBuffer = new CStructuredBuffer();
 	// 제어 변수 세팅

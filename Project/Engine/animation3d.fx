@@ -307,6 +307,7 @@ StructuredBuffer<tFrameTrans> g_arrFrameTrans_next : register(t18);
 StructuredBuffer<tAnimIndices> g_modifyIndices : register(t19);
 
 RWStructuredBuffer<matrix> g_arrFinelMat : register(u0);
+RWStructuredBuffer<matrix> g_retMat : register(u1);
 
 // ===========================
 // Animation3D Compute Shader
@@ -384,11 +385,19 @@ void CS_Animation3D(int3 _iThreadIdx : SV_DispatchThreadID)
     // 최종 본행렬 연산
     //MatrixAffineTransformation(g_arrFrameTrans[iFrameDataIndex].vScale, vQZero, g_arrFrameTrans[iFrameDataIndex].qRot, g_arrFrameTrans[iFrameDataIndex].vTranslate, matBone);
 
+    
+    
     // 담당하는 뼈의 위치를 offset(기본) 위치로 이동시킴
     matrix matOffset = transpose(g_arrOffset[_iThreadIdx.x]);
 
     // 구조화버퍼에 결과값 저장 : 프레임위치에 오프셋으로 이동시킨 뼈를 곱해서 최종 뼈위치를 구함
-    g_arrFinelMat[_iThreadIdx.x] = mul(matOffset, matBone);
+    g_arrFinelMat[_iThreadIdx.x] = mul(matOffset, matBone);   
+
+    
+    
+    // 위치 반환용
+    g_retMat[_iThreadIdx.x] = transpose(matBone);
+
 }
 
 

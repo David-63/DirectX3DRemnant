@@ -25,10 +25,10 @@ void CP_FSMScript::begin()
 
 
 	// 애니메이션
-	GetOwner()->Animator3D()->Add(P_R2Dodge);
-	GetOwner()->Animator3D()->Add(P_R2Dodge_L);
-	GetOwner()->Animator3D()->Add(P_R2Dodge_N);
-	GetOwner()->Animator3D()->Add(P_R2Dodge_R);
+	Animator3D()->Add(P_R2Dodge);
+	Animator3D()->Add(P_R2Dodge_L);
+	Animator3D()->Add(P_R2Dodge_N);
+	Animator3D()->Add(P_R2Dodge_R);
 		
 	GetOwner()->Animator3D()->Add(P_R2Idle);
 	GetOwner()->Animator3D()->Add(P_R2IdleAim);
@@ -38,38 +38,38 @@ void CP_FSMScript::begin()
 	GetOwner()->Animator3D()->Add(P_R2Reload);
 	GetOwner()->Animator3D()->Add(P_R2ReloadCrouch);
 	
-	GetOwner()->Animator3D()->Add(P_R2MoveWalk);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalk_B);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalk_BL);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalk_BR);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalk_FL);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalk_FR);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_B);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_BL);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_BR);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_FL);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkAim_FR);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_B);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_BL);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_BR);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_FL);
-	GetOwner()->Animator3D()->Add(P_R2MoveWalkCrouch_FR);
-	GetOwner()->Animator3D()->Add(P_R2MoveSprint);
-	GetOwner()->Animator3D()->Add(P_R2MoveSprint_L);
-	GetOwner()->Animator3D()->Add(P_R2MoveSprint_R);
+	Animator3D()->Add(P_R2MoveWalk);
+	Animator3D()->Add(P_R2MoveWalk_B);
+	Animator3D()->Add(P_R2MoveWalk_BL);
+	Animator3D()->Add(P_R2MoveWalk_BR);
+	Animator3D()->Add(P_R2MoveWalk_FL);
+	Animator3D()->Add(P_R2MoveWalk_FR);
+	Animator3D()->Add(P_R2MoveWalkAim);
+	Animator3D()->Add(P_R2MoveWalkAim_B);
+	Animator3D()->Add(P_R2MoveWalkAim_BL);
+	Animator3D()->Add(P_R2MoveWalkAim_BR);
+	Animator3D()->Add(P_R2MoveWalkAim_FL);
+	Animator3D()->Add(P_R2MoveWalkAim_FR);
+	Animator3D()->Add(P_R2MoveWalkCrouch);
+	Animator3D()->Add(P_R2MoveWalkCrouch_B);
+	Animator3D()->Add(P_R2MoveWalkCrouch_BL);
+	Animator3D()->Add(P_R2MoveWalkCrouch_BR);
+	Animator3D()->Add(P_R2MoveWalkCrouch_FL);
+	Animator3D()->Add(P_R2MoveWalkCrouch_FR);
+	Animator3D()->Add(P_R2MoveSprint);
+	Animator3D()->Add(P_R2MoveSprint_L);
+	Animator3D()->Add(P_R2MoveSprint_R);
 
 	
 
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
+	Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::GotoIdle, this);
+	Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
+	Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
 
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge) = std::bind(&CP_FSMScript::GotoMove, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_L) = std::bind(&CP_FSMScript::GotoMove, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_N) = std::bind(&CP_FSMScript::GotoMove, this);
-	GetOwner()->Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoMove, this);
+	Animator3D()->CompleteEvent(P_R2Dodge) = std::bind(&CP_FSMScript::GotoMove, this);
+	Animator3D()->CompleteEvent(P_R2Dodge_L) = std::bind(&CP_FSMScript::GotoMove, this);
+	Animator3D()->CompleteEvent(P_R2Dodge_N) = std::bind(&CP_FSMScript::GotoMove, this);
+	Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoMove, this);
 
 	// GetOwner()->Animator3D()->CompleteEvent(P_MoveR2Jog)
 
@@ -87,7 +87,7 @@ void CP_FSMScript::begin()
 		m_Weapon = pMeshData->InstMesh();
 		m_Weapon->SetName(L"LongGun");
 		m_Weapon->MeshRender()->SetFrustumCheck(false);
-		SpawnGameObject(m_Weapon, Vec3(200.f, 0.f, 0.f), 1);
+		SpawnGameObject(m_Weapon, Vec3(0.f, 0.f, 0.f), 1);
 
 		m_MouseCtrl.SetOwner(this);
 		m_MouseCtrl.SetWeaponObj(m_Weapon);
@@ -95,31 +95,31 @@ void CP_FSMScript::begin()
 	}
 
 	GetOwner()->AddComponent(new CCollider3D);
-	GetOwner()->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+	Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 	GetOwner()->AddComponent(new CRigidBody);
 
 	tShapeInfo info = {};
 	info.eGeomType = GEOMETRY_TYPE::Sphere;
 	info.size = Vector3(15.f, 15.f, 15.f);
-	GetOwner()->RigidBody()->PushBackShapeInfo(info);
+	RigidBody()->PushBackShapeInfo(info);
 	tShapeInfo info2 = {};
 	info2.eGeomType = GEOMETRY_TYPE::Sphere;
 	info2.size = Vector3(15.f, 15.f, 15.f);
-	GetOwner()->RigidBody()->PushBackShapeInfo(info2);
+	RigidBody()->PushBackShapeInfo(info2);
 	tShapeInfo info3 = {};
 	info3.eGeomType = GEOMETRY_TYPE::Sphere;
 	info3.size = Vector3(8.f, 8.f, 8.f);
-	GetOwner()->RigidBody()->PushBackShapeInfo(info3);
+	RigidBody()->PushBackShapeInfo(info3);
 
-	GetOwner()->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-	GetOwner()->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-	GetOwner()->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-	GetOwner()->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-	GetOwner()->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+	RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+	RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+	RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+	RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+	RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
-	GetOwner()->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-	GetOwner()->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-	GetOwner()->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));
+	RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+	RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+	RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 100.f, 0.f));
 }
 
 void CP_FSMScript::tick()

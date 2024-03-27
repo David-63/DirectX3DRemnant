@@ -111,11 +111,11 @@ void CP_STATEMoveScript::translateInput()
 {
 	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 
-	Vec3 vCurPos = m_PHQ->GetOwner()->Transform()->GetRelativePos();
+	Vec3 vCurPos = m_PHQ->Transform()->GetRelativePos();
 
-	Vec3 vFront = m_PHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-	Vec3 vUp = m_PHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::UP);
-	Vec3 vRight = m_PHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
+	Vec3 vFront = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 vUp = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::UP);
+	Vec3 vRight = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
 
 	// 이동량 구하기
 
@@ -129,30 +129,29 @@ void CP_STATEMoveScript::translateInput()
 	else
 		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT;
 
-	moveMagnitude *= 50.f;
+	//moveMagnitude *= 50.f;
 	Vec3 vMoveVector(0.f, 0.f, 0.f);
-	//vMoveVector += DT * vFront * fSpeed;
-	//GetOwner()->RigidBody()->SetVelocity(vMoveVector);
+
 	if (KEY_HOLD(KEY::W))
 	{
-		vMoveVector += vFront * moveMagnitude;
+		vCurPos += vFront * moveMagnitude;
 	}
 	if (KEY_HOLD(KEY::S))
 	{
-		vMoveVector -= vFront * moveMagnitude;
+		vCurPos -= vFront * moveMagnitude;
 	}
 	if (KEY_HOLD(KEY::A))
 	{
-		vMoveVector -= vRight * moveMagnitude;
+		vCurPos -= vRight * moveMagnitude;
 	}
 	if (KEY_HOLD(KEY::D))
 	{
-		vMoveVector += vRight * moveMagnitude;
+		vCurPos += vRight * moveMagnitude;
 	}
 
-	m_PHQ->GetOwner()->RigidBody()->SetVelocity(vMoveVector);
+	//m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 
-	//m_PHQ->GetOwner()->Transform()->SetRelativePos(vCurPos);
+	m_PHQ->Transform()->SetRelativePos(vCurPos);
 }
 
 void CP_STATEMoveScript::CallAnimation()

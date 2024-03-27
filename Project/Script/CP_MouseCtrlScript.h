@@ -64,10 +64,13 @@ public:
 	virtual void tick() override;
 
 
+private:
+	void ctrlMovePos();
+	void ctrlMoveRot();
+	void mouseRock();
+	void updateWeaponMatrix();
+
 public:
-	void CtrlMovePos();
-	void CtrlMoveRot();
-	void MouseRock();
 	void OverrideObjRotY();
 
 public:

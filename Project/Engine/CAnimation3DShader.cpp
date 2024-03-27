@@ -10,6 +10,7 @@ CAnimation3DShader::CAnimation3DShader(UINT _iGroupPerThreadX, UINT _iGroupPerTh
 	, m_pOffsetMatBuffer(nullptr)
 	, m_pFrameDataBuffer_next(nullptr)
 	, m_pOutputBuffer(nullptr)
+	, m_pRetBuffer(nullptr)
 {
 	m_iGroupPerThreadX = _iGroupPerThreadX;
 	m_iGroupPerThreadY = _iGroupPerThreadY;
@@ -32,6 +33,7 @@ void CAnimation3DShader::UpdateData()
 		m_pModifyIndicesBuffer->UpdateData_CS(19, true);
 	}
 	m_pOutputBuffer->UpdateData_CS(0, false);   // u0
+	m_pRetBuffer->UpdateData_CS(1, false);		// u1
 
 	// m_Const.arrInt[0] = 뼈 개수만큼 스레드 돌림
 	m_iGroupX = (m_Const.arrInt[0] / m_iGroupPerThreadX) + 1;
@@ -69,5 +71,10 @@ void CAnimation3DShader::Clear()
 	{
 		m_pOutputBuffer->Clear_CS(false);
 		m_pOutputBuffer = nullptr;
+	}
+	if (nullptr != m_pRetBuffer)
+	{
+		m_pRetBuffer->Clear_CS(false);
+		m_pRetBuffer = nullptr;
 	}
 }

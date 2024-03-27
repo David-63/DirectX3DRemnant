@@ -267,10 +267,7 @@ void QuatToEuler(const XMFLOAT4& quaternion, Vec3& euler)
 	yaw = asin(2.0f * (quaternion.w * quaternion.y - quaternion.z * quaternion.x));
 	roll = atan2(2.0f * (quaternion.w * quaternion.z + quaternion.x * quaternion.y), 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
 
-	// 라디안을 도(degree)로 변환
-	euler.x = XMConvertToDegrees(pitch);
-	euler.y = XMConvertToDegrees(yaw);
-	euler.z = XMConvertToDegrees(roll);
+	euler = Vec3(pitch, yaw, roll);
 }
 
 Vec3 QuatToEuler(const XMFLOAT4& quaternion)
@@ -283,11 +280,7 @@ Vec3 QuatToEuler(const XMFLOAT4& quaternion)
 	pitch = atan2(2.0f * (quaternion.w * quaternion.x + quaternion.y * quaternion.z), 1.0f - 2.0f * (quaternion.x * quaternion.x + quaternion.y * quaternion.y));
 	yaw = asin(2.0f * (quaternion.w * quaternion.y - quaternion.z * quaternion.x));
 	roll = atan2(2.0f * (quaternion.w * quaternion.z + quaternion.x * quaternion.y), 1.0f - 2.0f * (quaternion.y * quaternion.y + quaternion.z * quaternion.z));
-
-	// 라디안을 도(degree)로 변환
-	retEuler.x = XMConvertToDegrees(pitch);
-	retEuler.y = XMConvertToDegrees(yaw);
-	retEuler.z = XMConvertToDegrees(roll);
+	retEuler = Vec3(pitch, yaw, roll);
 	return retEuler;
 }
 
