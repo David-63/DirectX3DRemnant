@@ -4,6 +4,7 @@
 #include "CB_FSMScript.h"
 #include "CB_STATEDamagedScript.h"
 #include "CB_STATEDeadScript.h"
+#include "CB_STATEHealScript.h"
 #include "CB_STATEIdleScript.h"
 #include "CB_STATEMeleeScript.h"
 #include "CB_STATEMoveScript.h"
@@ -49,6 +50,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CB_FSMScript");
 	_vec.push_back(L"CB_STATEDamagedScript");
 	_vec.push_back(L"CB_STATEDeadScript");
+	_vec.push_back(L"CB_STATEHealScript");
 	_vec.push_back(L"CB_STATEIdleScript");
 	_vec.push_back(L"CB_STATEMeleeScript");
 	_vec.push_back(L"CB_STATEMoveScript");
@@ -98,6 +100,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CB_STATEDamagedScript;
 	if (L"CB_STATEDeadScript" == _strScriptName)
 		return new CB_STATEDeadScript;
+	if (L"CB_STATEHealScript" == _strScriptName)
+		return new CB_STATEHealScript;
 	if (L"CB_STATEIdleScript" == _strScriptName)
 		return new CB_STATEIdleScript;
 	if (L"CB_STATEMeleeScript" == _strScriptName)
@@ -191,6 +195,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::B_STATEDEADSCRIPT:
 		return new CB_STATEDeadScript;
+		break;
+	case (UINT)SCRIPT_TYPE::B_STATEHEALSCRIPT:
+		return new CB_STATEHealScript;
 		break;
 	case (UINT)SCRIPT_TYPE::B_STATEIDLESCRIPT:
 		return new CB_STATEIdleScript;
@@ -327,6 +334,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::B_STATEDEADSCRIPT:
 		return L"CB_STATEDeadScript";
+		break;
+
+	case SCRIPT_TYPE::B_STATEHEALSCRIPT:
+		return L"CB_STATEHealScript";
 		break;
 
 	case SCRIPT_TYPE::B_STATEIDLESCRIPT:

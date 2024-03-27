@@ -205,7 +205,7 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
                     float timePerFrm = ModuleData.fAnimSpeed / totalFrm;
                     int CurFrm = int(ParticleBuffer[_in.iInstID].NomalizedAge / timePerFrm) + 1;
                     if (CurFrm > totalFrm)
-                        CurFrm = totalFrm - 1;
+                        CurFrm = totalFrm;
     
     
                     int CurFrmY = CurFrm / ModuleData.iAnimXCount;

@@ -175,6 +175,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CB_FSMScript.h" />
     <ClInclude Include="CB_STATEDamagedScript.h" />
     <ClInclude Include="CB_STATEDeadScript.h" />
+    <ClInclude Include="CB_STATEHealScript.h" />
     <ClInclude Include="CB_STATEMeleeScript.h" />
     <ClInclude Include="CB_STATEIdleScript.h" />
     <ClInclude Include="CB_STATEMoveScript.h" />
@@ -223,6 +224,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CB_FSMScript.cpp" />
     <ClCompile Include="CB_STATEDamagedScript.cpp" />
     <ClCompile Include="CB_STATEDeadScript.cpp" />
+    <ClCompile Include="CB_STATEHealScript.cpp" />
     <ClCompile Include="CB_STATEMeleeScript.cpp" />
     <ClCompile Include="CB_STATEIdleScript.cpp" />
     <ClCompile Include="CB_STATEMoveScript.cpp" />

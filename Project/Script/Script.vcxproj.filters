@@ -228,6 +228,9 @@
     <ClInclude Include="CP_STATEReloadScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
+    <ClInclude Include="CB_STATEHealScript.h">
+      <Filter>Script\Creature\Boss\B_States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -367,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="CP_STATEReloadScript.cpp">
       <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CB_STATEHealScript.cpp">
+      <Filter>Script\Creature\Boss\B_States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
