@@ -341,9 +341,18 @@ enum class LAYER_TYPE
 	Default,
 	Player,
 	Monster,
+	Effect,
 	Ground,
 	Wall,
 	HitBoxPlayer,
 	HitBoxMonster,
 	END,
+};
+
+enum class COLLIDE_TYPE
+{
+	None,
+	Other,
+	Player,
+	Monster,
 };

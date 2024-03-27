@@ -13,6 +13,7 @@
 
 CEventMgr::CEventMgr()
 	: m_LevelChanged(false)
+	, m_Obj(nullptr)
 {
 
 }

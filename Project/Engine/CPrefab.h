@@ -26,6 +26,8 @@ private:
 
 public:
 	void RegisterProtoObject(CGameObject* _Proto);
+	CGameObject* GetProtoObj() { return m_ProtoObj; }
+
 
 public:
 	CPrefab();

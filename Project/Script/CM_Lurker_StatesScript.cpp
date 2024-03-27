@@ -4,7 +4,6 @@
 #include "Engine/CLevelMgr.h"
 #include "Engine\CLevel.h"
 
-eMeleeState  CM_Lurker_StatesScript::m_eMeleeState = eMeleeState::Heavy1;
 
 CM_Lurker_StatesScript::CM_Lurker_StatesScript()
 	: m_StateType(eM_States::END)

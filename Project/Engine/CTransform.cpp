@@ -153,36 +153,6 @@ void CTransform::LoadFromLevelFile(FILE* _FILE)
 }
 
 
-
-void CTransform::Move(const Vector3& _velocity)
-{
-	if (true == IsPhysicsObject())
-	{
-		CRigidBody* rigidBody = GetOwner()->RigidBody();
-		physx::PxTransform transform = rigidBody->GetPhysicsTransform();
-
-		transform.p.x += _velocity.x * CTimeMgr::GetInst()->GetDeltaTime();
-		transform.p.y += _velocity.y * CTimeMgr::GetInst()->GetDeltaTime();
-		transform.p.z += _velocity.z * CTimeMgr::GetInst()->GetDeltaTime();
-
-		ACTOR_TYPE eActorType = rigidBody->GetActorType();
-
-		if (ACTOR_TYPE::Kinematic == eActorType)
-			rigidBody->GetDynamicActor()->setKinematicTarget(transform);
-		else if (ACTOR_TYPE::Dynamic == eActorType)
-			rigidBody->GetDynamicActor()->setGlobalPose(transform);
-		else
-			AssertEx(false, L"Transform::Move() - Static Actor에 대한 Move 호출");
-	}
-
-	else
-	{
-		m_vRelativePos.x += _velocity.x * CTimeMgr::GetInst()->GetDeltaTime();
-		m_vRelativePos.y += _velocity.y * CTimeMgr::GetInst()->GetDeltaTime();
-		m_vRelativePos.z += _velocity.z * CTimeMgr::GetInst()->GetDeltaTime();
-	}
-}
-
 physx::PxVec3 CTransform::GetPhysicsPosition()
 {
 	CRigidBody* rigidBody = GetOwner()->RigidBody();
@@ -210,6 +180,10 @@ void CTransform::SetRelativeRot(Vec3 _vRot)
 {
 	if (isnan(_vRot.y))
 		_vRot.y = 0.f;
+	if (isnan(_vRot.x))
+		_vRot.x = 0.f;
+	if (isnan(_vRot.z))
+		_vRot.z = 0.f;
 
 	if (_vRot.y > 2 * 3.141592 || _vRot.y < -2 * 3.141592)
 	{

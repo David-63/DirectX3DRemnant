@@ -118,7 +118,8 @@ void CMonsterMoveScript::Trace()
 bool CMonsterMoveScript::RenewPath()
 {
 	m_RenewCount++;
-	if (m_RenewCount < 60)
+
+	if (m_RenewCount < 60) // 60프레임마다 초기화 
 		return false;
 
 	m_RenewCount = 0;

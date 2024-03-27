@@ -23,7 +23,7 @@ public:
 
 	const Vector3& GetGravity() { return mGravity; }
 	PxPhysics* GetPhysics() { return mPhysics; }
-	tRayCastInfo* RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLength);
+	tRayCastInfo* RayCast(Vec3 _rayOrigin, Vec3 _rayDirection, float _rayLength, bool _isMonster = false);
 	void ReleaseAndCreatePxScene();
 
 	static PxFilterFlags PlayerFilterShader(

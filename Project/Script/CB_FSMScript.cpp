@@ -64,11 +64,17 @@ void CB_FSMScript::begin()
 	GetOwner()->Animator3D()->Add(B_Melee_Evade_R);
 
 	GetOwner()->Animator3D()->Add(B_Melee_Idle);
-	GetOwner()->Animator3D()->Add(B_Melee_Return_Passive);
 
 	GetOwner()->Animator3D()->Add(B_NC_Idle);
 	GetOwner()->Animator3D()->Add(B_NC_Agree);
 	GetOwner()->Animator3D()->Add(B_NC_Disagree);
+
+	GetOwner()->Animator3D()->Add(B_Turn90_L);
+	GetOwner()->Animator3D()->Add(B_Turn90_R);
+	GetOwner()->Animator3D()->Add(B_Turn135_L);
+	GetOwner()->Animator3D()->Add(B_Turn135_R);
+	GetOwner()->Animator3D()->Add(B_Turn180_L);
+	GetOwner()->Animator3D()->Add(B_Turn180_R);
 
 
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEIDLESCRIPT)));
@@ -77,6 +83,7 @@ void CB_FSMScript::begin()
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEDEADSCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATERANGEDSCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEMELEESCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::B_STATEHEALSCRIPT)));
 
 	// =====================
 
@@ -171,10 +178,13 @@ CB_FSMScript::eBossMoveDir CB_FSMScript::RandomDir()
 
 void CB_FSMScript::Phase1_AnimEnd()
 {
-	++m_iAnimCount;
-
 	m_bPlaying = false;
 
+	// 보스의 
+
+
+	// === 애니메이션이 1번만 재생되면 너무 짧아서 2번 재생하게 하기 위한 코드 ===
+	++m_iAnimCount;
 	if (m_iAnimCount == 1)
 	{
 		B_MoveDir = B_MoveDir;

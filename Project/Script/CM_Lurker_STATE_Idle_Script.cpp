@@ -35,7 +35,11 @@ void CM_Lurker_STATE_Idle_Script::tick()
 			mKey = false;
 		}
 	}*/
-
+	if (!m_bAlert)
+	{
+		if (DistBetwPlayer() < 800.f)
+			m_bAlert = true;
+	}
 	
 
 	if (m_bAlert && !m_bAlertOnce)
@@ -84,6 +88,7 @@ void CM_Lurker_STATE_Idle_Script::EmergePose()
 	switch (m_pose)
 	{
 	case CM_Lurker_STATE_Idle_Script::eInitialPose::Up:
+		ChangeStateChase();
 		break;
 	case CM_Lurker_STATE_Idle_Script::eInitialPose::Down:
 		m_MHQ->Animator3D()->Play(Lurker_ALERT01, false);

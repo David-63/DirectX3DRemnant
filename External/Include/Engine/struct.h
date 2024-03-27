@@ -467,7 +467,7 @@ struct tShapeInfo
 		, massProperties(tMassProperties())
 		, filterData{}
 		, offset(0.f,0.f,0.f)
-		, isPlayer(false)
+		, CollideType(1)
 		, boneIdx(0)
 	{}
 
@@ -476,7 +476,7 @@ struct tShapeInfo
 	tMassProperties massProperties;
 	physx::PxFilterData filterData;
 	Vector3 offset;
-	bool isPlayer;
+	UINT CollideType;    //  1:Other 2:Player 3:Monster
 	int boneIdx;
 	Vector3 boneOffset;
 };

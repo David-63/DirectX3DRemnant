@@ -32,7 +32,6 @@ class CM_Lurker_StatesScript : public CC_StatesScript
 {
 protected:
 	CM_Lurker_FSMScript* m_MHQ;
-	static eMeleeState   m_eMeleeState;
 
 private:
 	eM_States           m_StateType;

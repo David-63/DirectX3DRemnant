@@ -61,6 +61,7 @@ void CM_Lurker_FSMScript::tick()
 	CC_FSMScript::tick();
 	DeathCheck();
 
+
 	if (KEY_TAP(KEY::O))
 	{
 		ChangeState((UINT)eLurkerState::Damaged);
