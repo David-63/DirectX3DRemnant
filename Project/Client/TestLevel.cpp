@@ -140,29 +140,34 @@ void CreateTestLevel()
 
 		player->SetName(L"Player");
 		player->MeshRender()->SetFrustumCheck(false);
+		player->AddComponent(new CRigidBody);
 		player->AddComponent(new CP_FSMScript());
 
-		player->AddComponent(new CRigidBody);
+		// rigidbody 에 전달할 데이터 미리 초기화
+		Vec3 playerStartPos = Vec3(0, 100.f, 0);
+		player->Transform()->SetRelativePos(playerStartPos);
+		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
 
+		// 쉐이프 정의 및 등록
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(15.f, 15.f, 15.f);
 		player->RigidBody()->PushBackShapeInfo(info);
-		player->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
-		player->SetLayerIdx(1);
 
+		// 피지컬 등록하기
 		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+
 		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
 		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
 		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
-		player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		//player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
 
-		player->AddComponent(new CCollider3D);
-		player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+		//player->AddComponent(new CCollider3D);
+		//player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 
-		SpawnGameObject(player, Vec3(0.f, 0.f, 0.f), 1);
+		SpawnGameObject(player, playerStartPos, (UINT)LAYER_TYPE::Player);
 	}
 
 	{

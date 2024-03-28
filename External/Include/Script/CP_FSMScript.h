@@ -40,82 +40,10 @@
 #define StanceDelay 0.1f
 
 // 플레이어는 몬스터와 다르게 장비중인 무기에 따라 스텟이 달라짐
-enum class eInpStance
-{
-    Crouch,
-    Aim,
-    Sprint,
-    Mouse,
-    End,
-};
-
-enum class eStanceCheck
-{
-    IsChange,
-    IsFrontDir,
-    End,
-};
 
 class CP_FSMScript : public CC_FSMScript
 {
 public:
-    enum class ePlayerStance
-    {
-        Normal,
-        Sprint,
-        Crouch,
-        Aim,
-        Dodge,
-        End,
-    };
-    struct tPlayerStat
-    {
-        float MoveSpeed;
-        tPlayerStat() : MoveSpeed(1500.f) {}
-    };
-    struct tP_Info
-    {
-        tPlayerStat     P_Stat;
-        tHealthStat     P_Health;   // Creature FSM 에 명시되어 있음
-    };
-    struct tP_LongGunInfo
-    {
-        int CurAmmo;
-        int MaxAmmo;
-        float Damage;
-        float FireLate;
-        float ReloadSpeed;
-
-        tP_LongGunInfo() : CurAmmo(12), MaxAmmo(12), Damage(12), FireLate(0.22f), ReloadSpeed(0.22f) {}
-
-        bool IsAble() { return (0 < CurAmmo) ? true : false; }
-
-        bool Fire()
-        {
-            if (0 >= CurAmmo)
-                return false;
-
-            CurAmmo--;
-            return true;
-        }
-
-        bool Reload()
-        {
-            if (MaxAmmo <= CurAmmo)
-                return false;
-            CurAmmo++;
-            return true;
-        }
-        bool ReloadMag()
-        {
-            if (MaxAmmo <= CurAmmo)
-                return false;
-            CurAmmo = MaxAmmo;
-            return true;
-        }
-    };
-
-
 private:
     tP_Info             m_PlayerInfo;
     tP_LongGunInfo      m_LongGunInfo;
@@ -136,6 +64,11 @@ public:
     virtual void tick() override;
 
 private:
+    void initState();
+    void initAnim();
+    void initWeapon();
+
+private:
     void stanceControl();
     void dirInput();
     void stanceInput();
@@ -148,8 +81,8 @@ public:
 
 public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
-    ePlayerStance GetStance() { return P_Stance; }
-    tP_Info GetPlayerInfo() { return m_PlayerInfo; }
+    ePlayerStance* GetStance() { return &P_Stance; }
+    tP_Info* GetPlayerInfo() { return &m_PlayerInfo; }
     tP_LongGunInfo* GetLongGunInfo() { return &m_LongGunInfo; }
     CP_MouseCtrlScript* GetMouseController() { return &m_MouseCtrl; }
 public:
@@ -171,7 +104,7 @@ public:
     void InputMove(Vec2 _input) { m_moveDir += _input; }
     void InputMove(int _inputX, int _inputY) { m_moveDir += Vec2(_inputX, _inputY); }
     void ClearMoveDir() { m_moveDir = Vec2(0, 0); }
-    Vec2 GetMoveDir() { return m_moveDir; }
+    Vec2* GetMoveDir() { return &m_moveDir; }
 
 public:
     void GotoIdle();

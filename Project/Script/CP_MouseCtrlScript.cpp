@@ -55,6 +55,9 @@ CP_MouseCtrlScript::~CP_MouseCtrlScript()
 
 void CP_MouseCtrlScript::begin()
 {
+	m_PlayerStance = m_PHQ->GetStance();
+
+	
 }
 
 void CP_MouseCtrlScript::tick()
@@ -109,15 +112,14 @@ void CP_MouseCtrlScript::ctrlMovePos()
 void CP_MouseCtrlScript::ctrlMoveRot()
 {
 	// Find stance or state about Rotation Mode
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 	eP_States stateType = static_cast<eP_States>(m_PHQ->GetCurStateType());
 
 	bool justRotCam = false;
 	if (eP_States::IDLE == stateType)
 	{
-		if (CP_FSMScript::ePlayerStance::Normal == curStance
-			|| CP_FSMScript::ePlayerStance::Crouch == curStance
-			|| CP_FSMScript::ePlayerStance::Dodge == curStance)
+		if (ePlayerStance::Normal == *m_PlayerStance
+			|| ePlayerStance::Crouch == *m_PlayerStance
+			|| ePlayerStance::Dodge == *m_PlayerStance)
 			justRotCam = true;
 	}
 

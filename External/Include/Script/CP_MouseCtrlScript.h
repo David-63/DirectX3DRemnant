@@ -65,6 +65,7 @@ private:
 	};
 private:
 	CP_FSMScript*	m_PHQ;
+	ePlayerStance*	m_PlayerStance;
 	CCamera*		m_ctrlCam;
 	tCameraInfo		m_CamInfo;
 	bool			m_IsChangeStance;
