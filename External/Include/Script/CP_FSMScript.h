@@ -51,7 +51,6 @@ private:
 private:
     CP_MouseCtrlScript  m_MouseCtrl;
     CGameObject*        m_Weapon;
-    CGameObject*        m_LongGun;
 
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
@@ -67,7 +66,7 @@ private:
     void initState();
     void initAnim();
     void initWeapon();
-    void initCollider();
+
 private:
     void stanceControl();
     void dirInput();
@@ -77,6 +76,15 @@ public:
     void PlayAnimation(wstring _name, bool _repeat);
     void OverrideObjRotY() { m_MouseCtrl.OverrideObjRotY(); }
     void DoDodge();
+
+
+public:
+    void SetWeapon(CGameObject* _obj)
+    {
+        m_Weapon = _obj;
+        m_MouseCtrl.SetWeaponObj(m_Weapon);
+    }
+
 
 
 public:

@@ -47,35 +47,32 @@ void CreateTestLevel()
 	CCollisionMgr::GetInst()->SetColLayer(2, 5);
 
 	// camera
+	// Main Camera Object 생성
+	CGameObject* pMainCam = new CGameObject;
+	pMainCam->SetName(L"MainCamera");
+
+	pMainCam->AddComponent(new CTransform);
+	pMainCam->AddComponent(new CCamera);
+	//pMainCam->AddComponent(new CCameraMoveScript);
+	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
+	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
+	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
+	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
+	pMainCam->Camera()->SetFar(20000.f);
+	SpawnGameObject(pMainCam, Vec3(200.f, 133.f, -500.f), 0);
+
+	// UI cameara
+	CGameObject* pUICam = new CGameObject;
+	pUICam->SetName(L"UICamera");
+
+	pUICam->AddComponent(new CTransform);
+	pUICam->AddComponent(new CCamera);
+
+	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
+	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
+	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
+	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
 	
-		// Main Camera Object 생성
-		CGameObject* pMainCam = new CGameObject;
-		pMainCam->SetName(L"MainCamera");
-
-		pMainCam->AddComponent(new CTransform);
-		pMainCam->AddComponent(new CCamera);
-		pMainCam->AddComponent(new CCameraMoveScript);
-		pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
-		pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
-		pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
-		pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
-		pMainCam->Camera()->SetFar(20000.f);
-		SpawnGameObject(pMainCam, Vec3(200.f, 133.f, -500.f), 0);
-
-		// UI cameara
-		CGameObject* pUICam = new CGameObject;
-		pUICam->SetName(L"UICamera");
-
-		pUICam->AddComponent(new CTransform);
-		pUICam->AddComponent(new CCamera);
-
-		pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
-		pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
-		pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
-		SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
-
-
-	//
 
 
 	// SkyBox 추가
@@ -140,15 +137,22 @@ void CreateTestLevel()
 
 		player->SetName(L"Player");
 		player->MeshRender()->SetFrustumCheck(false);
-		player->AddComponent(new CRigidBody);
-		player->AddComponent(new CP_FSMScript());
+		CP_FSMScript* pFSM = new CP_FSMScript();
+		player->AddComponent(pFSM);
 
 		// rigidbody 에 전달할 데이터 미리 초기화
 		Vec3 playerStartPos = Vec3(0, 100.f, 0);
 		player->Transform()->SetRelativePos(playerStartPos);
 		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
+		CGameObject* weapon = pMeshData->InstMesh();
+		weapon->MeshRender()->SetFrustumCheck(false);
+		weapon->SetName(L"LongGun");
+		pFSM->SetWeapon(weapon);
+		player->AddChild(weapon);
 
-		// 쉐이프 정의 및 등록
+		//// 쉐이프 정의 및 등록
+		player->AddComponent(new CRigidBody);
 		tShapeInfo info = {};								// foot
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(15.f, 15.f, 15.f);
@@ -168,7 +172,8 @@ void CreateTestLevel()
 		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
 		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-
+		
+		////////////////////////
 		//player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
 
 		//player->AddComponent(new CCollider3D);

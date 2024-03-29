@@ -2,9 +2,8 @@
 #include <Engine/CScript.h>
 #include <Engine/CGameObject.h>
 
-#define PIVOT_HIGH 150
-#define PIVOT_MIDDLE 120
-#define PIVOT_LOW 95
+#define PIVOT_HIGH 150 // 70
+#define PIVOT_LOW 95 // 25
 
 #define FOV_HIGH XM_PI / 2.25f
 #define FOV_LOW XM_PI / 5.75f
@@ -96,7 +95,7 @@ public:
 public:
 	void SetOwner(CP_FSMScript* _owner) { m_PHQ = _owner; }
 	void SetMainCam(CCamera* _cam) { m_ctrlCam = _cam; }
-	void SetWeaponObj(CGameObject* _parent, CGameObject* _child) { m_Weapon = _parent; m_LongGun = _child; }
+	void SetWeaponObj(CGameObject* _obj) { m_Weapon = _obj; }
 	void ChangeWeaponMatrix(UINT _rotMat) { m_CurRotMat = m_RotMat[_rotMat]; }
 
 	void SetPivot(float _value) { m_PivotValue.SetValue(_value); }

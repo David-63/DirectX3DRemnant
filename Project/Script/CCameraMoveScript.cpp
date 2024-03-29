@@ -106,18 +106,6 @@ void CCameraMoveScript::Camera3DMove()
 		vPos += DT * vRight * fSpeed;
 	}
 
-
-	//if (KEY_HOLD(KEY::LCTRL))
-	//{
-	//	vPos -= DT * vUp * fSpeed;
-	//}
-
-
-	//if (KEY_HOLD(KEY::SPACE))
-	//{
-	//	vPos += DT * vUp * fSpeed;
-	//}
-
 	if (KEY_HOLD(KEY::RBTN))
 	{
 		Vec2 vMouseDir = CKeyMgr::GetInst()->GetMouseDir();

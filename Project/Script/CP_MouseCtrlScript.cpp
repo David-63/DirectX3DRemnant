@@ -149,7 +149,7 @@ void CP_MouseCtrlScript::ctrlMoveRot()
 		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, 0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
-		m_Weapon->Transform()->SetRelativeRot(outObjEuler);
+		//m_Weapon->Transform()->SetRelativeRot(outObjEuler);
 	}
 }
 
@@ -165,21 +165,15 @@ void CP_MouseCtrlScript::mouseRock()
 
 void CP_MouseCtrlScript::updateWeaponMatrix()
 {
-	// Get BoneMatrix
 	Matrix retBoneMat = m_PHQ->Animator3D()->GetBoneMatrix(176);
 	retBoneMat._44 = 1;
-
-	// Apply parent position
-	Matrix ownerMat = m_PHQ->Transform()->GetWorldMat();
-	Matrix totalMat = retBoneMat * ownerMat;	
-	Vec3 bonePosition = totalMat.Translation();	
+	Vec3 bonePosition = retBoneMat.Translation();
 	m_Weapon->Transform()->SetRelativePos(bonePosition);
 
-	// Apply child rotation (CurRotMat was changed by FSM)
 	Matrix weaponMat = retBoneMat * m_CurRotMat;
 	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(weaponMat);
 	Vec3 boneRot = QuatToEuler(boneQRot);
-	m_LongGun->Transform()->SetRelativeRot(boneRot);
+	m_Weapon->Transform()->SetRelativeRot(boneRot);
 }
 
 

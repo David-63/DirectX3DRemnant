@@ -19,7 +19,6 @@ void CP_FSMScript::begin()
 	initState();
 	initAnim();
 	initWeapon();
-	initCollider();
 	PlayAnimation(P_R2Idle, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));	
 }
@@ -106,34 +105,12 @@ void CP_FSMScript::initAnim()
 
 void CP_FSMScript::initWeapon()
 {
-	if (nullptr == m_Weapon)
-	{
-		m_Weapon = new CGameObject();
-		m_Weapon->AddComponent(new CTransform());
-		m_Weapon->SetName(L"LongGun");
-	}
-	if (nullptr == m_LongGun)
-	{
-		Ptr<CMeshData> pMeshData = nullptr; 
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
-
-		m_LongGun = pMeshData->InstMesh();
-		m_LongGun->MeshRender()->SetFrustumCheck(false);
-		m_LongGun->SetName(L"AR");
-	}
-	SpawnGameObject(m_Weapon, Vec3(0.f, 0.f, 0.f), 1);
-	m_Weapon->AddChild(m_LongGun);
-
 	m_MouseCtrl.SetOwner(this);
-	m_MouseCtrl.SetWeaponObj(m_Weapon, m_LongGun);
-	m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
+	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
+	m_MouseCtrl.SetMainCam(cam);
 	m_MouseCtrl.begin();
 }
 
-void CP_FSMScript::initCollider()
-{
-	
-}
 
 void CP_FSMScript::stanceControl()
 {
