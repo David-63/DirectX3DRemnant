@@ -92,8 +92,7 @@ void CAnimator3D::finaltick()
 		animaTick();
 		if (m_blendTime.IsActivate())
 			blendTick();
-	}
-	
+	}	
 }
 
 void CAnimator3D::animaTick()

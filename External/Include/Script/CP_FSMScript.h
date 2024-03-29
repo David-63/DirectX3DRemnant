@@ -67,7 +67,7 @@ private:
     void initState();
     void initAnim();
     void initWeapon();
-
+    void initCollider();
 private:
     void stanceControl();
     void dirInput();

@@ -42,8 +42,8 @@ void CreateTestLevel()
 
 	CCollisionMgr::GetInst()->SetColLayer(1, 2);
 	CCollisionMgr::GetInst()->SetColLayer(1, 3);
-	CCollisionMgr::GetInst()->SetColLayer(2, 3);
 	CCollisionMgr::GetInst()->SetColLayer(1, 5);
+	CCollisionMgr::GetInst()->SetColLayer(2, 3);
 	CCollisionMgr::GetInst()->SetColLayer(2, 5);
 
 	// camera
@@ -149,11 +149,18 @@ void CreateTestLevel()
 		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
 
 		// 쉐이프 정의 및 등록
-		tShapeInfo info = {};
+		tShapeInfo info = {};								// foot
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(15.f, 15.f, 15.f);
 		player->RigidBody()->PushBackShapeInfo(info);
-
+		info = {};											// head
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(35.f, 35.f, 35.f);
+		player->RigidBody()->PushBackShapeInfo(info);
+		info = {};											// body
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(55.f, 55.f, 55.f);
+		player->RigidBody()->PushBackShapeInfo(info);
 		// 피지컬 등록하기
 		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 

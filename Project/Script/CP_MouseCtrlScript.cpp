@@ -168,7 +168,6 @@ void CP_MouseCtrlScript::updateWeaponMatrix()
 	// Get BoneMatrix
 	Matrix retBoneMat = m_PHQ->Animator3D()->GetBoneMatrix(176);
 	retBoneMat._44 = 1;
-	CAnimClip* curAnim = m_PHQ->Animator3D()->GetCurAnim();
 
 	// Apply parent position
 	Matrix ownerMat = m_PHQ->Transform()->GetWorldMat();

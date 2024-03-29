@@ -19,7 +19,7 @@ void CP_FSMScript::begin()
 	initState();
 	initAnim();
 	initWeapon();
-
+	initCollider();
 	PlayAnimation(P_R2Idle, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));	
 }
@@ -29,6 +29,17 @@ void CP_FSMScript::tick()
 	stanceControl();			// 먼저 호출해도 이상 없을듯 (변동사항이 있는 경우 애니메이션을 호출함)
 	CC_FSMScript::tick();		// 현재 State의 tick을 호출함
 	m_MouseCtrl.tick();			// 마우스 할일 함, 딱히 바꿔주는건 없음
+
+
+	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
+	retBoneMat._44 = 1;
+	Vec3 bonePosition = retBoneMat.Translation();
+	RigidBody()->SetShapeLocalPos(1, bonePosition);
+	retBoneMat = Animator3D()->GetBoneMatrix(10);
+	retBoneMat._44 = 1;
+	bonePosition = retBoneMat.Translation();
+	RigidBody()->SetShapeLocalPos(2, bonePosition);
+
 
 	if (m_TogleInput[(UINT)eInpStance::Mouse])
 	{
@@ -97,24 +108,31 @@ void CP_FSMScript::initWeapon()
 {
 	if (nullptr == m_Weapon)
 	{
-		Ptr<CMeshData> pMeshData = nullptr;
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
-
 		m_Weapon = new CGameObject();
 		m_Weapon->AddComponent(new CTransform());
 		m_Weapon->SetName(L"LongGun");
-		SpawnGameObject(m_Weapon, Vec3(0.f, 0.f, 0.f), 1);
+	}
+	if (nullptr == m_LongGun)
+	{
+		Ptr<CMeshData> pMeshData = nullptr; 
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
 
 		m_LongGun = pMeshData->InstMesh();
 		m_LongGun->MeshRender()->SetFrustumCheck(false);
 		m_LongGun->SetName(L"AR");
-		m_Weapon->AddChild(m_LongGun);
-
-		m_MouseCtrl.SetOwner(this);
-		m_MouseCtrl.SetWeaponObj(m_Weapon, m_LongGun);
-		m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
 	}
+	SpawnGameObject(m_Weapon, Vec3(0.f, 0.f, 0.f), 1);
+	m_Weapon->AddChild(m_LongGun);
+
+	m_MouseCtrl.SetOwner(this);
+	m_MouseCtrl.SetWeaponObj(m_Weapon, m_LongGun);
+	m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
 	m_MouseCtrl.begin();
+}
+
+void CP_FSMScript::initCollider()
+{
+	
 }
 
 void CP_FSMScript::stanceControl()
