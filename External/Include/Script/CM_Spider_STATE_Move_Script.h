@@ -40,28 +40,22 @@ private:
 	bool                m_bJustTurnOnce;
 	float               m_fJustTurnSpeed;
 
-	//MoveStart
+	//Move
 	bool       m_bMoveStartOnce;
-	bool       m_bEnterSign;
-	bool       m_bTurnAtStart;
 
-	//renewPath
-	bool	   m_bPathRenewed;
-	bool       m_bGetDirOnce;
-	bool       m_bTurnAtRenew;
-
-	//catchCheck
-	int        m_iCatchStage;
 
 	//GetBack
 	int        m_iGetBackStage;
+	bool       m_bBackProgress;
+	bool       m_bBackAniOnce;
 
 	bool mKey;
 	bool       m_bEnterDistCheck;
 
 	bool       m_bDirCheck;
 	Vec3       m_vToPlayerDir;
-	bool       m_bDirAccord;
+	bool       m_bShootReady;
+	float      m_fToPlayerDegree;
 
 	class CMonsterMoveScript* m_CMoveScript;
 	eAtkState m_eAtkInMove;
@@ -77,16 +71,13 @@ private:
 	void Clear();
 	bool AniTurn(Vec3 _dir);
 	bool JustTurn(Vec3 _dir);
-	Vec3 CalMoveDir();
-	bool MoveStart();
-	void CatchCheck();
-	void RenewPath();
-	void DecidePattern();
-	bool DistCheck();
-	void GetBack();
-	void RotationReset();
 
+	void RenewPath();
+
+	void GetBack();
 	bool ShootTest();
+	void TurnAction();
+	void ActionByDist();
 
 
 	void TurnComplete180();

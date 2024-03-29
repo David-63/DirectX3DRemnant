@@ -117,15 +117,15 @@ Vec3 CPathFinderScript::TransYXToPos(tYX _coord)
 {
 	Vec3 pos = {};
 
-	if (_coord.x > 250)
-		pos.x = (_coord.x - 250)* m_fLength - m_fLength / 2.f;
+	if (_coord.x > m_iXCount / 2)
+		pos.x = (_coord.x - m_iXCount / 2)* m_fLength - m_fLength / 2.f;
 	else
-		pos.x = -(251 - _coord.x)* m_fLength + m_fLength / 2.f;
+		pos.x = -(m_iXCount / 2 + 1 - _coord.x)* m_fLength + m_fLength / 2.f;
 	
-	if (_coord.y > 250)
-		pos.z = (_coord.y - 250) * m_fLength - m_fLength / 2.f;
+	if (_coord.y > m_iYCount / 2)
+		pos.z = (_coord.y - m_iYCount / 2) * m_fLength - m_fLength / 2.f;
 	else
-		pos.z = -(251 - _coord.y) * m_fLength + m_fLength / 2.f;
+		pos.z = -(m_iYCount / 2 + 1 - _coord.y) * m_fLength + m_fLength / 2.f;
 	
 	return pos;
 }
@@ -227,7 +227,7 @@ void CPathFinderScript::FindPath()
 	pCurNode->iIdxY = m_iCurPosY;
 	pCurNode->bClosed = true;
 	pCurNode->fFromParent = 0;
-	m_ArrNode[iCurY * 1000 + iCurX] = pCurNode;
+	m_ArrNode[iCurY * 10000 + iCurX] = pCurNode;
 
 	while (true)
 	{
@@ -397,7 +397,7 @@ void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin,eBl
 		return;
 	}
 
-	auto iter = m_ArrNode.find(_iYIdx * 1000 + _iXIdx);
+	auto iter = m_ArrNode.find(_iYIdx * 10000 + _iXIdx);
 	//해당 키값이 있으면서 
 	if (iter != m_ArrNode.end())
 	{
@@ -416,36 +416,36 @@ void CPathFinderScript::AddOpenList(int _iXIdx, int _iYIdx, tPNode* _pOrigin,eBl
 		tPNode* pCurNode = new tPNode;
 		pCurNode->iIdxX = _iXIdx;
 		pCurNode->iIdxY = _iYIdx;
-		m_ArrNode[_iYIdx * 1000 + _iXIdx] = pCurNode;
+		m_ArrNode[_iYIdx * 10000 + _iXIdx] = pCurNode;
 	}
 
 	// Open List 에 비용을 계산해서 넣는다.
-	if (false == m_ArrNode[_iYIdx * 1000 + _iXIdx]->bOpen)
+	if (false == m_ArrNode[_iYIdx * 10000 + _iXIdx]->bOpen)
 	{
-		CalculateCost(m_ArrNode[_iYIdx * 1000 + _iXIdx], _pOrigin, _bDiagonal);
+		CalculateCost(m_ArrNode[_iYIdx * 10000 + _iXIdx], _pOrigin, _bDiagonal);
 		// Open List 에 넣는다.
-		m_ArrNode[_iYIdx * 1000 + _iXIdx]->bOpen = true;
-		m_OpenList.push(m_ArrNode[_iYIdx * 1000 + _iXIdx]);
+		m_ArrNode[_iYIdx * 10000 + _iXIdx]->bOpen = true;
+		m_OpenList.push(m_ArrNode[_iYIdx * 10000 + _iXIdx]);
 	}
 	else // 이미 OpenList 에 있는 경우,
 	{
 		//비용을 계산해서 더 효율이 좋은 것으로 대체한다.
-		tPNode* pNodePtr = m_ArrNode[_iYIdx * 1000 + _iXIdx];
+		tPNode* pNodePtr = m_ArrNode[_iYIdx * 10000 + _iXIdx];
 		tPNode* copy = new tPNode(*pNodePtr);
 
 		CalculateCost(copy, _pOrigin, _bDiagonal); //카피의 코스트를 계산
 
-		if (m_ArrNode[_iYIdx * 1000 + _iXIdx]->fFinal > copy->fFinal)
+		if (m_ArrNode[_iYIdx * 10000 + _iXIdx]->fFinal > copy->fFinal)
 		{
 			//기존 노드 제거
 			EraseInOpenList(m_OpenList, _iYIdx, _iXIdx);
-			delete m_ArrNode[_iYIdx * 1000 + _iXIdx];
-			m_ArrNode[_iYIdx * 1000 + _iXIdx] = nullptr;
-			m_ArrNode.erase(_iYIdx * 1000 + _iXIdx);
+			delete m_ArrNode[_iYIdx * 10000 + _iXIdx];
+			m_ArrNode[_iYIdx * 10000 + _iXIdx] = nullptr;
+			m_ArrNode.erase(_iYIdx * 10000 + _iXIdx);
 
 			//카피 삽입
-			m_ArrNode[_iYIdx * 1000 + _iXIdx] = copy;
-			m_OpenList.push(m_ArrNode[_iYIdx * 1000 + _iXIdx]);
+			m_ArrNode[_iYIdx * 10000 + _iXIdx] = copy;
+			m_OpenList.push(m_ArrNode[_iYIdx * 10000 + _iXIdx]);
 
 			// 오픈리스트(우선순위큐) 재설정
 			Rebuild(m_OpenList);

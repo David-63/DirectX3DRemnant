@@ -312,7 +312,7 @@ void CRigidBody::ApplyGravity()
 	if (true == mbAppliedPhysics)
 	{
 		AssertEx(ACTOR_TYPE::Dynamic == mActorType, L"RigidBody::ApplyGravity() - Dynamic Actor가 아닌 물체에 대한 ApplyGravity() 호출 시도");
-		GetDynamicActor()->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, false);
+		GetDynamicActor()->setActorFlag(physx::PxActorFlag::eDISABLE_GRAVITY, true);
 	}
 
 	mbAppliedGravity = true;
@@ -446,6 +446,34 @@ void CRigidBody::SetShapeLocalPosByBone(int _idx, UINT _boneIdx)
 		return;
 
 	tMTBone bone = GetOwner()->Animator3D()->GetMTBoneData(_boneIdx);
+	if (bone.vecKeyFrame.size() == 0)
+		return;
+
+	Matrix retBoneMat = GetOwner()->Animator3D()->GetBoneMatrix(_boneIdx);
+	retBoneMat._44 = 0;
+
+	Matrix ownerMat = GetOwner()->Transform()->GetWorldMat();
+	Matrix totalMat = retBoneMat * ownerMat;
+	Vec3 bonePosition = totalMat.Translation();
+	
+	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(retBoneMat);
+
+	PxTransform tr;
+	tr.p.x = bonePosition.x;
+	tr.p.y = bonePosition.y;
+	tr.p.z = bonePosition.z;
+
+	tr.q.x = boneQRot.x;
+	tr.q.y = boneQRot.y;
+	tr.q.z = boneQRot.z;
+	tr.q.w = boneQRot.w;
+
+	mShapes[_idx]->setLocalPose(tr);
+
+	/*if (nullptr == GetOwner()->Animator3D() || nullptr == GetOwner()->Animator3D()->GetCurAnim())
+		return;
+
+	tMTBone bone = GetOwner()->Animator3D()->GetMTBoneData(_boneIdx);
 	int FrameIdx = GetOwner()->Animator3D()->GetCurFrame();
 
 	if (bone.vecKeyFrame.size() == 0)
@@ -460,13 +488,12 @@ void CRigidBody::SetShapeLocalPosByBone(int _idx, UINT _boneIdx)
 	localpose.q = GetPhysicsTransform().q;
 
 	mShapes[_idx]->setLocalPose(localpose);
-	mShapeInfos[_idx].offset = bonePos;
+	mShapeInfos[_idx].offset = bonePos;*/
 }
 
-void CRigidBody::SetBoneSoket(int _shapeIdx, int _boneIdx, Vec3 _offset)
+void CRigidBody::SetBoneSoket(int _shapeIdx, int _boneIdx)
 {
 	mShapeInfos[_shapeIdx].boneIdx = _boneIdx;
-	mShapeInfos[_shapeIdx].boneOffset = _offset;
 	m_bSoketUse = true;
 }
 

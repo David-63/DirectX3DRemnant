@@ -1,21 +1,25 @@
 #pragma once
 #include "CB_StateScript.h"
-class CB_STATEDeadScript :
+
+
+
+class CB_STATEHealScript :
     public CB_StateScript
 {
+
 public:
     virtual void begin() override;
+
     virtual void Enter() override;
     virtual void tick() override;
     virtual void Exit() override;
 
-
 public:
-    void Dead();
+    CLONE(CB_STATEHealScript);
+    CB_STATEHealScript();
+    virtual ~CB_STATEHealScript();
 
-public:
-    CLONE(CB_STATEDeadScript);
-    CB_STATEDeadScript();
-    virtual ~CB_STATEDeadScript();
+
+
 };
 

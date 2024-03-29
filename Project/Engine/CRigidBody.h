@@ -96,7 +96,7 @@ public:
 	void SetShapeLocalPos(int _idx, Vec3 _localPos);
 
 	void SetShapeLocalPosByBone(int _idx, UINT _boneIdx);
-	void SetBoneSoket(int _shapeIdx, int _boneIdx, Vec3 _offset);
+	void SetBoneSoket(int _shapeIdx, int _boneIdx);
 
 
 	void AttachShape(int _idx);

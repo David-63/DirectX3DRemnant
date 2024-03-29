@@ -4,6 +4,7 @@
 
 CM_Lurker_FSMScript::CM_Lurker_FSMScript()
 {
+	SetScriptType(SCRIPT_TYPE::M_LURKER_FSMSCRIPT);
 }
 
 CM_Lurker_FSMScript::~CM_Lurker_FSMScript()
@@ -54,6 +55,8 @@ void CM_Lurker_FSMScript::begin()
 
 	ChangeState(static_cast<UINT>(eLurkerState::Idle));
 	//ChangeState(static_cast<UINT>(eLurkerState::Move));
+
+
 }
 
 void CM_Lurker_FSMScript::tick()

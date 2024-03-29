@@ -484,7 +484,6 @@ struct tShapeInfo
 	Vector3 offset;
 	UINT CollideType;    //  1:Other 2:Player 3:Monster
 	int boneIdx;
-	Vector3 boneOffset;
 };
 
 struct tRayCastInfo

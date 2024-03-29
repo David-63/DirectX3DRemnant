@@ -32,6 +32,8 @@ private:
 	tM_Info      m_tMonsterInfo;
 	CGameObject*  m_Gun;
 
+	
+
 
 public:
 	virtual void begin() override;
