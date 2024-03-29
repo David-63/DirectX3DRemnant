@@ -9,6 +9,7 @@ enum class eB_States
 	RANGED, // 원거리 공격
 	MELEE, // 근접 공격
 	DAMAGED,
+	HEAL, // 블러드 드링크 
 	DEAD,
 	END,
 };

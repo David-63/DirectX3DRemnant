@@ -9,9 +9,8 @@
 
 
 CM_Spider_STATE_Move_Script::CM_Spider_STATE_Move_Script()
-	: m_iCatchStage(0)
-	, m_fAniTurnSpeed(1.f)
-	, m_fJustTurnSpeed(2.f)
+	: m_fAniTurnSpeed(2.f)
+	, m_fJustTurnSpeed(3.f)
 	, m_iGetBackStage(0)
 
 {
@@ -39,119 +38,9 @@ void CM_Spider_STATE_Move_Script::begin()
 
 void CM_Spider_STATE_Move_Script::tick()
 {
-	/*if (KEY_TAP(KEY::Y))
-	{
-		mKey = true;
-	}
+	TurnAction();
+	ActionByDist();
 
-	if (mKey)
-	{
-
-		if (JustTurn(Vec3(1.0, 0.f, 0.f)))
-		{
-			mKey = false;
-		}
-	}*/
-
-
-	if (!m_bDirCheck)
-	{
-		m_vToPlayerDir = GetToPlayerDir();
-		m_bDirCheck = true;
-	}
-	else
-	{
-		float ToPlayerDegree = CalTurnDegree(m_vToPlayerDir);
-		ToPlayerDegree = abs(ToPlayerDegree);
-
-		if (ToPlayerDegree < 0.1f)
-			m_bDirAccord = true;
-
-		if (!m_bDirAccord)
-		{
-			if (ToPlayerDegree < 10.f)
-			{
-				if (JustTurn(m_vToPlayerDir))
-				{
-					m_bDirCheck = false;
-				}
-			}
-			else
-			{
-				if (AniTurn(m_vToPlayerDir))
-				{
-					m_bDirCheck = false;
-				}
-			}
-		}
-	}
-
-
-	float dist = DistBetwPlayer();
-	if (dist < 220.f)
-	{
-		m_CMoveScript->SetNearPlayer(true);
-		dynamic_cast<CM_Spider_STATE_Atk_Script*>(m_MHQ->FindStateScript((UINT)eM_A_States::ATTACK))->SetAtkState(eAtkState::Push);
-		m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
-		return;
-	}
-	else
-	{
-		m_CMoveScript->SetNearPlayer(false);
-	}
-
-	if (220.f <= dist && dist <= 300.f)
-	{
-		m_MHQ->Animator3D()->Play(Spi_WalkB, true);
-		m_MHQ->GetGun()->Animator3D()->Play(SpiGun_WalkB, true);
-
-		GetBack();
-	}
-	else if (300.f < dist && dist <= 2000.f)
-	{
-		if (!m_bDirAccord)
-			return;
-
-		if (ShootTest())
-		{
-			dynamic_cast<CM_Spider_STATE_Atk_Script*>(m_MHQ->FindStateScript((UINT)eM_A_States::ATTACK))->SetAtkState(eAtkState::Shoot);
-			m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
-		}
-		else
-		{
-
-		}
-	}
-
-	
-
-	
-
-	/*if (m_bEnterDistCheck)
-	{
-		if (dist < 180.f)
-			GetBack();
-		else
-		{
-			m_bEnterDistCheck = false;
-			m_iGetBackStage = 0;
-		}
-	}
-	else
-	{
-		if (m_bEnterSign)
-		{
-			if (MoveStart())
-				m_bEnterSign = false;
-		}
-		else
-		{
-			if (m_iCatchStage == 0)
-				RenewPath();
-
-			CatchCheck();
-		}
-	}*/
 }
 
 void CM_Spider_STATE_Move_Script::Clear()
@@ -164,16 +53,11 @@ void CM_Spider_STATE_Move_Script::Clear()
 	m_BTurned135R = false;
 	m_bTurnBtn = false;
 	m_bMoveStartOnce = false;
-	m_bEnterSign = false;
-	m_bTurnAtStart = false;
-	m_bPathRenewed = false;
-	m_bGetDirOnce = false;
-	m_bTurnAtRenew = false;
 	m_fElapsedTime = 0.f;
-	m_iCatchStage = 0;
 
 	m_bDirCheck = false;
-	m_bDirAccord = false;
+	m_bShootReady = false;
+	m_bBackProgress = false;
 }
 
 bool CM_Spider_STATE_Move_Script::AniTurn(Vec3 _dir)
@@ -291,204 +175,11 @@ bool CM_Spider_STATE_Move_Script::JustTurn(Vec3 _dir)
 	return false;
 }
 
-Vec3 CM_Spider_STATE_Move_Script::CalMoveDir()
-{
-	std::stack<Vec3>* stack = m_CMoveScript->GetStack();
-
-	if (stack->size() <= 2)
-		return Vec3(0.f, 0.f, 0.f);
-
-	Vec3 startPos = stack->top();
-	stack->pop();
-	Vec3 secondPos = stack->top();
-	stack->push(startPos);
-
-	Vec3 dir = secondPos - startPos;
-	dir = dir.Normalize();
-
-	return dir;
-}
-
-bool CM_Spider_STATE_Move_Script::MoveStart()
-{
-	if (!m_bMoveStartOnce)
-	{
-		m_CMoveScript->SetAndGetPath(GetPlayer());
-
-		RotationReset();
-		float prevDegree = CalTurnDegree(m_vTurndir);
-
-		m_vTurndir = CalMoveDir();
-		float curDegree = CalTurnDegree(m_vTurndir);
-		float diff = abs(prevDegree - curDegree);
-
-		if (diff > 70.f)
-			m_bUseAniTurn = true;
-		else
-			m_bUseAniTurn = false;
-
-		if (diff < 10.f && DistBetwPlayer() < 200.f)
-			return true;
-
-		m_bMoveStartOnce = true;
-	}
-
-	if (m_bUseAniTurn)
-	{
-		if (AniTurn(m_vTurndir))
-		{
-			m_CMoveScript->MoveOn(true);
-			m_bMoveStartOnce = false;
-			m_bEnterSign = false;
-
-			return true;
-		}
-	}
-	else
-	{
-		if (JustTurn(m_vTurndir))
-		{
-			m_CMoveScript->MoveOn(true);
-			m_bMoveStartOnce = false;
-			m_bEnterSign = false;
-
-			return true;
-		}
-	}
-
-	return false;
-}
-
-void CM_Spider_STATE_Move_Script::CatchCheck()
-{
-	if (m_iCatchStage == 0)
-	{
-	/*	switch (m_eAtkInMove)
-		{
-		case eAtkState::Dash:
-			if (DistBetwPlayer() < 450.f)
-			{
-				m_vToPlayerDir = GetToPlayerDir();
-				m_iCatchStage++;
-			}
-			break;
-		case eAtkState::Heavy1:
-			if (DistBetwPlayer() < 350.f)
-			{
-				m_vToPlayerDir = GetToPlayerDir();
-				m_iCatchStage++;
-			}
-			break;
-		case eAtkState::Slash:
-			if (DistBetwPlayer() < 250.f)
-			{
-				m_vToPlayerDir = GetToPlayerDir();
-				m_iCatchStage++;
-			}
-			break;
-		default:
-			break;
-		}
-	}
-	else if (m_iCatchStage == 1)
-	{
-		switch (m_eAtkInMove)
-		{
-		case eAtkState::Dash:
-			if (JustTurn(m_vToPlayerDir))
-				m_iCatchStage++;
-			break;
-		case eAtkState::Heavy1:
-			if (JustTurn(m_vToPlayerDir))
-				m_iCatchStage++;
-			break;
-		case eAtkState::Slash:
-			if (JustTurn(m_vToPlayerDir))
-				m_iCatchStage++;
-			break;
-		default:
-			break;
-		}
-	}
-	else if (m_iCatchStage == 2)
-	{
-		switch (m_eAtkInMove)
-		{
-		case eAtkState::Dash:
-			m_CMoveScript->MoveOn(false);
-			m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
-			m_iCatchStage = 0;
-			break;
-		case eAtkState::Heavy1:
-			m_CMoveScript->MoveOn(false);
-			m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
-			m_iCatchStage = 0;
-			break;
-		case eAtkState::Slash:
-			m_CMoveScript->MoveOn(false);
-			m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
-			m_iCatchStage = 0;
-			break;
-		default:
-			break;
-		}*/
-	}
-}
-
 void CM_Spider_STATE_Move_Script::RenewPath()
 {
-	if (m_CMoveScript->RenewPath())
-	{
-		m_bPathRenewed = true;
-		RotationReset();
-	}
-
-	if (m_bPathRenewed) //&& m_CMoveScript->IsJustTurned() > 0)
-	{
-		if (!m_bGetDirOnce)
-		{
-			m_vTurndir = CalMoveDir();
-			m_bGetDirOnce = true;
-		}
-
-		if (JustTurn(m_vTurndir))
-		{
-			m_bPathRenewed = false;
-			m_bGetDirOnce = false;
-		}
-	}
+	m_CMoveScript->RenewPath();
 }
 
-void CM_Spider_STATE_Move_Script::DecidePattern()
-{
-	float dist = DistBetwPlayer();
-	if (dist > 450.f)
-	{
-		std::random_device rd;
-		std::mt19937_64 gen(rd());
-		std::uniform_int_distribution<int> distribution(0, 2);
-
-		m_eAtkInMove = (eAtkState)distribution(gen);
-		dynamic_cast<CM_Spider_STATE_Atk_Script*>(m_MHQ->FindStateScript(1))->SetAtkState(m_eAtkInMove);
-	}
-	else
-	{
-		std::random_device rd;
-		std::mt19937_64 gen(rd());
-		std::uniform_int_distribution<int> distribution(1, 2);
-
-		m_eAtkInMove = (eAtkState)distribution(gen);
-		dynamic_cast<CM_Spider_STATE_Atk_Script*>(m_MHQ->FindStateScript(1))->SetAtkState(m_eAtkInMove);
-	}
-}
-
-bool CM_Spider_STATE_Move_Script::DistCheck()
-{
-	if (DistBetwPlayer() < 200.f)
-		return true;
-	else
-		return false;
-}
 
 void CM_Spider_STATE_Move_Script::GetBack()
 {
@@ -512,35 +203,15 @@ void CM_Spider_STATE_Move_Script::GetBack()
 	}
 }
 
-void CM_Spider_STATE_Move_Script::RotationReset()
-{
-	Vec3 rot = m_MHQ->Transform()->GetRelativeRot();
-	TransRadToDegreeVector(rot);
-	if (rot.y > 360.f)
-	{
-		rot.y = fmod(rot.y, 360.f);
-
-
-		rot = TransDegreeToRadVector(rot);
-		m_MHQ->Transform()->SetRelativeRot(rot);
-	}
-	else if (rot.y < -360.f)
-	{
-		rot.y = fmod(rot.y, 360.f);
-
-		rot = TransDegreeToRadVector(rot);
-		m_MHQ->Transform()->SetRelativeRot(rot);
-	}
-
-
-}
 
 bool CM_Spider_STATE_Move_Script::ShootTest()
 {
 	Vec3 MyPos = GetMyPos();	
 	MyPos.y += 2.f;
 
-	tRayCastInfo* info = Physics::GetInst()->RayCast(MyPos, GetToPlayerDir(), 2500.f, true);
+	Vec3 playerdir = GetToPlayerDir();
+
+	tRayCastInfo* info = Physics::GetInst()->RayCast(MyPos, playerdir, 2500.f, true);
 
 	if (info->hit)
 	{
@@ -550,21 +221,131 @@ bool CM_Spider_STATE_Move_Script::ShootTest()
 		if (Data1 == PlayerAd)
 			return true;
 	}
-	
 
-	
+	/*Vec3 AdPosM = GetPlayerPos();
+	AdPosM.x -= 5.f;
+	AdPosM.z -= 5.f;
+	Vec3 AdjustDirM = AdPosM - MyPos;
+	AdjustDirM = AdjustDirM.Normalize();
+
+	tRayCastInfo* infoM = Physics::GetInst()->RayCast(MyPos, AdjustDirM, 2500.f, true);
+	if (info->hit)
+	{
+		CGameObject* Data1 = (CGameObject*)info->hitActor->userData;
+		CGameObject* PlayerAd = (CGameObject*)GetPlayer();
+
+		if (Data1 == PlayerAd)
+			return true;
+	}*/
 
 	return false;
 }
 
+void CM_Spider_STATE_Move_Script::TurnAction()
+{
+	if (m_bMoveStartOnce || m_bBackProgress)
+		return;
+
+	if (!m_bDirCheck)
+	{
+		m_vToPlayerDir = GetToPlayerDir();
+		m_bDirCheck = true;
+
+		m_fToPlayerDegree = CalTurnDegree(m_vToPlayerDir);
+		m_fToPlayerDegree = abs(m_fToPlayerDegree);
+	}
+	else if (m_bDirCheck)
+	{
+		if (m_fToPlayerDegree < 10.f)
+		{
+			if (JustTurn(m_vToPlayerDir))
+			{
+				m_bDirCheck = false;
+				m_bShootReady = true;
+			}
+		}
+		else
+		{
+			if (AniTurn(m_vToPlayerDir))
+			{
+				m_bDirCheck = false;
+				m_bShootReady = true;
+			}
+		}
+	}
+}
+
+void CM_Spider_STATE_Move_Script::ActionByDist()
+{
+	float dist = DistBetwPlayer();
+	if (dist < 220.f)
+	{
+		m_bBackProgress = false;
+		m_bBackAniOnce = false;
+		m_bMoveStartOnce = false;
+		m_CMoveScript->MoveOn(false);
+
+		m_CMoveScript->SetNearPlayer(true);
+		dynamic_cast<CM_Spider_STATE_Atk_Script*>(m_MHQ->FindStateScript((UINT)eM_A_States::ATTACK))->SetAtkState(eAtkState::Push);
+		m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
+		return;
+	}
+	else
+	{
+		m_CMoveScript->SetNearPlayer(false);
+	}
+
+	if (220.f <= dist && dist <= 300.f)
+	{
+		m_bBackProgress = true;
+		m_bBackAniOnce = false;
+		m_bMoveStartOnce = false;
+		m_CMoveScript->MoveOn(false);
+
+		if (!m_bBackAniOnce)
+		{
+			m_MHQ->Animator3D()->Play(Spi_WalkB, true);
+			m_MHQ->GetGun()->Animator3D()->Play(SpiGun_WalkB, true);
+			m_bBackAniOnce = true;
+		}
+		GetBack();
+	}
+	else if (300.f < dist && dist <= 2000.f)
+	{
+		m_bBackProgress = false;
+		m_bBackAniOnce = false;
+		m_bMoveStartOnce = false;
+		m_CMoveScript->MoveOn(false);
+
+		if (!m_bShootReady)
+			return;
+
+		dynamic_cast<CM_Spider_STATE_Atk_Script*>(m_MHQ->FindStateScript((UINT)eM_A_States::ATTACK))->SetAtkState(eAtkState::Shoot);
+		m_MHQ->ChangeState((UINT)eM_A_States::ATTACK);
+	}
+	else if (2000.f < dist)
+	{
+		if (!m_bMoveStartOnce)
+		{
+			m_MHQ->Animator3D()->Play(Spi_WalkF, true);
+			m_MHQ->GetGun()->Animator3D()->Play(SpiGun_WalkF, true);
+
+			m_CMoveScript->SetAndGetPath(GetPlayer());
+			m_CMoveScript->MoveOn(true);
+			m_bMoveStartOnce = true;
+		}
+		else
+		{
+			RenewPath();
+		}
+	}
+}
+
 void CM_Spider_STATE_Move_Script::Enter()
 {
-	m_bEnterSign = true;
-	//DecidePattern();
 	m_MHQ->Animator3D()->Play(Spi_Idle, true);
 	m_MHQ->GetGun()->Animator3D()->Play(SpiGun_Idle, true);
-	if (DistCheck())
-		m_bEnterDistCheck = true;
+	
 }
 
 void CM_Spider_STATE_Move_Script::Exit()

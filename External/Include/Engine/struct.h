@@ -177,7 +177,7 @@ struct tParticleModule
 
 	// 버퍼 최대크기
 	int		iMaxParticleCount;
-	int		ipad[2];
+	int		ipad[4];
 
 	// Add Velocity 모듈
 	Vec4	vVelocityDir;
@@ -199,7 +199,13 @@ struct tParticleModule
 
 	// Render 모듈
 	int		VelocityAlignment;	// 1 : 속도정렬 사용(이동 방향으로 회전) 0 : 사용 안함
-	int		VelocityScale;		// 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함	
+	int		VelocityScale;		// 1 : 속도에 따른 크기 변화 사용, 0 : 사용 안함
+	int		AnimUse;		// 1 : 애니메이션 사용, 
+	int		AnimLoop;		// 1 : 애니메이션 루프, 0 : 설정한 수명만큼 1번 재생 
+	int		iAnimXCount;
+	int		iAnimYCount;
+	float	fAnimFrmTime;
+	float   fAnimSpeed;
 	float   vMaxSpeed;			// 최대 크기에 도달하는 속력
 	Vec4	vMaxVelocityScale;	// 속력에 따른 크기 변화량 최대치	
 	float   fRotAngle;
@@ -478,7 +484,6 @@ struct tShapeInfo
 	Vector3 offset;
 	UINT CollideType;    //  1:Other 2:Player 3:Monster
 	int boneIdx;
-	Vector3 boneOffset;
 };
 
 struct tRayCastInfo

@@ -79,14 +79,17 @@
     <Filter Include="Script\Creature\Player\Module">
       <UniqueIdentifier>{aac34332-3515-460b-876f-6e781d78e913}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Creature\Monster\M_FSM\Annointed">
-      <UniqueIdentifier>{c83abffa-f3e3-4884-b5dc-fbb081490a8e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Script\Creature\Monster\Common">
       <UniqueIdentifier>{fc928bb5-7790-4bc5-841f-291a2b9a8b9c}</UniqueIdentifier>
     </Filter>
     <Filter Include="Script\Creature\Monster\M_States\Spider">
       <UniqueIdentifier>{ab488290-e825-4ed6-a3e6-bb2bab4ee84a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_FSM\Spider">
+      <UniqueIdentifier>{c83abffa-f3e3-4884-b5dc-fbb081490a8e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Script\Creature\Monster\M_Scripts">
+      <UniqueIdentifier>{d0454306-9168-4a03-96ed-5f6dab587f38}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -199,7 +202,7 @@
       <Filter>Script\Creature\Boss\B_States</Filter>
     </ClInclude>
     <ClInclude Include="CM_Spider_FSMScript.h">
-      <Filter>Script\Creature\Monster\M_FSM\Annointed</Filter>
+      <Filter>Script\Creature\Monster\M_FSM\Spider</Filter>
     </ClInclude>
     <ClInclude Include="CM_Spider_StatesScript.h">
       <Filter>Script\Creature\Monster\M_States\Spider</Filter>
@@ -342,7 +345,7 @@
       <Filter>Script\Creature\Boss\B_States</Filter>
     </ClCompile>
     <ClCompile Include="CM_Spider_FSMScript.cpp">
-      <Filter>Script\Creature\Monster\M_FSM\Annointed</Filter>
+      <Filter>Script\Creature\Monster\M_FSM\Spider</Filter>
     </ClCompile>
     <ClCompile Include="CM_Spider_StatesScript.cpp">
       <Filter>Script\Creature\Monster\M_States\Spider</Filter>

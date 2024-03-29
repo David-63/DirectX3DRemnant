@@ -26,12 +26,26 @@ private:
     Ptr<CTexture>               m_ParticleTex;
     Ptr<CTexture>               m_NoiseTex;
 
-    bool                        m_bOnceExcute;
     bool                        m_bBursts;
+    bool                        m_bOnceExcute;
     bool                        m_bLoop;
     bool                        m_bUseSpark; // 스파크처럼 튀는거 만들때는 이 옵션을 킬 것
+    bool                        m_IsFoward;
+    bool                        m_bClone;
 
-    
+    Ptr<CMesh>                  m_pMesh;
+    Ptr<CMaterial>              m_pMtrl;
+
+    wstring                     m_strTexName;
+    CGameObject*                m_pOwnerObj; // 랜덤스파크 쓸 때 여기에 오브젝트 세팅해줄것
+
+    // ==== Anim
+    vector<tAnim2DFrm>          m_vecFrm;
+    bool 					    m_bFinish;
+    int						    m_iCurFrm;
+    float					    m_fTime;
+
+
 
 
 
@@ -42,11 +56,15 @@ public:
 
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
+    CGameObject* LoadSetting(CGameObject* Obj);
 
     CLONE(CParticleSystem);
 
 
 public:
+    void SetOwnerObj(CGameObject* _pOwnerObj) { m_pOwnerObj = _pOwnerObj; }
+    CGameObject* GetOwnerObj() const { return m_pOwnerObj; }
+
     float RandomFloat(float min, float max);
 
     void SetParticleTex(Ptr<CTexture> _Tex)
@@ -102,6 +120,29 @@ public:
     void SetUseSpark(bool _bUseSpark) { m_bUseSpark = _bUseSpark; }
     bool GetUseSpark() const { return m_bUseSpark; }
 
+    void SetFoward(bool _IsFoward) { m_IsFoward = _IsFoward; }
+    bool IsFoward() const { return m_IsFoward; }
+
+    void SetParticleBufferSize();
+
+    void SetTexName(const wstring& _strTexName) { m_strTexName = _strTexName; }
+    wstring GetTexName() const { return m_strTexName; }
+
+
+    void SetUseAnim(bool _bUseAnimation) { m_ModuleData.AnimUse = _bUseAnimation; }
+    bool GetUseAnim() const { return m_ModuleData.AnimUse; }
+
+    void SetLoopAnim(bool _bLoopAnim) { m_ModuleData.AnimLoop = _bLoopAnim; }
+    bool GetLoopAnim() const { return m_ModuleData.AnimLoop; }
+
+    void SetAnimXCount(int _iAnimXCount) { m_ModuleData.iAnimXCount = _iAnimXCount; }
+    int GetAnimXCount() const { return m_ModuleData.iAnimXCount; }
+
+    void SetAnimYCount(int _iAnimYCount) { m_ModuleData.iAnimYCount = _iAnimYCount; }
+    int GetAnimYCount() const { return m_ModuleData.iAnimYCount; }
+
+    void SetAnimFrmTime(float _fAnimFrmTime) { m_ModuleData.fAnimFrmTime = _fAnimFrmTime; }
+    float GetAnimFrmTime() const { return m_ModuleData.fAnimFrmTime; }
 
 
 
