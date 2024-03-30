@@ -127,60 +127,54 @@ void CreateTestLevel()
 		
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}
-	{
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* player = nullptr;
+	//{
+	//	Ptr<CMeshData> pMeshData = nullptr;
+	//	CGameObject* player = nullptr;
 
-		//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_R2Fire.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
-		player = pMeshData->Instantiate();
+	//	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_R2Fire.fbx");
+	//	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
+	//	player = pMeshData->Instantiate();
 
-		player->SetName(L"Player");
-		player->MeshRender()->SetFrustumCheck(false);
-		CP_FSMScript* pFSM = new CP_FSMScript();
-		player->AddComponent(pFSM);
+	//	player->SetName(L"Player");
+	//	player->MeshRender()->SetFrustumCheck(false);
+	//	CP_FSMScript* pFSM = new CP_FSMScript();
+	//	player->AddComponent(pFSM);
 
-		// rigidbody 에 전달할 데이터 미리 초기화
-		Vec3 playerStartPos = Vec3(0, 100.f, 0);
-		player->Transform()->SetRelativePos(playerStartPos);
-		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
-		CGameObject* weapon = pMeshData->InstMesh();
-		weapon->MeshRender()->SetFrustumCheck(false);
-		weapon->SetName(L"LongGun");
-		pFSM->SetWeapon(weapon);
-		player->AddChild(weapon);
+	//	// rigidbody 에 전달할 데이터 미리 초기화
+	//	Vec3 playerStartPos = Vec3(0, 100.f, 0);
+	//	player->Transform()->SetRelativePos(playerStartPos);
+	//	player->SetLayerIdx((UINT)LAYER_TYPE::Player);
 
-		//// 쉐이프 정의 및 등록
-		player->AddComponent(new CRigidBody);
-		tShapeInfo info = {};								// foot
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(15.f, 15.f, 15.f);
-		player->RigidBody()->PushBackShapeInfo(info);
-		info = {};											// head
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(35.f, 35.f, 35.f);
-		player->RigidBody()->PushBackShapeInfo(info);
-		info = {};											// body
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(55.f, 55.f, 55.f);
-		player->RigidBody()->PushBackShapeInfo(info);
-		// 피지컬 등록하기
-		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+	//	//// 쉐이프 정의 및 등록
+	//	player->AddComponent(new CRigidBody);
+	//	tShapeInfo info = {};								// foot
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.size = Vector3(15.f, 15.f, 15.f);
+	//	player->RigidBody()->PushBackShapeInfo(info);
+	//	info = {};											// head
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.size = Vector3(35.f, 35.f, 35.f);
+	//	player->RigidBody()->PushBackShapeInfo(info);
+	//	info = {};											// body
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.size = Vector3(55.f, 55.f, 55.f);
+	//	player->RigidBody()->PushBackShapeInfo(info);
+	//	// 피지컬 등록하기
+	//	player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-		
-		////////////////////////
-		//player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+	//	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+	//	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+	//	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+	//	player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+	//	
+	//	////////////////////////
+	//	//player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
 
-		//player->AddComponent(new CCollider3D);
-		//player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+	//	//player->AddComponent(new CCollider3D);
+	//	//player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 
-		SpawnGameObject(player, playerStartPos, (UINT)LAYER_TYPE::Player);
-	}
+	//	SpawnGameObject(player, playerStartPos, (UINT)LAYER_TYPE::Player);
+	//}
 
 	{
 		CGameObject* pGround = new CGameObject;

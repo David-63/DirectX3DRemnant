@@ -3,9 +3,16 @@
 #include "CP_MouseCtrlScript.h"
 #include <Engine/CRenderMgr.h>
 #include <Engine/Physics.h>
+#include <Engine/CLevelMgr.h>
 
 CP_FSMScript::CP_FSMScript()
 	: m_TogleInput{ false, false, false, true }, m_StanceCheck{ false, true }, m_Weapon(nullptr)
+	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay)
+{
+}
+
+CP_FSMScript::CP_FSMScript(CP_FSMScript& _clone)
+	:m_TogleInput{ false, false, false, true }, m_StanceCheck{ false, true }, m_Weapon(nullptr)
 	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay)
 {
 }
@@ -105,6 +112,16 @@ void CP_FSMScript::initAnim()
 
 void CP_FSMScript::initWeapon()
 {
+	Ptr<CMeshData> pMeshData = nullptr;
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
+	CGameObject* weapon = pMeshData->InstMesh();
+	weapon->MeshRender()->SetFrustumCheck(false);
+	weapon->SetName(L"LongGun");
+	m_Weapon = weapon;
+	m_MouseCtrl.SetWeaponObj(m_Weapon);
+	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(weapon, 1, true);
+	GetOwner()->AddChild(weapon);
+
 	m_MouseCtrl.SetOwner(this);
 	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
 	m_MouseCtrl.SetMainCam(cam);

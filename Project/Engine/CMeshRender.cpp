@@ -123,9 +123,13 @@ void CMeshRender::SetMeshData(Ptr<CMeshData> _meshData)
 void CMeshRender::SaveToLevelFile(FILE* _File)
 {
 	CRenderComponent::SaveToLevelFile(_File);
+	SaveResRef(m_meshData.Get(), _File);
+	fwrite(&m_bRenderOff, 1, 1, _File);
 }
 
 void CMeshRender::LoadFromLevelFile(FILE* _File)
 {
 	CRenderComponent::LoadFromLevelFile(_File);
+	LoadResRef(m_meshData, _File);
+	fread(&m_bRenderOff, 1, 1, _File);
 }
