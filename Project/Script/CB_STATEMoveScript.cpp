@@ -36,7 +36,7 @@ CB_STATEMoveScript::~CB_STATEMoveScript()
 void CB_STATEMoveScript::begin()
 {
 	CB_StateScript::begin();
-	
+
 	m_CMoveScript = m_BHQ->GetOwner()->GetScript<CMonsterMoveScript>();
 	m_CMoveScript->SetSpeed(300.f);
 
@@ -69,9 +69,9 @@ void CB_STATEMoveScript::Enter()
 	if (DistCheck())
 		m_bEnterDistCheck = true;
 
-	 //=== 테스트 용도로 해뒀기 때문에 아래 두 줄은 테스트 끝나면 지우기
-	/*m_GetWeapon = false;
-	m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);*/
+	//=== 테스트 용도로 해뒀기 때문에 아래 두 줄은 테스트 끝나면 지우기
+   /*m_GetWeapon = false;
+   m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);*/
 
 	m_GetWeapon = true;
 	m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::EVADE);
@@ -81,15 +81,19 @@ void CB_STATEMoveScript::Enter()
 
 void CB_STATEMoveScript::tick()
 {
-	
 
 
-//====================
-	
 
-	
-	
-	
+	//====================
+
+
+		// 보스가 front로 갔다가 오른쪽으로 회전을 했다면 무기는 어떻게 회전해야될까?
+		// 회전할 때 같이 회전시켜줘야한다. 
+
+
+		//===========
+
+
 	CB_FSMScript::eBossMoveDir curDir = m_BHQ->GetMoveDir();
 	CB_FSMScript::eBossStance_NoWeapon NoWeaponCurStance = m_BHQ->GetStance_NoWeapon();
 	CB_FSMScript::eBossStance_Weapon WeaponCurStance = m_BHQ->GetStance_Weapon();
@@ -100,7 +104,7 @@ void CB_STATEMoveScript::tick()
 
 	m_ratio = (float)BossHP / (float)BossInfo.B_Health.MaxHp;
 
-	
+
 	if (BossHP <= 0.0f)
 	{
 		m_BHQ->ChangeState((UINT)eB_States::DEAD);
@@ -195,172 +199,172 @@ void CB_STATEMoveScript::tick()
 	bool test = IsPlaying;
 
 
-		if (!m_GetWeapon)
+	if (!m_GetWeapon)
+	{
+
+		NoWeapon_MoveToDir();
+
+
+		if (IsPlaying)
+			return;
+
+
+		if (NoWeaponCurStance == CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK)
 		{
-
-			NoWeapon_MoveToDir();
-
-
-			if (IsPlaying)
-				return;
-
-
-			if (NoWeaponCurStance == CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK)
+			if (curDir == CB_FSMScript::eBossMoveDir::LF)
 			{
-				if (curDir == CB_FSMScript::eBossMoveDir::LF)
-				{
-					m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
+				m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
 
-					m_BHQ->PlayAnim(B_Walk_FL, false);
-					m_BHQ->SetPlaying(true);
+				m_BHQ->PlayAnim(B_Walk_FL, false);
+				m_BHQ->SetPlaying(true);
 
-				}
-
-
-				else if (curDir == CB_FSMScript::eBossMoveDir::RF)
-				{
-
-					m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
-
-					m_BHQ->PlayAnim(B_Walk_FR, false);
-					m_BHQ->SetPlaying(true);
-				}
-
-				else if (curDir == CB_FSMScript::eBossMoveDir::F)
-				{
-					//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::F);
-					m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
-
-					m_BHQ->PlayAnim(B_Walk_F, false);
-
-
-					m_BHQ->SetPlaying(true);
-
-				}
-				else if (curDir == CB_FSMScript::eBossMoveDir::B)
-				{
-					m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
-					m_BHQ->PlayAnim(B_Walk_B, false);
-
-					m_BHQ->SetPlaying(true);
-
-				}
-				else if (curDir == CB_FSMScript::eBossMoveDir::LB)
-				{
-					m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
-					m_BHQ->PlayAnim(B_Walk_BL, false);
-					m_BHQ->SetPlaying(true);
-
-				}
-				else if (curDir == CB_FSMScript::eBossMoveDir::RB)
-				{
-					m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
-					m_BHQ->PlayAnim(B_Walk_BR, false);
-					m_BHQ->SetPlaying(true);
-
-				}
-
-				else if (curDir == CB_FSMScript::eBossMoveDir::R)
-				{
-					m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
-					m_BHQ->PlayAnim(B_Walk_FR, false);
-					m_BHQ->SetPlaying(true);
-				}
-
-				else if (curDir == CB_FSMScript::eBossMoveDir::L)
-				{
-					m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
-					m_BHQ->PlayAnim(B_Walk_FL, false);
-					m_BHQ->SetPlaying(true);
-				}
-			}
-
-		}
-
-		else if (m_GetWeapon)
-		{
-		
-			// stance를 바꾸는 함수도 하나 추가해야할듯. 	stance바꾸는 거는 complete event에서 해야할듯.
-			Weapon_Move();
-			
-			// m_iCatchStage가 0이 아니라면
-			CatchCheck(); // move에서 근접 공격 state로 넘어가는 함수임.
-
-			if (IsPlaying)
-				return;
-
-			CB_FSMScript::eBossStance_Weapon curStance = m_BHQ->GetStance_Weapon();
-
-			// 앞인지 뒤인지 판가름할 기준이 필요할듯 (플레이어의 등 앞뒤 기준으로????)
-			// 플레이어의 체력이 전체 대비 20%, 40%이면 Blood drink를 한다. 때문에 GetWeapon을 false로 해줄 일은 없다. 
-			// 그리고 지정된 위치로 플레이어가 움직이고, 그 위치에 도달하면 Blood drink를 한다.
-			// 이를 위해선 fast walk를 먼저 해야하는데 그 부분은 좀 생각해보자. blood drink로 상태 바꿀때 fast walk로 상태 전환하고
-			// bool 값이 켜져있고 지정한 위치에 다다르면 blood drink 상태로 바꾸는걸 여기 fast_walk 안에서 해줄지 아니면 다른곳에서
-			// 해줄지 복
-			if (curStance == CB_FSMScript::eBossStance_Weapon::FAST_WALK)
-			{
-				m_BHQ->PlayAnim(B_Walk_Fast_F, true);
-				// 모든 공격, 회복 패턴이 끝나면 이 상태로 기본으로 돌아가게 한다. 
-			
 			}
 
 
-			// 플레이어와의 거리가 엄청 멀 때만 이 state로 들어오게 하자. 
-			else if (curStance == CB_FSMScript::eBossStance_Weapon::EVADE)
+			else if (curDir == CB_FSMScript::eBossMoveDir::RF)
 			{
-				
-				m_BHQ->PlayAnim(B_Melee_Evade_F, false); // 애니메이션이 여러 번 들어오는 문제는 아님 
 
+				m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
+
+				m_BHQ->PlayAnim(B_Walk_FR, false);
+				m_BHQ->SetPlaying(true);
 			}
 
-			else if (curStance == CB_FSMScript::eBossStance_Weapon::MELEE_ATK)
+			else if (curDir == CB_FSMScript::eBossMoveDir::F)
 			{
-				// 공격 1,2를 랜덤으로 지정 (L, R 공격도 랜덤)
+				//	m_BHQ->ChangeDir(CB_FSMScript::eBossMoveDir::F);
+				m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
+
+				m_BHQ->PlayAnim(B_Walk_F, false);
+
+
+				m_BHQ->SetPlaying(true);
+
+			}
+			else if (curDir == CB_FSMScript::eBossMoveDir::B)
+			{
+				m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
 				m_BHQ->PlayAnim(B_Walk_B, false);
 
+				m_BHQ->SetPlaying(true);
+
 			}
-			else if (curStance == CB_FSMScript::eBossStance_Weapon::AOE)
+			else if (curDir == CB_FSMScript::eBossMoveDir::LB)
 			{
-				// 근거리 공격 중 하나. MELEE_ATK과 AOE랑 두 상태는 랜덤으로 하게 하자. 
+				m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
 				m_BHQ->PlayAnim(B_Walk_BL, false);
-
+				m_BHQ->SetPlaying(true);
 
 			}
-			else if (curStance == CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START)
+			else if (curDir == CB_FSMScript::eBossMoveDir::RB)
 			{
-				m_bBloodDrink = true;
-
-				// 이 STATE에 들어오면, 모션을 진행하기 전에 어느 정도 거리를 벌리고 걷다가 해당 상태 진행. (START-LOOP-END)
-				m_BHQ->PlayAnim(B_Walk_Fast_F, true);
-
+				m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
+				m_BHQ->PlayAnim(B_Walk_BR, false);
+				m_BHQ->SetPlaying(true);
 
 			}
 
-			else if (curStance == CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_END)
+			else if (curDir == CB_FSMScript::eBossMoveDir::R)
 			{
-				// ING일때는 BloodDrink에서 처리 
-				m_BHQ->PlayAnim(B_BloodDrink_Start, false);
-				
+				m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
+				m_BHQ->PlayAnim(B_Walk_FR, false);
+				m_BHQ->SetPlaying(true);
 			}
 
-			m_BHQ->SetPlaying(true);
-		
+			else if (curDir == CB_FSMScript::eBossMoveDir::L)
+			{
+				m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
+				m_BHQ->PlayAnim(B_Walk_FL, false);
+				m_BHQ->SetPlaying(true);
+			}
 		}
 
-		// 해당 상태일때는 원을 생성한다. (몬스터 모션 x)
-		if (NoWeaponCurStance == CB_FSMScript::eBossStance_NoWeapon::SPAWN_SPELL)
+	}
+
+	else if (m_GetWeapon)
+	{
+
+		// stance를 바꾸는 함수도 하나 추가해야할듯. 	stance바꾸는 거는 complete event에서 해야할듯.
+		Weapon_Move();
+
+		// m_iCatchStage가 0이 아니라면
+		CatchCheck(); // move에서 근접 공격 state로 넘어가는 함수임.
+
+		if (IsPlaying)
+			return;
+
+		CB_FSMScript::eBossStance_Weapon curStance = m_BHQ->GetStance_Weapon();
+
+		// 앞인지 뒤인지 판가름할 기준이 필요할듯 (플레이어의 등 앞뒤 기준으로????)
+		// 플레이어의 체력이 전체 대비 20%, 40%이면 Blood drink를 한다. 때문에 GetWeapon을 false로 해줄 일은 없다. 
+		// 그리고 지정된 위치로 플레이어가 움직이고, 그 위치에 도달하면 Blood drink를 한다.
+		// 이를 위해선 fast walk를 먼저 해야하는데 그 부분은 좀 생각해보자. blood drink로 상태 바꿀때 fast walk로 상태 전환하고
+		// bool 값이 켜져있고 지정한 위치에 다다르면 blood drink 상태로 바꾸는걸 여기 fast_walk 안에서 해줄지 아니면 다른곳에서
+		// 해줄지 복
+		if (curStance == CB_FSMScript::eBossStance_Weapon::FAST_WALK)
+		{
+			m_BHQ->PlayAnim(B_Walk_Fast_F, true);
+			// 모든 공격, 회복 패턴이 끝나면 이 상태로 기본으로 돌아가게 한다. 
+
+		}
+
+
+		// 플레이어와의 거리가 엄청 멀 때만 이 state로 들어오게 하자. 
+		else if (curStance == CB_FSMScript::eBossStance_Weapon::EVADE)
 		{
 
-			if (m_OnceSpawnSpell)
-				return;
-
-			m_OnceSpawnSpell = true; // 구체 스크립트 exit에서 false로 바꿔주기
-
-			// 아래에서 구체를 생성하는 코드 작성. 그리고 구체 스크립트 컴포넌트를 갖다붙인다. (상태 변경x 캐릭터가 움직여야하므로)
-			// 동시에 구체 2개를 생성한다. (플레이어의 좌우에)
+			m_BHQ->PlayAnim(B_Melee_Evade_F, false); // 애니메이션이 여러 번 들어오는 문제는 아님 
 
 		}
-		
+
+		else if (curStance == CB_FSMScript::eBossStance_Weapon::MELEE_ATK)
+		{
+			// 공격 1,2를 랜덤으로 지정 (L, R 공격도 랜덤)
+			m_BHQ->PlayAnim(B_Walk_B, false);
+
+		}
+		else if (curStance == CB_FSMScript::eBossStance_Weapon::AOE)
+		{
+			// 근거리 공격 중 하나. MELEE_ATK과 AOE랑 두 상태는 랜덤으로 하게 하자. 
+			m_BHQ->PlayAnim(B_Walk_BL, false);
+
+
+		}
+		else if (curStance == CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START)
+		{
+			m_bBloodDrink = true;
+
+			// 이 STATE에 들어오면, 모션을 진행하기 전에 어느 정도 거리를 벌리고 걷다가 해당 상태 진행. (START-LOOP-END)
+			m_BHQ->PlayAnim(B_Walk_Fast_F, true);
+
+
+		}
+
+		else if (curStance == CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_END)
+		{
+			// ING일때는 BloodDrink에서 처리 
+			m_BHQ->PlayAnim(B_BloodDrink_Start, false);
+
+		}
+
+		m_BHQ->SetPlaying(true);
+
+	}
+
+	// 해당 상태일때는 원을 생성한다. (몬스터 모션 x)
+	if (NoWeaponCurStance == CB_FSMScript::eBossStance_NoWeapon::SPAWN_SPELL)
+	{
+
+		if (m_OnceSpawnSpell)
+			return;
+
+		m_OnceSpawnSpell = true; // 구체 스크립트 exit에서 false로 바꿔주기
+
+		// 아래에서 구체를 생성하는 코드 작성. 그리고 구체 스크립트 컴포넌트를 갖다붙인다. (상태 변경x 캐릭터가 움직여야하므로)
+		// 동시에 구체 2개를 생성한다. (플레이어의 좌우에)
+
+	}
+
 
 	// ============= 회피
 	// 쿨타임이 다 됐고, 마침 플레이어의 조준점이 캐릭터를 바라보고 있는 상황이라면?(레이캐스트가 TRUE라면)
@@ -412,20 +416,20 @@ void CB_STATEMoveScript::NoWeapon_MoveToDir()
 
 	switch (curDir)
 	{
-	case CB_FSMScript::eBossMoveDir::F:		
+	case CB_FSMScript::eBossMoveDir::F:
 		vCurPos -= vFront * Force;
 		break;
 
 	case CB_FSMScript::eBossMoveDir::B:
 		vCurPos += vFront * Force;
 		break;
-		
+
 	case CB_FSMScript::eBossMoveDir::R:
 		vCurPos -= vRight * Force;
 		break;
 
 	case CB_FSMScript::eBossMoveDir::RF:
-		vCurPos -= rf * Force; 
+		vCurPos -= rf * Force;
 		break;
 
 	case CB_FSMScript::eBossMoveDir::RB:
@@ -436,7 +440,7 @@ void CB_STATEMoveScript::NoWeapon_MoveToDir()
 		vCurPos += vRight * Force;
 		break;
 
-	case CB_FSMScript::eBossMoveDir::LF: 
+	case CB_FSMScript::eBossMoveDir::LF:
 		vCurPos -= lf * Force;
 		break;
 
@@ -466,57 +470,57 @@ void CB_STATEMoveScript::Weapon_Move()
 
 	switch (curStance)
 	{
-		case CB_FSMScript::eBossStance_Weapon::FAST_WALK:
+	case CB_FSMScript::eBossStance_Weapon::FAST_WALK:
+	{
+		// 몬스터의 front 방향에 플레이어가 있었다면 이걸로. 플레이어가 몬스터의 back방향에 있었다면 += 으로 해야함
+
+
+	// blood rink일때만 사용한다 이런식으로 하기
+	//	vBossCurPos -= vBossFront  * m_fCurForce;
+	}
+	break;
+
+	case CB_FSMScript::eBossStance_Weapon::EVADE:
+	{
+		// 플레이어와의 거리가 어느 정도 다다르면 플레이어 앞으로 이동한다.
+		// 플레이어의 위치를 받아와서 거리를 체크한다.
+		//m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::EVADE);
+
+		// 플레이어 쪽으로 이동한다.
+		// 앞으로 이동하다가 플레이어 위치에 이르면 멈춘다.
+		if (!m_bStorePlayerPos)
 		{
-			// 몬스터의 front 방향에 플레이어가 있었다면 이걸로. 플레이어가 몬스터의 back방향에 있었다면 += 으로 해야함
+			m_vPlayerPos = GetPlayerPos();
 
+			m_vPlayerPos.z = m_vPlayerPos.z + 120.f; // 착지할 때 플레이어와 겹치면 안되므로 약간의 여유 공간을 둔다. 
 
-		// blood rink일때만 사용한다 이런식으로 하기
-		//	vBossCurPos -= vBossFront  * m_fCurForce;
+			m_bStorePlayerPos = true;
 		}
-				break;
 
-		case CB_FSMScript::eBossStance_Weapon::EVADE:
-		{
-			// 플레이어와의 거리가 어느 정도 다다르면 플레이어 앞으로 이동한다.
-			// 플레이어의 위치를 받아와서 거리를 체크한다.
-			//m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::EVADE);
-				
-			// 플레이어 쪽으로 이동한다.
-			// 앞으로 이동하다가 플레이어 위치에 이르면 멈춘다.
-			if (!m_bStorePlayerPos)
-			{
-				m_vPlayerPos = GetPlayerPos();
-				
-				m_vPlayerPos.z = m_vPlayerPos.z + 120.f; // 착지할 때 플레이어와 겹치면 안되므로 약간의 여유 공간을 둔다. 
+		Vec3 BossToPlayerDir = m_vPlayerPos - vBossCurPos;
+		BossToPlayerDir.Normalize();
 
-				m_bStorePlayerPos = true;
-			}
+		vBossCurPos += -vBossFront * m_fCurForce;
+		//m_BHQ->GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f)); // 회전이 혼자 되길래 강제 세팅
 
-			Vec3 BossToPlayerDir = m_vPlayerPos - vBossCurPos;
-			BossToPlayerDir.Normalize();
+	}
+	break;
 
-			vBossCurPos += -vBossFront * m_fCurForce;
-			//m_BHQ->GetOwner()->Transform()->SetRelativeRot(Vec3(0.f, 0.f, 0.f)); // 회전이 혼자 되길래 강제 세팅
-	
-		}
-			break;
+	case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START:
+	{
 
-		case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START:
-		{
-		
-			Vec3 BossCurPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
+		Vec3 BossCurPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
 
-				// 지정한 위치까지 이동한다. (일단 0,0,0으로 해둠)
-			Vec3 TargetPos = Vec3(0, 0, 0);
-			Vec3 BossToTartgetDir = TargetPos - BossCurPos;
-			BossToTartgetDir.Normalize();
+		// 지정한 위치까지 이동한다. (일단 0,0,0으로 해둠)
+		Vec3 TargetPos = Vec3(0, 0, 0);
+		Vec3 BossToTartgetDir = TargetPos - BossCurPos;
+		BossToTartgetDir.Normalize();
 
-			vBossCurPos += vBossFront * BossToTartgetDir * m_fCurForce;
+		vBossCurPos += vBossFront * BossToTartgetDir * m_fCurForce;
 
-				
-		}
-			break;
+
+	}
+	break;
 	}
 
 	m_BHQ->GetOwner()->Transform()->SetRelativePos(vBossCurPos);
@@ -534,7 +538,7 @@ void CB_STATEMoveScript::Weapon_StanceChange()
 		|| CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START == curStance)
 	{
 		m_fCurForce = BossInfo.B_Stat.MoveSpeed * ScaleDT * 3.f;
-	
+
 	}
 
 	else if (CB_FSMScript::eBossStance_Weapon::EVADE == curStance)
@@ -555,7 +559,7 @@ void CB_STATEMoveScript::Weapon_StanceEvent() // 현재 안씀
 
 	m_BHQ->SetPlaying(false);
 
-	
+
 
 	CB_FSMScript::eBossStance_Weapon curStance = m_BHQ->GetStance_Weapon();
 	if (curStance == CB_FSMScript::eBossStance_Weapon::FAST_WALK)
@@ -580,7 +584,7 @@ void CB_STATEMoveScript::Weapon_StanceEvent() // 현재 안씀
 
 void CB_STATEMoveScript::FastWalk_End()
 {
-	
+
 }
 
 void CB_STATEMoveScript::Evade_End()
@@ -1051,7 +1055,7 @@ void CB_STATEMoveScript::TurnComplete180()
 	m_BTurned180 = true;
 	m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::FAST_WALK);
 	m_BHQ->SetPlaying(false);
-	
+
 }
 
 void CB_STATEMoveScript::TurnComplete90L()
@@ -1138,7 +1142,7 @@ void CB_STATEMoveScript::CatchCheck() // move에서 근접 공격 state로 넘어가는 함�
 	else if (DistBetwPlayer() < 250.f)
 	{
 		m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::MELEE_ATK);
-	} 
+	}
 
 
 
@@ -1152,29 +1156,29 @@ void CB_STATEMoveScript::CatchCheck() // move에서 근접 공격 state로 넘어가는 함�
 		float dist = DistBetwPlayer();
 		switch (curStance)
 		{
-			case CB_FSMScript::eBossStance_Weapon::EVADE:
-				{
-				m_vToPlayerDir = GetToPlayerDir(); // 플레이어의 현재 방향을 갖고 온다.
-				m_iCatchStage++;
-				}
-				break;
+		case CB_FSMScript::eBossStance_Weapon::EVADE:
+		{
+			m_vToPlayerDir = GetToPlayerDir(); // 플레이어의 현재 방향을 갖고 온다.
+			m_iCatchStage++;
+		}
+		break;
 
-			case CB_FSMScript::eBossStance_Weapon::MELEE_ATK:
-			{
-				m_vToPlayerDir = GetToPlayerDir(); // 플레이어의 현재 방향을 갖고 온다.
-				m_iCatchStage++;
-			}
-				
-				break;
-	
-			case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START:
-				break;
-			case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_LOOP:
-				break;
-			case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_END:
-				break;
-			case CB_FSMScript::eBossStance_Weapon::END:
-				break;
+		case CB_FSMScript::eBossStance_Weapon::MELEE_ATK:
+		{
+			m_vToPlayerDir = GetToPlayerDir(); // 플레이어의 현재 방향을 갖고 온다.
+			m_iCatchStage++;
+		}
+
+		break;
+
+		case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START:
+			break;
+		case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_LOOP:
+			break;
+		case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_END:
+			break;
+		case CB_FSMScript::eBossStance_Weapon::END:
+			break;
 		}
 	}
 
@@ -1189,14 +1193,14 @@ void CB_STATEMoveScript::CatchCheck() // move에서 근접 공격 state로 넘어가는 함�
 			if (JustTurn(m_vToPlayerDir)) // 플레이어 방향으로 몸을 튼다.
 				m_iCatchStage++;
 		}
-			break;
-	
+		break;
+
 		case CB_FSMScript::eBossStance_Weapon::MELEE_ATK:
 		{
 			if (JustTurn(m_vToPlayerDir)) // 플레이어 방향으로 몸을 튼다.
 				m_iCatchStage++;
 		}
-			break;
+		break;
 		case CB_FSMScript::eBossStance_Weapon::AOE:
 			break;
 		case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START:
@@ -1223,10 +1227,10 @@ void CB_STATEMoveScript::CatchCheck() // move에서 근접 공격 state로 넘어가는 함�
 			//m_BHQ->SetPlaying(false); // 애니메이션 작동되도록 false로 바꿔줌
 
 			m_bOnEvade = true; // renewPath 함수 호출을 막기 위해 true
-	
+
 			m_iCatchStage = 0;
 		}
-			break;
+		break;
 
 		case CB_FSMScript::eBossStance_Weapon::MELEE_ATK:
 		{
@@ -1236,7 +1240,7 @@ void CB_STATEMoveScript::CatchCheck() // move에서 근접 공격 state로 넘어가는 함�
 
 			m_iCatchStage = 0;
 		}
-			break;
+		break;
 
 		case CB_FSMScript::eBossStance_Weapon::BLOOD_DRINK_START:
 			break;
@@ -1251,7 +1255,7 @@ void CB_STATEMoveScript::CatchCheck() // move에서 근접 공격 state로 넘어가는 함�
 
 
 
-		
+
 	}
 
 	//	switch (m_eMeleeState)
@@ -1359,7 +1363,7 @@ bool CB_STATEMoveScript::MoveStart()
 			m_CMoveScript->MoveOn(true);
 			m_bMoveStartOnce = false;
 			m_bEnterSign = false;
-	
+
 			return true;
 		}
 	}
@@ -1370,11 +1374,11 @@ bool CB_STATEMoveScript::MoveStart()
 			m_CMoveScript->MoveOn(true);
 			m_bMoveStartOnce = false;
 			m_bEnterSign = false;
-	
+
 			return true;
 		}
 	}
-	
+
 	return false;
 
 	if (!m_bMoveStartOnce)
