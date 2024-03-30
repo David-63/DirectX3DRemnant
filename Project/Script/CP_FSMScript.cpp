@@ -9,12 +9,7 @@ CP_FSMScript::CP_FSMScript()
 	: m_TogleInput{ false, false, false, true }, m_StanceCheck{ false, true }, m_Weapon(nullptr)
 	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay)
 {
-}
-
-CP_FSMScript::CP_FSMScript(CP_FSMScript& _clone)
-	:m_TogleInput{ false, false, false, true }, m_StanceCheck{ false, true }, m_Weapon(nullptr)
-	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay)
-{
+	SetScriptType(SCRIPT_TYPE::P_FSMSCRIPT);
 }
 
 CP_FSMScript::~CP_FSMScript()

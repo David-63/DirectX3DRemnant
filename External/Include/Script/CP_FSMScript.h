@@ -130,7 +130,6 @@ public:
 
 public:
     CP_FSMScript();
-    CP_FSMScript(CP_FSMScript& _clone);
     virtual ~CP_FSMScript();
 };
 

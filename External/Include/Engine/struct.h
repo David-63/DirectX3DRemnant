@@ -134,13 +134,13 @@ struct tParticle
 	float   ScaleFactor;	// 추가 크기 배율
 
 	int     Active;			// 파티클 활성화 여부
-	int     pad;
+	int     OnceSpawn;
 };
 
 struct tRWParticleBuffer
 {
 	int		iSpawnCount;			// 스폰 시킬 파티클 개수
-	int		padding[3];
+	int		Pad[3];
 };
 
 
@@ -164,7 +164,7 @@ struct tParticleModule
 
 	float   MinLifeTime;		// 최소 수명	
 	float   MaxLifeTime;		// 최대 수명
-	int     spawnpad[3];
+	int     spawnpad[4];
 
 	// Color Change 모듈
 	Vec4	vStartColor;		// 초기 색상
@@ -177,7 +177,7 @@ struct tParticleModule
 
 	// 버퍼 최대크기
 	int		iMaxParticleCount;
-	int		ipad[4];
+	int		ipad[3];
 
 	// Add Velocity 모듈
 	Vec4	vVelocityDir;
@@ -272,7 +272,7 @@ struct tMTAnimClip
 	int				iStartFrame;
 	int				iEndFrame;
 	int				iFrameLength;
-	
+
 	double			dStartTime;
 	double			dEndTime;
 	double			dTimeLength;
@@ -469,10 +469,10 @@ struct tShapeInfo
 {
 	tShapeInfo()
 		: eGeomType(GEOMETRY_TYPE::Sphere)
-		, size(1.f,1.f,1.f)
+		, size(1.f, 1.f, 1.f)
 		, massProperties(tMassProperties())
 		, filterData{}
-		, offset(0.f,0.f,0.f)
+		, offset(0.f, 0.f, 0.f)
 		, CollideType(1)
 		, boneIdx(0)
 	{}
@@ -508,7 +508,7 @@ struct tPNode
 		, bOpen(false)
 		, bClosed(false)
 	{}
-	tPNode*     pPrevNode;   // 이전 노드
+	tPNode* pPrevNode;   // 이전 노드
 	float		fFromParent; // 이전 노드에서 현재 노드까지의 거리
 	float		fToDest;	 // 현재 노드에서 목적지 까지의 거리
 	float		fFinal;		 // 위에 두 값을 합친 값(우선순위 기준)
