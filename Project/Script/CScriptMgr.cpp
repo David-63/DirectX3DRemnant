@@ -25,6 +25,7 @@
 #include "CM_Lurker_STATE_Melee_Script.h"
 #include "CM_Lurker_STATE_Move_Script.h"
 #include "CM_Spider_FSMScript.h"
+#include "CM_Spider_Proj_Script.h"
 #include "CM_Spider_StatesScript.h"
 #include "CM_Spider_STATE_Atk_Script.h"
 #include "CM_Spider_STATE_Damaged_Script.h"
@@ -71,6 +72,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CM_Lurker_STATE_Melee_Script");
 	_vec.push_back(L"CM_Lurker_STATE_Move_Script");
 	_vec.push_back(L"CM_Spider_FSMScript");
+	_vec.push_back(L"CM_Spider_Proj_Script");
 	_vec.push_back(L"CM_Spider_StatesScript");
 	_vec.push_back(L"CM_Spider_STATE_Atk_Script");
 	_vec.push_back(L"CM_Spider_STATE_Damaged_Script");
@@ -142,6 +144,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CM_Lurker_STATE_Move_Script;
 	if (L"CM_Spider_FSMScript" == _strScriptName)
 		return new CM_Spider_FSMScript;
+	if (L"CM_Spider_Proj_Script" == _strScriptName)
+		return new CM_Spider_Proj_Script;
 	if (L"CM_Spider_StatesScript" == _strScriptName)
 		return new CM_Spider_StatesScript;
 	if (L"CM_Spider_STATE_Atk_Script" == _strScriptName)
@@ -258,6 +262,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::M_SPIDER_FSMSCRIPT:
 		return new CM_Spider_FSMScript;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_PROJ_SCRIPT:
+		return new CM_Spider_Proj_Script;
 		break;
 	case (UINT)SCRIPT_TYPE::M_SPIDER_STATESSCRIPT:
 		return new CM_Spider_StatesScript;
@@ -418,6 +425,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::M_SPIDER_FSMSCRIPT:
 		return L"CM_Spider_FSMScript";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_PROJ_SCRIPT:
+		return L"CM_Spider_Proj_Script";
 		break;
 
 	case SCRIPT_TYPE::M_SPIDER_STATESSCRIPT:
