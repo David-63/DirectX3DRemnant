@@ -59,7 +59,7 @@ public:
 
 
 
-    
+
 public:
     CLONE(CB_STATEMeleeScript);
     CB_STATEMeleeScript();

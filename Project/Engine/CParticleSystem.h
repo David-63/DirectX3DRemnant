@@ -12,38 +12,35 @@ class CParticleSystem :
     public CRenderComponent
 {
 private:
-    CStructuredBuffer*          m_ParticleBuffer;
-    CStructuredBuffer*          m_RWBuffer;
-    CStructuredBuffer*          m_ModuleDataBuffer;
-    
+    CStructuredBuffer* m_ParticleBuffer;
+    CStructuredBuffer* m_RWBuffer;
+    CStructuredBuffer* m_ModuleDataBuffer;
+
     tParticleModule             m_ModuleData;
     tRWParticleBuffer		    m_RWPrticleBuffer;
     Ptr<CParticleUpdateShader>  m_UpdateCS; // 파티클 업데이트 셰이더
-   
+
     float                       m_AccTime;
     float                       m_SpawnTime;
+    bool                        m_UseTimeSpawn;
 
     Ptr<CTexture>               m_ParticleTex;
     Ptr<CTexture>               m_NoiseTex;
 
     bool                        m_bBursts;
-    bool                        m_bOnceExcute;
+    int                         m_bOnceExcute; // 1 : true , 0 : false
+    int                         m_iSpawnCount;
     bool                        m_bLoop;
     bool                        m_bUseSpark; // 스파크처럼 튀는거 만들때는 이 옵션을 킬 것
     bool                        m_IsFoward;
-    bool                        m_bClone;
+    bool                        m_bWantExcute;
+    bool                        m_bFinish;
 
     Ptr<CMesh>                  m_pMesh;
     Ptr<CMaterial>              m_pMtrl;
 
     wstring                     m_strTexName;
-    CGameObject*                m_pOwnerObj; // 랜덤스파크 쓸 때 여기에 오브젝트 세팅해줄것
-
-    // ==== Anim
-    vector<tAnim2DFrm>          m_vecFrm;
-    bool 					    m_bFinish;
-    int						    m_iCurFrm;
-    float					    m_fTime;
+    CGameObject* m_pOwnerObj; // 랜덤스파크 쓸 때 여기에 오브젝트 세팅해줄것
 
 
 
@@ -54,6 +51,7 @@ public:
     virtual void render() override;
     virtual void render(UINT _iSubset) override;
 
+
     virtual void SaveToLevelFile(FILE* _File) override;
     virtual void LoadFromLevelFile(FILE* _File) override;
     CGameObject* LoadSetting(CGameObject* Obj);
@@ -62,8 +60,14 @@ public:
 
 
 public:
+    void UpdateData();
+
     void SetOwnerObj(CGameObject* _pOwnerObj) { m_pOwnerObj = _pOwnerObj; }
     CGameObject* GetOwnerObj() const { return m_pOwnerObj; }
+
+    // Vec3 CreateRandomDirection(const Vector3& normal, const Vector3& up, const Vector3& Front);
+    Vec3 CreateRandomDirection(const Vector3& normal, float openAngle);
+
 
     float RandomFloat(float min, float max);
 
@@ -95,16 +99,13 @@ public:
 
     Ptr<CParticleUpdateShader> GetUpdateCS() const
     {
-		return m_UpdateCS;
-	}
+        return m_UpdateCS;
+    }
 
     CStructuredBuffer* GetParticleBuffer() const
     {
-        		return m_ParticleBuffer;
+        return m_ParticleBuffer;
     }
-
-    void SetOnceExcute(bool _bOnceExcute) { m_bOnceExcute = _bOnceExcute; }
-    bool GetOnceExcute() const { return m_bOnceExcute; }
 
     void SetBursts(bool _bBursts) { m_bBursts = _bBursts; }
     bool GetBursts() const { return m_bBursts; }
@@ -115,7 +116,6 @@ public:
     void SetLoop(bool _bLoop) { m_bLoop = _bLoop; }
     bool GetLoop() const { return m_bLoop; }
 
-    Vec3 CreateRandomDirection(const Vector3& normal, float openAngle);
 
     void SetUseSpark(bool _bUseSpark) { m_bUseSpark = _bUseSpark; }
     bool GetUseSpark() const { return m_bUseSpark; }
@@ -143,6 +143,14 @@ public:
 
     void SetAnimFrmTime(float _fAnimFrmTime) { m_ModuleData.fAnimFrmTime = _fAnimFrmTime; }
     float GetAnimFrmTime() const { return m_ModuleData.fAnimFrmTime; }
+
+    void SetExcute(bool _bExcute) { m_bWantExcute = _bExcute; }
+    bool GetExcute() const { return m_bWantExcute; }
+
+    void SetTimeSpawn(bool _bUseTimeSpawn) { m_UseTimeSpawn = _bUseTimeSpawn; }
+    bool GetTimeSpawn() const { return m_UseTimeSpawn; }
+
+    bool isFinish() const { return m_bFinish; }
 
 
 
