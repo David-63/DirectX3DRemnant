@@ -42,7 +42,7 @@ void CB_STATEMeleeScript::begin()
 
 
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 50) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
-	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 85) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOn, this); 
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 85) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOn, this);
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 110) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOff, this);
 
 
@@ -53,7 +53,7 @@ void CB_STATEMeleeScript::begin()
 	m_BHQ->Animator3D()->CompleteEvent(B_Melee_Atk_R02) = std::bind(&CB_STATEMeleeScript::AttackEnd, this);
 	m_BHQ->Animator3D()->CompleteEvent(B_Melee_Atk_R03) = std::bind(&CB_STATEMeleeScript::AttackEnd, this);
 	m_BHQ->Animator3D()->CompleteEvent(B_Melee_Atk_Weapon_AOE) = std::bind(&CB_STATEMeleeScript::AttackEnd, this);
-	
+
 	m_BHQ->Animator3D()->StartEvent(B_Melee_Atk_Weapon_AOE) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
 
 
@@ -91,7 +91,7 @@ void CB_STATEMeleeScript::Enter()
 	// 테스트 용으로 공격상태 일단 미리 지정(테스트 완료 후 지우기)
 	m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::MELEE_ATK);
 
-	
+
 	//m_iAttackType = AttackTypeRandom();
 
 	//if(m_iAttackType == 0)
@@ -115,47 +115,47 @@ void CB_STATEMeleeScript::tick()
 
 	if (!bPlay)
 	{
-		if(bPlay)
-		return;
+		if (bPlay)
+			return;
 
 		// 앞인지 뒤인지 판가름할 기준이 필요할듯 (플레이어의 등 앞뒤 기준으로????)
 		if (curStance == CB_FSMScript::eBossStance_Weapon::MELEE_ATK)
 		{
-			m_BHQ->PlayAnim(B_Melee_Atk_Weapon_AOE, true);
+			m_BHQ->PlayAnim(B_Melee_Atk_L01, true);
 
-		/*	m_iMeleeAtkType = MeleeAttackRandom();
+			/*	m_iMeleeAtkType = MeleeAttackRandom();
 
-			if (m_iMeleeAtkType == 0)
-			{
-				m_BHQ->PlayAnim(B_Melee_Atk_L01, false);
-			
-			}
+				if (m_iMeleeAtkType == 0)
+				{
+					m_BHQ->PlayAnim(B_Melee_Atk_L01, false);
 
-			else if (m_iMeleeAtkType == 1)
-			{
-				m_BHQ->PlayAnim(B_Melee_Atk_L02, false);
-	
-			}
+				}
 
-			else if (m_iMeleeAtkType == 2)
-			{
-				m_BHQ->PlayAnim(B_Melee_Atk_L03, false);
+				else if (m_iMeleeAtkType == 1)
+				{
+					m_BHQ->PlayAnim(B_Melee_Atk_L02, false);
 
-			}
-			else if (m_iMeleeAtkType == 3)
-			{
-				m_BHQ->PlayAnim(B_Melee_Atk_R01, false);
-			}
-			else if (m_iMeleeAtkType == 4)
-			{
-				m_BHQ->PlayAnim(B_Melee_Atk_R02, false);
-			}
-			else if (m_iMeleeAtkType == 5)
-			{
-				m_BHQ->PlayAnim(B_Melee_Atk_R03, false);
-			}
+				}
 
-	*/
+				else if (m_iMeleeAtkType == 2)
+				{
+					m_BHQ->PlayAnim(B_Melee_Atk_L03, false);
+
+				}
+				else if (m_iMeleeAtkType == 3)
+				{
+					m_BHQ->PlayAnim(B_Melee_Atk_R01, false);
+				}
+				else if (m_iMeleeAtkType == 4)
+				{
+					m_BHQ->PlayAnim(B_Melee_Atk_R02, false);
+				}
+				else if (m_iMeleeAtkType == 5)
+				{
+					m_BHQ->PlayAnim(B_Melee_Atk_R03, false);
+				}
+
+		*/
 
 		}
 
@@ -269,7 +269,7 @@ void CB_STATEMeleeScript::AttackEnd()
 	m_bAttack = true;
 
 	// ====================
-	
+
 
 
 	// ===========================
@@ -279,12 +279,12 @@ void CB_STATEMeleeScript::AttackEnd()
 	// 플레이어가 아직도 가까이에 있다면 공격을 반복한다 (근거리 기준은 어느정도가 좋을지 플레이어랑 하면서 봐야할듯?)
 	DistCheck();
 
-	if(m_bNearPlayer)
-		m_iAttackType = AttackTypeRandom(); 
-	
+	if (m_bNearPlayer)
+		m_iAttackType = AttackTypeRandom();
+
 	// 플레이어가 근거리에 없다면 다시 Move 상태로 돌아간다.
 	else
-	m_BHQ->ChangeState(static_cast<UINT>(eB_States::MOVE));
+		m_BHQ->ChangeState(static_cast<UINT>(eB_States::MOVE));
 }
 
 void CB_STATEMeleeScript::PlayerToRotate()
@@ -352,13 +352,13 @@ void CB_STATEMeleeScript::SpawnSpell()
 {
 	Vec3 BossPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
 
-	if(m_bSpawnCircleSpell)
+	if (m_bSpawnCircleSpell)
 		return;
 
-	Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\Circle_AOE.pref");
+	/*Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\Circle_AOE.pref");
 	CGameObject* cloneObj = fab->Instantiate(BossPos, 4);
 	SpawnGameObject(cloneObj, Vec3(BossPos), L"Effect");
-	m_bSpawnCircleSpell = true;
+	m_bSpawnCircleSpell = true;*/
 }
 
 UINT CB_STATEMeleeScript::MeleeAttackRandom()

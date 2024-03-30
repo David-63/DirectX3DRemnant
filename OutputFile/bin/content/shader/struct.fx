@@ -12,10 +12,10 @@ struct tLightColor
 struct tLightInfo
 {
     tLightColor Color; // 빛의 색상
-    
+
     float4      vWorldPos; // 광원의 월드 스페이스 위치
     float4      vWorldDir; // 빛을 보내는 방향
-    
+
     uint        LightType; // 빛의 타입(방향성, 점, 스포트)
     float       Radius; // 빛의 반경(사거리)
     float       Angle; // 빛의 각도    
@@ -40,15 +40,15 @@ struct tParticle
     float   LifeTime; // 수명
     float   Mass; // 질량
     float   ScaleFactor; // 추가 크기 배율
-    
+
     int     Active;
-    int     pad;
+    int     OnceSpawn;
 };
 
 struct tRWParticleBuffer
 {
     int  iSpawnCount; // 스폰 시킬 파티클 개수
-    int3  padding;
+    int3 Pad;
 };
 
 struct tParticleModule
@@ -71,7 +71,7 @@ struct tParticleModule
 
     float MinLifeTime;
     float MaxLifeTime;
-    int3 spawnpad;
+    int4 spawnpad;
 
     // Color Change 모듈
     float4 vStartColor; // 초기 색상
@@ -84,7 +84,7 @@ struct tParticleModule
 
     // 버퍼 최대크기
     int iMaxParticleCount;
-    int4 ipad;
+    int3 ipad;
 
     // Add Velocity 모듈
     float4 vVelocityDir;

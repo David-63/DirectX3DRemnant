@@ -11,18 +11,20 @@ private:
 
     int         m_horizontal;
     int         m_vertical;
+    bool        test;
+    CGameObject* m_pTest;
 
 
 public:
     virtual void begin() override;
 public:
-    virtual void Enter() override; 
+    virtual void Enter() override;
     virtual void tick() override;
     virtual void Exit() override;
 
 public:
     CLONE(CB_STATEIdleScript);
-     
+
     CB_STATEIdleScript();
     virtual ~CB_STATEIdleScript();
 

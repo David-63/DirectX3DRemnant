@@ -20,12 +20,16 @@ CParticleSystem::CParticleSystem()
 	, m_NoiseTex(nullptr)
 	, m_bOnceExcute(false)
 	, m_bBursts(false)
-	, m_SpawnTime(0.0f)
+	, m_SpawnTime(5.0f)
 	, m_bLoop(false)
 	, m_bUseSpark(false)
 	, m_pMesh(nullptr)
 	, m_pMtrl(nullptr)
 	, m_IsFoward(true)
+	, m_iSpawnCount(0)
+	, m_bWantExcute(false)
+	, m_UseTimeSpawn(false)
+	, m_bFinish(false)
 
 
 {
@@ -43,7 +47,7 @@ CParticleSystem::CParticleSystem()
 	m_ModuleData.vSpawnScaleMax = Vec3(20.f, 20.f, 1.f);
 
 	m_ModuleData.SpawnShapeType = 0;
-	m_ModuleData.vBoxShapeScale = Vec3(200.f, 200.f, 200.f);	
+	m_ModuleData.vBoxShapeScale = Vec3(200.f, 200.f, 200.f);
 	m_ModuleData.fSpawnAreaOffsetFactor = 0.0f;
 	m_ModuleData.Space = 0; // 시뮬레이션 좌표계
 
@@ -90,7 +94,7 @@ CParticleSystem::CParticleSystem()
 
 
 
-	
+
 
 	// 입자 메쉬
 	SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh"));
@@ -140,6 +144,9 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 	, m_bLoop(_other.m_bLoop)
 	, m_bUseSpark(_other.m_bUseSpark)
 	, m_IsFoward(_other.m_IsFoward)
+	, m_iSpawnCount(0)
+	, m_UseTimeSpawn(false)
+	, m_bFinish(false)
 {
 
 	SetFrustumCheck(false);
@@ -196,12 +203,15 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 
 	m_ModuleData.bStrongColor = _other.m_ModuleData.bStrongColor;
 
+
+	m_bWantExcute = _other.m_bWantExcute;
+
 	// ===============
 	SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"PointMesh"));
 
 	// == 재질 분류
-	if(m_IsFoward)
-	SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl"), 0);
+	if (m_IsFoward)
+		SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"ParticleRenderMtrl"), 0);
 
 	else
 		SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"D_ParticleRenderMtrl"), 0);
@@ -218,7 +228,7 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 	m_ParticleBuffer = new CStructuredBuffer;
 	m_ParticleBuffer->Create(sizeof(tParticle), m_ModuleData.iMaxParticleCount, SB_TYPE::READ_WRITE, false);
 
-	
+
 	// 파티클 스폰 갯수 전달용 버퍼
 	m_RWBuffer = new CStructuredBuffer;
 	m_RWBuffer->Create(sizeof(tRWParticleBuffer), 1, SB_TYPE::READ_WRITE, true);
@@ -242,7 +252,7 @@ CParticleSystem::~CParticleSystem()
 		delete m_ParticleBuffer;
 		m_ParticleBuffer = nullptr;
 	}
-		
+
 
 	if (nullptr != m_RWBuffer)
 	{
@@ -261,41 +271,19 @@ CParticleSystem::~CParticleSystem()
 
 void CParticleSystem::finaltick()
 {
-	//// 바이노말, 탄젠트, 노말 
-	//Vector3 normal = Vector3(-1.f, 0.f, 0.f); // 벽의 법선 벡터
-	//Vector3 up = Vector3(0.f, 1.f, 0.f); // up 벡터
-	//Vector3 right = Vector3(1.f, 0.f, 0.f); // right 벡터
-
-	m_ModuleData.vRandomSpark = CreateRandomDirection(Vec3(0.f, 0.f, 1.f), 45.f);
 
 
-	//m_ModuleData.vRandomSpark(CreateRandomDirection
-
-
-	// ===== 큐브 메쉬 노말정보 
-	/*  윗면 0, 1, 0
-		아랫면 0, -1, 0
-		왼쪽 - 1, 0, 0
-		오른쪽 1, 0, 0
-
-		앞면 0, 0, -1
-		뒷면 0, 0, 1 (뒷면인 경우는 완성) */
-
-	
-	//m_ModuleData.vRandomSpark = CreateRandomDirection(Vec3(0.f, 0.f, 1.f), 10.f);
 
 	// =================== Spawn Rate ===================
-	// 입자가 더 이상 안나오게 하려면 여기서 아래처럼 bool값으로 막아주면 됨!!!!!!!! 
-
 	if (!m_bOnceExcute)
 	{
 		if (m_bBursts)
 		{
-	
+
 			// 버퍼에 스폰 카운트 전달
 			tRWParticleBuffer rwbuffer = { m_ModuleData.iMaxParticleCount, };
 			m_RWBuffer->SetData(&rwbuffer);
-			m_ModuleData.SpawnRate = 1;
+			m_ModuleData.SpawnRate = 0;
 
 		}
 
@@ -322,16 +310,55 @@ void CParticleSystem::finaltick()
 			}
 		}
 
+		++m_iSpawnCount;
+
+		if (m_iSpawnCount == 1 && m_bWantExcute)
+			m_bOnceExcute = true;
+		// 리셋 버튼 만들어주기 스폰카운트 0으로 해주는....
+
+
+	}
+
+	//if (!m_bWantExcute)
+	//{
+	//	m_iSpawnCount = 0;
+	//	m_bOnceExcute = false;
+	//}
+
+	//else if (m_bWantExcute)
+	//	{
+	//		m_iSpawnCount++;
+	//	}
+
+	// 파티클 업데이트 컴퓨트 쉐이더
+	float originalSpawnTime = m_SpawnTime;
+
+	if (m_UseTimeSpawn)
+	{
+		// 설정한 m_SpawnTime 수치가 있다면
+		if (m_SpawnTime > 0.0f)
+		{
+			m_SpawnTime -= DT;
+
+
+
+		}
+
+		else if (m_SpawnTime <= 0.0f)
+		{
+			m_ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = false;
+			m_SpawnTime = 0.0f;
+			m_bFinish = true;
+		}
 	}
 
 
-	// 파티클 업데이트 컴퓨트 쉐이더
 
-		m_ModuleDataBuffer->SetData(&m_ModuleData);
+	m_ModuleDataBuffer->SetData(&m_ModuleData);
 
-		m_UpdateCS->SetParticleBuffer(m_ParticleBuffer); 
-		m_UpdateCS->SetRWParticleBuffer(m_RWBuffer); 
-		m_UpdateCS->SetModuleData(m_ModuleDataBuffer);
+	m_UpdateCS->SetParticleBuffer(m_ParticleBuffer);
+	m_UpdateCS->SetRWParticleBuffer(m_RWBuffer);
+	m_UpdateCS->SetModuleData(m_ModuleDataBuffer);
 
 
 
@@ -342,9 +369,12 @@ void CParticleSystem::finaltick()
 
 
 	m_UpdateCS->SetParticleObjectPos(Transform()->GetWorldPos());
-		
 
-	m_UpdateCS->Execute();	
+
+	m_UpdateCS->Execute();
+
+
+
 
 
 }
@@ -352,34 +382,34 @@ void CParticleSystem::finaltick()
 void CParticleSystem::render()
 {
 
-		// View 행렬과 투영 행렬을 업데이트 하기 위해 트랜스폼 바인딩
-		Transform()->UpdateData();
+	// View 행렬과 투영 행렬을 업데이트 하기 위해 트랜스폼 바인딩
+	Transform()->UpdateData();
 
-		// 구조화 버퍼로 입자 데이터를 t20에 바인딩
+	// 구조화 버퍼로 입자 데이터를 t20에 바인딩
 
-		m_ParticleBuffer->UpdateData(20, PIPELINE_STAGE::PS_ALL);
-
-
-		// 모듈 데이터 t21 에 바인딩
-		m_ModuleDataBuffer->UpdateData(21, PIPELINE_STAGE::PS_ALL);
+	m_ParticleBuffer->UpdateData(20, PIPELINE_STAGE::PS_ALL);
 
 
-
-		// 파티클 렌더 셰이더 업데이트
-		GetMaterial(0)->SetTexParam(TEX_0, m_ParticleTex);
-
-		GetMaterial(0)->UpdateData();
-
-
-		// 인스턴싱으로 하나의 파이프라인에서 파티클 최대 개수만큼 렌더링 수행
-		GetMesh()->render_particle(m_ModuleData.iMaxParticleCount);
+	// 모듈 데이터 t21 에 바인딩
+	m_ModuleDataBuffer->UpdateData(21, PIPELINE_STAGE::PS_ALL);
 
 
 
+	// 파티클 렌더 셰이더 업데이트
+	GetMaterial(0)->SetTexParam(TEX_0, m_ParticleTex);
 
-		m_ParticleBuffer->Clear();
+	GetMaterial(0)->UpdateData();
 
-		m_ModuleDataBuffer->Clear();
+
+	// 인스턴싱으로 하나의 파이프라인에서 파티클 최대 개수만큼 렌더링 수행
+	GetMesh()->render_particle(m_ModuleData.iMaxParticleCount);
+
+
+
+
+	m_ParticleBuffer->Clear();
+
+	m_ModuleDataBuffer->Clear();
 
 }
 
@@ -394,7 +424,7 @@ void CParticleSystem::render(UINT _iSubset) // 이건 오버라이딩한 함수라서 여기다
 void CParticleSystem::SaveToLevelFile(FILE* _File)
 {
 	CRenderComponent::SaveToLevelFile(_File);
-	
+
 	SaveWString(GetName(), _File);
 	SaveWString(GetTexName(), _File);
 
@@ -405,6 +435,8 @@ void CParticleSystem::SaveToLevelFile(FILE* _File)
 	fwrite(&m_bLoop, sizeof(bool), 1, _File);
 	fwrite(&m_bUseSpark, sizeof(bool), 1, _File);
 	fwrite(&m_IsFoward, sizeof(bool), 1, _File);
+	fwrite(&m_bWantExcute, sizeof(bool), 1, _File);
+	fwrite(&m_iSpawnCount, sizeof(int), 1, _File);
 
 	SaveResRef(m_UpdateCS.Get(), _File);
 	SaveResRef(m_ParticleTex.Get(), _File);
@@ -431,8 +463,8 @@ void CParticleSystem::LoadFromLevelFile(FILE* _File)
 	fread(&m_bLoop, sizeof(bool), 1, _File);
 	fread(&m_bUseSpark, sizeof(bool), 1, _File);
 	fread(&m_IsFoward, sizeof(bool), 1, _File);
-
-
+	fread(&m_bWantExcute, sizeof(bool), 1, _File);
+	fread(&m_iSpawnCount, sizeof(int), 1, _File);
 
 	int i = 0;
 	fread(&i, sizeof(i), 1, _File);
@@ -479,6 +511,40 @@ CGameObject* CParticleSystem::LoadSetting(CGameObject* Obj)
 //
 //	return randomDirection;
 //}
+//
+//Vec3 CParticleSystem::CreateRandomDirection(const Vector3& normal, float openAngle)
+//{
+//	openAngle = XMConvertToRadians(openAngle);
+//
+//	std::random_device rd;
+//	std::mt19937 gen(rd());
+//	std::uniform_real_distribution<float> dis(0, 1);
+//
+//	// 원뿔의 중심 방향 벡터에 대한 극좌표에서의 랜덤 각도 생성
+//	float theta = dis(gen) * DirectX::XM_2PI; // 0에서 2PI 사이
+//	float phi = dis(gen) * openAngle; // 0에서 coneHalfAngleInRadians 사이
+//
+//	// 극좌표를 카테시안 좌표로 변환
+//	float x = sinf(phi) * cosf(theta);
+//	float y = sinf(phi) * sinf(theta);
+//	float z = cosf(phi);
+//
+//	// 랜덤 방향 벡터 생성
+//	Vector3 randomDir(x, y, z);
+//
+//	// 원뿔의 중심 방향 벡터를 기준으로 랜덤 방향 벡터를 회전
+//	Vector3 axis = normal.Cross(Vector3(1, 0, 0)).Normalize();
+//	if (axis.LengthSquared() == 0.0f) {
+//		// coneDir이 이미 Z축과 평행한 경우, Y축을 회전 축으로 사용
+//		axis = normal.Cross(Vector3::UnitY).Normalize();
+//	}
+//	float angle = acos(normal.Dot(Vector3(0, 1, 0)));
+//	Matrix rotationMatrix = Matrix::CreateFromAxisAngle(axis, angle);
+//
+//	return Vector3::Transform(randomDir, rotationMatrix);
+//} // 한 방향으로 나가는 것 밖에 안됨 
+
+
 
 Vec3 CParticleSystem::CreateRandomDirection(const Vector3& normal, float openAngle)
 {
@@ -502,16 +568,16 @@ Vec3 CParticleSystem::CreateRandomDirection(const Vector3& normal, float openAng
 
 	// 원뿔의 중심 방향 벡터를 기준으로 랜덤 방향 벡터를 회전
 	Vector3 axis = normal.Cross(Vector3(1, 0, 0)).Normalize();
+
 	//if (axis.LengthSquared() == 0.0f) {
 	//	// coneDir이 이미 Z축과 평행한 경우, Y축을 회전 축으로 사용
-	//	axis = normal.Cross(Vector3::UnitY).Normalize();
+	//	axis = normal.Cross(Vector3(0, 1, 0).Normalize());
 	//}
 	float angle = acos(normal.Dot(Vector3(0, 1, 0)));
 	Matrix rotationMatrix = Matrix::CreateFromAxisAngle(axis, angle);
 
 	return Vector3::Transform(randomDir, rotationMatrix);
-} // 한 방향으로 나가는 것 밖에 안됨 
-
+}
 
 float CParticleSystem::RandomFloat(float min, float max)
 {

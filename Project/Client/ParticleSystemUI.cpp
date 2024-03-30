@@ -19,6 +19,7 @@ ParticleSystemUI::ParticleSystemUI()
 	, m_NoiseTex(nullptr)
 	, m_AccTime(0.0f)
 	, m_fDebugTime(0.0f)
+
 {
 	SetName("ParticleSystem");
 }
@@ -96,6 +97,17 @@ int ParticleSystemUI::render_update()
 
 	}
 
+	bool bFoward = m_Particle->IsFoward();
+
+	// ==== 재질이 파티클인지 아닌지 
+	ImGui::Text("Is FowardRendering?");
+	ImGui::SameLine();
+	if (ImGui::Checkbox("##FowardOrNo", &bFoward))
+	{
+		m_Particle->SetFoward(bFoward);
+
+	}
+
 
 	// ===== Texture
 	ImGui::Text("Texture");
@@ -133,17 +145,6 @@ int ParticleSystemUI::render_update()
 	}
 
 
-	bool bFoward = m_Particle->IsFoward();
-
-	// ==== 재질이 파티클인지 아닌지 
-	ImGui::Text("Is FowardRendering?");
-	ImGui::SameLine();
-	if (ImGui::Checkbox("##FowardOrNo", &bFoward))
-	{
-		m_Particle->SetFoward(bFoward);
-
-	}
-
 
 
 
@@ -173,19 +174,6 @@ int ParticleSystemUI::render_update()
 
 				//}
 
-				//if (SpawnOnOff)
-				//{
-				//	m_AccTime += (float)DT;
-				//}
-
-				//else
-				//{
-				//	m_fDebugTime = m_AccTime;
-				//	m_AccTime = 0.0f;
-				//}
-
-				//ImGui::Text("AccDuringTime : %.2f", m_AccTime); // 누적되는 시간
-
 
 
 
@@ -202,14 +190,6 @@ int ParticleSystemUI::render_update()
 
 				}
 
-				ImGui::SameLine();
-				bool Excute = m_Particle->GetOnceExcute();
-				ImGui::Text("Once Excute");
-				ImGui::SameLine();
-				if (ImGui::Checkbox("##oneceExcute ON/OFF", &Excute))
-				{
-					m_Particle->SetOnceExcute(Excute);
-				}
 
 
 				// Module On/Off
@@ -222,46 +202,46 @@ int ParticleSystemUI::render_update()
 				}
 				ImGui::Separator();
 
-				// During 지속시간
-				ImGui::Text("Set During Time");
-				ImGui::SameLine();
-				float SpawnTime = m_Particle->GetSpawnTime();
 
-				if (SpawnOnOff && !bLoop)
+				if (SpawnOnOff)
 				{
 					m_AccTime += (float)DT;
 				}
 
-				ImGui::SetNextItemWidth(80);
-				if (ImGui::InputFloat("##DuringTime", &SpawnTime))
+				else
 				{
-					m_Particle->SetSpawnTime(SpawnTime);
+					m_fDebugTime = m_AccTime;
 				}
 
+
+				ImGui::Text("For Debuging");
 
 				ImGui::Text("AccDuringTime : %.2f", m_AccTime); // 누적되는 시간
+				ImGui::SameLine();
 
-
-				if (SpawnTime < m_AccTime && !bLoop)
+				if (ImGui::Button("  Time Reset", ImVec2(180, 18)))
 				{
-					tParticleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = 0;
 					m_AccTime = 0.0f;
-					m_Particle->SetSpawnTime(0.f);
-
-					// 체크시간이 지나면 알파값을 0으로
-					tParticleData.vSpawnColor.w = 0.0f;
 				}
 
-				else if (SpawnTime > m_AccTime && !bLoop)
-				{
-					// 시간의 비율에 따른 alpha 값 감소
-
-					tParticleData.vSpawnColor.w = (SpawnTime - m_AccTime) / SpawnTime;
-				}
+				ImGui::Separator();
 
 
+				ImGui::Text("For Use");
+
+				ImGui::Text("User Set Spawn Time : %.2f", m_Particle->GetSpawnTime());
+				ImGui::SameLine();
+				ImGui::Separator();
 
 
+				//bool useTimeSpawn = m_Particle->GetTimeSpawn();
+				//ImGui::Text("Use Time Spawn");
+				//ImGui::SameLine();
+				//if (ImGui::Checkbox("##UseTimespawn", &useTimeSpawn))
+				//{
+				//	m_Particle->SetTimeSpawn(useTimeSpawn);
+				//}
+				//ImGui::Separator();
 
 
 				// ================================ 아래는 만지지 말것 
@@ -951,12 +931,12 @@ int ParticleSystemUI::render_update()
 			bool Loop = tParticleData.AnimLoop;
 
 			ImGui::Text("AnimUse");
-			if (ImGui::Checkbox("##AnimationUse", &UseAnim)) 
+			if (ImGui::Checkbox("##AnimationUse", &UseAnim))
 			{
 				tParticleData.AnimUse = UseAnim;
 			}
 
-			if (UseAnim) 
+			if (UseAnim)
 			{
 				ImGui::Text("AnimLoop");
 				if (ImGui::Checkbox("##AnimLooop", &Loop))
@@ -971,7 +951,7 @@ int ParticleSystemUI::render_update()
 					ImGui::SameLine();
 					float time = tParticleData.fAnimFrmTime;
 
-					if (ImGui::DragFloat("##PrcAnimTime", &time, 0.03f, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("##PrcLoopAnimTime", &time, 0.03f, 0.0f, 3.0f, "%0.5f", ImGuiSliderFlags_AlwaysClamp))
 					{
 						tParticleData.fAnimFrmTime = time;
 					}
@@ -983,7 +963,7 @@ int ParticleSystemUI::render_update()
 					ImGui::SameLine();
 					float ftime = tParticleData.fAnimSpeed;
 
-					if (ImGui::DragFloat("##PrcAnimSpeed", &ftime, 0.03f, 0.0f, 1.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat("##PrcAnimSpeed", &ftime, 0.01f, 0.0f, 3.0f, "%0.5f", ImGuiSliderFlags_AlwaysClamp))
 					{
 						tParticleData.fAnimSpeed = ftime;
 					}
@@ -1014,7 +994,7 @@ int ParticleSystemUI::render_update()
 	}
 
 	m_Particle->SetModuleData(tParticleData);
-	
+
 
 
 	return TRUE;
