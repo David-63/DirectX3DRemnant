@@ -4,6 +4,7 @@
 
 CM_Spider_FSMScript::CM_Spider_FSMScript()
 {
+	SetScriptType(SCRIPT_TYPE::M_SPIDER_FSMSCRIPT);
 }
 
 CM_Spider_FSMScript::~CM_Spider_FSMScript()

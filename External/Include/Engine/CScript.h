@@ -66,6 +66,7 @@ public:
 
 protected:
     void AddScriptParam(SCRIPT_PARAM eParam, void* _pData, const string& _Desc);
+    void SetScriptType(UINT _type) { m_iScriptType = _type; }
 
 public:
     CScript(UINT _iScriptType);

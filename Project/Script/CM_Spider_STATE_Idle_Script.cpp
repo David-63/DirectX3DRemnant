@@ -35,7 +35,7 @@ void CM_Spider_STATE_Idle_Script::tick()
 
 	if (!m_bAlert)
 	{
-		if (DistBetwPlayer() < 800.f)
+		if (DistBetwPlayer() < 1600.f)
 			m_bAlert = true;
 	}
 
