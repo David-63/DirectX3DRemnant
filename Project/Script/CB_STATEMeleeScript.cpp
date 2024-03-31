@@ -366,13 +366,13 @@ void CB_STATEMeleeScript::SpawnSpell()
 	if (m_bSpawnCircleSpell)
 		return;
 
-	    Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\9090909090909090909090.pref", L"prefab\\9090909090909090909090.pref");
-		fab->PrefabLoad(L"prefab\\9090909090909090909090.pref");
+	    Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Circle_AOE.pref", L"prefab\\Circle_AOE.pref");
+		fab->PrefabLoad(L"prefab\\Circle_AOE.pref");
 
 		//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
 		m_AOE_Circle = fab.Get()->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
 
-		SpawnGameObject(m_AOE_Circle, Vec3(PlayerPos.x, PlayerPos.y + 210, PlayerPos.z), L"Effect");
+		SpawnGameObject(m_AOE_Circle, Vec3(PlayerPos.x - 200, PlayerPos.y + 210, PlayerPos.z), L"Effect");
 		m_AOE_Circle->SetName(L"blood");
 
 

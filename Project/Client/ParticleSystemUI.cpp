@@ -180,15 +180,15 @@ int ParticleSystemUI::render_update()
 				// ==== 파티클 다 만들었으면 아래 코드로 사용할 것
 				// Spawn Loop
 
-				bool bLoop = m_Particle->GetLoop();
+				//bool bLoop = m_Particle->GetLoop();
 
-				ImGui::Text("Spawn Loop On/Off");
-				ImGui::SameLine();
-				if (ImGui::Checkbox("##Loop_OnOff", &bLoop))
-				{
-					m_Particle->SetLoop(bLoop);
+				//ImGui::Text("Spawn Loop On/Off");
+				//ImGui::SameLine();
+				//if (ImGui::Checkbox("##Loop_OnOff", &bLoop))
+				//{
+				//	m_Particle->SetLoop(bLoop);
 
-				}
+				//}
 
 
 
