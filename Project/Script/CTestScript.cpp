@@ -32,6 +32,14 @@ void CTestScript::tick()
 	float fSpeed = 10000.f;
 
 
+	if (KEY_TAP(KEY::J))
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\memPlayer.pref", L"prefab\\memPlayer.pref");
+		fab->PrefabLoad(L"prefab\\memPlayer.pref");
+		CGameObject* player = fab.Get()->Instantiate(Vec3(0, 0, 0), 1);
+		SpawnGameObject(player, Vec3(0, 0, 0), 1);
+	}
+
 	if (KEY_HOLD(KEY::NUM_8))
 	{
 		vMoveVector += DT * vFront * fSpeed;

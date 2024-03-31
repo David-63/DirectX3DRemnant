@@ -79,7 +79,7 @@ public:
     void PlayAnimation(wstring _name, bool _repeat);
     void OverrideObjRotY() { m_MouseCtrl.OverrideObjRotY(); }
     void DoDodge();
-
+    void ShootRay();
 
 public:
     void SetWeapon(CGameObject* _obj)

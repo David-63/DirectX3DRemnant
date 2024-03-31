@@ -47,6 +47,12 @@ void CP_FSMScript::tick()
 		dirInput();				// wasd 방향에 대한 키입력을 감지함
 		stanceInput();			// 자세 변경에 대한 키입력을 감지함
 	}
+
+	if (KEY_TAP(KEY::K))
+	{
+		DestroyObject(m_Weapon);
+		DestroyObject(GetOwner());
+	}
 }
 
 void CP_FSMScript::initState()
@@ -266,6 +272,14 @@ void CP_FSMScript::DoDodge()
 	}
 
 	ChangeState(static_cast<UINT>(eP_States::DODGE));
+}
+
+void CP_FSMScript::ShootRay()
+{
+	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
+	Vec3 camPos = cam->Transform()->GetRelativePos();
+	Vec3 camDir = cam->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	tRayCastInfo*  other = Physics::GetInst()->RayCast(camPos, camDir, 10000.f);
 }
 
 void CP_FSMScript::GotoIdle()
