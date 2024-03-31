@@ -2,7 +2,7 @@
 #include "CB_StateScript.h"
 
 class CB_STATEMoveScript :
-    public CB_StateScript
+	public CB_StateScript
 {
 	enum class eTurnAni
 	{
@@ -14,28 +14,28 @@ class CB_STATEMoveScript :
 	};
 
 public:
-    virtual void begin() override;
-    virtual void tick() override;
+	virtual void begin() override;
+	virtual void tick() override;
 public:
-    virtual void Enter() override;
-    virtual void Exit() override;
+	virtual void Enter() override;
+	virtual void Exit() override;
 
 private:
 	int         m_testcount;
 
 	bool        m_IsPhase_1;
-    bool        m_GetWeapon;
-    bool        m_OnceEvade;
-    bool        m_OnceSpawnSpell;
-    bool        m_bBloodDrink;
+	bool        m_GetWeapon;
+	bool        m_OnceEvade;
+	bool        m_OnceSpawnSpell;
+	bool        m_bBloodDrink;
 	bool        m_bOnEvade;
-    
- 
-    int         m_DirSetCount;
 
-    float       m_fPrevForce; // m_fCurForce 저장용
-    float       m_fCurForce;
-    class CMonsterMoveScript* m_CMoveScript;
+
+	int         m_DirSetCount;
+
+	float       m_fPrevForce; // m_fCurForce 저장용
+	float       m_fCurForce;
+	class CMonsterMoveScript* m_CMoveScript;
 
 	bool        m_bStorePlayerPos;
 	Vec3        m_vPlayerPos;
@@ -89,22 +89,22 @@ private:
 
 
 public:
-    void NoWeapon_MoveToDir();
-    void Weapon_Move();
-    void Weapon_StanceChange();
-    void Weapon_StanceEvent();
+	void NoWeapon_MoveToDir();
+	void Weapon_Move();
+	void Weapon_StanceChange();
+	void Weapon_StanceEvent();
 
 	void FastWalk_End();
-    void Evade_End();
+	void Evade_End();
 
-    void BloodDrink_StartEnd();
-    void BloodDrink_LoopEnd();
-    void BloodDrink_End();
+	void BloodDrink_StartEnd();
+	void BloodDrink_LoopEnd();
+	void BloodDrink_End();
 
 
-    void Evade_MoveZero();
-    void Evade_MoveRestore();
-    int ZeroToOneRandom();
+	void Evade_MoveZero();
+	void Evade_MoveRestore();
+	int ZeroToOneRandom();
 
 
 
@@ -124,7 +124,7 @@ public:
 	void TurnComplete135L();
 	void TurnComplete135R();
 
-	
+
 	void RenewPath();
 	void CatchCheck();
 
@@ -137,10 +137,10 @@ public:
 	void Clear();
 
 public:
-    CLONE(CB_STATEMoveScript);
+	CLONE(CB_STATEMoveScript);
 
-    CB_STATEMoveScript();
-    virtual ~CB_STATEMoveScript();
+	CB_STATEMoveScript();
+	virtual ~CB_STATEMoveScript();
 
 
 };

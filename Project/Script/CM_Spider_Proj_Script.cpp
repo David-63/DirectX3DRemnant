@@ -6,16 +6,8 @@
 
 CM_Spider_Proj_Script::CM_Spider_Proj_Script()
 	: CScript((UINT)SCRIPT_TYPE::M_SPIDER_PROJ_SCRIPT)
+	, mOffset(0.f,0.f,0.f)
 {
-	GetOwner()->AddComponent(new CCollider3D);
-	GetOwner()->AddComponent(new CRigidBody);
-
-	tShapeInfo info = {};
-	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	info.size = Vector3(10.f, 1.f, 2.f);
-	GetOwner()->RigidBody()->PushBackShapeInfo(info);
-
-	
 }
 
 CM_Spider_Proj_Script::~CM_Spider_Proj_Script()
@@ -28,6 +20,21 @@ void CM_Spider_Proj_Script::begin()
 
 void CM_Spider_Proj_Script::tick()
 {
+	if (nullptr != mSpider && !m_bShootStart)
+	{
+		Vec3 spiderPos = mSpider->Transform()->GetRelativePos();
+		spiderPos.y = 140.f;
+		//spiderPos.y = 220.f;
+		Vec3 frontdir = mSpider->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+		Vec3 projPos = spiderPos - frontdir * 150.f + mOffset;
+		
+		GetOwner()->Transform()->SetRelativePos(projPos);
+	}
+	else if (m_bShootStart)
+	{
+		CGameObject* obj = GetOwner();
+		DestroyObject(GetOwner());
+	}
 }
 
 void CM_Spider_Proj_Script::BeginOverlap(CCollider3D* _Other)

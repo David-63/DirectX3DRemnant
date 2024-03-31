@@ -13,6 +13,11 @@ private:
 
 	//Shoot
 	bool			 m_bShootOnce;
+	CGameObject*     m_CProj;
+	bool             m_bLiftSet;
+	float            m_fElapsedTime;
+	float            m_fFinalTime;
+	bool             m_bShootLift;
 
 	//Push
 	bool			 m_bPushOnce;
@@ -33,7 +38,12 @@ private:
 	void Clear();
 
 	void Push();
+
 	void Shoot();
+	void ShootComplete();
+	void CreateProj();
+	void LiftProj();
+	void LiftStart() { m_bShootLift = true; }
 	
 
 	void PushHitBoxOn();
