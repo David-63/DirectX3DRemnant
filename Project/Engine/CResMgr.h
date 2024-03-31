@@ -152,6 +152,16 @@ inline Ptr<T> CResMgr::Load(const wstring& _strKey, const wstring& _strRelativeP
     wstring strFilePath = CPathMgr::GetInst()->GetContentPath();
     strFilePath += _strRelativePath;
 
+    if (pRes->GetType() == RES_TYPE::PREFAB)
+    {
+        RES_TYPE type = GetResType<T>();
+        m_arrRes[(UINT)type].insert(make_pair(_strKey, pRes));
+
+        m_Changed = true;
+
+        return (T*)pRes.Get();
+    }
+
     if (FAILED(pRes->Load(strFilePath)))
     {
         assert(nullptr);

@@ -3,6 +3,9 @@
 #include "CM_Spider_FSMScript.h"
 #include "Engine/func.h"
 #include "CHitBoxScript.h"
+#include "CM_Spider_Proj_Script.h"
+#include "Engine/CLevelMgr.h"
+#include "Engine/CLevel.h"
 
 
 CM_Spider_STATE_Atk_Script::CM_Spider_STATE_Atk_Script()
@@ -17,8 +20,9 @@ CM_Spider_STATE_Atk_Script::~CM_Spider_STATE_Atk_Script()
 void CM_Spider_STATE_Atk_Script::begin()
 {
 	CM_Spider_StatesScript::begin();
-	m_MHQ->Animator3D()->CompleteEvent(Spi_Atk) = std::bind(&CM_Spider_STATE_Atk_Script::AtkComplete, this);
-	//m_MHQ->Animator3D()->ActionEvent(Spi_Atk, 50) = std::bind(&CM_Spider_STATE_Atk_Script::AdjustZeroSpeed, this);
+	m_MHQ->Animator3D()->CompleteEvent(Spi_Atk) = std::bind(&CM_Spider_STATE_Atk_Script::ShootComplete, this);
+	m_MHQ->Animator3D()->ActionEvent(Spi_Atk, 20) = std::bind(&CM_Spider_STATE_Atk_Script::CreateProj, this);
+	m_MHQ->Animator3D()->ActionEvent(Spi_Atk, 60) = std::bind(&CM_Spider_STATE_Atk_Script::LiftStart, this);
 
 	m_MHQ->Animator3D()->CompleteEvent(Spi_AtkPush) = std::bind(&CM_Spider_STATE_Atk_Script::AtkComplete, this);
 	m_MHQ->Animator3D()->ActionEvent(Spi_AtkPush, 20) = std::bind(&CM_Spider_STATE_Atk_Script::AdjustZeroSpeed, this);
@@ -45,6 +49,9 @@ void CM_Spider_STATE_Atk_Script::tick()
 	default:
 		break;
 	}
+
+	if (m_bShootLift)
+		LiftProj();
 }
 
 
@@ -64,6 +71,79 @@ void CM_Spider_STATE_Atk_Script::Shoot()
 		m_MHQ->ChangeState((UINT)eM_A_States::MOVE);
 	}
 	
+}
+
+void CM_Spider_STATE_Atk_Script::ShootComplete()
+{
+	m_bAtkComplete = true;
+	m_CProj->GetScript< CM_Spider_Proj_Script>()->ShootStart(true);
+	m_CProj = nullptr;
+
+
+}
+
+void CM_Spider_STATE_Atk_Script::CreateProj()
+{
+	CGameObject* proj = new CGameObject;
+	proj->SetName(L"Spider_Projectile");
+	proj->AddComponent(new CM_Spider_Proj_Script);
+	proj->AddComponent(new CCollider3D);
+	proj->AddComponent(new CRigidBody);
+	proj->AddComponent(new CMeshRender);
+	proj->AddComponent(new CTransform);
+
+	proj->GetScript<CM_Spider_Proj_Script>()->SetSpider(m_MHQ->GetOwner());
+
+	proj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	proj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
+
+	Vec3 spiderPos = m_MHQ->GetOwner()->Transform()->GetRelativePos();
+	spiderPos.y = 140.f;
+	Vec3 frontdir = m_MHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 projPos = spiderPos - frontdir * 150.f;
+
+	proj->Transform()->SetRelativePos(projPos);
+
+	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(proj, L"HitBoxMonster", true);
+
+	proj->SetLayerIdx((UINT)LAYER_TYPE::HitBoxMonster);
+	tShapeInfo info = {};
+	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	info.size = Vector3(50.f, 1.f, 2.f);
+	proj->RigidBody()->PushBackShapeInfo(info);
+	proj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
+
+	m_CProj = proj;
+}
+
+void CM_Spider_STATE_Atk_Script::LiftProj()
+{
+	if (!m_CProj)
+		return;
+
+	if (!m_bLiftSet)
+	{
+		m_bLiftSet = true;
+		m_fElapsedTime = 0.f;
+		m_fFinalTime = 2.f;
+	}
+
+	m_fElapsedTime += DT * 2.f;
+
+	if (m_fElapsedTime < m_fFinalTime)
+	{
+		Vec3 vecOffset = Vector3::Lerp(Vec3(0.f,0.f,0.f), Vec3(0.f, 100.f, 0.f), m_fElapsedTime / m_fFinalTime);
+		m_CProj->GetScript< CM_Spider_Proj_Script>()->SetOffset(vecOffset);
+	}
+	else
+	{
+		m_CProj->GetScript< CM_Spider_Proj_Script>()->SetOffset(Vec3(0.f, 100.f, 0.f));
+
+		m_bLiftSet = false;
+		m_fElapsedTime = 0.f;
+		m_bShootLift = false;
+	}
+
 }
 
 void CM_Spider_STATE_Atk_Script::AdjustDashSpeed()
@@ -116,8 +196,12 @@ void CM_Spider_STATE_Atk_Script::AdjustZeroSpeed()
 void CM_Spider_STATE_Atk_Script::Clear()
 {
 	m_bAtkComplete = false;
+	m_bShootLift = false;
+	m_CProj = nullptr;
 	m_bShootOnce = false;
 	m_bPushOnce = false;
+	m_fElapsedTime = 0.f;
+	m_bShootLift = false;
 }
 
 
