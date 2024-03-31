@@ -114,7 +114,7 @@ void CP_FSMScript::initWeapon()
 	weapon->SetName(L"LongGun");
 	m_Weapon = weapon;
 	m_MouseCtrl.SetWeaponObj(m_Weapon);
-	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(weapon, 1, true);
+	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(weapon, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(weapon);
 
 	m_MouseCtrl.SetOwner(this);
