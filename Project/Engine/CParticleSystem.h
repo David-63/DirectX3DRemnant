@@ -152,6 +152,10 @@ public:
 
     bool isFinish() const { return m_bFinish; }
 
+    void UseRandomPos(bool _bUseRandomPos) { m_ModuleData.bRandomPos = _bUseRandomPos; }
+    int  IsRandomPos() const { return m_ModuleData.bRandomPos; }
+
+
 
 
 public:
