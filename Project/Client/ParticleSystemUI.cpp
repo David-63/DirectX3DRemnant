@@ -327,6 +327,14 @@ int ParticleSystemUI::render_update()
 					ImGui::EndCombo();
 				}
 
+				// 입자 위치 랜덤으로 할지 말지 
+				bool bRandom = m_Particle->IsRandomPos();
+				if (ImGui::Checkbox("##UseRandomPos", &bRandom))
+				{
+					tParticleData.bRandomPos = bRandom;
+
+				}
+
 
 				// 수명
 				float MinLifeTime = tParticleData.MinLifeTime;
@@ -334,7 +342,7 @@ int ParticleSystemUI::render_update()
 				ImGui::Text("LifeTime Per Particle   ");
 				ImGui::SameLine();
 				ImGui::SetNextItemWidth(150);
-				if (ImGui::DragFloatRange2("##LifeTime", &MinLifeTime, &MaxLifeTime, 0.25f, 0.0f, 100.0f, "Min: %.1f", "Max: %.1f", ImGuiSliderFlags_AlwaysClamp))
+				if (ImGui::DragFloatRange2("##LifeTime", &MinLifeTime, &MaxLifeTime, 0.25f, 0.0f, 300.0f, "Min: %.1f", "Max: %.1f", ImGuiSliderFlags_AlwaysClamp))
 				{
 					tParticleData.MinLifeTime = MinLifeTime;
 					tParticleData.MaxLifeTime = MaxLifeTime;
@@ -445,7 +453,7 @@ int ParticleSystemUI::render_update()
 					// BoxShapeScale
 					float Scale[3] = { tParticleData.vBoxShapeScale.x, tParticleData.vBoxShapeScale.y, tParticleData.vBoxShapeScale.z };
 					ImGui::SetNextItemWidth(110);
-					if (ImGui::DragFloat2("##Scale", Scale, 0.25f, 0.0f, 3000.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat2("##Scale", Scale, 0.25f, 0.0f, 3000.0f, "%.5f", ImGuiSliderFlags_AlwaysClamp))
 					{
 						tParticleData.vBoxShapeScale.x = Scale[0];
 						tParticleData.vBoxShapeScale.y = Scale[1];
@@ -614,7 +622,7 @@ int ParticleSystemUI::render_update()
 			ImGui::SameLine();
 			float Speed = tParticleData.Speed;
 			ImGui::SetNextItemWidth(110);
-			if (ImGui::DragFloat("##Speed", &Speed, 0.25f, 1.f, 10000.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+			if (ImGui::DragFloat("##Speed", &Speed, 0.25f, 0.1f, 10000.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
 			{
 				tParticleData.Speed = Speed;
 			}

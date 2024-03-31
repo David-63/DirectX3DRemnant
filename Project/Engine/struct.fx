@@ -54,6 +54,7 @@ struct tRWParticleBuffer
 struct tParticleModule
 {
     float3 vRandomSpark;
+    int    bRandomPos; // 1: 랜덤 위치 사용 , 0 : 사용 안함
 
     // 스폰 모듈
     float4 vSpawnColor;
@@ -71,7 +72,7 @@ struct tParticleModule
 
     float MinLifeTime;
     float MaxLifeTime;
-    int4 spawnpad;
+    int3 spawnpad;
 
     // Color Change 모듈
     float4 vStartColor; // 초기 색상

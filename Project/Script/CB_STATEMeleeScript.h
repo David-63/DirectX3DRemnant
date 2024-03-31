@@ -7,6 +7,7 @@ class CB_STATEMeleeScript :
 private:
     //common
 
+    CGameObject* m_AOE_Circle;
     bool    m_bSpawnCircleSpell;
     bool    m_bAttack;
     bool    m_bAtkComplete;
@@ -55,6 +56,7 @@ public:
     void AttackEnd();
     void PlayerToRotate();
     void SpawnSpell();
+    void SpawnSpellOff();
 
 
 

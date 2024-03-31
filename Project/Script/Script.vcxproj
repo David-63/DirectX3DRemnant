@@ -188,6 +188,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CHitBoxScript.h" />
     <ClInclude Include="CIdleStateScript.h" />
     <ClInclude Include="CM_Spider_FSMScript.h" />
+    <ClInclude Include="CM_Spider_Proj_Script.h" />
     <ClInclude Include="CM_Spider_StatesScript.h" />
     <ClInclude Include="CM_Spider_STATE_Atk_Script.h" />
     <ClInclude Include="CM_Spider_STATE_Damaged_Script.h" />
@@ -237,6 +238,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CHitBoxScript.cpp" />
     <ClCompile Include="CIdleStateScript.cpp" />
     <ClCompile Include="CM_Spider_FSMScript.cpp" />
+    <ClCompile Include="CM_Spider_Proj_Script.cpp" />
     <ClCompile Include="CM_Spider_StatesScript.cpp" />
     <ClCompile Include="CM_Spider_STATE_Atk_Script.cpp" />
     <ClCompile Include="CM_Spider_STATE_Damaged_Script.cpp" />

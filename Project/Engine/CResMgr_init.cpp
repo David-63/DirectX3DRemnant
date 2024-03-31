@@ -774,7 +774,7 @@ void CResMgr::CreateDefaultGraphicsShader()
 	pShader->SetRSType(RS_TYPE::CULL_NONE);
 	//pShader->SetRSType(RS_TYPE::WIRE_FRAME);
 	pShader->SetDSType(DS_TYPE::NO_TEST_NO_WRITE);
-	pShader->SetBSType(BS_TYPE::ONE_ONE);
+	pShader->SetBSType(BS_TYPE::ALPHA_BLEND);
 	pShader->SetTopology(D3D11_PRIMITIVE_TOPOLOGY::D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 	pShader->SetDomain(SHADER_DOMAIN::DOMAIN_DEFERRED_PARTICLE);
 
