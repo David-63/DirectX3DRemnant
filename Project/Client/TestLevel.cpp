@@ -128,12 +128,12 @@ void CreateTestLevel()
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}
 	//{
-		//Ptr<CMeshData> pMeshData = nullptr;
-		//CGameObject* player = nullptr;
+		Ptr<CMeshData> pMeshData = nullptr;
+		CGameObject* player = nullptr;
 
-		////pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_R2Fire.fbx");
+		pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_R2ImpactStagger.fbx");
 		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
-		//player = pMeshData->Instantiate();
+		player = pMeshData->Instantiate();
 
 		//player->SetName(L"Player");
 		//player->MeshRender()->SetFrustumCheck(false);
@@ -173,7 +173,7 @@ void CreateTestLevel()
 		////player->AddComponent(new CCollider3D);
 		////player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 
-		//SpawnGameObject(player, playerStartPos, (UINT)LAYER_TYPE::Player);
+		SpawnGameObject(player, Vec3(0,0,0), (UINT)LAYER_TYPE::Player);
 	//}
 
 	{

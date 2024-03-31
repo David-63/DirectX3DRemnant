@@ -35,6 +35,9 @@
 #define P_R2MoveSprint_L                L"animclip\\player\\P_R2MoveSprint_L.animclip"
 #define P_R2MoveSprint_R                L"animclip\\player\\P_R2MoveSprint_R.animclip"
 
+#define P_R2ImpactStagger               L"animclip\\player\\P_R2ImpactStagger.animclip"
+#define P_R2ImpactStagger_B             L"animclip\\player\\P_R2ImpactStagger_B.animclip"
+
 #define P_R2Fire                        L"animclip\\player\\P_R2Fire.animclip"
 
 #define StanceDelay 0.1f
