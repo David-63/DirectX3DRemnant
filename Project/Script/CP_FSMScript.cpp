@@ -3,11 +3,13 @@
 #include "CP_MouseCtrlScript.h"
 #include <Engine/CRenderMgr.h>
 #include <Engine/Physics.h>
+#include <Engine/CLevelMgr.h>
 
 CP_FSMScript::CP_FSMScript()
 	: m_TogleInput{ false, false, false, true }, m_StanceCheck{ false, true }, m_Weapon(nullptr)
 	, P_Stance(ePlayerStance::Normal), m_StanceDelay(StanceDelay)
 {
+	SetScriptType(SCRIPT_TYPE::P_FSMSCRIPT);
 }
 
 CP_FSMScript::~CP_FSMScript()
@@ -16,28 +18,61 @@ CP_FSMScript::~CP_FSMScript()
 
 void CP_FSMScript::begin()
 {
-	// State 넣어주기
+	initState();
+	initAnim();
+	initWeapon();
+	PlayAnimation(P_R2Idle, true);
+	ChangeState(static_cast<UINT>(eP_States::IDLE));	
+}
+
+void CP_FSMScript::tick()
+{
+	stanceControl();			// 먼저 호출해도 이상 없을듯 (변동사항이 있는 경우 애니메이션을 호출함)
+	CC_FSMScript::tick();		// 현재 State의 tick을 호출함
+	m_MouseCtrl.tick();			// 마우스 할일 함, 딱히 바꿔주는건 없음
+
+
+	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
+	retBoneMat._44 = 1;
+	Vec3 bonePosition = retBoneMat.Translation();
+	RigidBody()->SetShapeLocalPos(1, bonePosition);
+	retBoneMat = Animator3D()->GetBoneMatrix(10);
+	retBoneMat._44 = 1;
+	bonePosition = retBoneMat.Translation();
+	RigidBody()->SetShapeLocalPos(2, bonePosition);
+
+
+	if (m_TogleInput[(UINT)eInpStance::Mouse])
+	{
+		dirInput();				// wasd 방향에 대한 키입력을 감지함
+		stanceInput();			// 자세 변경에 대한 키입력을 감지함
+	}
+}
+
+void CP_FSMScript::initState()
+{
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEIDLESCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEMOVESCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEDODGESCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATERELOADSCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEFIRESCRIPT)));
+}
 
-
-	// 애니메이션
+void CP_FSMScript::initAnim()
+{
 	Animator3D()->Add(P_R2Dodge);
 	Animator3D()->Add(P_R2Dodge_L);
 	Animator3D()->Add(P_R2Dodge_N);
 	Animator3D()->Add(P_R2Dodge_R);
-		
-	GetOwner()->Animator3D()->Add(P_R2Idle);
-	GetOwner()->Animator3D()->Add(P_R2IdleAim);
-	GetOwner()->Animator3D()->Add(P_R2IdleCrouch);
-	
-	GetOwner()->Animator3D()->Add(P_R2Fire);
-	GetOwner()->Animator3D()->Add(P_R2Reload);
-	GetOwner()->Animator3D()->Add(P_R2ReloadCrouch);
-	
+
+	Animator3D()->Add(P_R2Idle);
+	Animator3D()->Add(P_R2IdleAim);
+	Animator3D()->Add(P_R2IdleCrouch);
+
+	Animator3D()->Add(P_R2Fire);
+	Animator3D()->Add(P_R2Reload);
+	Animator3D()->Add(P_R2ReloadCrouch);
+
 	Animator3D()->Add(P_R2MoveWalk);
 	Animator3D()->Add(P_R2MoveWalk_B);
 	Animator3D()->Add(P_R2MoveWalk_BL);
@@ -60,8 +95,6 @@ void CP_FSMScript::begin()
 	Animator3D()->Add(P_R2MoveSprint_L);
 	Animator3D()->Add(P_R2MoveSprint_R);
 
-	
-
 	Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::GotoIdle, this);
 	Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
 	Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
@@ -70,88 +103,72 @@ void CP_FSMScript::begin()
 	Animator3D()->CompleteEvent(P_R2Dodge_L) = std::bind(&CP_FSMScript::GotoMove, this);
 	Animator3D()->CompleteEvent(P_R2Dodge_N) = std::bind(&CP_FSMScript::GotoMove, this);
 	Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoMove, this);
-
-	// GetOwner()->Animator3D()->CompleteEvent(P_MoveR2Jog)
-
-	PlayAnimation(P_R2Idle, true);
-	ChangeState(static_cast<UINT>(eP_States::IDLE));
-
-
-	if (nullptr == m_Weapon)
-	{
-		Ptr<CMeshData> pMeshData = nullptr;
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
-
-		m_Weapon = new CGameObject();
-		m_Weapon->AddComponent(new CTransform());
-		m_Weapon->SetName(L"LongGun");
-		SpawnGameObject(m_Weapon, Vec3(0.f, 0.f, 0.f), 1);
-
-		m_LongGun = pMeshData->InstMesh();
-		m_LongGun->MeshRender()->SetFrustumCheck(false);
-		m_LongGun->SetName(L"AR");
-		m_Weapon->AddChild(m_LongGun);
-
-		m_MouseCtrl.SetOwner(this);
-		m_MouseCtrl.SetWeaponObj(m_Weapon, m_LongGun);
-		m_MouseCtrl.SetMainCam(CRenderMgr::GetInst()->GetMainCam());
-	}
 }
 
-void CP_FSMScript::tick()
+void CP_FSMScript::initWeapon()
 {
-	stanceControl();
-	CC_FSMScript::tick();
-	m_MouseCtrl.tick();
+	Ptr<CMeshData> pMeshData = nullptr;
+	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_AssaultRifle.mdat");
+	CGameObject* weapon = pMeshData->InstMesh();
+	weapon->MeshRender()->SetFrustumCheck(false);
+	weapon->SetName(L"LongGun");
+	m_Weapon = weapon;
+	m_MouseCtrl.SetWeaponObj(m_Weapon);
+	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(weapon, 1, true);
+	GetOwner()->AddChild(weapon);
 
-	if (m_TogleInput[(UINT)eInpStance::Mouse])
-	{
-		dirInput();
-		stanceInput();
-	}
+	m_MouseCtrl.SetOwner(this);
+	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
+	m_MouseCtrl.SetMainCam(cam);
+	m_MouseCtrl.begin();
 }
+
 
 void CP_FSMScript::stanceControl()
 {
 	if (m_StanceCheck[(UINT)eStanceCheck::IsChange])
 	{
-		m_StanceDelay.curTime += ScaleDT;
-
-		if (m_StanceDelay.IsFinish())
+		CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
+		if (m_TogleInput[(UINT)eInpStance::Sprint])
 		{
-			m_StanceDelay.ResetTime();
-			CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
-			if (m_TogleInput[(UINT)eInpStance::Sprint])
-			{
-				ChangeStance(ePlayerStance::Sprint);
-				curState->CallAnimation();
-				m_MouseCtrl.SetPivot(PIVOT_HIGH);
-				m_MouseCtrl.SetFov(FOV_HIGH);
-			}
-			else if (m_TogleInput[(UINT)eInpStance::Aim])
-			{
-				ChangeStance(ePlayerStance::Aim);
-				curState->CallAnimation();
-				m_MouseCtrl.SetPivot(PIVOT_HIGH);
-				m_MouseCtrl.SetFov(FOV_LOW);
-				OverrideObjRotY();
-			}
-			else if (m_TogleInput[(UINT)eInpStance::Crouch])
-			{
-				ChangeStance(ePlayerStance::Crouch);
-				curState->CallAnimation();
-				m_MouseCtrl.SetPivot(PIVOT_LOW);
-				m_MouseCtrl.SetFov(FOV_HIGH);
-			}
-			else
-			{
-				ChangeStance(ePlayerStance::Normal);
-				curState->CallAnimation();
-				m_MouseCtrl.SetPivot(PIVOT_HIGH);
-				m_MouseCtrl.SetFov(FOV_HIGH);
-			}
-			m_StanceCheck[(UINT)eStanceCheck::IsChange] = false;
+			ChangeStance(ePlayerStance::Sprint);
+			curState->CallAnimation();
+			m_MouseCtrl.SetPivot(PIVOT_HIGH);
+			m_MouseCtrl.SetFov(FOV_HIGH);
 		}
+		else if (m_TogleInput[(UINT)eInpStance::Aim])
+		{
+			ChangeStance(ePlayerStance::Aim);
+			curState->CallAnimation();
+			m_MouseCtrl.SetPivot(PIVOT_HIGH);
+			m_MouseCtrl.SetFov(FOV_LOW);
+			OverrideObjRotY();
+		}
+		else if (m_TogleInput[(UINT)eInpStance::Crouch])
+		{
+			ChangeStance(ePlayerStance::Crouch);
+			curState->CallAnimation();
+			m_MouseCtrl.SetPivot(PIVOT_LOW);
+			m_MouseCtrl.SetFov(FOV_HIGH);
+		}
+		else
+		{
+			ChangeStance(ePlayerStance::Normal);
+			curState->CallAnimation();
+			m_MouseCtrl.SetPivot(PIVOT_HIGH);
+			m_MouseCtrl.SetFov(FOV_HIGH);
+		}
+
+		m_StanceCheck[(UINT)eStanceCheck::IsChange] = false;
+
+		// 자세 변경시 딜레이 주는 코드였..음
+		//m_StanceDelay.curTime += ScaleDT;
+		//
+		//if (m_StanceDelay.IsFinish())
+		//{
+		//	m_StanceDelay.ResetTime();
+		//	
+		//}
 	}
 }
 

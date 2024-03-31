@@ -14,19 +14,24 @@ CP_STATEMoveScript::~CP_STATEMoveScript()
 
 void CP_STATEMoveScript::tick()
 {
-	Vec2 moveDir = m_PHQ->GetMoveDir();
-	if ((0.1 >= moveDir.y && -0.1 <= moveDir.y)
-		&& (0.1 >= moveDir.x && -0.1 <= moveDir.x))
+	if ((0.1 >= m_PlayerMoveDir->y && -0.1 <= m_PlayerMoveDir->y)
+		&& (0.1 >= m_PlayerMoveDir->x && -0.1 <= m_PlayerMoveDir->x))
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::IDLE));
 
-
-	CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
+	// 여기서 애니메이션 2중 호출됨 (조건을 완화시켜야할듯?) 
+	// 의도한 로직은 진행방향이 바뀌면 애니메이션을 갱신시키는건데
+	// 멈춰있다가 이동하니까 여기에 조건이 걸림
+	if (m_prevDir != *m_PlayerMoveDir)
+	{
+		m_prevDir = *m_PlayerMoveDir;
+		CallAnimation();
+	}
+	translateInput();
 	if (KEY_TAP(KEY::R))
 	{
-		if (gun->ReloadMag())
+		if (m_Gun->ReloadMag())
 		{
-			if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+			if (ePlayerStance::Crouch == *m_PlayerStance)
 			{
 				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false);
 			}
@@ -39,12 +44,11 @@ void CP_STATEMoveScript::tick()
 	}
 	if (!m_PHQ->IsSprint())
 	{
-		if (CP_FSMScript::ePlayerStance::Aim == curStance)
+		if (ePlayerStance::Aim == *m_PlayerStance)
 		{
-			CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
 			if (KEY_HOLD(KEY::LBTN))
 			{
-				if (gun->Fire())
+				if (m_Gun->Fire())
 				{
 					m_PHQ->PlayAnimation(P_R2Fire, false);
 					m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
@@ -65,15 +69,12 @@ void CP_STATEMoveScript::translateInput()
 	Vec3 vUp = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::UP);
 	Vec3 vRight = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
 
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-	CP_FSMScript::tP_Info playerInfo = m_PHQ->GetPlayerInfo();
-
-	if (CP_FSMScript::ePlayerStance::Crouch == curStance)
-		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 0.1f;
-	else if (CP_FSMScript::ePlayerStance::Sprint == curStance && m_PHQ->IsFrontDir())
-		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT * 2.8f;
+	if (ePlayerStance::Crouch == *m_PlayerStance)
+		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.1f;
+	else if (ePlayerStance::Sprint == *m_PlayerStance && m_PHQ->IsFrontDir())
+		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 3.8f;
 	else
-		moveMagnitude = playerInfo.P_Stat.MoveSpeed * ScaleDT;
+		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT;
 
 
 	if (KEY_HOLD(KEY::W))
@@ -90,28 +91,25 @@ void CP_STATEMoveScript::translateInput()
 
 void CP_STATEMoveScript::CallAnimation()
 {
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-	Vec2 moveDir = m_PHQ->GetMoveDir();
-
 	if (m_PHQ->IsFrontDir())
 	{
-		if (CP_FSMScript::ePlayerStance::Sprint == curStance)
+		if (ePlayerStance::Sprint == *m_PlayerStance)
 		{
-			if (0.3 <= moveDir.x)
+			if (0.3 <= m_PlayerMoveDir->x)
 				m_PHQ->PlayAnimation(P_R2MoveSprint_R, true);
-			else if (-0.3 >= moveDir.x)
+			else if (-0.3 >= m_PlayerMoveDir->x)
 				m_PHQ->PlayAnimation(P_R2MoveSprint_L, true);
 			else
 				m_PHQ->PlayAnimation(P_R2MoveSprint, true);
 		}
-		if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+		if (ePlayerStance::Crouch == *m_PlayerStance)
 		{
-			if (0.3 <= moveDir.x)
+			if (0.3 <= m_PlayerMoveDir->x)
 			{
 				m_PHQ->PlayAnimation(P_R2MoveWalkCrouch_FR, true);
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::CrouchRight);
 			}
-			else if (-0.3 >= moveDir.x)
+			else if (-0.3 >= m_PlayerMoveDir->x)
 			{
 				m_PHQ->PlayAnimation(P_R2MoveWalkCrouch_FL, true);
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::CrouchLeft);
@@ -122,24 +120,24 @@ void CP_STATEMoveScript::CallAnimation()
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::Crouch);
 			}
 		}
-		else if (CP_FSMScript::ePlayerStance::Aim == curStance)
+		else if (ePlayerStance::Aim == *m_PlayerStance)
 		{
-			if (0.3 <= moveDir.x)
+			if (0.3 <= m_PlayerMoveDir->x)
 				m_PHQ->PlayAnimation(P_R2MoveWalkAim_FR, true);
-			else if (-0.3 >= moveDir.x)
+			else if (-0.3 >= m_PlayerMoveDir->x)
 				m_PHQ->PlayAnimation(P_R2MoveWalkAim_FL, true);
 			else
 				m_PHQ->PlayAnimation(P_R2MoveWalkAim, true);
 			m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::Aim);
 		}
-		else if (CP_FSMScript::ePlayerStance::Normal == curStance)
+		else if (ePlayerStance::Normal == *m_PlayerStance)
 		{
-			if (0.3 <= moveDir.x)
+			if (0.3 <= m_PlayerMoveDir->x)
 			{
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::MoveRight);
 				m_PHQ->PlayAnimation(P_R2MoveWalk_FR, true);
 			}
-			else if (-0.3 >= moveDir.x)
+			else if (-0.3 >= m_PlayerMoveDir->x)
 			{
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::MoveLeft);
 				m_PHQ->PlayAnimation(P_R2MoveWalk_FL, true);
@@ -153,14 +151,14 @@ void CP_STATEMoveScript::CallAnimation()
 	}
 	else
 	{
-		if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+		if (ePlayerStance::Crouch == *m_PlayerStance)
 		{
-			if (0.3 <= moveDir.x)
+			if (0.3 <= m_PlayerMoveDir->x)
 			{
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::CrouchRight);
 				m_PHQ->PlayAnimation(P_R2MoveWalkCrouch_BR, true);
 			}
-			else if (-0.3 >= moveDir.x)
+			else if (-0.3 >= m_PlayerMoveDir->x)
 			{
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::CrouchLeft);
 				m_PHQ->PlayAnimation(P_R2MoveWalkCrouch_BL, true);
@@ -171,25 +169,25 @@ void CP_STATEMoveScript::CallAnimation()
 				m_PHQ->PlayAnimation(P_R2MoveWalkCrouch_B, true);
 			}
 		}
-		else if (CP_FSMScript::ePlayerStance::Aim == curStance)
+		else if (ePlayerStance::Aim == *m_PlayerStance)
 		{
-			if (0.3 <= moveDir.x)
+			if (0.3 <= m_PlayerMoveDir->x)
 
 				m_PHQ->PlayAnimation(P_R2MoveWalkAim_BR, true);
-			else if (-0.3 >= moveDir.x)
+			else if (-0.3 >= m_PlayerMoveDir->x)
 				m_PHQ->PlayAnimation(P_R2MoveWalkAim_BL, true);
 			else
 				m_PHQ->PlayAnimation(P_R2MoveWalkAim_B, true);
 			m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::Aim);
 		}
-		else if (CP_FSMScript::ePlayerStance::Normal == curStance)
+		else if (ePlayerStance::Normal == *m_PlayerStance)
 		{
-			if (0.3 <= moveDir.x)
+			if (0.3 <= m_PlayerMoveDir->x)
 			{
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::MoveRight);
 				m_PHQ->PlayAnimation(P_R2MoveWalk_BR, true);
 			}
-			else if (-0.3 >= moveDir.x)
+			else if (-0.3 >= m_PlayerMoveDir->x)
 			{
 				m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::MoveLeft);
 				m_PHQ->PlayAnimation(P_R2MoveWalk_BL, true);
@@ -207,7 +205,7 @@ void CP_STATEMoveScript::CallAnimation()
 
 void CP_STATEMoveScript::Enter()
 {
-	CallAnimation();
+	//CallAnimation();
 }
 
 void CP_STATEMoveScript::Exit()

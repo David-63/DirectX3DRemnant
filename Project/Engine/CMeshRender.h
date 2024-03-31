@@ -10,8 +10,8 @@ class CMeshRender :
     public CRenderComponent
 {
 private:
-    Ptr<CMeshData> m_meshData;
-    bool m_bRenderOff;
+    Ptr<CMeshData>  m_meshData;
+    bool            m_bRenderOff;
 
 public:
     virtual void finaltick() override;

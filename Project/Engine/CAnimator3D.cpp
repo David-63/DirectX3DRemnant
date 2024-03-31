@@ -16,7 +16,7 @@ CAnimator3D::CAnimator3D()
 	: CComponent(COMPONENT_TYPE::ANIMATOR3D)
 	, m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(false), m_isRun(false)
 	, m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr), m_BoneRetMatBuffer(nullptr)
-	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_AnimRatio(0.f)
+	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_AnimRatio(0.f), m_targetBone(0)
 	, m_blendTime(BlendEndTime), m_blendRatio(0.f), m_prevFrameIdx(0)
 	, m_isModifyUse(false), m_modifyRotScalar(180.f)
 {
@@ -29,7 +29,7 @@ CAnimator3D::CAnimator3D(const CAnimator3D& _origin)
 	: CComponent(_origin)
 	, m_pCurrentAnim(nullptr), m_pPrevAnim(nullptr), m_bRepeat(_origin.m_bRepeat), m_isRun(false)
 	, m_isFinalMatUpdate(false), m_BoneFinalMatBuffer(nullptr), m_BoneRetMatBuffer(nullptr)
-	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_AnimRatio(0.f)
+	, m_CurFrameIdx(0), m_NextFrameIdx(0), m_AnimRatio(0.f), m_targetBone(0)
 	, m_blendTime(_origin.m_blendTime), m_blendRatio(0.f), m_prevFrameIdx(0)
 	, m_isModifyUse(_origin.m_isModifyUse), m_modifyRotScalar(180.f)
 {
@@ -92,8 +92,7 @@ void CAnimator3D::finaltick()
 		animaTick();
 		if (m_blendTime.IsActivate())
 			blendTick();
-	}
-	
+	}	
 }
 
 void CAnimator3D::animaTick()
@@ -474,9 +473,8 @@ void CAnimator3D::Add(wstring _name)
 	Ptr<CAnimClip> newAnim = CResMgr::GetInst()->FindRes<CAnimClip>(_name);
 	assert(newAnim.Get());
 	
-	// map에 이벤트가 있는지 확인
+	// map에 이벤트가 없으면 clip에 대한 새 이벤트 생성 후 map에 추가하기
 	Events* events = FindEvents(_name);
-	// 없으면 clip에 대한 새 이벤트 생성 후 map에 추가하기
 	if (!events)
 	{
 		tAnim3DData thisAnimData = newAnim.Get()->GetAnimData();
@@ -485,15 +483,15 @@ void CAnimator3D::Add(wstring _name)
 		events->ActionEvents.resize(maxFrame);
 		m_Events.insert(std::make_pair(_name, events));
 	}
+	// 이미 있는 애니메이션이면 넘김
+	if (nullptr != findAnim(newAnim.Get()->GetKey()))
+		return;
 
-	// 클립을 map에 추가하기	
 	m_mapAnim.insert(make_pair(_name, newAnim.Get()));
-
-	// 애니메이션 변경해주기
 	changeAnimClip(_name);
 
 	// 버퍼 새로 구성하기
-	UINT iBoneCount = m_pCurrentAnim->GetOriginMesh().Get()->GetMTBoneCount();
+	UINT iBoneCount = newAnim->GetOriginMesh().Get()->GetMTBoneCount();
 	m_vecFinalBoneMat.resize(iBoneCount);
 }
 

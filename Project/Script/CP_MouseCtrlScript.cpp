@@ -55,6 +55,9 @@ CP_MouseCtrlScript::~CP_MouseCtrlScript()
 
 void CP_MouseCtrlScript::begin()
 {
+	m_PlayerStance = m_PHQ->GetStance();
+
+	
 }
 
 void CP_MouseCtrlScript::tick()
@@ -109,15 +112,14 @@ void CP_MouseCtrlScript::ctrlMovePos()
 void CP_MouseCtrlScript::ctrlMoveRot()
 {
 	// Find stance or state about Rotation Mode
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
 	eP_States stateType = static_cast<eP_States>(m_PHQ->GetCurStateType());
 
 	bool justRotCam = false;
 	if (eP_States::IDLE == stateType)
 	{
-		if (CP_FSMScript::ePlayerStance::Normal == curStance
-			|| CP_FSMScript::ePlayerStance::Crouch == curStance
-			|| CP_FSMScript::ePlayerStance::Dodge == curStance)
+		if (ePlayerStance::Normal == *m_PlayerStance
+			|| ePlayerStance::Crouch == *m_PlayerStance
+			|| ePlayerStance::Dodge == *m_PlayerStance)
 			justRotCam = true;
 	}
 
@@ -147,7 +149,7 @@ void CP_MouseCtrlScript::ctrlMoveRot()
 		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, 0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
-		m_Weapon->Transform()->SetRelativeRot(outObjEuler);
+		//m_Weapon->Transform()->SetRelativeRot(outObjEuler);
 	}
 }
 
@@ -163,22 +165,15 @@ void CP_MouseCtrlScript::mouseRock()
 
 void CP_MouseCtrlScript::updateWeaponMatrix()
 {
-	// Get BoneMatrix
 	Matrix retBoneMat = m_PHQ->Animator3D()->GetBoneMatrix(176);
 	retBoneMat._44 = 1;
-	CAnimClip* curAnim = m_PHQ->Animator3D()->GetCurAnim();
-
-	// Apply parent position
-	Matrix ownerMat = m_PHQ->Transform()->GetWorldMat();
-	Matrix totalMat = retBoneMat * ownerMat;	
-	Vec3 bonePosition = totalMat.Translation();	
+	Vec3 bonePosition = retBoneMat.Translation();
 	m_Weapon->Transform()->SetRelativePos(bonePosition);
 
-	// Apply child rotation (CurRotMat was changed by FSM)
 	Matrix weaponMat = retBoneMat * m_CurRotMat;
 	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(weaponMat);
 	Vec3 boneRot = QuatToEuler(boneQRot);
-	m_LongGun->Transform()->SetRelativeRot(boneRot);
+	m_Weapon->Transform()->SetRelativeRot(boneRot);
 }
 
 

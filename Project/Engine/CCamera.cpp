@@ -316,25 +316,6 @@ void CCamera::SortObject_Shadow()
 {
 	clear_shadow();
 
-	/*CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
-	for (UINT layerIdx = 0; layerIdx < MAX_LAYER; ++layerIdx)
-	{
-		if (m_iLayerMask & (1 << layerIdx))
-		{
-			CLayer* pLayer = pCurLevel->GetLayer(layerIdx);
-			const vector<CGameObject*>& vecObject = pLayer->GetObjects();
-			for (size_t objIdx = 0; objIdx < vecObject.size(); ++objIdx)
-			{
-				CRenderComponent* pRenderCom = vecObject[objIdx]->GetRenderComponent();
-
-				if (nullptr == pRenderCom)
-					continue;
-				m_vecShadow.push_back(vecObject[objIdx]);
-			}
-		}
-	}*/
-
-	///////////////////////////////////////////////////////////////
 	CLevel* pCurLevel = CLevelMgr::GetInst()->GetCurLevel();
 	for (UINT layerIdx = 0; layerIdx < MAX_LAYER; ++layerIdx)
 	{
@@ -575,9 +556,6 @@ void CCamera::render_deferred()
 		if (pair.second.empty())
 			continue;
 
-		// instancing 개수 조건 이하이거나
-		// Animation2D 오브젝트거나(스프라이트 애니메이션 오브젝트)
-		// Shader 가 Instancing 을 지원하지 않는경우
 		if (pair.second.size() <= 1 || pair.second[0].pObj->Animator2D()
 			|| nullptr == pair.second[0].pObj->GetRenderComponent()->GetMaterial(pair.second[0].iMtrlIdx)->GetShader()->GetVSInst())
 		{

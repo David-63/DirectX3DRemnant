@@ -13,21 +13,20 @@ CP_STATEIdleScript::~CP_STATEIdleScript()
 {
 }
 
+
 void CP_STATEIdleScript::tick()
 {
-	Vec2 moveDir = m_PHQ->GetMoveDir();
+	// 이동상태 확인
 
-	if (Vec2(0, 0) != moveDir)
+	if (Vec2(0, 0) != *m_PlayerMoveDir)
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
 
 
-	CP_FSMScript::tP_LongGunInfo* gun = m_PHQ->GetLongGunInfo();
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-	if (CP_FSMScript::ePlayerStance::Aim == curStance)
+	if (ePlayerStance::Aim == *m_PlayerStance)
 	{
 		if (KEY_HOLD(KEY::LBTN))
 		{
-			if (gun->Fire())
+			if (m_Gun->Fire())
 			{
 				m_PHQ->PlayAnimation(P_R2Fire, false);
 				m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
@@ -37,9 +36,9 @@ void CP_STATEIdleScript::tick()
 	
 	if (KEY_TAP(KEY::R))
 	{
-		if (gun->ReloadMag())
+		if (m_Gun->ReloadMag())
 		{
-			if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+			if (ePlayerStance::Crouch == *m_PlayerStance)
 				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false);
 			else
 				m_PHQ->PlayAnimation(P_R2Reload, false);
@@ -51,19 +50,17 @@ void CP_STATEIdleScript::tick()
 
 void CP_STATEIdleScript::CallAnimation()
 {
-	CP_FSMScript::ePlayerStance curStance = m_PHQ->GetStance();
-
-	if (CP_FSMScript::ePlayerStance::Crouch == curStance)
+	if (ePlayerStance::Crouch == *m_PlayerStance)
 	{
 		m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::Crouch);
 		m_PHQ->PlayAnimation(P_R2IdleCrouch, true);
 	}
-	else if (CP_FSMScript::ePlayerStance::Aim == curStance)
+	else if (ePlayerStance::Aim == *m_PlayerStance)
 	{
 		m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::Aim);
 		m_PHQ->PlayAnimation(P_R2IdleAim, true);
 	}
-	else if (CP_FSMScript::ePlayerStance::Normal == curStance)
+	else if (ePlayerStance::Normal == *m_PlayerStance)
 	{
 		m_PHQ->GetMouseController()->ChangeWeaponMatrix((UINT)CP_MouseCtrlScript::eRotMat::Normal);
 		m_PHQ->PlayAnimation(P_R2Idle, true);
