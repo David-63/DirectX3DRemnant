@@ -329,7 +329,7 @@ int ParticleSystemUI::render_update()
 
 				// 입자 위치 랜덤으로 할지 말지 
 				bool bRandom = m_Particle->IsRandomPos();
-				if (ImGui::Checkbox("##UseRandomPos", &bRandom))
+				if (ImGui::Checkbox("Use Random Pos", &bRandom))
 				{
 					tParticleData.bRandomPos = bRandom;
 

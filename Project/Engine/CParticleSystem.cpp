@@ -410,8 +410,8 @@ void CParticleSystem::render()
 
 
 	m_ParticleBuffer->Clear();
-
 	m_ModuleDataBuffer->Clear();
+	m_RWBuffer->Clear();	
 
 }
 
