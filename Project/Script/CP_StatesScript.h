@@ -9,6 +9,7 @@ enum class eP_States
     FIRE,
     RELOAD,
     MELEE,
+    STAGGER,
     DAMAGED,
     DEAD,
     END,
