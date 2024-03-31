@@ -84,12 +84,22 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         //                              , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * RandomSpark.y
                         //                              , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * RandomSpark.z); // 0.f;\        
 
-                        particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
+                        if (ModuleData.bRandomPos)
+                        {                       
+                            particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
                             , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
                             , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
+                        }
+                        
+                        else if (!ModuleData.bRandomPos)
+                        {
+                        
+                            particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
+                            , ModuleData.vBoxShapeScale.y - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
+                            , ModuleData.vBoxShapeScale.z - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
+                        }
 
                         particle.vWorldPos.xyz = particle.vLocalPos.xyz + ObjectPos.xyz;
-
 
                         // 스폰 크기 범위내에서 랜덤 크기로 지정 (Min, Max 가 일치하면 고정크기)
                         float4 vSpawnScale = ModuleData.vSpawnScaleMin + (ModuleData.vSpawnScaleMax - ModuleData.vSpawnScaleMin);
@@ -239,6 +249,8 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                     GaussianSample(NoiseTexture, NoiseTexResolution, fNormalizeThreadID + 0.1f, vOut2);
                     GaussianSample(NoiseTexture, NoiseTexResolution, fNormalizeThreadID + 0.2f, vOut3);
 
+                    
+                  
                     float3 vForce = normalize(float3(vOut1.x, vOut2.x, vOut1.z) * 2.f - 1.f);
                     particle.vRandomForce.xyz = vForce * ModuleData.fNoiseForce;
                 }

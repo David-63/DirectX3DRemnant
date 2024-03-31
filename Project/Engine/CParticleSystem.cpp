@@ -39,7 +39,7 @@ CParticleSystem::CParticleSystem()
 	SetFrustumCheck(false);
 	m_ModuleData.iMaxParticleCount = 1000;
 
-
+	m_ModuleData.bRandomPos = false;
 	m_ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = false;
 	m_ModuleData.SpawnRate = 2;
 	m_ModuleData.vSpawnColor = Vec4(0.4f, 1.f, 1.f, 0.8f);
@@ -151,6 +151,8 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 
 	SetFrustumCheck(false);
 	m_ModuleData.iMaxParticleCount = _other.m_ModuleData.iMaxParticleCount;
+	m_ModuleData.bRandomPos = _other.m_ModuleData.bRandomPos;
+
 
 	m_ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN] = _other.m_ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::PARTICLE_SPAWN];
 	m_ModuleData.SpawnRate = _other.m_ModuleData.SpawnRate;

@@ -7,6 +7,7 @@ CB_FSMScript::CB_FSMScript()
 	, m_eNoWeapon_Stance(eBossStance_NoWeapon::NORMAL_WALK)
 	, m_iRatio(0.f)
 {
+	SetScriptType(SCRIPT_TYPE::B_FSMSCRIPT);
 }
 
 CB_FSMScript::~CB_FSMScript()

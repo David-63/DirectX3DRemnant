@@ -15,6 +15,7 @@ CB_STATEMeleeScript::CB_STATEMeleeScript()
 	, m_bAttack(false)
 	, m_bNearPlayer(false)
 	, m_bSpawnCircleSpell(false)
+	, m_AOE_Circle(nullptr)
 {
 	SetStateType(static_cast<UINT>(eB_States::MELEE));
 }
@@ -54,7 +55,8 @@ void CB_STATEMeleeScript::begin()
 	m_BHQ->Animator3D()->CompleteEvent(B_Melee_Atk_R03) = std::bind(&CB_STATEMeleeScript::AttackEnd, this);
 	m_BHQ->Animator3D()->CompleteEvent(B_Melee_Atk_Weapon_AOE) = std::bind(&CB_STATEMeleeScript::AttackEnd, this);
 
-	m_BHQ->Animator3D()->StartEvent(B_Melee_Atk_Weapon_AOE) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 15) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 87) = std::bind(&CB_STATEMeleeScript::SpawnSpellOff, this);
 
 
 	// ===== 히트 박스
@@ -80,6 +82,8 @@ void CB_STATEMeleeScript::begin()
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 170.f, 150.f), Vec3(0.f, 100.f, -100.f));
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(6); // AOE
 
+	// ============================= 
+
 
 
 
@@ -89,7 +93,7 @@ void CB_STATEMeleeScript::begin()
 void CB_STATEMeleeScript::Enter()
 {
 	// 테스트 용으로 공격상태 일단 미리 지정(테스트 완료 후 지우기)
-	m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::MELEE_ATK);
+	m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::AOE);
 
 
 	//m_iAttackType = AttackTypeRandom();
@@ -109,6 +113,8 @@ void CB_STATEMeleeScript::tick()
 	//// 플레이어쪽으로 몸을 튼다.
 	//if(m_bAttack)
 	//	PlayerToRotate();
+
+	Vec3 PlayerPos = GetPlayerPos();
 
 
 	bool bPlay = m_BHQ->IsPlaying();
@@ -164,6 +170,8 @@ void CB_STATEMeleeScript::tick()
 		{
 
 			m_BHQ->PlayAnim(B_Melee_Atk_Weapon_AOE, true);
+
+
 		}
 
 
@@ -172,6 +180,8 @@ void CB_STATEMeleeScript::tick()
 
 
 	}
+
+
 
 
 
@@ -351,14 +361,37 @@ void CB_STATEMeleeScript::PlayerToRotate()
 void CB_STATEMeleeScript::SpawnSpell()
 {
 	Vec3 BossPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
+	Vec3 PlayerPos = GetPlayerPos();
 
 	if (m_bSpawnCircleSpell)
 		return;
+
+	    Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Circle_AOE.pref", L"prefab\\Circle_AOE.pref");
+		fab->PrefabLoad(L"prefab\\Circle_AOE.pref");
+
+		//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
+		m_AOE_Circle = fab->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
+		SpawnGameObject(m_AOE_Circle, Vec3(PlayerPos.x, PlayerPos.y + 210, PlayerPos.z), L"Effect");
+
+		m_AOE_Circle->SetName(L"blood");
+		m_bSpawnCircleSpell = true;
+
+
+
+
+
 
 	/*Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\Circle_AOE.pref");
 	CGameObject* cloneObj = fab->Instantiate(BossPos, 4);
 	SpawnGameObject(cloneObj, Vec3(BossPos), L"Effect");
 	m_bSpawnCircleSpell = true;*/
+}
+
+void CB_STATEMeleeScript::SpawnSpellOff()
+{
+	DestroyObject(m_AOE_Circle);
+	m_bSpawnCircleSpell = false;
+
 }
 
 UINT CB_STATEMeleeScript::MeleeAttackRandom()
