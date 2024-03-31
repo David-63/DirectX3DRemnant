@@ -7,6 +7,7 @@ private:
 	CGameObject* mSpider;
 	Vec3 mOffset;
 	bool m_bShootStart;
+	float m_fDurationTime;
 
 public:
 	CM_Spider_Proj_Script();

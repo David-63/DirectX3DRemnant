@@ -78,8 +78,6 @@ void CM_Spider_STATE_Atk_Script::ShootComplete()
 	m_bAtkComplete = true;
 	m_CProj->GetScript< CM_Spider_Proj_Script>()->ShootStart(true);
 	m_CProj = nullptr;
-
-
 }
 
 void CM_Spider_STATE_Atk_Script::CreateProj()
