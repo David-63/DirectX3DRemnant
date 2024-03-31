@@ -110,6 +110,26 @@ int CPrefab::Load(const wstring& _strFilePath)
 	return S_OK;
 }
 
+int CPrefab::PrefabLoad(const wstring& _strFilePath)
+{
+	wstring strPath = CPathMgr::GetInst()->GetContentPath();
+	strPath += _strFilePath;
+
+	FILE* pFile = nullptr;
+
+	_wfopen_s(&pFile, strPath.c_str(), L"rb");
+
+	if (nullptr == pFile)
+		return E_FAIL;
+
+	m_ProtoObj = nullptr;
+	m_ProtoObj = LoadGameObject(pFile);
+
+	fclose(pFile);
+
+	return S_OK;
+}
+
 void CPrefab::SaveGameObject(CGameObject* _Object, FILE* _File)
 {
 	// ¿Ã∏ß
