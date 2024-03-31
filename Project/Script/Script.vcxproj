@@ -188,6 +188,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CHitBoxScript.h" />
     <ClInclude Include="CIdleStateScript.h" />
     <ClInclude Include="CM_Spider_FSMScript.h" />
+    <ClInclude Include="CM_Spider_Proj_Script.h" />
     <ClInclude Include="CM_Spider_StatesScript.h" />
     <ClInclude Include="CM_Spider_STATE_Atk_Script.h" />
     <ClInclude Include="CM_Spider_STATE_Damaged_Script.h" />
@@ -212,6 +213,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CP_STATEMoveScript.h" />
     <ClInclude Include="CP_STATEReloadScript.h" />
     <ClInclude Include="CP_StatesScript.h" />
+    <ClInclude Include="CP_STATEStaggerScript.h" />
     <ClInclude Include="CScriptMgr.h" />
     <ClInclude Include="CShoulderViewScript.h" />
     <ClInclude Include="CStateScript.h" />
@@ -219,7 +221,6 @@ call CodeGen.exe</Command>
     <ClInclude Include="framework.h" />
     <ClInclude Include="CMonsterMoveScript.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="CP_STATEStaggerScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CB_FSMScript.cpp" />
@@ -238,6 +239,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CHitBoxScript.cpp" />
     <ClCompile Include="CIdleStateScript.cpp" />
     <ClCompile Include="CM_Spider_FSMScript.cpp" />
+    <ClCompile Include="CM_Spider_Proj_Script.cpp" />
     <ClCompile Include="CM_Spider_StatesScript.cpp" />
     <ClCompile Include="CM_Spider_STATE_Atk_Script.cpp" />
     <ClCompile Include="CM_Spider_STATE_Damaged_Script.cpp" />

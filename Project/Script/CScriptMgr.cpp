@@ -499,6 +499,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CP_StatesScript";
 		break;
 
+	case SCRIPT_TYPE::P_STATESTAGGERSCRIPT:
+		return L"CP_STATEStaggerScript";
+		break;
+
 	case SCRIPT_TYPE::SHOULDERVIEWSCRIPT:
 		return L"CShoulderViewScript";
 		break;

@@ -40,5 +40,6 @@ CP_STATEIdleScript
 CP_STATEMoveScript
 CP_STATEReloadScript
 CP_StatesScript
+CP_STATEStaggerScript
 CShoulderViewScript
 CTestScript
