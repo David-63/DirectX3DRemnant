@@ -21,7 +21,8 @@ void CM_Spider_STATE_Atk_Script::begin()
 {
 	CM_Spider_StatesScript::begin();
 	m_MHQ->Animator3D()->CompleteEvent(Spi_Atk) = std::bind(&CM_Spider_STATE_Atk_Script::ShootComplete, this);
-	m_MHQ->Animator3D()->ActionEvent(Spi_Atk, 20) = std::bind(&CM_Spider_STATE_Atk_Script::CreateProj, this);
+	//m_MHQ->Animator3D()->StartEvent(Spi_Atk) = std::bind(&CM_Spider_STATE_Atk_Script::CreateProj, this);
+	m_MHQ->Animator3D()->StartEvent(Spi_Atk) = std::bind(&CM_Spider_STATE_Atk_Script::SetDelayStart, this);
 	m_MHQ->Animator3D()->ActionEvent(Spi_Atk, 60) = std::bind(&CM_Spider_STATE_Atk_Script::LiftStart, this);
 
 	m_MHQ->Animator3D()->CompleteEvent(Spi_AtkPush) = std::bind(&CM_Spider_STATE_Atk_Script::AtkComplete, this);
@@ -52,6 +53,11 @@ void CM_Spider_STATE_Atk_Script::tick()
 
 	if (m_bShootLift)
 		LiftProj();
+
+	if (m_bdelayStart)
+	{
+		CreateDelay();
+	}
 }
 
 
@@ -78,6 +84,18 @@ void CM_Spider_STATE_Atk_Script::ShootComplete()
 	m_bAtkComplete = true;
 	m_CProj->GetScript< CM_Spider_Proj_Script>()->ShootStart(true);
 	m_CProj = nullptr;
+}
+
+void CM_Spider_STATE_Atk_Script::CreateDelay()
+{
+	m_fDelayTime += DT;
+
+	if (m_fDelayTime > 0.3f)
+	{
+		CreateProj();
+		m_fDelayTime = 0.f;
+		m_bdelayStart = false;
+	}
 }
 
 void CM_Spider_STATE_Atk_Script::CreateProj()
@@ -126,16 +144,16 @@ void CM_Spider_STATE_Atk_Script::LiftProj()
 		m_fFinalTime = 2.f;
 	}
 
-	m_fElapsedTime += DT * 2.f;
+	m_fElapsedTime += DT * 8.f;
 
 	if (m_fElapsedTime < m_fFinalTime)
 	{
-		Vec3 vecOffset = Vector3::Lerp(Vec3(0.f,0.f,0.f), Vec3(0.f, 100.f, 0.f), m_fElapsedTime / m_fFinalTime);
+		Vec3 vecOffset = Vector3::Lerp(Vec3(0.f,0.f,0.f), Vec3(0.f, 80.f, 0.f), m_fElapsedTime / m_fFinalTime);
 		m_CProj->GetScript< CM_Spider_Proj_Script>()->SetOffset(vecOffset);
 	}
 	else
 	{
-		m_CProj->GetScript< CM_Spider_Proj_Script>()->SetOffset(Vec3(0.f, 100.f, 0.f));
+		m_CProj->GetScript< CM_Spider_Proj_Script>()->SetOffset(Vec3(0.f, 80.f, 0.f));
 
 		m_bLiftSet = false;
 		m_fElapsedTime = 0.f;

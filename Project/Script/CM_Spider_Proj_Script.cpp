@@ -21,29 +21,34 @@ void CM_Spider_Proj_Script::begin()
 
 void CM_Spider_Proj_Script::tick()
 {
-	Vec3 frontdir = mSpider->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	
 
 	if (nullptr != mSpider && !m_bShootStart)
 	{
 		Vec3 spiderPos = mSpider->Transform()->GetRelativePos();
 		spiderPos.y = 140.f;
 		//spiderPos.y = 220.f;
-		
-		Vec3 projPos = spiderPos - frontdir * 150.f + mOffset;
+		m_vdir = mSpider->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+
+		Vec3 projPos = spiderPos - m_vdir * 150.f + mOffset;
 		
 		GetOwner()->Transform()->SetRelativePos(projPos);
+		m_fDurationTime = 0.f;
 	}
 	else if (m_bShootStart)
 	{
 		Vec3 projPos = GetOwner()->Transform()->GetRelativePos();
-		projPos += -frontdir * DT * 500.f;
+		projPos += -m_vdir * DT * 1500.f;
 
 		GetOwner()->Transform()->SetRelativePos(projPos);
 
 		m_fDurationTime += DT;
 
-		if (m_fDurationTime > 1.f);
+		if (m_fDurationTime > 1000.f);
+		{
 			DestroyObject(GetOwner());
+			m_fDurationTime = 0.f;
+		}
 	}
 }
 
