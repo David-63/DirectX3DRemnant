@@ -101,16 +101,21 @@ void CM_Spider_STATE_Atk_Script::CreateDelay()
 
 void CM_Spider_STATE_Atk_Script::CreateProj()
 {
-	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\SpiderProjectile.pref", L"prefab\SpiderProjectile.pref");
-	fab->PrefabLoad(L"prefab\SpiderProjectile.pref");
-	CGameObject* proj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), (UINT)LAYER_TYPE::HitBoxMonster);
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\SpiderProjectile.pref", L"prefab\\SpiderProjectile.pref");
+	fab->PrefabLoad(L"prefab\\SpiderProjectile.pref");
+
+	Vec3 spiderPos = m_MHQ->GetOwner()->Transform()->GetRelativePos();
+	spiderPos.y = 140.f;
+	Vec3 frontdir = m_MHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	Vec3 projPos = spiderPos - frontdir * 150.f;
+
+	CGameObject* proj = fab->Instantiate(projPos, (UINT)LAYER_TYPE::HitBoxMonster);
 
 	//CGameObject* proj = new CGameObject;
 	proj->SetName(L"Spider_Projectile");
 	proj->AddComponent(new CM_Spider_Proj_Script);
 	proj->AddComponent(new CCollider3D);
 	proj->AddComponent(new CRigidBody);
-	proj->AddComponent(new CTransform);
 	
 
 	proj->GetScript<CM_Spider_Proj_Script>()->SetSpider(m_MHQ->GetOwner());
@@ -118,14 +123,7 @@ void CM_Spider_STATE_Atk_Script::CreateProj()
 	//proj->AddComponent(new CMeshRender);
 	//proj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	//proj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
-
-	Vec3 spiderPos = m_MHQ->GetOwner()->Transform()->GetRelativePos();
-	spiderPos.y = 140.f;
-	Vec3 frontdir = m_MHQ->GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-	Vec3 projPos = spiderPos - frontdir * 150.f;
-
-	proj->Transform()->SetRelativePos(projPos);
-
+	
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(proj, L"HitBoxMonster", true);
 
 	proj->SetLayerIdx((UINT)LAYER_TYPE::HitBoxMonster);

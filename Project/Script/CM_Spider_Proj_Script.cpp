@@ -21,8 +21,6 @@ void CM_Spider_Proj_Script::begin()
 
 void CM_Spider_Proj_Script::tick()
 {
-	
-
 	if (nullptr != mSpider && !m_bShootStart)
 	{
 		Vec3 spiderPos = mSpider->Transform()->GetRelativePos();
@@ -30,10 +28,9 @@ void CM_Spider_Proj_Script::tick()
 		//spiderPos.y = 220.f;
 		m_vdir = mSpider->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 
-		Vec3 projPos = spiderPos - m_vdir * 150.f + mOffset;
+		Vec3 m_vInitialPos = spiderPos - m_vdir * 150.f + mOffset;
 		
-		GetOwner()->Transform()->SetRelativePos(projPos);
-		m_fDurationTime = 0.f;
+		GetOwner()->Transform()->SetRelativePos(m_vInitialPos);
 	}
 	else if (m_bShootStart)
 	{
@@ -42,13 +39,13 @@ void CM_Spider_Proj_Script::tick()
 
 		GetOwner()->Transform()->SetRelativePos(projPos);
 
-		m_fDurationTime += DT;
+		Vector3::Distance(projPos, m_vInitialPos)
 
-		if (m_fDurationTime > 1000.f);
+		/*if (m_fDurationTime > 1000.f);
 		{
 			DestroyObject(GetOwner());
 			m_fDurationTime = 0.f;
-		}
+		}*/
 	}
 }
 

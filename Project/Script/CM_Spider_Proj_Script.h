@@ -5,10 +5,10 @@ class CM_Spider_Proj_Script : public CScript
 {
 private:
 	CGameObject* mSpider;
+	Vec3 m_vInitialPos;
 	Vec3 mOffset;
 	Vec3 m_vdir;
 	bool m_bShootStart;
-	float m_fDurationTime;
 
 public:
 	CM_Spider_Proj_Script();
