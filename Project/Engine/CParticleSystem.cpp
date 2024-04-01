@@ -27,11 +27,11 @@ CParticleSystem::CParticleSystem()
 	, m_pMtrl(nullptr)
 	, m_IsFoward(true)
 	, m_iSpawnCount(0)
-	, m_bWantExcute(false)
+	, m_bWantExcute(true)
 	, m_UseTimeSpawn(false)
 	, m_bFinish(false)
 	, m_BackUpModuleData{}
-
+	, m_UseOnceSpawn(false)
 
 {
 
@@ -149,6 +149,8 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 	, m_iSpawnCount(0)
 	, m_UseTimeSpawn(false)
 	, m_bFinish(false)
+	, m_bWantExcute(true)
+	, m_UseOnceSpawn(false)
 {
 
 	SetFrustumCheck(false);
@@ -282,49 +284,90 @@ void CParticleSystem::finaltick()
 
 
 	// =================== Spawn Rate ===================
-	if (!m_bOnceExcute)
+	
+
+	if (m_bWantExcute)
 	{
+		if (m_UseOnceSpawn)
+		{
+			if (m_bWantExcute)
+				m_bWantExcute = false;
+		}
 		if (m_bBursts)
 		{
 
-			// 버퍼에 스폰 카운트 전달
 			tRWParticleBuffer rwbuffer = { m_ModuleData.iMaxParticleCount, };
 			m_RWBuffer->SetData(&rwbuffer);
 			m_ModuleData.SpawnRate = 0;
-
 		}
-
 		else
 		{
-
-			// 스폰 레이트 계산
-			// 1개 스폰 시간
 			float fTimePerCount = 1.f / (float)m_ModuleData.SpawnRate;
 			m_AccTime += DT;
 
-			// 누적시간이 개당 생성시간을 넘어서면
 			if (fTimePerCount < m_AccTime)
 			{
-				// 초과 배율 ==> 생성 개수
 				float fData = m_AccTime / fTimePerCount;
-
-				// 나머지는 남은 시간
 				m_AccTime = fTimePerCount * (fData - floor(fData));
 
-				// 버퍼에 스폰 카운트 전달
 				tRWParticleBuffer rwbuffer = { (int)fData, };
 				m_RWBuffer->SetData(&rwbuffer);
 			}
 		}
-
-		++m_iSpawnCount;
-
-		if (m_iSpawnCount == 1 && m_bWantExcute)
-			m_bOnceExcute = true;
-		// 리셋 버튼 만들어주기 스폰카운트 0으로 해주는....
-
-
 	}
+	
+	// 진입 조건 (Active) SetExcute
+	// m_bWantExcute 이 값을 기본적으로 false
+	
+
+	///
+	//if (!m_bOnceExcute)
+	//{
+	//	// 종료 조건
+	//	if (++m_iSpawnCount >= 1 && m_bWantExcute)
+	//	{
+	//		m_bOnceExcute = true;
+	//		m_iSpawnCount = 0;
+	//	}
+
+	//	if (m_bBursts)
+	//	{
+
+	//		// 버퍼에 스폰 카운트 전달
+	//		tRWParticleBuffer rwbuffer = { m_ModuleData.iMaxParticleCount, };
+	//		m_RWBuffer->SetData(&rwbuffer);
+	//		m_ModuleData.SpawnRate = 0;
+
+	//	}
+
+	//	else
+	//	{
+
+	//		// 스폰 레이트 계산
+	//		// 1개 스폰 시간
+	//		float fTimePerCount = 1.f / (float)m_ModuleData.SpawnRate;
+	//		m_AccTime += DT;
+
+	//		// 누적시간이 개당 생성시간을 넘어서면
+	//		if (fTimePerCount < m_AccTime)
+	//		{
+	//			// 초과 배율 ==> 생성 개수
+	//			float fData = m_AccTime / fTimePerCount;
+
+	//			// 나머지는 남은 시간
+	//			m_AccTime = fTimePerCount * (fData - floor(fData));
+
+	//			// 버퍼에 스폰 카운트 전달
+	//			tRWParticleBuffer rwbuffer = { (int)fData, };
+	//			m_RWBuffer->SetData(&rwbuffer);
+	//		}
+	//	}
+
+	//	
+	//	// 리셋 버튼 만들어주기 스폰카운트 0으로 해주는....
+
+
+	//}
 
 	//if (!m_bWantExcute)
 	//{
@@ -346,9 +389,6 @@ void CParticleSystem::finaltick()
 		if (m_SpawnTime > 0.0f)
 		{
 			m_SpawnTime -= DT;
-
-
-
 		}
 
 		else if (m_SpawnTime <= 0.0f)
@@ -359,7 +399,7 @@ void CParticleSystem::finaltick()
 		}
 	}
 
-
+	
 
 	m_ModuleDataBuffer->SetData(&m_ModuleData);
 
@@ -367,24 +407,15 @@ void CParticleSystem::finaltick()
 	m_UpdateCS->SetRWParticleBuffer(m_RWBuffer);
 	m_UpdateCS->SetModuleData(m_ModuleDataBuffer);
 
-
-
 	if (nullptr != m_NoiseTex)
 	{
 		m_UpdateCS->SetNoiseTexture(m_NoiseTex);
 	}
 
-
 	m_UpdateCS->SetParticleObjectPos(Transform()->GetWorldPos());
 	m_UpdateCS->SetParticleObjectDir(Transform()->GetWorldDir(DIR_TYPE::FRONT));
 
-
 	m_UpdateCS->Execute();
-
-
-
-
-
 }
 
 void CParticleSystem::render()
