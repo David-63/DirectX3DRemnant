@@ -102,33 +102,63 @@ void GS_ParticleRender(point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outstr
             // 파티클 월드 기준 속도를 View 공간으로 변환
             float3 vVelocity = normalize(ParticleBuffer[id].vVelocity.xyz);
             vVelocity = mul(float4(vVelocity, 0.f), g_matView).xyz;
-
+                       
             // 파티클 Right 방향과 이동 방향을 내적해서 둘 사이의 각도를 구한다.
             float3 vRight = float3(1.f, 0.f, 0.f);
             float fTheta = acos(dot(vRight, vVelocity));
-
+            
             // 내적의 결과가 코사인 예각을 기준으로 하기 때문에, 2파이 에서 반대로 뒤집어 준다.
             if (vVelocity.y < vRight.y)
             {
                 fTheta = (2.f * 3.1415926535f) - fTheta;
             }
-
+            
             // 구한 각도로 Z 축 회전 행렬을 만든다.
             float3x3 matRotZ =
             {
-                cos(fTheta),  sin(fTheta),      0,
-                -sin(fTheta), cos(fTheta),      0,
-                          0,            0,    1.f,
+                cos(fTheta), sin(fTheta), 0,
+                -sin(fTheta), cos(fTheta), 0,
+                          0, 0, 1.f,
             };
-
+            
             // 4개의 정점을 회전시킨다.
             for (int i = 0; i < 4; ++i)
             {
                 NewPos[i] = mul(NewPos[i], matRotZ);
             }
         }
-
+        
+        if (ModuleData.bRot)
+        {
+            float fAngle = 0.f;
+            
+            if (ModuleData.fRotSpeed == 0)
+            {
+                fAngle = ModuleData.fRotAngle;
+            }
+            else
+            {
+                fAngle = ModuleData.fRotAngle + g_AccTime * ModuleData.fRotSpeed;
+            }
+            
+             // 구한 각도로 Z 축 회전 행렬을 만든다.
+            float3x3 matRotZ =
+            {
+                cos(fAngle), sin(fAngle), 0,
+                -sin(fAngle), cos(fAngle), 0,
+                0, 0, 1.f,
+            };
+            
+            // 4개의 정점을 회전시킨다.
+            for (int i = 0; i < 4; ++i)
+            {
+                NewPos[i] = mul(NewPos[i], matRotZ);
+            }
+            
+        }
     }
+
+    
 
 
     GS_OUT output[4] = { (GS_OUT)0.f, (GS_OUT)0.f, (GS_OUT)0.f, (GS_OUT)0.f };

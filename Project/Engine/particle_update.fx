@@ -85,18 +85,18 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         //                              , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * RandomSpark.z); // 0.f;\        
 
                         if (ModuleData.bRandomPos)
-                        {                       
+                        {
                             particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
-                            , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
-                            , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
+                                , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
+                                , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
                         }
-                        
+
                         else if (!ModuleData.bRandomPos)
                         {
-                        
+
                             particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
-                            , ModuleData.vBoxShapeScale.y - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
-                            , ModuleData.vBoxShapeScale.z - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
+                                , ModuleData.vBoxShapeScale.y - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
+                                , ModuleData.vBoxShapeScale.z - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
                         }
 
                         particle.vWorldPos.xyz = particle.vLocalPos.xyz + ObjectPos.xyz;
@@ -205,7 +205,7 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
 
 
         // 파티클의 수명이 끝나면, 다시 비활성화 상태로 되돌림
-        if (particle.LifeTime <= particle.Age)
+        if (particle.LifeTime <= particle.Age || ModuleData.bDead)
         {
             particle.Active = 0.f;
 

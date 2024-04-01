@@ -180,15 +180,15 @@ int ParticleSystemUI::render_update()
 				// ==== 파티클 다 만들었으면 아래 코드로 사용할 것
 				// Spawn Loop
 
-				bool bLoop = m_Particle->GetLoop();
+				//bool bLoop = m_Particle->GetLoop();
 
-				ImGui::Text("Spawn Loop On/Off");
-				ImGui::SameLine();
-				if (ImGui::Checkbox("##Loop_OnOff", &bLoop))
-				{
-					m_Particle->SetLoop(bLoop);
+				//ImGui::Text("Spawn Loop On/Off");
+				//ImGui::SameLine();
+				//if (ImGui::Checkbox("##Loop_OnOff", &bLoop))
+				//{
+				//	m_Particle->SetLoop(bLoop);
 
-				}
+				//}
 
 
 
@@ -676,22 +676,22 @@ int ParticleSystemUI::render_update()
 				// VelocityDir
 				ImGui::Text("Dir  ");
 				ImGui::SameLine();
-				float Dir[2] = { tParticleData.vVelocityDir.x, tParticleData.vVelocityDir.y };
+				float Dir[3] = { tParticleData.vVelocityDir.x, tParticleData.vVelocityDir.y, tParticleData.vVelocityDir.z };
 				ImGui::SetNextItemWidth(110);
-				if (ImGui::DragFloat2("##Dir", Dir, 0.25f, -1.0f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+				if (ImGui::DragFloat3("##Dir", Dir, 0.25f, -1.0f, 1.f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
 				{
-					tParticleData.vVelocityDir = Vec4(Dir[0], Dir[1], tParticleData.vVelocityDir.z, tParticleData.vVelocityDir.w);
+					tParticleData.vVelocityDir = Vec4(Dir[0], Dir[1], Dir[2], tParticleData.vVelocityDir.w);
 				}
 
-				// OffsetAngle
-				ImGui::Text("Angle");
-				ImGui::SameLine();
-				float Angle = tParticleData.OffsetAngle;
-				ImGui::SetNextItemWidth(110);
-				if (ImGui::DragFloat("##Angle", &Angle, 0.25f, -360.0f, 360.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
-				{
-					tParticleData.OffsetAngle = Angle;
-				}
+				//// OffsetAngle
+				//ImGui::Text("Angle");
+				//ImGui::SameLine();
+				//float Angle = tParticleData.OffsetAngle;
+				//ImGui::SetNextItemWidth(110);
+				//if (ImGui::DragFloat("##Angle", &Angle, 0.25f, -360.0f, 360.0f, "%.1f", ImGuiSliderFlags_AlwaysClamp))
+				//{
+				//	tParticleData.OffsetAngle = Angle;
+				//}
 			}
 
 
