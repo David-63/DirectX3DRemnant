@@ -56,8 +56,8 @@ public:
     void AttackEnd();
     void PlayerToRotate();
     void SpawnSpell();
+    void SpawnSpellGravity();
     void SpawnSpellOff();
-
 
 
 

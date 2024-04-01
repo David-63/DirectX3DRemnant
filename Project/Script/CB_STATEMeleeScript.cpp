@@ -41,8 +41,10 @@ void CB_STATEMeleeScript::begin()
 	//m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_L03, 14) = std::bind(&CB_STATEMeleeScript::AttackBoxOff3, this);
 
 
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 19) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 84) = std::bind(&CB_STATEMeleeScript::SpawnSpellGravity, this); 
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 93) = std::bind(&CB_STATEMeleeScript::SpawnSpellOff, this);
 
-	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 50) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 85) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOn, this);
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 110) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOff, this);
 
@@ -55,8 +57,6 @@ void CB_STATEMeleeScript::begin()
 	m_BHQ->Animator3D()->CompleteEvent(B_Melee_Atk_R03) = std::bind(&CB_STATEMeleeScript::AttackEnd, this);
 	m_BHQ->Animator3D()->CompleteEvent(B_Melee_Atk_Weapon_AOE) = std::bind(&CB_STATEMeleeScript::AttackEnd, this);
 
-	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 15) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
-	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 87) = std::bind(&CB_STATEMeleeScript::SpawnSpellOff, this);
 
 
 	// ===== 히트 박스
@@ -363,38 +363,51 @@ void CB_STATEMeleeScript::SpawnSpell()
 	Vec3 BossPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
 	Vec3 PlayerPos = GetPlayerPos();
 
-	if (m_bSpawnCircleSpell)
-		return;
 
-	    Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\9090909090909090909090.pref", L"prefab\\9090909090909090909090.pref");
-		fab->PrefabLoad(L"prefab\\9090909090909090909090.pref");
+	// 이미 한번 생성했다면 객체 생성 x 
+	if (nullptr == m_AOE_Circle && !m_bSpawnCircleSpell)
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Circle_AOE.pref", L"prefab\\Circle_AOE.pref");
+		fab->PrefabLoad(L"prefab\\Circle_AOE.pref");
 
 		//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
-		m_AOE_Circle = fab.Get()->Instantiate(Vec3(300.f, 0.f, 400.f), 2);
-
-		SpawnGameObject(m_AOE_Circle, Vec3(PlayerPos.x, PlayerPos.y + 210, PlayerPos.z), L"Effect");
+		m_AOE_Circle = fab.Get()->Instantiate(Vec3(PlayerPos.x - 190, PlayerPos.y + 210, PlayerPos.z - 30), 2);
+		SpawnGameObject(m_AOE_Circle, Vec3(PlayerPos.x - 190, PlayerPos.y + 210, PlayerPos.z - 30), L"Effect");
 		m_AOE_Circle->SetName(L"blood");
 
-
-
-
 		m_bSpawnCircleSpell = true;
+	}
 
+		tParticleModule ModuleData = m_AOE_Circle->ParticleSystem()->GetModuleData();
+		ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = true;
+		ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::GRAVITY] = false;
+		ModuleData.bDead = false;
+		m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
 
-
-
-
-
-	/*Ptr<CPrefab> fab = CResMgr::GetInst()->FindRes<CPrefab>(L"prefab\\Circle_AOE.pref");
-	CGameObject* cloneObj = fab->Instantiate(BossPos, 4);
-	SpawnGameObject(cloneObj, Vec3(BossPos), L"Effect");
-	m_bSpawnCircleSpell = true;*/
 }
+
+
+
+void CB_STATEMeleeScript::SpawnSpellGravity()
+{
+
+	tParticleModule ModuleData  = m_AOE_Circle->ParticleSystem()->GetModuleData();
+	ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
+	ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::GRAVITY] = true;
+	ModuleData.fGravityForce = 6800.f;
+
+	m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
+	
+
+}
+
 
 void CB_STATEMeleeScript::SpawnSpellOff()
 {
-	DestroyObject(m_AOE_Circle);
-	m_bSpawnCircleSpell = false;
+	tParticleModule ModuleData = m_AOE_Circle->ParticleSystem()->GetModuleData();
+	ModuleData.bDead = true;
+	m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
+
 
 }
 

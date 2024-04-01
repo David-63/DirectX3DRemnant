@@ -55,6 +55,7 @@ struct tParticleModule
 {
     float3 vRandomSpark;
     int    bRandomPos; // 1: 랜덤 위치 사용 , 0 : 사용 안함
+    int    bDead; // 1: 수명과 관계없이 파티클 즉시 비활성화, 0 : 수명이 다되면 비활성화
 
     // 스폰 모듈
     float4 vSpawnColor;
@@ -72,12 +73,12 @@ struct tParticleModule
 
     float MinLifeTime;
     float MaxLifeTime;
-    int3 spawnpad;
+    int spawnpad[2];
 
     // Color Change 모듈
     float4 vStartColor; // 초기 색상
     float4 vEndColor; // 최종 색상
-    bool bStrongColor;
+    int bStrongColor;
 
     // Scale Change 모듈
     float StartScale; // 초기 크기
