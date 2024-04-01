@@ -7,7 +7,6 @@
 CM_Spider_Proj_Script::CM_Spider_Proj_Script()
 	: CScript((UINT)SCRIPT_TYPE::M_SPIDER_PROJ_SCRIPT)
 	, mOffset(0.f,0.f,0.f)
-	, m_fDurationTime(0.f)
 {
 }
 
@@ -39,13 +38,11 @@ void CM_Spider_Proj_Script::tick()
 
 		GetOwner()->Transform()->SetRelativePos(projPos);
 
-		Vector3::Distance(projPos, m_vInitialPos)
-
-		/*if (m_fDurationTime > 1000.f);
+		if (Vector3::Distance(projPos, m_vInitialPos) > 5000.f)
 		{
 			DestroyObject(GetOwner());
-			m_fDurationTime = 0.f;
-		}*/
+		}
+
 	}
 }
 

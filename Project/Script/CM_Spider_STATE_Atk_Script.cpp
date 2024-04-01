@@ -110,13 +110,14 @@ void CM_Spider_STATE_Atk_Script::CreateProj()
 	Vec3 projPos = spiderPos - frontdir * 150.f;
 
 	CGameObject* proj = fab->Instantiate(projPos, (UINT)LAYER_TYPE::HitBoxMonster);
+	fab->FabClear();
 
-	//CGameObject* proj = new CGameObject;
 	proj->SetName(L"Spider_Projectile");
 	proj->AddComponent(new CM_Spider_Proj_Script);
 	proj->AddComponent(new CCollider3D);
 	proj->AddComponent(new CRigidBody);
 	
+	//proj->ParticleSystem()->se
 
 	proj->GetScript<CM_Spider_Proj_Script>()->SetSpider(m_MHQ->GetOwner());
 
