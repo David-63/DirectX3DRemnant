@@ -179,7 +179,8 @@ public:
 
     void SetDead(bool _dead) { m_ModuleData.bDead = _dead; }
 
-
+    void SetOffsetPos(Vec3 _OffsetPos) { m_ModuleData.vBoxShapeScale = _OffsetPos; }
+    Vec3 GetOffsetPos() const { return m_ModuleData.vBoxShapeScale; }
 
 public:
     CParticleSystem();
