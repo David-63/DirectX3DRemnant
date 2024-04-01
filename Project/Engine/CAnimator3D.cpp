@@ -113,24 +113,28 @@ void CAnimator3D::animaTick()
 		}
 	}
 
-	// 애니메이션 진행
+	// 애니메이션 종료 조건
 	m_AnimUpdateTime[m_CurAnimData.AnimClipIdx] += ScaleDT;
 	if (m_AnimUpdateTime[m_CurAnimData.AnimClipIdx] >= m_CurAnimData.FinishTime)
 		m_CurAnimData.IsFinish = true;
 
-	double dFrameIdx =
-		(m_AnimUpdateTime[m_CurAnimData.AnimClipIdx] + m_CurAnimData.BeginTime) * (double)30;
+	// 현재 프레임 구하기
+	double dFrameIdx = (m_AnimUpdateTime[m_CurAnimData.AnimClipIdx] + m_CurAnimData.BeginTime) * (double)30;
 	m_CurFrameIdx = (int)(dFrameIdx);
 
+	// 현재 프레임 기준으로 다음 프레임 숫자 구하기
 	if (m_CurFrameIdx >= m_pCurrentAnim->GetMTAnimClips().at(m_CurAnimData.AnimClipIdx).iFrameLength - 1)
 		m_NextFrameIdx = m_CurFrameIdx;
 	else
 		m_NextFrameIdx = m_CurFrameIdx + 1;
 
+	// 현재 프레임과 다음프레임간의 시간비율 구하기
 	m_AnimRatio = (float)(dFrameIdx - (double)m_NextFrameIdx);
 
+	// 현재 프레임이 최대 프레임을 넘긴것 같으면 보정해주기
 	if (m_CurFrameIdx >= m_pCurrentAnim->GetMTAnimClips().at(m_CurAnimData.AnimClipIdx).iFrameLength - 1)
 		m_CurFrameIdx = m_pCurrentAnim->GetMTAnimClips().at(m_CurAnimData.AnimClipIdx).iFrameLength - 1;
+
 	//UINT frameIndex = m_CurFrameIdx - (m_CurAnimData.BeginTime * 30);
 	m_isFinalMatUpdate = false;
 

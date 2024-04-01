@@ -47,6 +47,20 @@ void CP_FSMScript::tick()
 		dirInput();				// wasd 방향에 대한 키입력을 감지함
 		stanceInput();			// 자세 변경에 대한 키입력을 감지함
 	}
+
+	if (KEY_TAP(KEY::K))
+	{
+		DestroyObject(m_Weapon);
+		DestroyObject(GetOwner());
+	}
+	if (KEY_TAP(KEY::O))
+	{
+		m_MuzzleFlash->ParticleSystem()->Module_Active_OnceSpawn();
+	}
+	if (KEY_TAP(KEY::P))
+	{
+		m_MuzzleFlash->ParticleSystem()->Module_Diactive_OnceSpawn();
+	}
 }
 
 void CP_FSMScript::initState()
@@ -116,6 +130,26 @@ void CP_FSMScript::initWeapon()
 	m_MouseCtrl.SetWeaponObj(m_Weapon);
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(weapon, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(weapon);
+
+
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_MuzzleFlash.pref", L"prefab\\P_MuzzleFlash.pref");
+	fab->PrefabLoad(L"prefab\\P_MuzzleFlash.pref");
+	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(23.f, 182.f, 63.f), 1);
+	m_MuzzleFlash->SetName(L"MuzzleFlash");
+	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_MuzzleFlash, (UINT)LAYER_TYPE::Player, true);
+	GetOwner()->AddChild(m_MuzzleFlash);
+	tParticleModule ModuleData = m_MuzzleFlash->ParticleSystem()->GetModuleData();
+	ModuleData.bDead = true;											// 이거 값이 true 인지 확인하기
+	m_MuzzleFlash->ParticleSystem()->SetModuleData(ModuleData);
+	m_MuzzleFlash->ParticleSystem()->Module_Active_OnceSpawn();
+	
+	/*fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\bullet.pref", L"prefab\\bullet.pref");
+	fab->PrefabLoad(L"prefab\\bullet.pref");
+	m_Bullet = fab.Get()->Instantiate(Vec3(0, 0, 0), 1);
+	m_Bullet->SetName(L"Bullet");
+	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_Bullet, (UINT)LAYER_TYPE::Player, true);
+	GetOwner()->AddChild(m_Bullet);*/
+
 
 	m_MouseCtrl.SetOwner(this);
 	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
@@ -266,6 +300,15 @@ void CP_FSMScript::DoDodge()
 	}
 
 	ChangeState(static_cast<UINT>(eP_States::DODGE));
+}
+
+void CP_FSMScript::ShootRay()
+{
+	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
+	Vec3 camPos = cam->Transform()->GetRelativePos();
+	Vec3 camDir = cam->Transform()->GetWorldDir(DIR_TYPE::FRONT);
+	tRayCastInfo*  other = Physics::GetInst()->RayCast(camPos, camDir, 10000.f);
+	other->hitActor;
 }
 
 void CP_FSMScript::GotoIdle()

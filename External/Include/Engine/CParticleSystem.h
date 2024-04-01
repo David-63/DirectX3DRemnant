@@ -24,6 +24,9 @@ private:
     float                       m_AccTime;
     float                       m_SpawnTime;
     bool                        m_UseTimeSpawn;
+    bool                        m_UseOnceSpawn;
+
+
 
     Ptr<CTexture>               m_ParticleTex;
     Ptr<CTexture>               m_NoiseTex;
@@ -44,7 +47,7 @@ private:
     CGameObject* m_pOwnerObj; // 랜덤스파크 쓸 때 여기에 오브젝트 세팅해줄것
 
 
-
+private:
 
 
 public:
@@ -150,8 +153,21 @@ public:
     void SetAnimFrmTime(float _fAnimFrmTime) { m_ModuleData.fAnimFrmTime = _fAnimFrmTime; }
     float GetAnimFrmTime() const { return m_ModuleData.fAnimFrmTime; }
 
-    void SetExcute(bool _bExcute) { m_bWantExcute = _bExcute; }
-    bool GetExcute() const { return m_bWantExcute; }
+    // 파티클을 1회 단위로 사용하는 경우 세팅해줌
+    void Module_Active_OnceSpawn()
+    {
+        m_UseOnceSpawn = true;
+        m_bWantExcute = false;
+    }
+    void ActiveParticle() { m_bWantExcute = true; }
+
+    // 위 모드를 취소하고 싶으면 호출
+    void Module_Diactive_OnceSpawn()
+    {
+        m_UseOnceSpawn = false;
+        m_bWantExcute = true;
+    }
+
 
     void SetTimeSpawn(bool _bUseTimeSpawn) { m_UseTimeSpawn = _bUseTimeSpawn; }
     bool GetTimeSpawn() const { return m_UseTimeSpawn; }
@@ -163,7 +179,8 @@ public:
 
     void SetDead(bool _dead) { m_ModuleData.bDead = _dead; }
 
-
+    void SetOffsetPos(Vec3 _OffsetPos) { m_ModuleData.vBoxShapeScale = _OffsetPos; }
+    Vec3 GetOffsetPos() const { return m_ModuleData.vBoxShapeScale; }
 
 public:
     CParticleSystem();

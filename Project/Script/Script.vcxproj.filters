@@ -243,6 +243,9 @@
     <ClInclude Include="CP_STATEStaggerScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
+    <ClInclude Include="CP_STATEStaggerScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -388,6 +391,9 @@
     </ClCompile>
     <ClCompile Include="CM_Spider_Proj_Script.cpp">
       <Filter>Script\Creature\Monster\M_Scripts\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEStaggerScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
     </ClCompile>
     <ClCompile Include="CP_STATEStaggerScript.cpp">
       <Filter>Script\Creature\Player\P_States</Filter>
