@@ -6,6 +6,7 @@
 #include "CM_Spider_Proj_Script.h"
 #include "Engine/CLevelMgr.h"
 #include "Engine/CLevel.h"
+#include "Engine/CParticleSystem.h"
 
 
 CM_Spider_STATE_Atk_Script::CM_Spider_STATE_Atk_Script()
@@ -100,18 +101,23 @@ void CM_Spider_STATE_Atk_Script::CreateDelay()
 
 void CM_Spider_STATE_Atk_Script::CreateProj()
 {
-	CGameObject* proj = new CGameObject;
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\SpiderProjectile.pref", L"prefab\SpiderProjectile.pref");
+	fab->PrefabLoad(L"prefab\SpiderProjectile.pref");
+	CGameObject* proj = fab->Instantiate(Vec3(300.f, 0.f, 400.f), (UINT)LAYER_TYPE::HitBoxMonster);
+
+	//CGameObject* proj = new CGameObject;
 	proj->SetName(L"Spider_Projectile");
 	proj->AddComponent(new CM_Spider_Proj_Script);
 	proj->AddComponent(new CCollider3D);
 	proj->AddComponent(new CRigidBody);
-	proj->AddComponent(new CMeshRender);
 	proj->AddComponent(new CTransform);
+	
 
 	proj->GetScript<CM_Spider_Proj_Script>()->SetSpider(m_MHQ->GetOwner());
 
-	proj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-	proj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
+	//proj->AddComponent(new CMeshRender);
+	//proj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+	//proj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
 
 	Vec3 spiderPos = m_MHQ->GetOwner()->Transform()->GetRelativePos();
 	spiderPos.y = 140.f;
@@ -125,7 +131,7 @@ void CM_Spider_STATE_Atk_Script::CreateProj()
 	proj->SetLayerIdx((UINT)LAYER_TYPE::HitBoxMonster);
 	tShapeInfo info = {};
 	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	info.size = Vector3(50.f, 1.f, 2.f);
+	info.size = Vector3(20.f, 1.f, 2.f);
 	proj->RigidBody()->PushBackShapeInfo(info);
 	proj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
 
