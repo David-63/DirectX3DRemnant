@@ -14,8 +14,9 @@ private:
 
     bool m_bTargetOn;
     bool m_bMoveOn;
-    int  m_iJustTurned;
     bool m_bNearPlayer;
+
+    bool m_bDestbyPos;
 
 
     class CPathFinderScript* m_sPathFinder;
@@ -34,10 +35,10 @@ public:
 public:
     void MoveTo(Vec3 _dstPos);
     void SetAndGetPath(CGameObject* _pObject);
+    void SetAndGetPath(Vec3 _pos);
     void MoveOn(bool _is);
     std::stack<Vec3>* GetStack() { return m_Stack; }
     bool RenewPath();
-    int  IsJustTurned() { return m_iJustTurned; }
     void SetNearPlayer(bool is) { m_bNearPlayer = is; }
 
     void SetSpeed(float _speed) { m_fSpeed = _speed; }

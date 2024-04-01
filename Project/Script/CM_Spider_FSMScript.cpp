@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CM_Spider_FSMScript.h"
 #include "CM_Spider_StatesScript.h"
+#include "CM_Spider_STATE_Damaged_Script.h"
 
 CM_Spider_FSMScript::CM_Spider_FSMScript()
 {
@@ -76,7 +77,7 @@ void CM_Spider_FSMScript::begin()
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_SPIDER_STATE_DEAD_SCRIPT)));
 
 	//ChangeState(static_cast<UINT>(eSpiderState::Idle));
-	ChangeState(static_cast<UINT>(eSpiderState::Mttack));
+	ChangeState(static_cast<UINT>(eSpiderState::Attack));
 }
 
 void CM_Spider_FSMScript::tick()
@@ -87,6 +88,14 @@ void CM_Spider_FSMScript::tick()
 	if (KEY_TAP(KEY::O))
 	{
 		ChangeState((UINT)eSpiderState::Damaged);
+	}
+
+	if (GetAtkSign())
+	{
+		tHitInfo info = GetHitInfo();
+		//dynamic_cast<CM_Spider_STATE_Damaged_Script*>(FindStateScript((UINT)eM_A_States::DAMAGED))->
+		ChangeState((UINT)eSpiderState::Damaged);
+
 	}
 }
 
