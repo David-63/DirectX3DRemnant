@@ -221,132 +221,132 @@ void CreateTestLevel()
 
 
 	//lurker    
-	//{
-	//	Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.fbx");
-	//	CGameObject* obj = data->Instantiate();
-	//	obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.animclip");
-	//	obj->SetName(L"TestObj");
-	//	obj->AddComponent(new CM_Lurker_FSMScript);
-	//	obj->AddComponent(new CHitBoxScript);
-	//	obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+	{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.fbx");
+		CGameObject* obj = data->Instantiate();
+		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.animclip");
+		obj->SetName(L"TestObj");
+		obj->AddComponent(new CM_Lurker_FSMScript);
+		obj->AddComponent(new CHitBoxScript);
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
 
-	//	obj->AddComponent(new CPathFinderScript());
-	//	obj->AddComponent(new CMonsterMoveScript());
-	//	obj->AddComponent(new CRigidBody());
+		obj->AddComponent(new CPathFinderScript());
+		obj->AddComponent(new CMonsterMoveScript());
+		obj->AddComponent(new CRigidBody());
 
-	//	
+		
 
-	//	tShapeInfo info = {};
-	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info.size = Vector3(2.f, 2.f, 2.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info);
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(2.f, 2.f, 2.f);
+		obj->RigidBody()->PushBackShapeInfo(info);
 
-	//	tShapeInfo info1 = {};
-	//	info1.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info1.size = Vector3(40.f, 40.f, 40.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info1);
+		tShapeInfo info1 = {};
+		info1.eGeomType = GEOMETRY_TYPE::Sphere;
+		info1.size = Vector3(40.f, 40.f, 40.f);
+		obj->RigidBody()->PushBackShapeInfo(info1);
 
-	//	tShapeInfo info2 = {};
-	//	info2.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info2.size = Vector3(20.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info2);
+		tShapeInfo info2 = {};
+		info2.eGeomType = GEOMETRY_TYPE::Sphere;
+		info2.size = Vector3(20.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info2);
 
-	//	tShapeInfo info3 = {};
-	//	info3.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info3.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info3);
+		tShapeInfo info3 = {};
+		info3.eGeomType = GEOMETRY_TYPE::Sphere;
+		info3.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info3);
 
-	//	tShapeInfo info4 = {};
-	//	info4.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info4.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info4);
+		tShapeInfo info4 = {};
+		info4.eGeomType = GEOMETRY_TYPE::Sphere;
+		info4.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info4);
 
-	//	tShapeInfo info5 = {};
-	//	info5.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info5.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info5);
+		tShapeInfo info5 = {};
+		info5.eGeomType = GEOMETRY_TYPE::Sphere;
+		info5.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info5);
 
-	//	tShapeInfo info6 = {};
-	//	info6.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info6.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info6);
+		tShapeInfo info6 = {};
+		info6.eGeomType = GEOMETRY_TYPE::Sphere;
+		info6.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info6);
 
-	//	tShapeInfo info7 = {};
-	//	info7.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info7.size = Vector3(40.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info7);
+		tShapeInfo info7 = {};
+		info7.eGeomType = GEOMETRY_TYPE::Sphere;
+		info7.size = Vector3(40.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info7);
 
-	//	tShapeInfo info8 = {};
-	//	info8.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info8.size = Vector3(40.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info8);
+		tShapeInfo info8 = {};
+		info8.eGeomType = GEOMETRY_TYPE::Sphere;
+		info8.size = Vector3(40.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info8);
 
-	//	tShapeInfo info9 = {};
-	//	info9.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info9.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info9);
+		tShapeInfo info9 = {};
+		info9.eGeomType = GEOMETRY_TYPE::Sphere;
+		info9.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info9);
 
-	//	tShapeInfo info10 = {};
-	//	info10.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info10.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info10);
+		tShapeInfo info10 = {};
+		info10.eGeomType = GEOMETRY_TYPE::Sphere;
+		info10.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info10);
 
-	//	tShapeInfo info11 = {};
-	//	info11.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info11.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info11);
+		tShapeInfo info11 = {};
+		info11.eGeomType = GEOMETRY_TYPE::Sphere;
+		info11.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info11);
 
-	//	tShapeInfo info12 = {};
-	//	info12.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info12.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info12);
+		tShapeInfo info12 = {};
+		info12.eGeomType = GEOMETRY_TYPE::Sphere;
+		info12.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info12);
 
-	//	tShapeInfo info13 = {};
-	//	info13.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info13.size = Vector3(40.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info13);
+		tShapeInfo info13 = {};
+		info13.eGeomType = GEOMETRY_TYPE::Sphere;
+		info13.size = Vector3(40.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info13);
 
-	//	tShapeInfo info14 = {};
-	//	info14.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info14.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info14);
+		tShapeInfo info14 = {};
+		info14.eGeomType = GEOMETRY_TYPE::Sphere;
+		info14.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info14);
 
-	//	tShapeInfo info15 = {};
-	//	info15.eGeomType = GEOMETRY_TYPE::Sphere;
-	//	info15.size = Vector3(30.f, 20.f, 20.f);
-	//	obj->RigidBody()->PushBackShapeInfo(info15);
-
-
-	//	obj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
-	//	//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-	//	//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-	//	//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-	//	obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+		tShapeInfo info15 = {};
+		info15.eGeomType = GEOMETRY_TYPE::Sphere;
+		info15.size = Vector3(30.f, 20.f, 20.f);
+		obj->RigidBody()->PushBackShapeInfo(info15);
 
 
-
-	//	obj->RigidBody()->SetBoneSoket(0, 0, Vec3(0.f, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(1, 1, Vec3(0, 0, 0));
-	//	obj->RigidBody()->SetBoneSoket(2, 6, Vec3(0, -5.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(3, 9, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(4, 27, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(5, 10, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(6, 28, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(7, 8, Vec3(0, 0.f, 0)); 
-	//	obj->RigidBody()->SetBoneSoket(8, 4, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(9, 49, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(10, 53, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(11, 50, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(12, 54, Vec3(0, 0.f, 0));
-	//	obj->RigidBody()->SetBoneSoket(13, 26, Vec3(0, 0.f, 0)); 
-	//	obj->RigidBody()->SetBoneSoket(14, 52, Vec3(-12.f, -15.f, 5)); 
-	//	obj->RigidBody()->SetBoneSoket(15, 48, Vec3(12.f, -15.f, 5));
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
+		//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
 
 
+		obj->RigidBody()->SetBoneSoket(0, 0);
+		obj->RigidBody()->SetBoneSoket(1, 1);
+		obj->RigidBody()->SetBoneSoket(2, 6);
+		obj->RigidBody()->SetBoneSoket(3, 9);
+		obj->RigidBody()->SetBoneSoket(4, 27);
+		obj->RigidBody()->SetBoneSoket(5, 10);
+		obj->RigidBody()->SetBoneSoket(6, 28);
+		obj->RigidBody()->SetBoneSoket(7, 8); 
+		obj->RigidBody()->SetBoneSoket(8, 4);
+		obj->RigidBody()->SetBoneSoket(9, 49);
+		obj->RigidBody()->SetBoneSoket(10, 53);
+		obj->RigidBody()->SetBoneSoket(11, 50);
+		obj->RigidBody()->SetBoneSoket(12, 54);
+		obj->RigidBody()->SetBoneSoket(13, 26); 
+		obj->RigidBody()->SetBoneSoket(14, 52); 
+		obj->RigidBody()->SetBoneSoket(15, 48);
 
-	//	SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
-	//}
+
+
+
+		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
+	}
 
 
 	Ptr<CMeshData> pMeshData = nullptr;
