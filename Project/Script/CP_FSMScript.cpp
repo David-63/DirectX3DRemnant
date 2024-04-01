@@ -280,6 +280,7 @@ void CP_FSMScript::ShootRay()
 	Vec3 camPos = cam->Transform()->GetRelativePos();
 	Vec3 camDir = cam->Transform()->GetWorldDir(DIR_TYPE::FRONT);
 	tRayCastInfo*  other = Physics::GetInst()->RayCast(camPos, camDir, 10000.f);
+	other->hitActor;
 }
 
 void CP_FSMScript::GotoIdle()
