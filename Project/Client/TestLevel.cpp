@@ -134,62 +134,62 @@ void CreateTestLevel()
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}
 
-	/*{
+	{
 		CGameObject* pObj = new CGameObject;
 		pObj->SetName(L"Particle Maker");
 		pObj->AddComponent(new CTransform());
 		pObj->AddComponent(new CParticleSystem());
 		pObj->Transform()->SetDebugSphereUse(true);
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
-	}*/
+	}
 
 	//{
-		//Ptr<CMeshData> pMeshData = nullptr;
-		//CGameObject* player = nullptr;
+		Ptr<CMeshData> pMeshData = nullptr;
+		CGameObject* player = nullptr;
 
-		/////pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_R2ImpactStagger.fbx");
-		//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
-		//player = pMeshData->Instantiate();
+		///pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_R2ImpactStagger.fbx");
+		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
+		player = pMeshData->Instantiate();
 
-		//player->SetName(L"Player");
-		//player->MeshRender()->SetFrustumCheck(false);
-		//CP_FSMScript* pFSM = new CP_FSMScript();
-		//player->AddComponent(pFSM);
+		player->SetName(L"Player");
+		player->MeshRender()->SetFrustumCheck(false);
+		CP_FSMScript* pFSM = new CP_FSMScript();
+		player->AddComponent(pFSM);
 
-		//// rigidbody 에 전달할 데이터 미리 초기화
-		//Vec3 playerStartPos = Vec3(0, 100.f, 0);
-		//player->Transform()->SetRelativePos(playerStartPos);
-		//player->SetLayerIdx((UINT)LAYER_TYPE::Player);
+		// rigidbody 에 전달할 데이터 미리 초기화
+		Vec3 playerStartPos = Vec3(0, 100.f, 0);
+		player->Transform()->SetRelativePos(playerStartPos);
+		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
 
-		////// 쉐이프 정의 및 등록
-		//player->AddComponent(new CRigidBody);
-		//tShapeInfo info = {};								// foot
-		//info.eGeomType = GEOMETRY_TYPE::Sphere;
-		//info.size = Vector3(15.f, 15.f, 15.f);
-		//player->RigidBody()->PushBackShapeInfo(info);
-		//info = {};											// head
-		//info.eGeomType = GEOMETRY_TYPE::Sphere;
-		//info.size = Vector3(35.f, 35.f, 35.f);
-		//player->RigidBody()->PushBackShapeInfo(info);
-		//info = {};											// body
-		//info.eGeomType = GEOMETRY_TYPE::Sphere;
-		//info.size = Vector3(55.f, 55.f, 55.f);
-		//player->RigidBody()->PushBackShapeInfo(info);
-		//// 피지컬 등록하기
-		//player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		//// 쉐이프 정의 및 등록
+		player->AddComponent(new CRigidBody);
+		tShapeInfo info = {};								// foot
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(15.f, 15.f, 15.f);
+		player->RigidBody()->PushBackShapeInfo(info);
+		info = {};											// head
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(35.f, 35.f, 35.f);
+		player->RigidBody()->PushBackShapeInfo(info);
+		info = {};											// body
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(55.f, 55.f, 55.f);
+		player->RigidBody()->PushBackShapeInfo(info);
+		// 피지컬 등록하기
+		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 
-		//player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		//player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		//player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		//player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-		//
-		//////////////////////////
-		////player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+		
+		////////////////////////
+		//player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
 
-		////player->AddComponent(new CCollider3D);
-		////player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+		//player->AddComponent(new CCollider3D);
+		//player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 
-		//SpawnGameObject(player, Vec3(0,0,0), (UINT)LAYER_TYPE::Player);
+		SpawnGameObject(player, Vec3(0,0,0), (UINT)LAYER_TYPE::Player);
 	//}
 
 	{
@@ -220,61 +220,4 @@ void CreateTestLevel()
 		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), (UINT)LAYER_TYPE::Ground);
 	}
 
-		//static box
-	{
-		CGameObject* pObj = new CGameObject;
-		pObj->SetName(L"staticBox");
-		pObj->AddComponent(new CTransform);
-		pObj->AddComponent(new CMeshRender);
-		pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug"));
-		pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
-
-
-		pObj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
-		pObj->Transform()->SetRelativePos(Vec3(500.f, 100.f, 0.f));
-		pObj->Transform()->SetRelativeScale(200.f, 200.f, 200.f);
-
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Box;
-		info.size = Vector3(200.f, 200.f, 200.f);
-
-		pObj->AddComponent(new CRigidBody);
-		pObj->RigidBody()->PushBackShapeInfo(info);
-		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
-
-		pObj->AddComponent(new CCollider3D);
-		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Wall);
-
-		SpawnGameObject(pObj, Vec3(500.f, 100.f, 0.f), (UINT)LAYER_TYPE::Wall);
-
-	}
-
-	//dynamic sphere
-	/*{
-		CGameObject* pObj = new CGameObject;
-		pObj->AddComponent(new CTransform);
-		pObj->AddComponent(new CMeshRender);
-		pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-		pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
-
-		pObj->SetName(L"DynamicSphere");
-		pObj->SetLayerIdx(5);
-		pObj->Transform()->SetRelativePos(Vec3(-200.f, 700.f, 0.f));
-		pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
-
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(100.f, 100.f, 100.f);
-		info.massProperties.restitution = 0.f;
-		info.massProperties.dynamicFriction = 0.6f;
-		info.massProperties.staticFriction = 0.6f;
-
-		pObj->AddComponent(new CRigidBody);
-		pObj->AddComponent(new CCollider3D);
-
-		SpawnGameObject(pObj, Vec3(-200.f, 700.f, 0.f), 5);
-
-		}*/
-
-	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
 }

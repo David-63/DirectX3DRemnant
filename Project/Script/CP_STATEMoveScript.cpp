@@ -12,6 +12,12 @@ CP_STATEMoveScript::~CP_STATEMoveScript()
 {
 }
 
+void CP_STATEMoveScript::begin()
+{
+	CP_StatesScript::begin();
+	m_readyToFire.SetFinishTime(m_Gun->FireLate);
+}
+
 void CP_STATEMoveScript::tick()
 {
 	if ((0.1 >= m_PlayerMoveDir->y && -0.1 <= m_PlayerMoveDir->y)
@@ -26,19 +32,31 @@ void CP_STATEMoveScript::tick()
 		m_prevDir = *m_PlayerMoveDir;
 		CallAnimation();
 	}
+	if (!m_readyToFire.IsFinish())
+	{
+		m_readyToFire.curTime += ScaleDT;
+	}
+	else
+	{
+		m_readyToFire.Activate();
+	}
+
+
 	translateInput();
 	if (KEY_TAP(KEY::R))
 	{
 		if (m_Gun->ReloadMag())
 		{
 			if (ePlayerStance::Crouch == *m_PlayerStance)
-			{
-				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false);
-			}
+				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false); 
 			else
-			{
 				m_PHQ->PlayAnimation(P_R2Reload, false);
-			}
+
+			if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+				m_PHQ->InputCrouch();
+			if (m_PHQ->IsInput((UINT)eInpStance::Aim))
+				m_PHQ->InputAim();
+			m_PHQ->InputSprint(false);
 			m_PHQ->ChangeState(static_cast<UINT>(eP_States::RELOAD));
 		}
 	}
@@ -48,11 +66,29 @@ void CP_STATEMoveScript::tick()
 		{
 			if (KEY_HOLD(KEY::LBTN))
 			{
-				if (m_Gun->Fire())
+				if (m_readyToFire.IsActivate())
 				{
-					m_PHQ->PlayAnimation(P_R2Fire, false);
-					m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
+					m_readyToFire.ResetTime();
+					if (m_Gun->Fire())
+					{
+						m_PHQ->PlayAnimation(P_R2Fire, false);
+						CParticleSystem* particle = m_PHQ->GetBullet()->ParticleSystem();
+						tParticleModule ModuleData = particle->GetModuleData();
+						ModuleData.bDead = false;
+						particle->SetModuleData(ModuleData);
+						particle->ActiveParticle();
+						particle = m_PHQ->GetMuzzelFlash()->ParticleSystem();
+						ModuleData = particle->GetModuleData();
+						ModuleData.bDead = false;
+						particle->SetModuleData(ModuleData);
+						particle->ActiveParticle();
+						if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+							m_PHQ->InputCrouch();
+						m_PHQ->InputSprint(false);
+					}
 				}
+
+				
 			}
 		}
 	}
@@ -84,7 +120,10 @@ void CP_STATEMoveScript::translateInput()
 	if (KEY_HOLD(KEY::A))
 		vMoveVector -= vRight;
 	if (KEY_HOLD(KEY::D))
+	{
 		vMoveVector += vRight;
+		m_PHQ->InputSprint(false);
+	}
 	vMoveVector *= moveMagnitude * 50.f;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }

@@ -109,7 +109,7 @@ void CP_FSMScript::initAnim()
 	Animator3D()->Add(P_R2MoveSprint_L);
 	Animator3D()->Add(P_R2MoveSprint_R);
 
-	Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::GotoIdle, this);
+	Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::AfterCallAnim, this);
 	Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
 	Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
 
@@ -132,10 +132,10 @@ void CP_FSMScript::initWeapon()
 	GetOwner()->AddChild(weapon);
 
 
-	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_MuzzleFlash.pref", L"prefab\\P_MuzzleFlash.pref");
-	fab->PrefabLoad(L"prefab\\P_MuzzleFlash.pref");
-	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(23.f, 182.f, 63.f), 1);
-	m_MuzzleFlash->SetName(L"MuzzleFlash");
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_MuzzleFlash_Fixed.pref", L"prefab\\P_MuzzleFlash_Fixed.pref");
+	fab->PrefabLoad(L"prefab\\P_MuzzleFlash_Fixed.pref");
+	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(23.f, 182.f, 100.f), 1);
+	m_MuzzleFlash->SetName(L"P_MuzzleFlash");
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_MuzzleFlash, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(m_MuzzleFlash);
 	tParticleModule ModuleData = m_MuzzleFlash->ParticleSystem()->GetModuleData();
@@ -143,13 +143,16 @@ void CP_FSMScript::initWeapon()
 	m_MuzzleFlash->ParticleSystem()->SetModuleData(ModuleData);
 	m_MuzzleFlash->ParticleSystem()->Module_Active_OnceSpawn();
 	
-	/*fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\bullet.pref", L"prefab\\bullet.pref");
-	fab->PrefabLoad(L"prefab\\bullet.pref");
-	m_Bullet = fab.Get()->Instantiate(Vec3(0, 0, 0), 1);
-	m_Bullet->SetName(L"Bullet");
+	fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_Bullet_Final.pref", L"prefab\\P_Bullet_Final.pref");
+	fab->PrefabLoad(L"prefab\\P_Bullet_Final.pref");
+	m_Bullet = fab.Get()->Instantiate(Vec3(5.f, 152.f, 110.f), 1);
+	m_Bullet->SetName(L"P_Bullet");
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_Bullet, (UINT)LAYER_TYPE::Player, true);
-	GetOwner()->AddChild(m_Bullet);*/
-
+	GetOwner()->AddChild(m_Bullet);
+	ModuleData = m_Bullet->ParticleSystem()->GetModuleData();
+	ModuleData.bDead = true;
+	m_Bullet->ParticleSystem()->SetModuleData(ModuleData);
+	m_Bullet->ParticleSystem()->Module_Active_OnceSpawn();
 
 	m_MouseCtrl.SetOwner(this);
 	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
@@ -280,6 +283,12 @@ void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 {
 	GetOwner()->Animator3D()->Play(_name, _repeat);
 	
+}
+
+void CP_FSMScript::AfterCallAnim()
+{
+	CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
+	curState->CallAnimation();
 }
 
 void CP_FSMScript::DoDodge()

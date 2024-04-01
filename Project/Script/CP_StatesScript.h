@@ -56,7 +56,7 @@ struct tP_LongGunInfo
     float FireLate;
     float ReloadSpeed;
 
-    tP_LongGunInfo() : CurAmmo(12), MaxAmmo(12), Damage(12), FireLate(0.22f), ReloadSpeed(0.22f) {}
+    tP_LongGunInfo() : CurAmmo(12), MaxAmmo(12), Damage(12), FireLate(0.17f), ReloadSpeed(0.22f) {}
 
     bool IsAble() { return (0 < CurAmmo) ? true : false; }
 
