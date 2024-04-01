@@ -42,8 +42,8 @@ void CB_STATEMeleeScript::begin()
 
 
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 19) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
-	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 84) = std::bind(&CB_STATEMeleeScript::SpawnSpellGravity, this); 
-	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 93) = std::bind(&CB_STATEMeleeScript::SpawnSpellOff, this);
+	//m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 84) = std::bind(&CB_STATEMeleeScript::SpawnSpellGravity, this); 
+	//m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 93) = std::bind(&CB_STATEMeleeScript::SpawnSpellOff, this);
 
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 85) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOn, this);
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 110) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOff, this);
@@ -371,8 +371,10 @@ void CB_STATEMeleeScript::SpawnSpell()
 		fab->PrefabLoad(L"prefab\\Circle_AOE.pref");
 
 		//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
-		m_AOE_Circle = fab.Get()->Instantiate(Vec3(PlayerPos.x - 190, PlayerPos.y + 210, PlayerPos.z - 30), 2);
-		SpawnGameObject(m_AOE_Circle, Vec3(PlayerPos.x - 190, PlayerPos.y + 210, PlayerPos.z - 30), L"Effect");
+		m_AOE_Circle = fab.Get()->Instantiate(Vec3(PlayerPos), 2);
+		//fab->FabClear();
+
+		SpawnGameObject(m_AOE_Circle, Vec3(PlayerPos), L"Effect");
 		m_AOE_Circle->SetName(L"blood");
 
 		m_bSpawnCircleSpell = true;
