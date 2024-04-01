@@ -73,6 +73,7 @@ public:
 
 public:
 	float SetDestObject(CGameObject* _pObject);
+	void SetDestPos(Vec3 _pos);
 	std::stack<Vec3>* GetPathStack() { return &m_Stack; }
 	void Clear();
 

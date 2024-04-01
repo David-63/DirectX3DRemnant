@@ -27,12 +27,12 @@ struct tLightInfo
 struct tParticle
 {
     float4  vLocalPos;
-    float4  vWorldPos; // 파티클 위치
-    float4  vWorldScale; // 파티클 크기
-    float4  vColor; // 파티클 색상
-    float4  vVelocity; // 파티클 현재 속도
-    float4  vForce; // 파티클에 주어진 힘
-    float4  vRandomForce; // 파티클에 적용되는 랜덤 힘
+    float4  vWorldPos;      // 파티클 위치
+    float4  vWorldScale;    // 파티클 크기
+    float4  vColor;         // 파티클 색상
+    float4  vVelocity;      // 파티클 현재 속도
+    float4  vForce;         // 파티클에 주어진 힘
+    float4  vRandomForce;   // 파티클에 적용되는 랜덤 힘
 
     float   Age; // 생존 시간
     float   PrevAge;  // 이전 프레임 생존시간

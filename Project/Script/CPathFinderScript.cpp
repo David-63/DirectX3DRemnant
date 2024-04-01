@@ -93,6 +93,18 @@ tYX CPathFinderScript::TransToYX(Vec3 _pos)
 	return coordinate;
 }
 
+void CPathFinderScript::SetDestPos(Vec3 _pos)
+{
+	Clear();
+
+	SetDstYX(_pos);
+	SetCurYX();
+
+	m_vDynamicMap = CPathFinderMgr::GetInst()->GetDynamicMap();
+
+	FindPath();
+}
+
 
 
 float CPathFinderScript::SetDestObject(CGameObject* _pObject)
@@ -293,55 +305,12 @@ void CPathFinderScript::FindPath()
 	// 길 저장
 	while (true)
 	{
-		//m_StraightTestStack.push(tYX(pCurNode->iIdxY, pCurNode->iIdxX));
-
-		//if (m_StraightTestStack.size() == 3)
-		//{
-		//	tYX Third = m_StraightTestStack.top();
-		//	m_StraightTestStack.pop();
-		//	tYX Second = m_StraightTestStack.top();
-		//	m_StraightTestStack.pop();
-		//	tYX First = m_StraightTestStack.top();
-		//	
-		//	if ((First.x == Second.x && Second.x == Third.x)
-		//	 || (First.y == Second.y && Second.y == Third.y)
-		//	 || (First.x != Second.x && First.y != Second.y  && First.x != Third.x && First.y != Third.y) &&
-		//		(First.x - Second.x) / (First.y - Second.y) == (First.x - Third.x) / (First.y - Third.y))
-		//	{
-		//		m_StraightTestStack.push(Third);
-		//	}
-		//	else
-		//	{
-		//		Vec3 nodePos = TransYXToPos(First);
-		//		m_Stack.push(nodePos);
-		//		nodePos = TransYXToPos(Second);
-		//		m_Stack.push(nodePos);
-		//		m_StraightTestStack.pop(); //first 빼기
-		//		m_StraightTestStack.push(Third);
-		//	}
-		//}
-		
 		Vec3 nodePos = TransYXToPos(tYX(pCurNode->iIdxY, pCurNode->iIdxX));
 		m_Stack.push(nodePos);
 		pCurNode = pCurNode->pPrevNode;
 
 		if (pCurNode->iIdxX == m_iCurPosX && pCurNode->iIdxY == m_iCurPosY)
 		{
-			/*if (m_StraightTestStack.size() == 1)
-			{
-				Vec3 nodePos = TransYXToPos(m_StraightTestStack.top());
-				m_StraightTestStack.pop();
-				m_Stack.push(nodePos);
-			}
-			else
-			{
-				Vec3 Pos2 = TransYXToPos(m_StraightTestStack.top());
-				m_StraightTestStack.pop();
-				Vec3 Pos1 = TransYXToPos(m_StraightTestStack.top());
-				m_StraightTestStack.pop();
-				m_Stack.push(Pos1);
-				m_Stack.push(Pos2);
-			}*/
 			//Vec3 nodePos = TransYXToPos(tYX(m_iCurPosY, m_iCurPosX));
 			//m_Stack.push(nodePos); 첫노드는 생략.
 			m_bPathReady = true;
