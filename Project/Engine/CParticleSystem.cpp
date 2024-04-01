@@ -49,7 +49,7 @@ CParticleSystem::CParticleSystem()
 
 	m_ModuleData.SpawnShapeType = 0;
 	m_ModuleData.vBoxShapeScale = Vec3(200.f, 200.f, 200.f);
-	m_ModuleData.fSpawnAreaOffsetFactor = 0.0f;
+	m_ModuleData.vSpawnAreaOffsetFactor = Vec3(0.f, 0.f, 0.f);
 	m_ModuleData.Space = 0; // ½Ã¹Ä·¹ÀÌ¼Ç ÁÂÇ¥°è
 
 	m_ModuleData.MinLifeTime = 3.f;
@@ -164,7 +164,7 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 
 	m_ModuleData.SpawnShapeType = _other.m_ModuleData.SpawnShapeType;
 	m_ModuleData.vBoxShapeScale = _other.m_ModuleData.vBoxShapeScale;
-	m_ModuleData.fSpawnAreaOffsetFactor = _other.m_ModuleData.fSpawnAreaOffsetFactor;
+	m_ModuleData.vSpawnAreaOffsetFactor = _other.m_ModuleData.vSpawnAreaOffsetFactor;
 	m_ModuleData.Space = _other.m_ModuleData.Space; // ½Ã¹Ä·¹ÀÌ¼Ç ÁÂÇ¥°è
 
 	m_ModuleData.MinLifeTime = _other.m_ModuleData.MinLifeTime;
@@ -376,6 +376,7 @@ void CParticleSystem::finaltick()
 
 
 	m_UpdateCS->SetParticleObjectPos(Transform()->GetWorldPos());
+	m_UpdateCS->SetParticleObjectDir(Transform()->GetWorldDir(DIR_TYPE::FRONT));
 
 
 	m_UpdateCS->Execute();
