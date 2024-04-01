@@ -8,7 +8,6 @@ CMonsterMoveScript::CMonsterMoveScript()
 	: CScript((UINT)SCRIPT_TYPE::MONSTERMOVESCRIPT)
 	, m_fSpeed(100.f)
 	, m_RenewCount(60)
-	, m_iJustTurned(0)
 {
 
 }
@@ -84,14 +83,12 @@ void CMonsterMoveScript::Trace()
 		m_XDiff = abs(pos.x - dstPos.x);
 		m_YDiff = abs(pos.z - dstPos.z);
 
-		m_iJustTurned = 0;
 
 		if (m_XDiff <= 0.5f && m_YDiff <= 0.5f)
 		{
 			if (m_Stack->size() > 1)
 			{
 				m_Stack->pop();
-				m_iJustTurned++;
 			}
 			
 			dstPos = m_Stack->top();
@@ -130,6 +127,12 @@ bool CMonsterMoveScript::RenewPath()
 		m_Stack = m_sPathFinder->GetPathStack();
 		return true;
 	}
+	else if (m_bDestbyPos)
+	{
+		m_sPathFinder->SetDestPos(m_finalDst);
+		m_Stack = m_sPathFinder->GetPathStack();
+		return true;
+	}
 	else
 	{
 		m_bTargetOn = false;
@@ -142,7 +145,6 @@ void CMonsterMoveScript::Clear()
 {
 	m_bTargetOn = false;
 	m_bMoveOn = false;
-	m_iJustTurned = 0;
 	m_RenewCount = 60;
 	m_Stack = {};
 }
@@ -150,9 +152,20 @@ void CMonsterMoveScript::Clear()
 void CMonsterMoveScript::SetAndGetPath(CGameObject* _pObject)
 {
 	m_sPathFinder = GetOwner()->GetScript<CPathFinderScript>();
+	m_bDestbyPos = false;
 	m_TargetObj = _pObject;
 	m_finalDst = _pObject->Transform()->GetRelativePos();
 	m_Pad = m_sPathFinder->SetDestObject(_pObject);
+	m_Stack = m_sPathFinder->GetPathStack();
+	m_bTargetOn = true;
+}
+
+void CMonsterMoveScript::SetAndGetPath(Vec3 _pos)
+{
+	m_sPathFinder = GetOwner()->GetScript<CPathFinderScript>();
+	m_bDestbyPos = true;
+	m_finalDst = _pos;
+	m_sPathFinder->SetDestPos(_pos);
 	m_Stack = m_sPathFinder->GetPathStack();
 	m_bTargetOn = true;
 }

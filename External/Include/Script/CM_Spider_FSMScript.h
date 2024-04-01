@@ -8,7 +8,7 @@ public:
 	enum class eSpiderState
 	{
 		Idle,
-		Mttack,
+		Attack,
 		Move,
 		Damaged,
 		Dead,
