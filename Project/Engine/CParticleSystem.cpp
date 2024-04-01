@@ -30,6 +30,7 @@ CParticleSystem::CParticleSystem()
 	, m_bWantExcute(false)
 	, m_UseTimeSpawn(false)
 	, m_bFinish(false)
+	, m_BackUpModuleData{}
 
 
 {
@@ -91,8 +92,9 @@ CParticleSystem::CParticleSystem()
 	m_ModuleData.iAnimYCount = 1;
 
 	m_ModuleData.bStrongColor = false;
+	m_ModuleData.bDead = false;
 
-
+	m_BackUpModuleData = m_ModuleData;
 
 
 
@@ -204,7 +206,10 @@ CParticleSystem::CParticleSystem(const CParticleSystem& _other)
 	m_ModuleData.iAnimYCount = _other.m_ModuleData.iAnimYCount;
 
 	m_ModuleData.bStrongColor = _other.m_ModuleData.bStrongColor;
+	m_ModuleData.bDead = false;
 
+
+	m_BackUpModuleData = _other.m_ModuleData;
 
 	m_bWantExcute = _other.m_bWantExcute;
 
@@ -412,6 +417,7 @@ void CParticleSystem::render()
 	m_ParticleBuffer->Clear();
 	m_ModuleDataBuffer->Clear();
 	m_RWBuffer->Clear();	
+
 
 }
 
