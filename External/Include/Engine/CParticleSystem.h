@@ -16,6 +16,7 @@ private:
     CStructuredBuffer* m_RWBuffer;
     CStructuredBuffer* m_ModuleDataBuffer;
 
+    tParticleModule             m_BackUpModuleData; // 
     tParticleModule             m_ModuleData;
     tRWParticleBuffer		    m_RWPrticleBuffer;
     Ptr<CParticleUpdateShader>  m_UpdateCS; // 파티클 업데이트 셰이더
@@ -97,6 +98,11 @@ public:
         return m_ModuleData;
     }
 
+    tParticleModule GetBackUpModuleData() const
+    {
+        return m_BackUpModuleData;
+    }
+
     Ptr<CParticleUpdateShader> GetUpdateCS() const
     {
         return m_UpdateCS;
@@ -155,6 +161,7 @@ public:
     void UseRandomPos(bool _bUseRandomPos) { m_ModuleData.bRandomPos = _bUseRandomPos; }
     int  IsRandomPos() const { return m_ModuleData.bRandomPos; }
 
+    void SetDead(bool _dead) { m_ModuleData.bDead = _dead; }
 
 
 

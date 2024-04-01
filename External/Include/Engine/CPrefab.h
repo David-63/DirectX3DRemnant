@@ -21,6 +21,7 @@ public:
 	virtual int Save(const wstring& _strRelativePath);
 	virtual int Load(const wstring& _strFilePath);
 	int PrefabLoad(const wstring& _strFilePath);
+	void FabClear();
 
 private:
 	virtual void UpdateData() override {}
@@ -32,6 +33,6 @@ public:
 
 public:
 	CPrefab();
-	~CPrefab();
+	virtual ~CPrefab();
 };
 

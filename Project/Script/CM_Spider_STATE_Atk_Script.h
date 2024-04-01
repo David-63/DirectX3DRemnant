@@ -18,11 +18,14 @@ private:
 	float            m_fElapsedTime;
 	float            m_fFinalTime;
 	bool             m_bShootLift;
+	float            m_fDelayTime;
+	bool             m_bdelayStart;
 
 	//Push
 	bool			 m_bPushOnce;
 
-
+private:
+	void SetDelayStart() { m_bdelayStart = true; }
 
 public:
 	virtual void tick() override;
@@ -41,6 +44,7 @@ private:
 
 	void Shoot();
 	void ShootComplete();
+	void CreateDelay();
 	void CreateProj();
 	void LiftProj();
 	void LiftStart() { m_bShootLift = true; }

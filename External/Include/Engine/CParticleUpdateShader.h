@@ -27,6 +27,7 @@ public:
     }
 
     void SetParticleObjectPos(Vec3 _vPos) { m_Const.arrV4[0] = _vPos; }
+    void SetParticleObjectDir(Vec3 _vDir) { m_Const.arrV4[1] = _vDir; }
 
 public:
     virtual void UpdateData() override;

@@ -148,6 +148,7 @@ struct tParticleModule
 {
 	Vec3    vRandomSpark; 
 	int     bRandomPos; // 1: 사용 , 0 : 안  사용
+	bool    bDead; // 1: 수명과 관계없이 파티클 즉시 비활성화, 0 : 수명이 다되면 비활성화
 
 	// 스폰 모듈
 	Vec4    vSpawnColor;
@@ -159,13 +160,12 @@ struct tParticleModule
 	float   fSphereOffset;
 	int		SpawnShapeType;		// 0 : BOX, 1 : Sphere
 
-	float   fSpawnAreaOffsetFactor;
+	Vec3    vSpawnAreaOffsetFactor;
 	int		SpawnRate;			// 초당 생성 개수
 	int		Space;				// 파티클 업데이트 좌표계 ( 0 : World,  1 : Local)	
 
 	float   MinLifeTime;		// 최소 수명	
 	float   MaxLifeTime;		// 최대 수명
-	int     spawnpad[3];
 
 	// Color Change 모듈
 	Vec4	vStartColor;		// 초기 색상

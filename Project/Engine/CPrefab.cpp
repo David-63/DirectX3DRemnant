@@ -18,8 +18,6 @@ CPrefab::~CPrefab()
 {
 	if (nullptr != m_ProtoObj)
 	{		
-		m_ProtoObj->~CGameObject();
-
 		delete m_ProtoObj;
 		m_ProtoObj = nullptr;
 	}
@@ -128,6 +126,12 @@ int CPrefab::PrefabLoad(const wstring& _strFilePath)
 	fclose(pFile);
 
 	return S_OK;
+}
+
+void CPrefab::FabClear()
+{
+	delete m_ProtoObj;
+	m_ProtoObj = nullptr;
 }
 
 void CPrefab::SaveGameObject(CGameObject* _Object, FILE* _File)
