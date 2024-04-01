@@ -53,6 +53,14 @@ void CP_FSMScript::tick()
 		DestroyObject(m_Weapon);
 		DestroyObject(GetOwner());
 	}
+	if (KEY_TAP(KEY::O))
+	{
+		m_MuzzleFlash->ParticleSystem()->Module_Active_OnceSpawn();
+	}
+	if (KEY_TAP(KEY::P))
+	{
+		m_MuzzleFlash->ParticleSystem()->Module_Diactive_OnceSpawn();
+	}
 }
 
 void CP_FSMScript::initState()
@@ -124,14 +132,17 @@ void CP_FSMScript::initWeapon()
 	GetOwner()->AddChild(weapon);
 
 
-	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\muzzleFlashTest.pref", L"prefab\\muzzleFlashTest.pref");
-	fab->PrefabLoad(L"prefab\\muzzleFlashTest.pref");
-	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(88, 146, 0), 1);
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_MuzzleFlash.pref", L"prefab\\P_MuzzleFlash.pref");
+	fab->PrefabLoad(L"prefab\\P_MuzzleFlash.pref");
+	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(23.f, 182.f, 63.f), 1);
 	m_MuzzleFlash->SetName(L"MuzzleFlash");
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_MuzzleFlash, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(m_MuzzleFlash);
-
-
+	tParticleModule ModuleData = m_MuzzleFlash->ParticleSystem()->GetModuleData();
+	ModuleData.bDead = true;											// 이거 값이 true 인지 확인하기
+	m_MuzzleFlash->ParticleSystem()->SetModuleData(ModuleData);
+	m_MuzzleFlash->ParticleSystem()->Module_Active_OnceSpawn();
+	
 	/*fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\bullet.pref", L"prefab\\bullet.pref");
 	fab->PrefabLoad(L"prefab\\bullet.pref");
 	m_Bullet = fab.Get()->Instantiate(Vec3(0, 0, 0), 1);

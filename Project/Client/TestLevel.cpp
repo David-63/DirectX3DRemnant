@@ -128,14 +128,14 @@ void CreateTestLevel()
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}
 
-	{
+	/*{
 		CGameObject* pObj = new CGameObject;
 		pObj->SetName(L"Particle Maker");
 		pObj->AddComponent(new CTransform());
 		pObj->AddComponent(new CParticleSystem());
 		pObj->Transform()->SetDebugSphereUse(true);
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
-	}
+	}*/
 	//{
 	
 
