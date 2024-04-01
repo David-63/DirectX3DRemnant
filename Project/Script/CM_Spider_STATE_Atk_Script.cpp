@@ -112,6 +112,8 @@ void CM_Spider_STATE_Atk_Script::CreateProj()
 	CGameObject* proj = fab->Instantiate(projPos, (UINT)LAYER_TYPE::HitBoxMonster);
 	fab->FabClear();
 
+	//proj->ParticleSystem()->
+
 	proj->SetName(L"Spider_Projectile");
 	proj->AddComponent(new CM_Spider_Proj_Script);
 	proj->AddComponent(new CCollider3D);
