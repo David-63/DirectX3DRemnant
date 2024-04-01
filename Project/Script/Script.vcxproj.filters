@@ -91,6 +91,9 @@
     <Filter Include="Script\Creature\Monster\M_Scripts">
       <UniqueIdentifier>{d0454306-9168-4a03-96ed-5f6dab587f38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Script\Creature\Monster\M_Scripts\Spider">
+      <UniqueIdentifier>{49b4f726-fded-4c98-ac5a-75770431b3ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -137,6 +140,15 @@
     </ClInclude>
     <ClInclude Include="CP_FSMScript.h">
       <Filter>Script\Creature\Player\P_FSM</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEIdleScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEMoveScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_StatesScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
     <ClInclude Include="CM_Lurker_FSMScript.h">
       <Filter>Script\Creature\Monster\M_FSM\Lurker</Filter>
@@ -213,29 +225,23 @@
     <ClInclude Include="CM_Spider_STATE_Move_Script.h">
       <Filter>Script\Creature\Monster\M_States\Spider</Filter>
     </ClInclude>
-    <ClInclude Include="CB_STATEHealScript.h">
-      <Filter>Script\Creature\Boss\B_States</Filter>
-    </ClInclude>
     <ClInclude Include="CP_STATEDodgeScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
     <ClInclude Include="CP_STATEFireScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
-    <ClInclude Include="CP_STATEIdleScript.h">
-      <Filter>Script\Creature\Player\P_States</Filter>
-    </ClInclude>
-    <ClInclude Include="CP_STATEMoveScript.h">
-      <Filter>Script\Creature\Player\P_States</Filter>
-    </ClInclude>
     <ClInclude Include="CP_STATEReloadScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
-    <ClInclude Include="CP_StatesScript.h">
-      <Filter>Script\Creature\Player\P_States</Filter>
+    <ClInclude Include="CB_STATEHealScript.h">
+      <Filter>Script\Creature\Boss\B_States</Filter>
     </ClInclude>
     <ClInclude Include="CM_Spider_Proj_Script.h">
-      <Filter>Script\Creature\Monster\M_Scripts</Filter>
+      <Filter>Script\Creature\Monster\M_Scripts\Spider</Filter>
+    </ClInclude>
+    <ClInclude Include="CP_STATEStaggerScript.h">
+      <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
     <ClInclude Include="CP_STATEStaggerScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
@@ -286,6 +292,15 @@
     </ClCompile>
     <ClCompile Include="CP_FSMScript.cpp">
       <Filter>Script\Creature\Player\P_FSM</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEIdleScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEMoveScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_StatesScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
     </ClCompile>
     <ClCompile Include="CM_Lurker_FSMScript.cpp">
       <Filter>Script\Creature\Monster\M_FSM\Lurker</Filter>
@@ -362,29 +377,23 @@
     <ClCompile Include="CM_Spider_STATE_Move_Script.cpp">
       <Filter>Script\Creature\Monster\M_States\Spider</Filter>
     </ClCompile>
-    <ClCompile Include="CB_STATEHealScript.cpp">
-      <Filter>Script\Creature\Boss\B_States</Filter>
-    </ClCompile>
     <ClCompile Include="CP_STATEDodgeScript.cpp">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClCompile>
     <ClCompile Include="CP_STATEFireScript.cpp">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClCompile>
-    <ClCompile Include="CP_STATEIdleScript.cpp">
-      <Filter>Script\Creature\Player\P_States</Filter>
-    </ClCompile>
-    <ClCompile Include="CP_STATEMoveScript.cpp">
-      <Filter>Script\Creature\Player\P_States</Filter>
-    </ClCompile>
     <ClCompile Include="CP_STATEReloadScript.cpp">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClCompile>
-    <ClCompile Include="CP_StatesScript.cpp">
-      <Filter>Script\Creature\Player\P_States</Filter>
+    <ClCompile Include="CB_STATEHealScript.cpp">
+      <Filter>Script\Creature\Boss\B_States</Filter>
     </ClCompile>
     <ClCompile Include="CM_Spider_Proj_Script.cpp">
-      <Filter>Script\Creature\Monster\M_Scripts</Filter>
+      <Filter>Script\Creature\Monster\M_Scripts\Spider</Filter>
+    </ClCompile>
+    <ClCompile Include="CP_STATEStaggerScript.cpp">
+      <Filter>Script\Creature\Player\P_States</Filter>
     </ClCompile>
     <ClCompile Include="CP_STATEStaggerScript.cpp">
       <Filter>Script\Creature\Player\P_States</Filter>

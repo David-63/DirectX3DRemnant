@@ -134,7 +134,7 @@ void CAnimator3D::animaTick()
 	// 현재 프레임이 최대 프레임을 넘긴것 같으면 보정해주기
 	if (m_CurFrameIdx >= m_pCurrentAnim->GetMTAnimClips().at(m_CurAnimData.AnimClipIdx).iFrameLength - 1)
 		m_CurFrameIdx = m_pCurrentAnim->GetMTAnimClips().at(m_CurAnimData.AnimClipIdx).iFrameLength - 1;
-	// 최종적으로 구해진 프레임
+
 	//UINT frameIndex = m_CurFrameIdx - (m_CurAnimData.BeginTime * 30);
 	m_isFinalMatUpdate = false;
 

@@ -43,6 +43,7 @@
 #include "CP_STATEMoveScript.h"
 #include "CP_STATEReloadScript.h"
 #include "CP_StatesScript.h"
+#include "CP_STATEStaggerScript.h"
 #include "CShoulderViewScript.h"
 #include "CTestScript.h"
 
@@ -90,6 +91,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CP_STATEMoveScript");
 	_vec.push_back(L"CP_STATEReloadScript");
 	_vec.push_back(L"CP_StatesScript");
+	_vec.push_back(L"CP_STATEStaggerScript");
 	_vec.push_back(L"CShoulderViewScript");
 	_vec.push_back(L"CTestScript");
 }
@@ -180,6 +182,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CP_STATEReloadScript;
 	if (L"CP_StatesScript" == _strScriptName)
 		return new CP_StatesScript;
+	if (L"CP_STATEStaggerScript" == _strScriptName)
+		return new CP_STATEStaggerScript;
 	if (L"CShoulderViewScript" == _strScriptName)
 		return new CShoulderViewScript;
 	if (L"CTestScript" == _strScriptName)
@@ -316,6 +320,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::P_STATESSCRIPT:
 		return new CP_StatesScript;
+		break;
+	case (UINT)SCRIPT_TYPE::P_STATESTAGGERSCRIPT:
+		return new CP_STATEStaggerScript;
 		break;
 	case (UINT)SCRIPT_TYPE::SHOULDERVIEWSCRIPT:
 		return new CShoulderViewScript;

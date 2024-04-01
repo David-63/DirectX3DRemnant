@@ -76,7 +76,7 @@ void CM_Spider_FSMScript::begin()
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_SPIDER_STATE_DEAD_SCRIPT)));
 
 	//ChangeState(static_cast<UINT>(eSpiderState::Idle));
-	ChangeState(static_cast<UINT>(eSpiderState::Move));
+	ChangeState(static_cast<UINT>(eSpiderState::Mttack));
 }
 
 void CM_Spider_FSMScript::tick()

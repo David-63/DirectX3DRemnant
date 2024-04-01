@@ -21,6 +21,9 @@
 #include <Script/CCharacterMoveScript.h>
 #include <Script/CPathFinderScript.h>
 #include <Script/CMonsterMoveScript.h>
+#include <Script/CM_Lurker_FSMScript.h>
+#include <Script/CM_Spider_FSMScript.h>
+#include <Script/CHitBoxScript.h>
 #include <Script/CP_FSMScript.h>
 #include <Script/CB_FSMScript.h>
 
@@ -38,6 +41,9 @@ void CreateTestLevel()
 	pCurLevel->GetLayer((UINT)LAYER_TYPE::Wall)->SetName(L"Wall");
 	pCurLevel->GetLayer(4)->SetName(L"Background");
 	pCurLevel->GetLayer(5)->SetName(L"Ground");
+	pCurLevel->GetLayer((UINT)LAYER_TYPE::Ground)->SetName(L"Ground");
+	pCurLevel->GetLayer((UINT)LAYER_TYPE::HitBoxMonster)->SetName(L"HitBoxMonster");
+	pCurLevel->GetLayer((UINT)LAYER_TYPE::HitBoxPlayer)->SetName(L"HitBoxPlayer");
 	pCurLevel->GetLayer(31)->SetName(L"ViewPort UI");
 
 	CCollisionMgr::GetInst()->SetColLayer(1, 2);
@@ -72,7 +78,7 @@ void CreateTestLevel()
 	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
 	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
-	
+
 
 
 	// SkyBox 추가
@@ -136,9 +142,8 @@ void CreateTestLevel()
 		pObj->Transform()->SetDebugSphereUse(true);
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}*/
-	//{
-	
 
+	//{
 		//Ptr<CMeshData> pMeshData = nullptr;
 		//CGameObject* player = nullptr;
 
@@ -214,4 +219,62 @@ void CreateTestLevel()
 
 		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), (UINT)LAYER_TYPE::Ground);
 	}
+
+		//static box
+	{
+		CGameObject* pObj = new CGameObject;
+		pObj->SetName(L"staticBox");
+		pObj->AddComponent(new CTransform);
+		pObj->AddComponent(new CMeshRender);
+		pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug"));
+		pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
+
+
+		pObj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+		pObj->Transform()->SetRelativePos(Vec3(500.f, 100.f, 0.f));
+		pObj->Transform()->SetRelativeScale(200.f, 200.f, 200.f);
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Box;
+		info.size = Vector3(200.f, 200.f, 200.f);
+
+		pObj->AddComponent(new CRigidBody);
+		pObj->RigidBody()->PushBackShapeInfo(info);
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
+
+		pObj->AddComponent(new CCollider3D);
+		pObj->Collider3D()->SetType(COLLIDER3D_TYPE::Wall);
+
+		SpawnGameObject(pObj, Vec3(500.f, 100.f, 0.f), (UINT)LAYER_TYPE::Wall);
+
+	}
+
+	//dynamic sphere
+	/*{
+		CGameObject* pObj = new CGameObject;
+		pObj->AddComponent(new CTransform);
+		pObj->AddComponent(new CMeshRender);
+		pObj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+		pObj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
+
+		pObj->SetName(L"DynamicSphere");
+		pObj->SetLayerIdx(5);
+		pObj->Transform()->SetRelativePos(Vec3(-200.f, 700.f, 0.f));
+		pObj->Transform()->SetRelativeScale(100.f, 100.f, 100.f);
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(100.f, 100.f, 100.f);
+		info.massProperties.restitution = 0.f;
+		info.massProperties.dynamicFriction = 0.6f;
+		info.massProperties.staticFriction = 0.6f;
+
+		pObj->AddComponent(new CRigidBody);
+		pObj->AddComponent(new CCollider3D);
+
+		SpawnGameObject(pObj, Vec3(-200.f, 700.f, 0.f), 5);
+
+		}*/
+
+	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
 }
