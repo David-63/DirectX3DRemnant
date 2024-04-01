@@ -12,7 +12,7 @@ Texture2D                           NoiseTexture : register(t21);
 
 
 #define ObjectPos           g_vec4_0
-#define ObjectFront         g_vec4_0
+#define ObjectFrontDir      g_vec4_1
 
 #define NoiseTexResolution  g_vec2_0
 
@@ -80,19 +80,25 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                     // Box 스폰
                     if (ModuleData.SpawnShapeType == 0)
                     {
+
+                        //particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * RandomSpark.x
+                        //                              , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * RandomSpark.y
+                        //                              , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * RandomSpark.z); // 0.f;\        
+
                         if (ModuleData.bRandomPos)
                         {
-                            particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
-                                , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
-                                , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
+                            particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.vSpawnAreaOffsetFactor.x
+                                , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * ModuleData.vSpawnAreaOffsetFactor.x
+                                , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * ModuleData.vSpawnAreaOffsetFactor.x); // 0.f;\     
                         }
 
                         else if (!ModuleData.bRandomPos)
                         {
 
-                            particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
-                                , ModuleData.vBoxShapeScale.y - ModuleData.vBoxShapeScale.y * ModuleData.fSpawnAreaOffsetFactor
-                                , ModuleData.vBoxShapeScale.z - ModuleData.vBoxShapeScale.z * ModuleData.fSpawnAreaOffsetFactor); // 0.f;\     
+                            particle.vLocalPos.xyz = 
+                            float3(ModuleData.vBoxShapeScale.x
+                                , ModuleData.vBoxShapeScale.y
+                                , ModuleData.vBoxShapeScale.z); // 0.f;\     
                         }
 
                         particle.vWorldPos.xyz = particle.vLocalPos.xyz + ObjectPos.xyz;
@@ -100,6 +106,12 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         // 스폰 크기 범위내에서 랜덤 크기로 지정 (Min, Max 가 일치하면 고정크기)
                         float4 vSpawnScale = ModuleData.vSpawnScaleMin + (ModuleData.vSpawnScaleMax - ModuleData.vSpawnScaleMin);
                         particle.vWorldScale.xyz = vSpawnScale.xyz;
+                    }
+
+                    // Sphere 스폰
+                    else if (ModuleData.SpawnShapeType == 1)
+                    {
+                     
                     }
 
 
@@ -114,31 +126,22 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         if (ModuleData.AddVelocityType == 0)
                         {
 
-                            float3 vVelocity = normalize(ObjectFront);
-                            
-                            
-
-                            if (ModuleData.bUseSpark == 1)
-                                particle.vVelocity.xyz = vVelocity * ModuleData.Speed * RandomSpark * vOut3; // 원래는 랜덤Spark 안곱해짐
-
-                            ///
-                            else if (ModuleData.bUseSpark == 0)
-                                particle.vVelocity.xyz = vVelocity * ModuleData.Speed;
-                            ///
-                            
+                            float3 vVelocity = normalize(ObjectFrontDir.xyz);
+                            particle.vVelocity.xyz = vVelocity * ModuleData.Speed;
                         }
 
                         // To Center
                         else if (ModuleData.AddVelocityType == 1)
                         {
-                            float3 vVelocity = -normalize(particle.vLocalPos.xyz);
+                            float3 vVelocity = -normalize(ObjectFrontDir.xyz);
                             particle.vVelocity.xyz = vVelocity * ModuleData.Speed;
                         }
-                        
+
                         // Fixed Direction
                         else
                         {
-                            particle.vVelocity.xyz = normalize(ObjectFront.xyz + normalize(ModuleData.vVelocityDir.xyz))
+                            particle.vVelocity.xyz = 
+                            normalize(ObjectFrontDir.xyz + normalize(ModuleData.vVelocityDir.xyz)) 
                             * ModuleData.Speed;
                         }
                     }

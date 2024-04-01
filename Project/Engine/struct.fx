@@ -67,13 +67,12 @@ struct tParticleModule
     float fSphereOffset;
     int SpawnShapeType; // Sphere , Box
 
-    float fSpawnAreaOffsetFactor;
+    int3 vSpawnAreaOffsetFactor;
     int SpawnRate;
     int Space; // 0 World, 1 Local    
 
     float MinLifeTime;
     float MaxLifeTime;
-    int spawnpad[2];
 
     // Color Change 모듈
     float4 vStartColor; // 초기 색상
