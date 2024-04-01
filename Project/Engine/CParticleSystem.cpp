@@ -376,6 +376,7 @@ void CParticleSystem::finaltick()
 
 
 	m_UpdateCS->SetParticleObjectPos(Transform()->GetWorldPos());
+	m_UpdateCS->SetParticleObjectDir(Transform()->GetWorldDir(DIR_TYPE::FRONT));
 
 
 	m_UpdateCS->Execute();

@@ -40,7 +40,7 @@
 
 #define P_R2Fire                        L"animclip\\player\\P_R2Fire.animclip"
 
-#define StanceDelay 0.1f
+#define StanceDelay                     0.1f
 
 // 플레이어는 몬스터와 다르게 장비중인 무기에 따라 스텟이 달라짐
 
@@ -54,6 +54,9 @@ private:
 private:
     CP_MouseCtrlScript  m_MouseCtrl;
     CGameObject*        m_Weapon;
+    CGameObject*        m_MuzzleFlash;
+    CGameObject*        m_Bullet;
+
 
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
@@ -96,6 +99,10 @@ public:
     tP_Info* GetPlayerInfo() { return &m_PlayerInfo; }
     tP_LongGunInfo* GetLongGunInfo() { return &m_LongGunInfo; }
     CP_MouseCtrlScript* GetMouseController() { return &m_MouseCtrl; }
+
+    CGameObject* GetMuzzelFlash() { return m_MuzzleFlash; }
+    CGameObject* GetBullet() { return m_Bullet; }
+
 public:
     void ClearStanceChange() { m_StanceCheck[(UINT)eStanceCheck::IsChange] = false; }
     void InputCrouch() { m_TogleInput[(UINT)eInpStance::Crouch] ? m_TogleInput[(UINT)eInpStance::Crouch] = false : m_TogleInput[(UINT)eInpStance::Crouch] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }

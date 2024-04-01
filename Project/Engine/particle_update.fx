@@ -12,6 +12,7 @@ Texture2D                           NoiseTexture : register(t21);
 
 
 #define ObjectPos           g_vec4_0
+#define ObjectFront         g_vec4_0
 
 #define NoiseTexResolution  g_vec2_0
 
@@ -79,11 +80,6 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                     // Box 스폰
                     if (ModuleData.SpawnShapeType == 0)
                     {
-
-                        //particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * RandomSpark.x
-                        //                              , ModuleData.vBoxShapeScale.y * vOut2.r - ModuleData.vBoxShapeScale.y * RandomSpark.y
-                        //                              , ModuleData.vBoxShapeScale.z * vOut3.r - ModuleData.vBoxShapeScale.z * RandomSpark.z); // 0.f;\        
-
                         if (ModuleData.bRandomPos)
                         {
                             particle.vLocalPos.xyz = float3(ModuleData.vBoxShapeScale.x * vOut1.r - ModuleData.vBoxShapeScale.x * ModuleData.fSpawnAreaOffsetFactor
@@ -106,28 +102,6 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         particle.vWorldScale.xyz = vSpawnScale.xyz;
                     }
 
-                    // Sphere 스폰
-                    else if (ModuleData.SpawnShapeType == 1)
-                    {
-                        // float fRadius = vOut1.r * 50.f; 
-                        // float fAngle = vOut2.r * 2 * 3.1415926535f;
-                         //particle.vWorldPos.xyz = float3(fRadius * cos(fAngle), fRadius * sin(fAngle), 100.f);
-
-
-
-
-
-                         //float fAngle = vOut2.r * 2 * PI; // 방위각
-                         //float phi = acos(1 * vOut2.r - 1); // -1에서 1까지의 범위를 갖도록 조정// 고도각 (원래는 1번 썼었음) 
-
-                         //particle.vLocalPos.xyz = float3(ModuleData.fSphereShapeRadius * sin(phi) * cos(fAngle)
-                         //                                , ModuleData.fSphereShapeRadius * sin(phi) * sin(fAngle)
-                         //                                , ModuleData.fSphereShapeRadius * cos(phi) + ModuleData.fSphereOffset);
-
-                         //particle.vWorldPos.xyz = particle.vLocalPos.xyz + ObjectPos.xyz;
-
-                    }
-
 
                     // 파티클 질량 설정
                     particle.Mass = 1.f;
@@ -140,13 +114,18 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                         if (ModuleData.AddVelocityType == 0)
                         {
 
-                            float3 vVelocity = normalize(particle.vLocalPos.xyz);
+                            float3 vVelocity = normalize(ObjectFront);
+                            
+                            
 
                             if (ModuleData.bUseSpark == 1)
                                 particle.vVelocity.xyz = vVelocity * ModuleData.Speed * RandomSpark * vOut3; // 원래는 랜덤Spark 안곱해짐
 
+                            ///
                             else if (ModuleData.bUseSpark == 0)
                                 particle.vVelocity.xyz = vVelocity * ModuleData.Speed;
+                            ///
+                            
                         }
 
                         // To Center
@@ -155,25 +134,12 @@ void CS_ParticleUpdate(int3 _ID : SV_DispatchThreadID)
                             float3 vVelocity = -normalize(particle.vLocalPos.xyz);
                             particle.vVelocity.xyz = vVelocity * ModuleData.Speed;
                         }
-
+                        
                         // Fixed Direction
                         else
                         {
-                            float fAngle =
-                                (vOut1.r * radians(ModuleData.OffsetAngle)) - radians(ModuleData.OffsetAngle) / 2.f;
-
-                            float3 fVelocity = normalize(ModuleData.vVelocityDir.xyz);
-
-                            float4x4 rotMat =
-                            {
-                                cos(fAngle), -sin(fAngle), 0, 0,
-                                sin(fAngle), cos(fAngle), 0, 0,
-                                0, 0, 1, 0,
-                                0, 0, 0, 1
-                            };
-
-                            float4 rotVelocity = mul(rotMat, float4(fVelocity, 1.f));
-                            particle.vVelocity.xyz = rotVelocity.xyz * ModuleData.Speed;
+                            particle.vVelocity.xyz = normalize(ObjectFront.xyz + normalize(ModuleData.vVelocityDir.xyz))
+                            * ModuleData.Speed;
                         }
                     }
 

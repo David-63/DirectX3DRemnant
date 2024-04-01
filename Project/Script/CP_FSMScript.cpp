@@ -123,6 +123,23 @@ void CP_FSMScript::initWeapon()
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(weapon, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(weapon);
 
+
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\muzzleFlashTest.pref", L"prefab\\muzzleFlashTest.pref");
+	fab->PrefabLoad(L"prefab\\muzzleFlashTest.pref");
+	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(88, 146, 0), 1);
+	m_MuzzleFlash->SetName(L"MuzzleFlash");
+	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_MuzzleFlash, (UINT)LAYER_TYPE::Player, true);
+	GetOwner()->AddChild(m_MuzzleFlash);
+
+
+	/*fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\bullet.pref", L"prefab\\bullet.pref");
+	fab->PrefabLoad(L"prefab\\bullet.pref");
+	m_Bullet = fab.Get()->Instantiate(Vec3(0, 0, 0), 1);
+	m_Bullet->SetName(L"Bullet");
+	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_Bullet, (UINT)LAYER_TYPE::Player, true);
+	GetOwner()->AddChild(m_Bullet);*/
+
+
 	m_MouseCtrl.SetOwner(this);
 	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
 	m_MouseCtrl.SetMainCam(cam);
