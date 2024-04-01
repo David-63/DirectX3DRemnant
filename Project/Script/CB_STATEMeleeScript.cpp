@@ -394,7 +394,7 @@ void CB_STATEMeleeScript::SpawnSpellGravity()
 	tParticleModule ModuleData  = m_AOE_Circle->ParticleSystem()->GetModuleData();
 	ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::DRAG] = false;
 	ModuleData.ModuleCheck[(UINT)PARTICLE_MODULE::GRAVITY] = true;
-	ModuleData.fGravityForce = 6800.f;
+	ModuleData.fGravityForce = 6500.f;
 
 	m_AOE_Circle->ParticleSystem()->SetModuleData(ModuleData);
 	

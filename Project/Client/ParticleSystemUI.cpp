@@ -453,7 +453,7 @@ int ParticleSystemUI::render_update()
 					// BoxShapeScale
 					float Scale[3] = { tParticleData.vBoxShapeScale.x, tParticleData.vBoxShapeScale.y, tParticleData.vBoxShapeScale.z };
 					ImGui::SetNextItemWidth(110);
-					if (ImGui::DragFloat2("##Scale", Scale, 0.25f, 0.0f, 3000.0f, "%.5f", ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat3("Offset", Scale, 0.25f, -3000.0f, 5000.0f, "%.5f", ImGuiSliderFlags_AlwaysClamp))
 					{
 						tParticleData.vBoxShapeScale.x = Scale[0];
 						tParticleData.vBoxShapeScale.y = Scale[1];
@@ -462,13 +462,15 @@ int ParticleSystemUI::render_update()
 					}
 
 					// SpawnAreaOffsetFactor (0에 가까울수록 한 방향으로 향하는 경사진(cone-like 형태가 됨)
-					float SpawnAreaOffsetFactor = tParticleData.fSpawnAreaOffsetFactor;
+					float SpawnAreaOffsetFactor[3] = { tParticleData.vSpawnAreaOffsetFactor.x, tParticleData.vSpawnAreaOffsetFactor.y, tParticleData.vSpawnAreaOffsetFactor.z };
 					ImGui::SetNextItemWidth(110);
 
-					if (ImGui::DragFloat("BoxOffset", &SpawnAreaOffsetFactor, 0.03f, -0.5f, 1.5f, "%0.5f", ImGuiSliderFlags_AlwaysClamp))
+					if (ImGui::DragFloat3("0.5: Circle (For Random)", SpawnAreaOffsetFactor, 0.03f, -4000.f, 1.5f, "%0.5f", ImGuiSliderFlags_AlwaysClamp))
 					{
-						// 0.5가 원 모양으로 퍼짐 
-						tParticleData.fSpawnAreaOffsetFactor = SpawnAreaOffsetFactor;
+						// 0.5가 원 모양으로 퍼짐 (랜덤 사용시) 
+						tParticleData.vSpawnAreaOffsetFactor.x = SpawnAreaOffsetFactor[0];
+						tParticleData.vSpawnAreaOffsetFactor.y = SpawnAreaOffsetFactor[1];
+						tParticleData.vSpawnAreaOffsetFactor.z = SpawnAreaOffsetFactor[2];
 					}
 
 
