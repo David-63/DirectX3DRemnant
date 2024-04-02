@@ -60,7 +60,8 @@ void CreateTestLevel()
 	pMainCam->AddComponent(new CTransform());
 	pMainCam->AddComponent(new CCamera());
 	pMainCam->AddComponent(new CCameraMoveScript());
-	//pMainCam->AddComponent(new CCameraMoveScript);
+	pMainCam->Transform()->SetDebugSphereUse(true);
+
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
@@ -74,7 +75,6 @@ void CreateTestLevel()
 
 	pUICam->AddComponent(new CTransform);
 	pUICam->AddComponent(new CCamera);
-
 	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
@@ -133,6 +133,7 @@ void CreateTestLevel()
 		pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 		
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
+		//pObj->AddChild(pMainCam);
 	}
 
 	{
@@ -140,7 +141,6 @@ void CreateTestLevel()
 		pObj->SetName(L"Particle Maker");
 		pObj->AddComponent(new CTransform());
 		pObj->AddComponent(new CParticleSystem());
-		pObj->Transform()->SetDebugSphereUse(true);
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}
 
@@ -148,7 +148,6 @@ void CreateTestLevel()
 		CGameObject* pObj = new CGameObject;
 		pObj->SetName(L"Collition Test");
 		pObj->AddComponent(new CTransform());
-		pObj->Transform()->SetDebugSphereUse(true);
 		pObj->AddComponent(new CC_FSMScript());
 		pObj->AddComponent(new CRigidBody());
 

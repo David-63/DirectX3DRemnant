@@ -106,7 +106,7 @@ void CP_MouseCtrlScript::ctrlMovePos()
 
 	objPos.y += m_PivotValue.CurValue;
 	Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
-	m_ctrlCam->Transform()->SetRelativePos(Point);
+	//m_ctrlCam->Transform()->SetRelativePos(Point);
 }
 
 void CP_MouseCtrlScript::ctrlMoveRot()
@@ -141,14 +141,14 @@ void CP_MouseCtrlScript::ctrlMoveRot()
 	if (justRotCam)
 	{
 		Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, 0);
-		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
+		//m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 	}
 	else
 	{
 		Vec3 outObjEuler = Vec3(0, yObjRot, 0);
 		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, 0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
-		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
+		//m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 		//m_Weapon->Transform()->SetRelativeRot(outObjEuler);
 	}
 }

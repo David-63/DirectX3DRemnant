@@ -59,7 +59,6 @@ void CP_FSMScript::initState()
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATERELOADSCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEFIRESCRIPT)));
 }
-
 void CP_FSMScript::initAnim()
 {
 	Animator3D()->Add(P_R2Dodge);
@@ -106,7 +105,6 @@ void CP_FSMScript::initAnim()
 	Animator3D()->CompleteEvent(P_R2Dodge_N) = std::bind(&CP_FSMScript::GotoMove, this);
 	Animator3D()->CompleteEvent(P_R2Dodge_R) = std::bind(&CP_FSMScript::GotoMove, this);
 }
-
 void CP_FSMScript::initWeapon()
 {
 	Ptr<CMeshData> pMeshData = nullptr;
@@ -142,8 +140,9 @@ void CP_FSMScript::initWeapon()
 	m_Bullet->ParticleSystem()->SetModuleData(ModuleData);
 	m_Bullet->ParticleSystem()->Module_Active_OnceSpawn();
 
-	m_MouseCtrl.SetOwner(this);
 	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
+	GetOwner()->AddChild(cam->GetOwner());
+	m_MouseCtrl.SetOwner(this);
 	m_MouseCtrl.SetMainCam(cam);
 	m_MouseCtrl.begin();
 }
@@ -202,7 +201,6 @@ void CP_FSMScript::stanceControl()
 		//}
 	}
 }
-
 void CP_FSMScript::dirInput()
 {
 	if (KEY_TAP(KEY::W))
@@ -238,7 +236,6 @@ void CP_FSMScript::dirInput()
 		InputMove(1.f, 0);
 	}
 }
-
 void CP_FSMScript::stanceInput()
 {
 	if (KEY_TAP(KEY::RBTN))
@@ -272,7 +269,6 @@ void CP_FSMScript::stanceInput()
 		DoDodge();
 	}
 }
-
 void CP_FSMScript::inputCheck()
 {
 	if (m_TogleInput[(UINT)eInpStance::Mouse])
@@ -281,7 +277,6 @@ void CP_FSMScript::inputCheck()
 		stanceInput();			// 자세 변경에 대한 키입력을 감지함
 	}
 }
-
 void CP_FSMScript::colliderUpdate()
 {
 	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
@@ -322,13 +317,11 @@ void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 	GetOwner()->Animator3D()->Play(_name, _repeat);
 	
 }
-
 void CP_FSMScript::AfterCallAnim()
 {
 	CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
 	curState->CallAnimation();
 }
-
 void CP_FSMScript::DoDodge()
 {
 	(0 <= m_moveDir.y) ? m_StanceCheck[(UINT)eStanceCheck::IsFrontDir] = true : m_StanceCheck[(UINT)eStanceCheck::IsFrontDir] = false;
@@ -348,7 +341,6 @@ void CP_FSMScript::DoDodge()
 
 	ChangeState(static_cast<UINT>(eP_States::DODGE));
 }
-
 void CP_FSMScript::ShootRay()
 {
 	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();

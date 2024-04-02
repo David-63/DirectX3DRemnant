@@ -31,6 +31,8 @@ void CP_STATEMoveScript::tick()
 	{
 		m_prevDir = *m_PlayerMoveDir;
 		CallAnimation();
+		if (m_prevDir != *m_PlayerMoveDir)
+			int a = 0;
 	}
 	if (!m_readyToFire.IsFinish())
 	{
