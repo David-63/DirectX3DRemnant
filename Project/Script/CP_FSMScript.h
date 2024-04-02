@@ -57,7 +57,6 @@ private:
     CGameObject*        m_MuzzleFlash;
     CGameObject*        m_Bullet;
 
-
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
     bool                m_TogleInput[(UINT)eInpStance::End];
@@ -75,8 +74,11 @@ private:
 
 private:
     void stanceControl();
+
     void dirInput();
     void stanceInput();
+    void inputCheck();
+    void colliderUpdate();
 
 public:
     void PlayAnimation(wstring _name, bool _repeat);

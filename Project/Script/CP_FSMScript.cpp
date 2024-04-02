@@ -4,6 +4,7 @@
 #include <Engine/CRenderMgr.h>
 #include <Engine/Physics.h>
 #include <Engine/CLevelMgr.h>
+#include <Engine/CGameObject.h>
 
 CP_FSMScript::CP_FSMScript()
 	: m_TogleInput{ false, false, false, true }, m_StanceCheck{ false, true }, m_Weapon(nullptr)
@@ -21,33 +22,20 @@ void CP_FSMScript::begin()
 	initState();
 	initAnim();
 	initWeapon();
+
 	PlayAnimation(P_R2Idle, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));	
 }
 
 void CP_FSMScript::tick()
 {
+	m_MouseCtrl.tick();			// 마우스 할일 함, 딱히 바꿔주는건 없음
 	stanceControl();			// 먼저 호출해도 이상 없을듯 (변동사항이 있는 경우 애니메이션을 호출함)
 	CC_FSMScript::tick();		// 현재 State의 tick을 호출함
-	m_MouseCtrl.tick();			// 마우스 할일 함, 딱히 바꿔주는건 없음
-
-
-	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
-	retBoneMat._44 = 1;
-	Vec3 bonePosition = retBoneMat.Translation();
-	RigidBody()->SetShapeLocalPos(1, bonePosition);
-	retBoneMat = Animator3D()->GetBoneMatrix(10);
-	retBoneMat._44 = 1;
-	bonePosition = retBoneMat.Translation();
-	RigidBody()->SetShapeLocalPos(2, bonePosition);
-
-
-	if (m_TogleInput[(UINT)eInpStance::Mouse])
-	{
-		dirInput();				// wasd 방향에 대한 키입력을 감지함
-		stanceInput();			// 자세 변경에 대한 키입력을 감지함
-	}
-
+	inputCheck();
+	colliderUpdate();
+	
+	// somthing debug code
 	if (KEY_TAP(KEY::K))
 	{
 		DestroyObject(m_Weapon);
@@ -132,9 +120,9 @@ void CP_FSMScript::initWeapon()
 	GetOwner()->AddChild(weapon);
 
 
-	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_MuzzleFlash_Fixed.pref", L"prefab\\P_MuzzleFlash_Fixed.pref");
-	fab->PrefabLoad(L"prefab\\P_MuzzleFlash_Fixed.pref");
-	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(23.f, 182.f, 100.f), 1);
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_FixMuzzleFlash.pref", L"prefab\\P_FixMuzzleFlash.pref");
+	fab->PrefabLoad(L"prefab\\P_FixMuzzleFlash.pref");
+	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(13.f, 172.f, 108.f), 1);
 	m_MuzzleFlash->SetName(L"P_MuzzleFlash");
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_MuzzleFlash, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(m_MuzzleFlash);
@@ -143,8 +131,8 @@ void CP_FSMScript::initWeapon()
 	m_MuzzleFlash->ParticleSystem()->SetModuleData(ModuleData);
 	m_MuzzleFlash->ParticleSystem()->Module_Active_OnceSpawn();
 	
-	fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_Bullet_Final.pref", L"prefab\\P_Bullet_Final.pref");
-	fab->PrefabLoad(L"prefab\\P_Bullet_Final.pref");
+	fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_FixBullet.pref", L"prefab\\P_FixBullet.pref");
+	fab->PrefabLoad(L"prefab\\P_FixBullet.pref");
 	m_Bullet = fab.Get()->Instantiate(Vec3(5.f, 152.f, 110.f), 1);
 	m_Bullet->SetName(L"P_Bullet");
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_Bullet, (UINT)LAYER_TYPE::Player, true);
@@ -163,6 +151,12 @@ void CP_FSMScript::initWeapon()
 
 void CP_FSMScript::stanceControl()
 {
+	if (GetAtkSign())
+	{
+		tHitInfo info = GetHitInfo();
+		ChangeState((UINT)eP_States::DAMAGED);
+	}
+
 	if (m_StanceCheck[(UINT)eStanceCheck::IsChange])
 	{
 		CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
@@ -279,6 +273,50 @@ void CP_FSMScript::stanceInput()
 	}
 }
 
+void CP_FSMScript::inputCheck()
+{
+	if (m_TogleInput[(UINT)eInpStance::Mouse])
+	{
+		dirInput();				// wasd 방향에 대한 키입력을 감지함
+		stanceInput();			// 자세 변경에 대한 키입력을 감지함
+	}
+}
+
+void CP_FSMScript::colliderUpdate()
+{
+	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
+	Matrix ownerMat = GetOwner()->Transform()->GetWorldMat();
+	Matrix totalMat = retBoneMat * ownerMat;
+	Vec3 retPos = totalMat.Translation();
+	Vec4 retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
+	PxTransform retTransform;
+	retTransform.p.x = retPos.x;
+	retTransform.p.y = retPos.y;
+	retTransform.p.z = retPos.z;
+
+	retTransform.q.x = retRot.x;
+	retTransform.q.y = retRot.y;
+	retTransform.q.z = retRot.z;
+	retTransform.q.w = retRot.w;
+
+	RigidBody()->SetShapeLocalPxTransform(1, retTransform);
+
+
+	retBoneMat = Animator3D()->GetBoneMatrix(10);
+	totalMat = retBoneMat * ownerMat;
+	retPos = totalMat.Translation();
+	retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
+	retTransform.p.x = retPos.x;
+	retTransform.p.y = retPos.y;
+	retTransform.p.z = retPos.z;
+
+	retTransform.q.x = retRot.x;
+	retTransform.q.y = retRot.y;
+	retTransform.q.z = retRot.z;
+	retTransform.q.w = retRot.w;
+	RigidBody()->SetShapeLocalPxTransform(2, retTransform);
+}
+
 void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 {
 	GetOwner()->Animator3D()->Play(_name, _repeat);
@@ -314,10 +352,29 @@ void CP_FSMScript::DoDodge()
 void CP_FSMScript::ShootRay()
 {
 	CCamera* cam = CRenderMgr::GetInst()->GetMainCam();
-	Vec3 camPos = cam->Transform()->GetRelativePos();
-	Vec3 camDir = cam->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-	tRayCastInfo*  other = Physics::GetInst()->RayCast(camPos, camDir, 10000.f);
-	other->hitActor;
+	tRay rayInfo = cam->GetRay();
+	tRayCastInfo*  rayResult = Physics::GetInst()->RayCast(rayInfo.vStart, rayInfo.vDir, 10000.f);
+	// 레이를 허공에 날린 경우
+	if (!rayResult->hitActor)
+		return;
+	CGameObject* targetObj = (CGameObject*)rayResult->hitActor->userData;
+	UINT targetLayer = -1;
+	CC_FSMScript* monsterScript = nullptr;
+	bool keepGoing = false;
+
+	if (targetObj)
+		targetLayer = targetObj->GetLayerIndex();
+	if (-1 != targetLayer && (UINT)LAYER_TYPE::Monster == targetLayer)
+	{
+		monsterScript = targetObj->GetScript<CC_FSMScript>();
+		keepGoing = true;
+	}
+	if (keepGoing)
+	{
+		tHitInfo give = { GetOwner()->Transform()->GetRelativePos(),
+			rayResult->hitPos, GetOwner(), 10 };
+		monsterScript->GiveAtkInfo(give);
+	}
 }
 
 void CP_FSMScript::GotoIdle()

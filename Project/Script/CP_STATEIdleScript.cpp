@@ -59,6 +59,7 @@ void CP_STATEIdleScript::tick()
 					particle->ActiveParticle();
 					if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
 						m_PHQ->InputCrouch();
+					m_PHQ->ShootRay();
 					//m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
 				}
 			}

@@ -57,8 +57,9 @@ void CreateTestLevel()
 	CGameObject* pMainCam = new CGameObject;
 	pMainCam->SetName(L"MainCamera");
 
-	pMainCam->AddComponent(new CTransform);
-	pMainCam->AddComponent(new CCamera);
+	pMainCam->AddComponent(new CTransform());
+	pMainCam->AddComponent(new CCamera());
+	pMainCam->AddComponent(new CCameraMoveScript());
 	//pMainCam->AddComponent(new CCameraMoveScript);
 	pMainCam->Camera()->SetProjType(PROJ_TYPE::PERSPECTIVE);
 	pMainCam->Camera()->SetCameraIndex(0);		// MainCamera 로 설정
@@ -143,54 +144,40 @@ void CreateTestLevel()
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}
 
-	//{
-		Ptr<CMeshData> pMeshData = nullptr;
-		CGameObject* player = nullptr;
-
-		///pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\P_R2ImpactStagger.fbx");
-		pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
-		player = pMeshData->Instantiate();
-
-		player->SetName(L"Player");
-		player->MeshRender()->SetFrustumCheck(false);
-		CP_FSMScript* pFSM = new CP_FSMScript();
-		player->AddComponent(pFSM);
+	{
+		CGameObject* pObj = new CGameObject;
+		pObj->SetName(L"Collition Test");
+		pObj->AddComponent(new CTransform());
+		pObj->Transform()->SetDebugSphereUse(true);
+		pObj->AddComponent(new CC_FSMScript());
+		pObj->AddComponent(new CRigidBody());
 
 		// rigidbody 에 전달할 데이터 미리 초기화
-		Vec3 playerStartPos = Vec3(0, 100.f, 0);
-		player->Transform()->SetRelativePos(playerStartPos);
-		player->SetLayerIdx((UINT)LAYER_TYPE::Player);
+		Vec3 targetPos = Vec3(200.f, 100.f, 0.f);
+		pObj->Transform()->SetRelativePos(targetPos);
+		pObj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
 
 		//// 쉐이프 정의 및 등록
-		player->AddComponent(new CRigidBody);
-		tShapeInfo info = {};								// foot
+		tShapeInfo info = {};                        // foot
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(15.f, 15.f, 15.f);
-		player->RigidBody()->PushBackShapeInfo(info);
-		info = {};											// head
+		info.size = Vector3(200.f, 200.f, 200.f);
+		pObj->RigidBody()->PushBackShapeInfo(info);
+		info = {};                                 // head
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(35.f, 35.f, 35.f);
-		player->RigidBody()->PushBackShapeInfo(info);
-		info = {};											// body
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(55.f, 55.f, 55.f);
-		player->RigidBody()->PushBackShapeInfo(info);
+		info.size = Vector3(200.f, 200.f, 200.f);
+		pObj->RigidBody()->PushBackShapeInfo(info);
+		info = {};
 		// 피지컬 등록하기
-		player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
 
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-		
-		////////////////////////
-		//player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(0.f, 30.f, 0.f));
+		SpawnGameObject(pObj, targetPos, (UINT)LAYER_TYPE::Monster);
+	}
 
-		//player->AddComponent(new CCollider3D);
-		//player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
-
-		SpawnGameObject(player, Vec3(0,0,0), (UINT)LAYER_TYPE::Player);
-	//}
 
 	{
 		CGameObject* pGround = new CGameObject;

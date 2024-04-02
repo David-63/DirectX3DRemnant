@@ -12,7 +12,7 @@ struct tHealthStat
 
         void GotDamage(float _in)
         {
-            if (CurHp = -_in <= 0)
+            if (CurHp -= _in <= 0)
             {
                 CurHp = 0;
                 IsDead = true;
@@ -20,7 +20,7 @@ struct tHealthStat
         }
         void GotHeal(float _in)
         {
-            if (CurHp = +_in >= MaxHp)
+            if (CurHp += _in >= MaxHp)
             {
                 CurHp = MaxHp;
             }
@@ -33,11 +33,11 @@ struct tHealthStat
 
 struct tHitInfo
 {
-    Vec3 ShooterPos;
-    Vec3 HitPos;
-    CGameObject* Shooter;
-    float Damage;
-    UINT KnockBackGrade = 0;
+    Vec3            ShooterPos;
+    Vec3            HitPos;
+    CGameObject*    Shooter;
+    float           Damage;
+    UINT            KnockBackGrade = 0;
 };
 
 class CC_FSMScript : public CScript
