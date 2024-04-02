@@ -12,7 +12,7 @@ public:
     virtual void tick() override;
 
 private:
-    void translateInput();
+    void moveVelocity();
 
 public:
     virtual void CallAnimation() override;

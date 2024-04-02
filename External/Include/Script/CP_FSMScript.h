@@ -56,6 +56,7 @@ private:
     CGameObject*        m_Weapon;
     CGameObject*        m_MuzzleFlash;
     CGameObject*        m_Bullet;
+    tTimeCtrl           m_readyToFire;
 
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
@@ -73,12 +74,13 @@ private:
     void initWeapon();
 
 private:
-    void stanceControl();
+    void inputDir();        // 방향 입력
 
-    void dirInput();
-    void stanceInput();
-    void inputCheck();
+    void inputStance();     
+    void changeStance();    // 상태 변경해주기
     void colliderUpdate();
+
+
 
 public:
     void PlayAnimation(wstring _name, bool _repeat);
@@ -111,7 +113,7 @@ public:
     void InputCrouch() { m_TogleInput[(UINT)eInpStance::Crouch] ? m_TogleInput[(UINT)eInpStance::Crouch] = false : m_TogleInput[(UINT)eInpStance::Crouch] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
     void InputAim() { m_TogleInput[(UINT)eInpStance::Aim] ? m_TogleInput[(UINT)eInpStance::Aim] = false : m_TogleInput[(UINT)eInpStance::Aim] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
     bool IsInput(UINT _stance) { return m_TogleInput[_stance]; }
-    bool IsFrontDir() { return m_StanceCheck[m_StanceCheck[(UINT)eStanceCheck::IsFrontDir]]; }
+    bool IsFrontDir() { return m_StanceCheck[(UINT)eStanceCheck::IsFrontDir]; }
 
     
     void InputSprint(bool _isHold) { m_TogleInput[(UINT)eInpStance::Sprint] = _isHold;  m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }

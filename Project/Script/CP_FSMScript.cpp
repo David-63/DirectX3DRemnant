@@ -29,25 +29,22 @@ void CP_FSMScript::begin()
 
 void CP_FSMScript::tick()
 {
-	m_MouseCtrl.tick();			// 마우스 할일 함, 딱히 바꿔주는건 없음
-	stanceControl();			// 먼저 호출해도 이상 없을듯 (변동사항이 있는 경우 애니메이션을 호출함)
-	CC_FSMScript::tick();		// 현재 State의 tick을 호출함
-	inputCheck();
-	colliderUpdate();
+	// 잠구면 안되는 로직
+	CC_FSMScript::tick();	// 현재 스테이트의 tick을 호출
+	inputDir();				// 방향에 대한 입력을 감지
+	changeStance();			// 자세 변동이 있는 경우 상태를 재설정
+	if (!m_readyToFire.IsFinish())
+		m_readyToFire.curTime += ScaleDT;
+	else
+		m_readyToFire.Activate();
 	
-	// somthing debug code
-	if (KEY_TAP(KEY::K))
+	// 잠궈도 되는 로직
+	if (m_TogleInput[(UINT)eInpStance::Mouse])
 	{
-		DestroyObject(m_Weapon);
-		DestroyObject(GetOwner());
-	}
-	if (KEY_TAP(KEY::O))
-	{
-		m_MuzzleFlash->ParticleSystem()->Module_Active_OnceSpawn();
-	}
-	if (KEY_TAP(KEY::P))
-	{
-		m_MuzzleFlash->ParticleSystem()->Module_Diactive_OnceSpawn();
+		m_MouseCtrl.tick();			// 마우스의 입력에 맞게 나머지 오브젝트의 트랜스폼을 갱신
+		inputStance();				// 플레이어의 상태및 자세를 변경시키는 입력을 감지
+		
+		colliderUpdate();			// 충돌체의 위치를 갱신
 	}
 }
 
@@ -145,10 +142,12 @@ void CP_FSMScript::initWeapon()
 	m_MouseCtrl.SetOwner(this);
 	m_MouseCtrl.SetMainCam(cam);
 	m_MouseCtrl.begin();
+
+	m_readyToFire.SetFinishTime(m_LongGunInfo.FireLate);
 }
 
 
-void CP_FSMScript::stanceControl()
+void CP_FSMScript::changeStance()
 {
 	if (GetAtkSign())
 	{
@@ -190,18 +189,9 @@ void CP_FSMScript::stanceControl()
 		}
 
 		m_StanceCheck[(UINT)eStanceCheck::IsChange] = false;
-
-		// 자세 변경시 딜레이 주는 코드였..음
-		//m_StanceDelay.curTime += ScaleDT;
-		//
-		//if (m_StanceDelay.IsFinish())
-		//{
-		//	m_StanceDelay.ResetTime();
-		//	
-		//}
 	}
 }
-void CP_FSMScript::dirInput()
+void CP_FSMScript::inputDir()
 {
 	if (KEY_TAP(KEY::W))
 	{
@@ -235,64 +225,122 @@ void CP_FSMScript::dirInput()
 	{
 		InputMove(1.f, 0);
 	}
+	
+	if (0 <= m_moveDir.y)
+		m_StanceCheck[(UINT)eStanceCheck::IsFrontDir] = true;
+	else
+		m_StanceCheck[(UINT)eStanceCheck::IsFrontDir] = false;
+
 }
-void CP_FSMScript::stanceInput()
+void CP_FSMScript::inputStance()
 {
 	if (KEY_TAP(KEY::RBTN))
 	{
+		InputAim();
 		if (IsInput((UINT)eInpStance::Crouch))
 			InputCrouch();
-
-		InputAim();
 	}
 	if (KEY_TAP(KEY::LCTRL))
 	{
+		InputCrouch();
+
 		if (IsInput((UINT)eInpStance::Aim))
 			InputAim();
-
-		InputCrouch();
 	}
 
-	if (KEY_TAP(KEY::LSHIFT))
-		InputSprint(true);
+	if (-0.3 >= m_moveDir.y)
+	{
+		if (KEY_TAP(KEY::LSHIFT))
+			InputSprint(true);
+	}
+	
 	if (KEY_RELEASE(KEY::LSHIFT))
 		InputSprint(false);
 
 	if (KEY_TAP(KEY::SPACE))
 	{
+		DoDodge();
+
 		if (IsInput((UINT)eInpStance::Crouch))
 			InputCrouch();
 		if (IsInput((UINT)eInpStance::Aim))
 			InputAim();
-		InputSprint(false);
-
-		DoDodge();
 	}
-}
-void CP_FSMScript::inputCheck()
-{
-	if (m_TogleInput[(UINT)eInpStance::Mouse])
+
+	if (KEY_HOLD(KEY::LBTN))
 	{
-		dirInput();				// wasd 방향에 대한 키입력을 감지함
-		stanceInput();			// 자세 변경에 대한 키입력을 감지함
+		if (m_TogleInput[(UINT)eInpStance::Aim])
+		{
+			// 원거리 공격
+			if (m_readyToFire.IsActivate())
+			{
+				m_readyToFire.ResetTime();
+				if (m_LongGunInfo.Fire())
+				{
+					PlayAnimation(P_R2Fire, false);
+					
+					CParticleSystem* particle = m_Bullet->ParticleSystem();
+					tParticleModule ModuleData = particle->GetModuleData();
+					ModuleData.bDead = false;
+					particle->SetModuleData(ModuleData);
+					particle->ActiveParticle();
+					particle = m_MuzzleFlash->ParticleSystem();
+					ModuleData = particle->GetModuleData();
+					ModuleData.bDead = false;
+					particle->SetModuleData(ModuleData);
+					particle->ActiveParticle();
+					if (IsInput((UINT)eInpStance::Crouch))
+						InputCrouch();
+					ShootRay();
+				}
+			}
+		}
+		else
+		{
+			// 근거리 공격
+		}
+	}
+
+	if (KEY_TAP(KEY::R))
+	{
+		if (m_LongGunInfo.ReloadMag())
+		{
+			if (m_TogleInput[(UINT)eInpStance::Crouch])
+				PlayAnimation(P_R2ReloadCrouch, false);
+			else
+				PlayAnimation(P_R2Reload, false);
+
+			if (IsInput((UINT)eInpStance::Crouch))
+				InputCrouch();
+			if (IsInput((UINT)eInpStance::Aim))
+				InputAim();
+			InputSprint(false);
+			ChangeState(static_cast<UINT>(eP_States::RELOAD));
+		}
 	}
 }
 void CP_FSMScript::colliderUpdate()
 {
 	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
-	Matrix ownerMat = GetOwner()->Transform()->GetWorldMat();
+	Matrix ownerMat = Transform()->GetWorldMat();
 	Matrix totalMat = retBoneMat * ownerMat;
 	Vec3 retPos = totalMat.Translation();
 	Vec4 retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
-	PxTransform retTransform;
-	retTransform.p.x = retPos.x;
-	retTransform.p.y = retPos.y;
-	retTransform.p.z = retPos.z;
 
-	retTransform.q.x = retRot.x;
-	retTransform.q.y = retRot.y;
-	retTransform.q.z = retRot.z;
-	retTransform.q.w = retRot.w;
+
+	//////
+	Vec3 childPos; // offset
+	Matrix childMat = XMMatrixTranslation(childPos.x, childPos.y, childPos.z);
+	Matrix ownerMat = Transform()->GetWorldMat();
+	Matrix rigidbodyMat = childMat * ownerMat;
+	Vec3 retPos = rigidbodyMat.Translation();
+	Vec4 retRot = DirectX::XMQuaternionRotationMatrix(rigidbodyMat);
+
+	// retPos = 
+
+	PxTransform retTransform;
+	retTransform.p = { retPos.x, retPos.y, retPos.z };
+	retTransform.q = { retRot.x, retRot.y, retRot.z, retRot.w };
 
 	RigidBody()->SetShapeLocalPxTransform(1, retTransform);
 
@@ -301,14 +349,8 @@ void CP_FSMScript::colliderUpdate()
 	totalMat = retBoneMat * ownerMat;
 	retPos = totalMat.Translation();
 	retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
-	retTransform.p.x = retPos.x;
-	retTransform.p.y = retPos.y;
-	retTransform.p.z = retPos.z;
-
-	retTransform.q.x = retRot.x;
-	retTransform.q.y = retRot.y;
-	retTransform.q.z = retRot.z;
-	retTransform.q.w = retRot.w;
+	retTransform.p = { retPos.x, retPos.y, retPos.z };
+	retTransform.q = { retRot.x, retRot.y, retRot.z, retRot.w };
 	RigidBody()->SetShapeLocalPxTransform(2, retTransform);
 }
 
@@ -324,7 +366,6 @@ void CP_FSMScript::AfterCallAnim()
 }
 void CP_FSMScript::DoDodge()
 {
-	(0 <= m_moveDir.y) ? m_StanceCheck[(UINT)eStanceCheck::IsFrontDir] = true : m_StanceCheck[(UINT)eStanceCheck::IsFrontDir] = false;
 
 	// 방향에 맞는 애니메이션 재생
 	if (0.3 <= m_moveDir.x)

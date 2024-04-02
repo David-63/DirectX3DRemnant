@@ -30,9 +30,12 @@ void CP_STATEMoveScript::tick()
 	if (m_prevDir != *m_PlayerMoveDir)
 	{
 		m_prevDir = *m_PlayerMoveDir;
-		CallAnimation();
-		if (m_prevDir != *m_PlayerMoveDir)
+		if (KEY_HOLD(KEY::U))
+		{
 			int a = 0;
+		}
+		CallAnimation();
+		
 	}
 	if (!m_readyToFire.IsFinish())
 	{
@@ -44,7 +47,7 @@ void CP_STATEMoveScript::tick()
 	}
 
 
-	translateInput();
+	moveVelocity();
 	if (KEY_TAP(KEY::R))
 	{
 		if (m_Gun->ReloadMag())
@@ -98,7 +101,7 @@ void CP_STATEMoveScript::tick()
 	
 }
 
-void CP_STATEMoveScript::translateInput()
+void CP_STATEMoveScript::moveVelocity()
 {
 	float moveMagnitude = 0.f;
 	Vec3 vMoveVector(0.f, 0.f, 0.f);
@@ -107,6 +110,20 @@ void CP_STATEMoveScript::translateInput()
 	Vec3 vUp = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::UP);
 	Vec3 vRight = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
 
+	// 방향부터 계산
+
+	if (0.3 <= m_PlayerMoveDir->x)
+		vMoveVector += vRight;
+	else if (-0.3 >= m_PlayerMoveDir->x)
+		vMoveVector -= vRight;
+	if (0.3 <= m_PlayerMoveDir->y)
+		vMoveVector += vFront;
+	else if (-0.3 >= m_PlayerMoveDir->y)
+	{
+		vMoveVector -= vFront;
+	}
+
+	// 상태에 맞게 이동량 계산
 	if (ePlayerStance::Crouch == *m_PlayerStance)
 		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.1f;
 	else if (ePlayerStance::Sprint == *m_PlayerStance && m_PHQ->IsFrontDir())
@@ -114,18 +131,7 @@ void CP_STATEMoveScript::translateInput()
 	else
 		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT;
 
-
-	if (KEY_HOLD(KEY::W))
-		vMoveVector += vFront;
-	if (KEY_HOLD(KEY::S))
-		vMoveVector -= vFront;
-	if (KEY_HOLD(KEY::A))
-		vMoveVector -= vRight;
-	if (KEY_HOLD(KEY::D))
-	{
-		vMoveVector += vRight;
-		m_PHQ->InputSprint(false);
-	}
+	// 최종 이동량 계산
 	vMoveVector *= moveMagnitude * 50.f;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }

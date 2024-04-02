@@ -2,8 +2,8 @@
 #include <Engine/CScript.h>
 #include <Engine/CGameObject.h>
 
-#define PIVOT_HIGH 150 // 70
-#define PIVOT_LOW 95 // 25
+#define PIVOT_HIGH 70 // 150
+#define PIVOT_LOW 25 // 95
 
 #define FOV_HIGH XM_PI / 2.25f
 #define FOV_LOW XM_PI / 5.75f
