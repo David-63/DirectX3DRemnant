@@ -35,7 +35,7 @@ void CP_STATEDodgeScript::tick()
 	moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT;
 
 	// 최종 이동량 계산
-	vMoveVector *= moveMagnitude * 50.f;
+	vMoveVector *= moveMagnitude * 80.f;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }
 

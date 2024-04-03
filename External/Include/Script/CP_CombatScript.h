@@ -7,20 +7,15 @@ class CP_CombatScript : public CScript
 {
 private:
 	CP_FSMScript* m_PHQ;
-
-private:
-	CGameObject* m_Weapon;
-	CGameObject* m_LongGun;
-
+	//tP_LongGunInfo* m_Gun;
 
 public:
 	virtual void begin() override;
 	virtual void tick() override;
 
 
-private:
+public:
 	void SetOwner(CP_FSMScript* _owner) { m_PHQ = _owner; }
-	void SetWeaponObj(CGameObject* _obj) { m_Weapon = _obj; }
 
 public:
 	CLONE(CP_CombatScript);

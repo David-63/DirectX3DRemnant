@@ -64,6 +64,7 @@ private:
     bool                m_TogleInput[(UINT)eInpStance::End];
     bool                m_StanceCheck[(UINT)eStanceCheck::End];
     Vec2                m_moveDir;
+    int                 m_hitDir;
 
 public:
     virtual void begin() override;
@@ -77,7 +78,7 @@ private:
 private:
     void inputDir();        // 방향 입력
 
-    void inputStance();     
+    void inputStance();
     void changeStance();    // 상태 변경해주기
     void colliderUpdate();
 
@@ -88,6 +89,7 @@ public:
     void AfterCallAnim();
     void DoDodge();
     void ShootRay();
+
 
 public:
     void SetWeapon(CGameObject* _obj)
@@ -110,6 +112,7 @@ public:
     void ClearStanceChange() { m_StanceCheck[(UINT)eStanceCheck::IsChange] = false; }
     void InputCrouch() { m_TogleInput[(UINT)eInpStance::Crouch] ? m_TogleInput[(UINT)eInpStance::Crouch] = false : m_TogleInput[(UINT)eInpStance::Crouch] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
     void InputAim() { m_TogleInput[(UINT)eInpStance::Aim] ? m_TogleInput[(UINT)eInpStance::Aim] = false : m_TogleInput[(UINT)eInpStance::Aim] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
+    
     bool IsInput(UINT _stance) { return m_TogleInput[_stance]; }
     bool IsFrontDir() { return m_StanceCheck[(UINT)eStanceCheck::IsFrontDir]; }
 
@@ -122,10 +125,11 @@ public:
 
 
 public:
-    void InputMove(Vec2 _input) { m_moveDir += _input; }
-    void InputMove(int _inputX, int _inputY) { m_moveDir += Vec2(_inputX, _inputY); }
-    void ClearMoveDir() { m_moveDir = Vec2(0, 0); }
     Vec2* GetMoveDir() { return &m_moveDir; }
+
+    void HitDir(int _zDir) { m_hitDir = _zDir; }
+    int GetHitDir() { return m_hitDir; }
+
 
 public:
     void GotoIdle();

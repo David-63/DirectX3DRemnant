@@ -29,24 +29,18 @@ void CP_FSMScript::begin()
 
 void CP_FSMScript::tick()
 {
-	// 잠구면 안되는 로직
+	// 마우스와 상관없는 로직
 	CC_FSMScript::tick();	// 현재 스테이트의 tick을 호출
-	m_MouseCtrl.tick();			// 마우스의 입력에 맞게 나머지 오브젝트의 트랜스폼을 갱신
+	m_MouseCtrl.tick();		// 마우스의 입력에 맞게 나머지 오브젝트의 트랜스폼을 갱신
 	inputDir();				// 방향에 대한 입력을 감지
 	changeStance();			// 자세 변동이 있는 경우 상태를 재설정
-	if (!m_readyToFire.IsActivate())
-	{
-		if (!m_readyToFire.IsFinish())
-			m_readyToFire.curTime += ScaleDT;
-		else
-			m_readyToFire.Activate();
-	}
+	m_Combat.tick();
+	
 		
-	// 잠궈도 되는 로직
+	// 마우스를 잠구면 멈추는 로직
 	if (m_TogleInput[(UINT)eInpStance::Mouse])
 	{
-		inputStance();				// 플레이어의 상태및 자세를 변경시키는 입력을 감지
-		
+		inputStance();				// 플레이어의 상태및 자세를 변경시키는 입력을 감지		
 		colliderUpdate();			// 충돌체의 위치를 갱신
 	}
 }
@@ -146,7 +140,7 @@ void CP_FSMScript::initWeapon()
 	m_MouseCtrl.SetMainCam(cam);
 	m_MouseCtrl.begin();
 
-	m_readyToFire.SetFinishTime(m_LongGunInfo.FireLate);
+	m_Combat.SetOwner(this);
 }
 
 
@@ -197,35 +191,36 @@ void CP_FSMScript::inputDir()
 {
 	if (KEY_TAP(KEY::W))
 	{
-		InputMove(0, 1.f);
+		m_moveDir += Vec2(0.f, 1.f);
 	}
 	if (KEY_TAP(KEY::S))
 	{
-		InputMove(0, -1.f);
+		m_moveDir += Vec2(0.f, -1.f);
 	}
 	if (KEY_TAP(KEY::A))
 	{
-		InputMove(-1.f, 0);
+		m_moveDir += Vec2(-1.f, 0.f);
 	}
 	if (KEY_TAP(KEY::D))
 	{
-		InputMove(1.f, 0);
+		m_moveDir += Vec2(1.f, 0.f);
 	}
 	if (KEY_RELEASE(KEY::W))
 	{
-		InputMove(0, -1.f);
+		m_moveDir += Vec2(0.f, -1.f);
 	}
 	if (KEY_RELEASE(KEY::S))
 	{
-		InputMove(0, 1.f);
+		m_moveDir += Vec2(0.f, 1.f);
 	}
 	if (KEY_RELEASE(KEY::D))
 	{
-		InputMove(-1.f, 0);
+		m_moveDir += Vec2(-1.f, 0.f);
 	}
 	if (KEY_RELEASE(KEY::A))
 	{
-		InputMove(1.f, 0);
+		
+		m_moveDir += Vec2(1.f, 0.f);
 	}
 	
 	if (0 <= m_moveDir.y)
@@ -250,7 +245,7 @@ void CP_FSMScript::inputStance()
 			InputAim();
 	}
 
-	if (-0.3 >= m_moveDir.y)
+	if (0.3 <= m_moveDir.y)
 	{
 		if (KEY_TAP(KEY::LSHIFT))
 			InputSprint(true);
@@ -269,39 +264,7 @@ void CP_FSMScript::inputStance()
 			InputAim();
 	}
 
-	if (KEY_HOLD(KEY::LBTN))
-	{
-		if (m_TogleInput[(UINT)eInpStance::Aim])
-		{
-			// 원거리 공격
-			if (m_readyToFire.IsActivate())
-			{
-				m_readyToFire.ResetTime();
-				if (m_LongGunInfo.Fire())
-				{
-					PlayAnimation(P_R2Fire, false);
-					
-					CParticleSystem* particle = m_Bullet->ParticleSystem();
-					tParticleModule ModuleData = particle->GetModuleData();
-					ModuleData.bDead = false;
-					particle->SetModuleData(ModuleData);
-					particle->ActiveParticle();
-					particle = m_MuzzleFlash->ParticleSystem();
-					ModuleData = particle->GetModuleData();
-					ModuleData.bDead = false;
-					particle->SetModuleData(ModuleData);
-					particle->ActiveParticle();
-					if (IsInput((UINT)eInpStance::Crouch))
-						InputCrouch();
-					ShootRay();
-				}
-			}
-		}
-		else
-		{
-			// 근거리 공격
-		}
-	}
+	
 
 	if (KEY_TAP(KEY::R))
 	{

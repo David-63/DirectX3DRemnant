@@ -4,8 +4,12 @@
 class CP_STATEStaggerScript : public CP_StatesScript
 {
 private:
+    int m_hitDir;
 public:
     virtual void tick() override;
+
+public:
+    virtual void CallAnimation() override;
 
 public:
     virtual void Enter() override;
