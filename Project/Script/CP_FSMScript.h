@@ -2,9 +2,9 @@
 #include "CC_FSMScript.h"
 #include "CP_StatesScript.h"
 #include "CP_MouseCtrlScript.h"
+#include "CP_CombatScript.h"
 
 #define P_R2Dodge                       L"animclip\\player\\P_R2Dodge.animclip"
-#define P_R2Dodge_B                     L"animclip\\player\\P_R2Dodge_B.animclip"   // 이건 안쓰는게 맞을듯
 #define P_R2Dodge_L                     L"animclip\\player\\P_R2Dodge_L.animclip"   
 #define P_R2Dodge_N                     L"animclip\\player\\P_R2Dodge_N.animclip"
 #define P_R2Dodge_R                     L"animclip\\player\\P_R2Dodge_R.animclip"
@@ -53,6 +53,7 @@ private:
 
 private:
     CP_MouseCtrlScript  m_MouseCtrl;
+    CP_CombatScript     m_Combat;
     CGameObject*        m_Weapon;
     CGameObject*        m_MuzzleFlash;
     CGameObject*        m_Bullet;
@@ -95,8 +96,6 @@ public:
         m_Weapon = _obj;
         m_MouseCtrl.SetWeaponObj(m_Weapon);
     }
-
-
 
 public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }

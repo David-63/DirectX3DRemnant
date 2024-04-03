@@ -84,8 +84,8 @@ public:
 
 
 private:
-	void ctrlMovePos();
-	void ctrlMoveRot();
+	void changeFov();
+	void changeTransfrom();
 	void mouseRock();
 	void updateWeaponMatrix();
 

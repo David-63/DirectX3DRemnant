@@ -31,6 +31,7 @@ void CP_FSMScript::tick()
 {
 	// 잠구면 안되는 로직
 	CC_FSMScript::tick();	// 현재 스테이트의 tick을 호출
+	m_MouseCtrl.tick();			// 마우스의 입력에 맞게 나머지 오브젝트의 트랜스폼을 갱신
 	inputDir();				// 방향에 대한 입력을 감지
 	changeStance();			// 자세 변동이 있는 경우 상태를 재설정
 	if (!m_readyToFire.IsFinish())
@@ -41,7 +42,6 @@ void CP_FSMScript::tick()
 	// 잠궈도 되는 로직
 	if (m_TogleInput[(UINT)eInpStance::Mouse])
 	{
-		m_MouseCtrl.tick();			// 마우스의 입력에 맞게 나머지 오브젝트의 트랜스폼을 갱신
 		inputStance();				// 플레이어의 상태및 자세를 변경시키는 입력을 감지
 		
 		colliderUpdate();			// 충돌체의 위치를 갱신
@@ -321,24 +321,13 @@ void CP_FSMScript::inputStance()
 }
 void CP_FSMScript::colliderUpdate()
 {
-	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
+	PxTransform retTransform;
 	Matrix ownerMat = Transform()->GetWorldMat();
+
+	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
 	Matrix totalMat = retBoneMat * ownerMat;
 	Vec3 retPos = totalMat.Translation();
 	Vec4 retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
-
-
-	//////
-	Vec3 childPos; // offset
-	Matrix childMat = XMMatrixTranslation(childPos.x, childPos.y, childPos.z);
-	Matrix ownerMat = Transform()->GetWorldMat();
-	Matrix rigidbodyMat = childMat * ownerMat;
-	Vec3 retPos = rigidbodyMat.Translation();
-	Vec4 retRot = DirectX::XMQuaternionRotationMatrix(rigidbodyMat);
-
-	// retPos = 
-
-	PxTransform retTransform;
 	retTransform.p = { retPos.x, retPos.y, retPos.z };
 	retTransform.q = { retRot.x, retRot.y, retRot.z, retRot.w };
 

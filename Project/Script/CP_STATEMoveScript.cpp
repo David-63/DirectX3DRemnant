@@ -119,9 +119,7 @@ void CP_STATEMoveScript::moveVelocity()
 	if (0.3 <= m_PlayerMoveDir->y)
 		vMoveVector += vFront;
 	else if (-0.3 >= m_PlayerMoveDir->y)
-	{
 		vMoveVector -= vFront;
-	}
 
 	// 상태에 맞게 이동량 계산
 	if (ePlayerStance::Crouch == *m_PlayerStance)
