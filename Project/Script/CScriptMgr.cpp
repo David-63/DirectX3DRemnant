@@ -14,6 +14,7 @@
 #include "CCharacterMoveScript.h"
 #include "CC_FSMScript.h"
 #include "CC_StatesScript.h"
+#include "CHitBoxInfoScript.h"
 #include "CHitBoxScript.h"
 #include "CIdleStateScript.h"
 #include "CMonsterMoveScript.h"
@@ -25,6 +26,7 @@
 #include "CM_Lurker_STATE_Melee_Script.h"
 #include "CM_Lurker_STATE_Move_Script.h"
 #include "CM_Spider_FSMScript.h"
+#include "CM_Spider_proj_Explosion_Script.h"
 #include "CM_Spider_Proj_Script.h"
 #include "CM_Spider_StatesScript.h"
 #include "CM_Spider_STATE_Atk_Script.h"
@@ -62,6 +64,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CCharacterMoveScript");
 	_vec.push_back(L"CC_FSMScript");
 	_vec.push_back(L"CC_StatesScript");
+	_vec.push_back(L"CHitBoxInfoScript");
 	_vec.push_back(L"CHitBoxScript");
 	_vec.push_back(L"CIdleStateScript");
 	_vec.push_back(L"CMonsterMoveScript");
@@ -73,6 +76,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CM_Lurker_STATE_Melee_Script");
 	_vec.push_back(L"CM_Lurker_STATE_Move_Script");
 	_vec.push_back(L"CM_Spider_FSMScript");
+	_vec.push_back(L"CM_Spider_proj_Explosion_Script");
 	_vec.push_back(L"CM_Spider_Proj_Script");
 	_vec.push_back(L"CM_Spider_StatesScript");
 	_vec.push_back(L"CM_Spider_STATE_Atk_Script");
@@ -124,6 +128,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CC_FSMScript;
 	if (L"CC_StatesScript" == _strScriptName)
 		return new CC_StatesScript;
+	if (L"CHitBoxInfoScript" == _strScriptName)
+		return new CHitBoxInfoScript;
 	if (L"CHitBoxScript" == _strScriptName)
 		return new CHitBoxScript;
 	if (L"CIdleStateScript" == _strScriptName)
@@ -146,6 +152,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CM_Lurker_STATE_Move_Script;
 	if (L"CM_Spider_FSMScript" == _strScriptName)
 		return new CM_Spider_FSMScript;
+	if (L"CM_Spider_proj_Explosion_Script" == _strScriptName)
+		return new CM_Spider_proj_Explosion_Script;
 	if (L"CM_Spider_Proj_Script" == _strScriptName)
 		return new CM_Spider_Proj_Script;
 	if (L"CM_Spider_StatesScript" == _strScriptName)
@@ -234,6 +242,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	case (UINT)SCRIPT_TYPE::C_STATESSCRIPT:
 		return new CC_StatesScript;
 		break;
+	case (UINT)SCRIPT_TYPE::HITBOXINFOSCRIPT:
+		return new CHitBoxInfoScript;
+		break;
 	case (UINT)SCRIPT_TYPE::HITBOXSCRIPT:
 		return new CHitBoxScript;
 		break;
@@ -266,6 +277,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::M_SPIDER_FSMSCRIPT:
 		return new CM_Spider_FSMScript;
+		break;
+	case (UINT)SCRIPT_TYPE::M_SPIDER_PROJ_EXPLOSION_SCRIPT:
+		return new CM_Spider_proj_Explosion_Script;
 		break;
 	case (UINT)SCRIPT_TYPE::M_SPIDER_PROJ_SCRIPT:
 		return new CM_Spider_Proj_Script;
@@ -390,6 +404,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 		return L"CC_StatesScript";
 		break;
 
+	case SCRIPT_TYPE::HITBOXINFOSCRIPT:
+		return L"CHitBoxInfoScript";
+		break;
+
 	case SCRIPT_TYPE::HITBOXSCRIPT:
 		return L"CHitBoxScript";
 		break;
@@ -432,6 +450,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::M_SPIDER_FSMSCRIPT:
 		return L"CM_Spider_FSMScript";
+		break;
+
+	case SCRIPT_TYPE::M_SPIDER_PROJ_EXPLOSION_SCRIPT:
+		return L"CM_Spider_proj_Explosion_Script";
 		break;
 
 	case SCRIPT_TYPE::M_SPIDER_PROJ_SCRIPT:

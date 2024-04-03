@@ -93,7 +93,36 @@ void CM_Spider_FSMScript::tick()
 	if (GetAtkSign())
 	{
 		tHitInfo info = GetHitInfo();
-		//dynamic_cast<CM_Spider_STATE_Damaged_Script*>(FindStateScript((UINT)eM_A_States::DAMAGED))->
+
+		//대미지적용하기
+
+		if (GetCurStateType() == (UINT)eM_A_States::DAMAGED)
+			return;
+
+		//앞뒤 구분, 뒤면 피격상태안됨
+		Vec3 hitPos = info.HitPos;
+		hitPos.y = 0.f;
+		Vec3 OwnerPos = GetOwner()->Transform()->GetRelativePos();
+		OwnerPos.y = 0.f;
+		Vec3 dir = hitPos - OwnerPos;
+		dir = dir.Normalize();
+
+		Vec3 front = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+		if (front.Dot(dir) < 0)
+			return;
+		
+		//부위에 따른 피격효과 
+		OwnerPos = GetOwner()->Transform()->GetRelativePos();
+		if (OwnerPos.y + 80.f <= info.HitPos.y && info.HitPos.y <= OwnerPos.y + 120.f
+			&& OwnerPos.x - 8.f <= info.HitPos.x && info.HitPos.x <= OwnerPos.x + 8.f)
+		{
+			dynamic_cast<CM_Spider_STATE_Damaged_Script*>(FindStateScript((UINT)eM_A_States::DAMAGED))->SetPart(1);
+		}
+		else 
+		{
+			dynamic_cast<CM_Spider_STATE_Damaged_Script*>(FindStateScript((UINT)eM_A_States::DAMAGED))->SetPart(0);
+		}
+
 		ChangeState((UINT)eSpiderState::Damaged);
 
 	}

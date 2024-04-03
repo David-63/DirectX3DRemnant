@@ -470,25 +470,7 @@ void CRigidBody::SetShapeLocalPosByBone(int _idx, UINT _boneIdx)
 
 	mShapes[_idx]->setLocalPose(tr);
 
-	/*if (nullptr == GetOwner()->Animator3D() || nullptr == GetOwner()->Animator3D()->GetCurAnim())
-		return;
-
-	tMTBone bone = GetOwner()->Animator3D()->GetMTBoneData(_boneIdx);
-	int FrameIdx = GetOwner()->Animator3D()->GetCurFrame();
-
-	if (bone.vecKeyFrame.size() == 0)
-		return;
-
-	Vec3 trans = bone.vecKeyFrame[FrameIdx].vTranslate;
-	Vec3 offset = mShapeInfos[_idx].boneOffset;
 	
-	Vec3 bonePos = trans + offset;
-
-	PxTransform localpose(PxVec3(bonePos.x, bonePos.y, bonePos.z));
-	localpose.q = GetPhysicsTransform().q;
-
-	mShapes[_idx]->setLocalPose(localpose);
-	mShapeInfos[_idx].offset = bonePos;*/
 }
 
 void CRigidBody::SetBoneSoket(int _shapeIdx, int _boneIdx)

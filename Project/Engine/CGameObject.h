@@ -33,6 +33,7 @@ private:
     vector<CScript*>        m_vecScript;
 
     CGameObject*            m_Parent;
+    CGameObject*            m_Reserver;
     vector<CGameObject*>    m_vecChild;
 
     int                     m_iLayerIdx; // 소속된 레이어 인덱스값
@@ -61,6 +62,9 @@ public:
     const vector<CGameObject*>& GetChild() { return m_vecChild; }
 
     CGameObject* GetParent() const { return m_Parent; }
+
+    CGameObject* GetReserver() { return m_Reserver; }
+    void SetReserver(CGameObject* _obj) { m_Reserver = _obj; }
 
     GET_COMPONENT(Transform, TRANSFORM);
     GET_COMPONENT(MeshRender, MESHRENDER);

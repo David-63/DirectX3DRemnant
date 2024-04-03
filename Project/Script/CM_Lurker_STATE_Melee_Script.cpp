@@ -35,13 +35,40 @@ void CM_Lurker_STATE_Melee_Script::begin()
 	m_MHQ->Animator3D()->ActionEvent(Lurker_SlashRCombo, 9) = std::bind(&CM_Lurker_STATE_Melee_Script::SlashComboBoxOn, this);
 	m_MHQ->Animator3D()->ActionEvent(Lurker_SlashRCombo, 20) = std::bind(&CM_Lurker_STATE_Melee_Script::SlashComboBoxOff, this);
 
-	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 50.f, 30.f), Vec3(0.f, 100.f, -200.f));
+
+	Vec3 ShooterPos = m_MHQ->GetOwner()->Transform()->GetRelativePos();
+	CGameObject* attacker = m_MHQ->GetOwner();
+
+	tHitInfo info0;
+	info0.Damage = 20;
+	info0.KnockBackGrade = 2;
+	info0.Shooter = attacker;
+	info0.ShooterPos = ShooterPos;
+	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 50.f, 30.f), Vec3(0.f, 100.f, -200.f), info0);
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(0);
-	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 50.f, 30.f), Vec3(0.f, 100.f, -160.f));
+
+	tHitInfo info1;
+	info1.Damage = 15;
+	info1.KnockBackGrade = 2;
+	info1.Shooter = attacker;
+	info1.ShooterPos = ShooterPos;
+	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 50.f, 30.f), Vec3(0.f, 100.f, -160.f), info1);
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(1);
-	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(180.f, 50.f, 30.f), Vec3(0.f, 100.f, -160.f));
+
+	tHitInfo info2;
+	info2.Damage = 10;
+	info2.KnockBackGrade = 1;
+	info2.Shooter = attacker;
+	info2.ShooterPos = ShooterPos;
+	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(180.f, 50.f, 30.f), Vec3(0.f, 100.f, -160.f), info2);
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(2);
-	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(180.f, 50.f, 30.f), Vec3(-20.f, 100.f, -160.f));
+
+	tHitInfo info3;
+	info3.Damage = 10;
+	info3.KnockBackGrade = 1;
+	info3.Shooter = attacker;
+	info3.ShooterPos = ShooterPos;
+	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(180.f, 50.f, 30.f), Vec3(-20.f, 100.f, -160.f), info3);
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(3);
 }
 

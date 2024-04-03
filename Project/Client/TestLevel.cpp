@@ -51,6 +51,8 @@ void CreateTestLevel()
 	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Monster, (UINT)LAYER_TYPE::Wall);
 	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Player, (UINT)LAYER_TYPE::HitBoxMonster);
 	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Monster, (UINT)LAYER_TYPE::HitBoxPlayer);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Wall, (UINT)LAYER_TYPE::HitBoxMonster);
+	CCollisionMgr::GetInst()->SetColLayer((UINT)LAYER_TYPE::Wall, (UINT)LAYER_TYPE::HitBoxPlayer);
 
 	// camera
 
@@ -215,13 +217,45 @@ void CreateTestLevel()
 		obj->AddComponent(new CPathFinderScript());
 		obj->AddComponent(new CMonsterMoveScript());
 
+		obj->AddComponent(new CRigidBody);
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(15.f, 15.f, 15.f);
+		info.massProperties.restitution = 0.99f;
+		info.CollideType = (UINT)COLLIDE_TYPE::Monster;
+		obj->RigidBody()->PushBackShapeInfo(info);
+
+		tShapeInfo info2 = {};
+		info2.eGeomType = GEOMETRY_TYPE::Sphere;
+		info2.size = Vector3(150.f, 15.f, 15.f);
+		info2.massProperties.restitution = 0.99f;
+		info2.CollideType = (UINT)COLLIDE_TYPE::Monster;
+		obj->RigidBody()->PushBackShapeInfo(info2);
+
+
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+		
+
+		int num = obj->RigidBody()->GetRigidActor()->getNbShapes();
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		obj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 130.f, 0.f));
+
+
+		obj->AddComponent(new CCollider3D);
+		obj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+
 		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
 	}
 
 
 
 	//lurker    
-	{
+	/*{
 		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.fbx");
 		CGameObject* obj = data->Instantiate();
 		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.animclip");
@@ -239,88 +273,105 @@ void CreateTestLevel()
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(2.f, 2.f, 2.f);
+		info.CollideType = (UINT)COLLIDE_TYPE::Monster;
+		
 		obj->RigidBody()->PushBackShapeInfo(info);
 
 		tShapeInfo info1 = {};
 		info1.eGeomType = GEOMETRY_TYPE::Sphere;
 		info1.size = Vector3(40.f, 40.f, 40.f);
+		info1.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info1);
 
 		tShapeInfo info2 = {};
 		info2.eGeomType = GEOMETRY_TYPE::Sphere;
 		info2.size = Vector3(20.f, 20.f, 20.f);
+		info2.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info2);
 
 		tShapeInfo info3 = {};
 		info3.eGeomType = GEOMETRY_TYPE::Sphere;
 		info3.size = Vector3(30.f, 20.f, 20.f);
+		info3.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info3);
 
 		tShapeInfo info4 = {};
 		info4.eGeomType = GEOMETRY_TYPE::Sphere;
 		info4.size = Vector3(30.f, 20.f, 20.f);
+		info4.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info4);
 
 		tShapeInfo info5 = {};
 		info5.eGeomType = GEOMETRY_TYPE::Sphere;
 		info5.size = Vector3(30.f, 20.f, 20.f);
+		info5.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info5);
 
 		tShapeInfo info6 = {};
 		info6.eGeomType = GEOMETRY_TYPE::Sphere;
 		info6.size = Vector3(30.f, 20.f, 20.f);
+		info6.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info6);
 
 		tShapeInfo info7 = {};
 		info7.eGeomType = GEOMETRY_TYPE::Sphere;
 		info7.size = Vector3(40.f, 20.f, 20.f);
+		info7.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info7);
 
 		tShapeInfo info8 = {};
 		info8.eGeomType = GEOMETRY_TYPE::Sphere;
 		info8.size = Vector3(40.f, 20.f, 20.f);
+		info8.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info8);
 
 		tShapeInfo info9 = {};
 		info9.eGeomType = GEOMETRY_TYPE::Sphere;
 		info9.size = Vector3(30.f, 20.f, 20.f);
+		info9.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info9);
 
 		tShapeInfo info10 = {};
 		info10.eGeomType = GEOMETRY_TYPE::Sphere;
 		info10.size = Vector3(30.f, 20.f, 20.f);
+		info10.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info10);
 
 		tShapeInfo info11 = {};
 		info11.eGeomType = GEOMETRY_TYPE::Sphere;
 		info11.size = Vector3(30.f, 20.f, 20.f);
+		info11.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info11);
 
 		tShapeInfo info12 = {};
 		info12.eGeomType = GEOMETRY_TYPE::Sphere;
 		info12.size = Vector3(30.f, 20.f, 20.f);
+		info12.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info12);
 
 		tShapeInfo info13 = {};
 		info13.eGeomType = GEOMETRY_TYPE::Sphere;
 		info13.size = Vector3(40.f, 20.f, 20.f);
+		info13.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info13);
 
 		tShapeInfo info14 = {};
 		info14.eGeomType = GEOMETRY_TYPE::Sphere;
 		info14.size = Vector3(30.f, 20.f, 20.f);
+		info14.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info14);
 
 		tShapeInfo info15 = {};
 		info15.eGeomType = GEOMETRY_TYPE::Sphere;
 		info15.size = Vector3(30.f, 20.f, 20.f);
+		info15.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info15);
 
 
 		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
-		//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		//obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
 		obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
 
@@ -343,10 +394,8 @@ void CreateTestLevel()
 		obj->RigidBody()->SetBoneSoket(15, 48);
 
 
-
-
 		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
-	}
+	}*/
 
 
 	Ptr<CMeshData> pMeshData = nullptr;
@@ -400,7 +449,24 @@ void CreateTestLevel()
 
 	SpawnGameObject(player, Vec3(900, 0.f, 50.f), (UINT)LAYER_TYPE::Player);
 
+	//ruler
+	{
+		CGameObject* obj = new CGameObject;
+		obj->AddComponent(new CMeshRender);
+		obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug"));
+		obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
 
+		obj->AddComponent(new CTestScript());
+		obj->AddComponent(new CTransform());
+		obj->AddComponent(new CRigidBody);
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(10.f, 15.f, 15.f);
+		info.CollideType = (UINT)COLLIDE_TYPE::Other;
+		obj->RigidBody()->PushBackShapeInfo(info);
+		SpawnGameObject(obj, Vec3(0, 0.f, -20.f), (UINT)LAYER_TYPE::Wall);
+	}
 
 
 	//prefab
@@ -483,6 +549,7 @@ void CreateTestLevel()
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Box;
 		info.size = Vector3(200.f, 200.f, 200.f);
+		info.CollideType = (UINT)COLLIDE_TYPE::Other;
 
 		pObj->AddComponent(new CRigidBody);
 		pObj->RigidBody()->PushBackShapeInfo(info);

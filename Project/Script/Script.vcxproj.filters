@@ -246,6 +246,12 @@
     <ClInclude Include="CP_STATEStaggerScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
+    <ClInclude Include="CHitBoxInfoScript.h">
+      <Filter>Script\System\HitBox</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Spider_proj_Explosion_Script.h">
+      <Filter>Script\Creature\Monster\M_Scripts\Spider</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -397,6 +403,12 @@
     </ClCompile>
     <ClCompile Include="CP_STATEStaggerScript.cpp">
       <Filter>Script\Creature\Player\P_States</Filter>
+    </ClCompile>
+    <ClCompile Include="CHitBoxInfoScript.cpp">
+      <Filter>Script\System\HitBox</Filter>
+    </ClCompile>
+    <ClCompile Include="CM_Spider_proj_Explosion_Script.cpp">
+      <Filter>Script\Creature\Monster\M_Scripts\Spider</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
