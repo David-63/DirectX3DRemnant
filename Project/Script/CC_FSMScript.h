@@ -31,14 +31,7 @@ struct tHealthStat
         tHealthStat(float _in) : MaxHp(_in), CurHp(_in), IsDead(false) {}
     };
 
-struct tHitInfo
-{
-    Vec3            ShooterPos;
-    Vec3            HitPos;
-    CGameObject*    Shooter;
-    float           Damage;
-    UINT            KnockBackGrade = 0;
-};
+
 
 class CC_FSMScript : public CScript
 {

@@ -37,7 +37,6 @@ void CM_Lurker_STATE_Damaged_Script::tick()
 }
 
 
-
 void CM_Lurker_STATE_Damaged_Script::AniComplete()
 {
 	m_bAniComplete = true;
