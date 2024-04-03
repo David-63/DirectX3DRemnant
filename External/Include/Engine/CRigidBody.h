@@ -96,6 +96,7 @@ public:
 	void SetShapeLocalPos(int _idx, Vec3 _localPos);
 
 	void SetShapeLocalPosByBone(int _idx, UINT _boneIdx);
+	void SetShapeLocalPxTransform(int _idx, physx::PxTransform _tr);
 	void SetBoneSoket(int _shapeIdx, int _boneIdx);
 
 

@@ -207,6 +207,7 @@ call CodeGen.exe</Command>
     <ClInclude Include="CPathFinderScript.h" />
     <ClInclude Include="CPlayerScript.h" />
     <ClInclude Include="CPlayerScriptFsm.h" />
+    <ClInclude Include="CP_CombatScript.h" />
     <ClInclude Include="CP_FSMScript.h" />
     <ClInclude Include="CP_MouseCtrlScript.h" />
     <ClInclude Include="CP_STATEDodgeScript.h" />
@@ -260,6 +261,7 @@ call CodeGen.exe</Command>
     <ClCompile Include="CPathFinderScript.cpp" />
     <ClCompile Include="CPlayerScript.cpp" />
     <ClCompile Include="CPlayerScriptFsm.cpp" />
+    <ClCompile Include="CP_CombatScript.cpp" />
     <ClCompile Include="CP_FSMScript.cpp" />
     <ClCompile Include="CP_MouseCtrlScript.cpp" />
     <ClCompile Include="CP_STATEDodgeScript.cpp" />

@@ -4,6 +4,7 @@
 class CP_STATEDodgeScript : public CP_StatesScript
 {
 private:
+    Vec2 m_evadeDir;
 public:
     virtual void tick() override;
 

@@ -34,6 +34,7 @@ CM_Spider_STATE_Move_Script
 CPathFinderScript
 CPlayerScript
 CPlayerScriptFsm
+CP_CombatScript
 CP_FSMScript
 CP_MouseCtrlScript
 CP_STATEDodgeScript

@@ -34,8 +34,8 @@ void CTestScript::tick()
 
 	if (KEY_TAP(KEY::J))
 	{
-		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\memPlayer.pref", L"prefab\\memPlayer.pref");
-		fab->PrefabLoad(L"prefab\\memPlayer.pref");
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_Main.pref", L"prefab\\P_Main.pref");
+		fab->PrefabLoad(L"prefab\\P_Main.pref");
 		CGameObject* player = fab.Get()->Instantiate(Vec3(0, 0, 0), 1);
 		SpawnGameObject(player, Vec3(0, 0, 0), 1);
 	}

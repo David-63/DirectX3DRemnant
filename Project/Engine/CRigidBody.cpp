@@ -473,6 +473,11 @@ void CRigidBody::SetShapeLocalPosByBone(int _idx, UINT _boneIdx)
 	
 }
 
+void CRigidBody::SetShapeLocalPxTransform(int _idx, physx::PxTransform _tr)
+{
+	mShapes[_idx]->setLocalPose(_tr);
+}
+
 void CRigidBody::SetBoneSoket(int _shapeIdx, int _boneIdx)
 {
 	mShapeInfos[_shapeIdx].boneIdx = _boneIdx;

@@ -14,23 +14,56 @@ CP_STATEIdleScript::~CP_STATEIdleScript()
 }
 
 
+void CP_STATEIdleScript::begin()
+{
+	CP_StatesScript::begin();
+	m_readyToFire.SetFinishTime(m_Gun->FireLate);
+}
+
 void CP_STATEIdleScript::tick()
 {
-	// 이동상태 확인
-
+	// 정지상태 확인
 	if (Vec2(0, 0) != *m_PlayerMoveDir)
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
 
 
+	if (!m_readyToFire.IsFinish())
+	{
+		m_readyToFire.curTime += ScaleDT;
+	}
+	else
+	{
+		m_readyToFire.Activate();
+	}
+
+	// 이것도 함수로 제어해보기
 	if (ePlayerStance::Aim == *m_PlayerStance)
 	{
 		if (KEY_HOLD(KEY::LBTN))
 		{
-			if (m_Gun->Fire())
+			if (m_readyToFire.IsActivate())
 			{
-				m_PHQ->PlayAnimation(P_R2Fire, false);
-				m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
+				m_readyToFire.ResetTime();
+				if (m_Gun->Fire())
+				{
+					m_PHQ->PlayAnimation(P_R2Fire, false);
+					CParticleSystem* particle = m_PHQ->GetBullet()->ParticleSystem();
+					tParticleModule ModuleData = particle->GetModuleData();
+					ModuleData.bDead = false;
+					particle->SetModuleData(ModuleData);
+					particle->ActiveParticle();
+					particle = m_PHQ->GetMuzzelFlash()->ParticleSystem();
+					ModuleData = particle->GetModuleData();
+					ModuleData.bDead = false;
+					particle->SetModuleData(ModuleData);
+					particle->ActiveParticle();
+					if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+						m_PHQ->InputCrouch();
+					m_PHQ->ShootRay();
+					//m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
+				}
 			}
+			
 		}
 	}
 	
@@ -43,9 +76,14 @@ void CP_STATEIdleScript::tick()
 			else
 				m_PHQ->PlayAnimation(P_R2Reload, false);
 
+			if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+				m_PHQ->InputCrouch();
+			if (m_PHQ->IsInput((UINT)eInpStance::Aim))
+				m_PHQ->InputAim();
+			m_PHQ->InputSprint(false);
 			m_PHQ->ChangeState(static_cast<UINT>(eP_States::RELOAD));
-		}		
-	}		
+		}
+	}	
 }
 
 void CP_STATEIdleScript::CallAnimation()
