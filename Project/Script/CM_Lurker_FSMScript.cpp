@@ -14,8 +14,8 @@ CM_Lurker_FSMScript::~CM_Lurker_FSMScript()
 
 void CM_Lurker_FSMScript::begin()
 {
-	m_tMonsterInfo.M_Health.MaxHp = 1000.f;
-	m_tMonsterInfo.M_Health.CurHp = 1000.f;
+	m_tMonsterInfo.M_Health.MaxHp = 100.f;
+	m_tMonsterInfo.M_Health.CurHp = 100.f;
 
 	GetOwner()->Animator3D()->Add(Lurker_ALERT01);
 	GetOwner()->Animator3D()->Add(Lurker_ALERT03);
@@ -70,6 +70,7 @@ void CM_Lurker_FSMScript::tick()
 		tHitInfo info = GetHitInfo();
 
 		//대미지적용하기
+		m_tMonsterInfo.M_Health.GotDamage()
 
 		if (GetCurStateType() == (UINT)eM_States::DAMAGED)
 			return;
