@@ -85,7 +85,6 @@ private:
 
 public:
     void PlayAnimation(wstring _name, bool _repeat);
-    void OverrideObjRotY() { m_MouseCtrl.OverrideObjRotY(); }
     void AfterCallAnim();
     void DoDodge();
     void ShootRay();

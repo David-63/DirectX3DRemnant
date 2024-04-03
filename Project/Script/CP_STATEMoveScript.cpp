@@ -47,7 +47,6 @@ void CP_STATEMoveScript::tick()
 	}
 
 
-	moveVelocity();
 	if (KEY_TAP(KEY::R))
 	{
 		if (m_Gun->ReloadMag())
@@ -98,7 +97,8 @@ void CP_STATEMoveScript::tick()
 		}
 	}
 
-	
+
+	moveVelocity();
 }
 
 void CP_STATEMoveScript::moveVelocity()

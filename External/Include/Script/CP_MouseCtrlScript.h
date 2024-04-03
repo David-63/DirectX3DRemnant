@@ -33,9 +33,8 @@ private:
 	{
 		Vec3			CamOffset;
 		float			MouseSensitivity;
-		float			PrevCamRotY;
 
-		tCameraInfo(Vec3 _offset, float _sensitive) : CamOffset(_offset), MouseSensitivity(_sensitive), PrevCamRotY(0) {}
+		tCameraInfo(Vec3 _offset, float _sensitive) : CamOffset(_offset), MouseSensitivity(_sensitive) {}
 	};
 	struct tSwapValue
 	{
@@ -88,9 +87,6 @@ private:
 	void changeTransfrom();
 	void mouseRock();
 	void updateWeaponMatrix();
-
-public:
-	void OverrideObjRotY();
 
 public:
 	void SetOwner(CP_FSMScript* _owner) { m_PHQ = _owner; }

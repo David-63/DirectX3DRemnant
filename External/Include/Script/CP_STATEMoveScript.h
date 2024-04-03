@@ -6,7 +6,7 @@ class CP_STATEMoveScript : public CP_StatesScript
 private:
     Vec2        m_prevDir;
     tTimeCtrl   m_readyToFire;
-
+    
 public:
     virtual void begin() override;
     virtual void tick() override;

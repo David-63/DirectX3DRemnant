@@ -34,11 +34,14 @@ void CP_FSMScript::tick()
 	m_MouseCtrl.tick();			// 마우스의 입력에 맞게 나머지 오브젝트의 트랜스폼을 갱신
 	inputDir();				// 방향에 대한 입력을 감지
 	changeStance();			// 자세 변동이 있는 경우 상태를 재설정
-	if (!m_readyToFire.IsFinish())
-		m_readyToFire.curTime += ScaleDT;
-	else
-		m_readyToFire.Activate();
-	
+	if (!m_readyToFire.IsActivate())
+	{
+		if (!m_readyToFire.IsFinish())
+			m_readyToFire.curTime += ScaleDT;
+		else
+			m_readyToFire.Activate();
+	}
+		
 	// 잠궈도 되는 로직
 	if (m_TogleInput[(UINT)eInpStance::Mouse])
 	{
@@ -171,7 +174,6 @@ void CP_FSMScript::changeStance()
 			curState->CallAnimation();
 			m_MouseCtrl.SetPivot(PIVOT_HIGH);
 			m_MouseCtrl.SetFov(FOV_LOW);
-			OverrideObjRotY();
 		}
 		else if (m_TogleInput[(UINT)eInpStance::Crouch])
 		{

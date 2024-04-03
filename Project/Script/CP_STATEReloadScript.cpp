@@ -14,11 +14,13 @@ CP_STATEReloadScript::~CP_STATEReloadScript()
 
 void CP_STATEReloadScript::tick()
 {
-	
+	m_PHQ->RigidBody()->SetVelocity(Vec3(0, 0, 0));
+
 }
 
 void CP_STATEReloadScript::Enter()
 {
+
 }
 
 void CP_STATEReloadScript::Exit()

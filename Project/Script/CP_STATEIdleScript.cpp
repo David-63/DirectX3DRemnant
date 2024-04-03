@@ -112,5 +112,4 @@ void CP_STATEIdleScript::Enter()
 
 void CP_STATEIdleScript::Exit()
 {
-	m_PHQ->OverrideObjRotY();
 }
