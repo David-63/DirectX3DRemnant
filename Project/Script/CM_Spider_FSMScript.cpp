@@ -14,8 +14,8 @@ CM_Spider_FSMScript::~CM_Spider_FSMScript()
 
 void CM_Spider_FSMScript::begin()
 {
-	m_tMonsterInfo.M_Health.MaxHp = 1000.f;
-	m_tMonsterInfo.M_Health.CurHp = 1000.f;
+	m_tMonsterInfo.M_Health.MaxHp = 100.f;
+	m_tMonsterInfo.M_Health.CurHp = 100.f;
 
 	Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Spider\\Wasteland_Spider_Gun_Passive_Idle.fbx");
 	m_Gun = data->Instantiate();
@@ -95,6 +95,7 @@ void CM_Spider_FSMScript::tick()
 		tHitInfo info = GetHitInfo();
 
 		//대미지적용하기
+		m_tMonsterInfo.M_Health.GotDamage(info.Damage);
 
 		if (GetCurStateType() == (UINT)eM_A_States::DAMAGED)
 			return;

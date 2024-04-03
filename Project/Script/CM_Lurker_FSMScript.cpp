@@ -70,7 +70,7 @@ void CM_Lurker_FSMScript::tick()
 		tHitInfo info = GetHitInfo();
 
 		//대미지적용하기
-		//m_tMonsterInfo.M_Health.GotDamage()
+		m_tMonsterInfo.M_Health.GotDamage(info.Damage);
 
 		if (GetCurStateType() == (UINT)eM_States::DAMAGED)
 			return;
