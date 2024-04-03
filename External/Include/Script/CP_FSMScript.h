@@ -46,7 +46,6 @@
 
 class CP_FSMScript : public CC_FSMScript
 {
-public:
 private:
     tP_Info             m_PlayerInfo;
     tP_LongGunInfo      m_LongGunInfo;

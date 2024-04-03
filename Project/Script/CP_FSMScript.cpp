@@ -149,7 +149,7 @@ void CP_FSMScript::changeStance()
 	if (GetAtkSign())
 	{
 		tHitInfo info = GetHitInfo();
-		ChangeState((UINT)eP_States::DAMAGED);
+		ChangeState((UINT)eP_States::STAGGER);
 	}
 
 	if (m_StanceCheck[(UINT)eStanceCheck::IsChange])

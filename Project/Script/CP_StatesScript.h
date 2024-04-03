@@ -10,7 +10,6 @@ enum class eP_States
     RELOAD,
     MELEE,
     STAGGER,
-    DAMAGED,
     DEAD,
     END,
 };
