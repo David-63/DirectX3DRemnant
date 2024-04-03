@@ -58,28 +58,36 @@ void CB_STATEMeleeScript::begin()
 	m_BHQ->Animator3D()->CompleteEvent(B_Melee_Atk_Weapon_AOE) = std::bind(&CB_STATEMeleeScript::AttackEnd, this);
 
 
+	Vec3 ShooterPos = m_BHQ->GetOwner()->Transform()->GetRelativePos();
+	CGameObject* attacker = m_BHQ->GetOwner();
+
+	tHitInfo info0;
+	info0.Damage = 20;
+	info0.KnockBackGrade = 2;
+	info0.Shooter = attacker;
+	info0.ShooterPos = ShooterPos;
 
 	// ===== 히트 박스
-	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 150.f), Vec3(0.f, 100.f, -120.f));
+	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 150.f), Vec3(0.f, 100.f, -120.f), info0);
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(0);
 
-	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 150.f), Vec3(0.f, 100.f, -120.f));
+	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 150.f), Vec3(0.f, 100.f, -120.f), info0);
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(1);
 
-	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 150.f), Vec3(0.f, 100.f, -120.f));
+	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 150.f), Vec3(0.f, 100.f, -120.f), info0);
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(2);
 
 	// R
-	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 60.f), Vec3(0.f, 100.f, -100.f));
+	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 60.f), Vec3(0.f, 100.f, -100.f), info0);
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(3);
 
-	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 60.f), Vec3(0.f, 100.f, -100.f));
+	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 60.f), Vec3(0.f, 100.f, -100.f), info0);
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(4);
 
-	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 60.f), Vec3(0.f, 100.f, -100.f));
+	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 150.f, 60.f), Vec3(0.f, 100.f, -100.f), info0);
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(5);
 
-	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 170.f, 150.f), Vec3(0.f, 100.f, -100.f));
+	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(120.f, 170.f, 150.f), Vec3(0.f, 100.f, -100.f), info0);
 	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(6); // AOE
 
 	// ============================= 

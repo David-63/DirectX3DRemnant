@@ -550,3 +550,13 @@ struct tRangeYX
 	int y1;
 	int y2;
 };
+
+struct tHitInfo
+{
+	Vec3 ShooterPos;
+	Vec3 HitPos = Vec3(-1.f,-1.f,-1.f);
+	CGameObject* Shooter;
+	float Damage;
+	UINT KnockBackGrade = 0;
+};
+

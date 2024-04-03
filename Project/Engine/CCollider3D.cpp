@@ -3,6 +3,7 @@
 #include "CResMgr.h"
 #include "CScript.h"
 
+
 CCollider3D::CCollider3D()
 	: CComponent(COMPONENT_TYPE::COLLIDER3D)
 	  , mType(COLLIDER3D_TYPE::NONE)
@@ -78,7 +79,9 @@ void CCollider3D::OnTriggerEnter(CCollider3D* _otherCollider)
 {
 	if (GetOwner()->GetName() == L"HitBoxObject")
 	{
-		const vector<CScript*>& vecScript = GetOwner()->GetParent()->GetScripts();
+		CGameObject* hitBox = GetOwner();
+
+		const vector<CScript*>& vecScript = hitBox->GetScripts();
 
 		for (size_t i = 0; i < vecScript.size(); ++i)
 		{
@@ -100,7 +103,9 @@ void CCollider3D::OnTriggerStay(CCollider3D* _otherCollider)
 {
 	if (GetOwner()->GetName() == L"HitBoxObject")
 	{
-		const vector<CScript*>& vecScript = GetOwner()->GetParent()->GetScripts();
+		CGameObject* hitBox = GetOwner();
+
+		const vector<CScript*>& vecScript = hitBox->GetScripts();
 
 		for (size_t i = 0; i < vecScript.size(); ++i)
 		{
@@ -122,12 +127,15 @@ void CCollider3D::OnTriggerExit(CCollider3D* _otherCollider)
 {
 	if (GetOwner()->GetName() == L"HitBoxObject")
 	{
-		const vector<CScript*>& vecScript = GetOwner()->GetParent()->GetScripts();
+		CGameObject* hitBox = GetOwner();
+
+		const vector<CScript*>& vecScript = hitBox->GetScripts();
 
 		for (size_t i = 0; i < vecScript.size(); ++i)
 		{
 			vecScript[i]->EndOverlap(_otherCollider);
 		}
+
 	}
 	else
 	{
