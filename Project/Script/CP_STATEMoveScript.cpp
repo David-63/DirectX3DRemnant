@@ -12,6 +12,12 @@ CP_STATEMoveScript::~CP_STATEMoveScript()
 {
 }
 
+void CP_STATEMoveScript::begin()
+{
+	CP_StatesScript::begin();
+	m_readyToFire.SetFinishTime(m_Gun->FireLate);
+}
+
 void CP_STATEMoveScript::tick()
 {
 	if ((0.1 >= m_PlayerMoveDir->y && -0.1 <= m_PlayerMoveDir->y)
@@ -24,21 +30,38 @@ void CP_STATEMoveScript::tick()
 	if (m_prevDir != *m_PlayerMoveDir)
 	{
 		m_prevDir = *m_PlayerMoveDir;
+		if (KEY_HOLD(KEY::U))
+		{
+			int a = 0;
+		}
 		CallAnimation();
+		
 	}
-	translateInput();
+	if (!m_readyToFire.IsFinish())
+	{
+		m_readyToFire.curTime += ScaleDT;
+	}
+	else
+	{
+		m_readyToFire.Activate();
+	}
+
+
+	moveVelocity();
 	if (KEY_TAP(KEY::R))
 	{
 		if (m_Gun->ReloadMag())
 		{
 			if (ePlayerStance::Crouch == *m_PlayerStance)
-			{
-				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false);
-			}
+				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false); 
 			else
-			{
 				m_PHQ->PlayAnimation(P_R2Reload, false);
-			}
+
+			if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+				m_PHQ->InputCrouch();
+			if (m_PHQ->IsInput((UINT)eInpStance::Aim))
+				m_PHQ->InputAim();
+			m_PHQ->InputSprint(false);
 			m_PHQ->ChangeState(static_cast<UINT>(eP_States::RELOAD));
 		}
 	}
@@ -48,11 +71,29 @@ void CP_STATEMoveScript::tick()
 		{
 			if (KEY_HOLD(KEY::LBTN))
 			{
-				if (m_Gun->Fire())
+				if (m_readyToFire.IsActivate())
 				{
-					m_PHQ->PlayAnimation(P_R2Fire, false);
-					m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
+					m_readyToFire.ResetTime();
+					if (m_Gun->Fire())
+					{
+						m_PHQ->PlayAnimation(P_R2Fire, false);
+						CParticleSystem* particle = m_PHQ->GetBullet()->ParticleSystem();
+						tParticleModule ModuleData = particle->GetModuleData();
+						ModuleData.bDead = false;
+						particle->SetModuleData(ModuleData);
+						particle->ActiveParticle();
+						particle = m_PHQ->GetMuzzelFlash()->ParticleSystem();
+						ModuleData = particle->GetModuleData();
+						ModuleData.bDead = false;
+						particle->SetModuleData(ModuleData);
+						particle->ActiveParticle();
+						if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
+							m_PHQ->InputCrouch();
+						m_PHQ->InputSprint(false);
+					}
 				}
+
+				
 			}
 		}
 	}
@@ -60,7 +101,7 @@ void CP_STATEMoveScript::tick()
 	
 }
 
-void CP_STATEMoveScript::translateInput()
+void CP_STATEMoveScript::moveVelocity()
 {
 	float moveMagnitude = 0.f;
 	Vec3 vMoveVector(0.f, 0.f, 0.f);
@@ -69,6 +110,18 @@ void CP_STATEMoveScript::translateInput()
 	Vec3 vUp = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::UP);
 	Vec3 vRight = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
 
+	// 방향부터 계산
+
+	if (0.3 <= m_PlayerMoveDir->x)
+		vMoveVector += vRight;
+	else if (-0.3 >= m_PlayerMoveDir->x)
+		vMoveVector -= vRight;
+	if (0.3 <= m_PlayerMoveDir->y)
+		vMoveVector += vFront;
+	else if (-0.3 >= m_PlayerMoveDir->y)
+		vMoveVector -= vFront;
+
+	// 상태에 맞게 이동량 계산
 	if (ePlayerStance::Crouch == *m_PlayerStance)
 		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.1f;
 	else if (ePlayerStance::Sprint == *m_PlayerStance && m_PHQ->IsFrontDir())
@@ -76,15 +129,7 @@ void CP_STATEMoveScript::translateInput()
 	else
 		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT;
 
-
-	if (KEY_HOLD(KEY::W))
-		vMoveVector += vFront;
-	if (KEY_HOLD(KEY::S))
-		vMoveVector -= vFront;
-	if (KEY_HOLD(KEY::A))
-		vMoveVector -= vRight;
-	if (KEY_HOLD(KEY::D))
-		vMoveVector += vRight;
+	// 최종 이동량 계산
 	vMoveVector *= moveMagnitude * 50.f;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }

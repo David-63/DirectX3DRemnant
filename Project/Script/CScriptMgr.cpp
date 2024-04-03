@@ -35,6 +35,7 @@
 #include "CPathFinderScript.h"
 #include "CPlayerScript.h"
 #include "CPlayerScriptFsm.h"
+#include "CP_CombatScript.h"
 #include "CP_FSMScript.h"
 #include "CP_MouseCtrlScript.h"
 #include "CP_STATEDodgeScript.h"
@@ -83,6 +84,7 @@ void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 	_vec.push_back(L"CPathFinderScript");
 	_vec.push_back(L"CPlayerScript");
 	_vec.push_back(L"CPlayerScriptFsm");
+	_vec.push_back(L"CP_CombatScript");
 	_vec.push_back(L"CP_FSMScript");
 	_vec.push_back(L"CP_MouseCtrlScript");
 	_vec.push_back(L"CP_STATEDodgeScript");
@@ -166,6 +168,8 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 		return new CPlayerScript;
 	if (L"CPlayerScriptFsm" == _strScriptName)
 		return new CPlayerScriptFsm;
+	if (L"CP_CombatScript" == _strScriptName)
+		return new CP_CombatScript;
 	if (L"CP_FSMScript" == _strScriptName)
 		return new CP_FSMScript;
 	if (L"CP_MouseCtrlScript" == _strScriptName)
@@ -296,6 +300,9 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 		break;
 	case (UINT)SCRIPT_TYPE::PLAYERSCRIPTFSM:
 		return new CPlayerScriptFsm;
+		break;
+	case (UINT)SCRIPT_TYPE::P_COMBATSCRIPT:
+		return new CP_CombatScript;
 		break;
 	case (UINT)SCRIPT_TYPE::P_FSMSCRIPT:
 		return new CP_FSMScript;
@@ -472,6 +479,10 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 
 	case SCRIPT_TYPE::PLAYERSCRIPTFSM:
 		return L"CPlayerScriptFsm";
+		break;
+
+	case SCRIPT_TYPE::P_COMBATSCRIPT:
+		return L"CP_CombatScript";
 		break;
 
 	case SCRIPT_TYPE::P_FSMSCRIPT:
