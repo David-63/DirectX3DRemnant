@@ -250,7 +250,7 @@ void CP_STATEMoveScript::CallAnimation()
 
 void CP_STATEMoveScript::Enter()
 {
-	//CallAnimation();
+	CallAnimation();
 }
 
 void CP_STATEMoveScript::Exit()

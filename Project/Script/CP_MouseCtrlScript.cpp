@@ -57,7 +57,6 @@ void CP_MouseCtrlScript::begin()
 {
 	m_PlayerStance = m_PHQ->GetStance();
 
-	m_ctrlCam->Transform()->SetRelativePos(m_CamInfo.CamOffset);
 }
 
 void CP_MouseCtrlScript::tick()
@@ -106,42 +105,20 @@ void CP_MouseCtrlScript::changeTransfrom()
 {
 	// Find stance or state about Rotation Mode
 	eP_States stateType = static_cast<eP_States>(m_PHQ->GetCurStateType());
-	
 
-	// ==========================================================================
-
-
-	// 이부분이 필요하긴 한데
-	// 상대적으로 계산해야하니까 수식을 수정해야함
-	// Vec3 objPos = m_PHQ->Transform()->GetRelativePos();
-	// Vec3 camF = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-	// Vec3 camR = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
-	// Vec3 camU = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::UP);
-	// objPos.y += m_PivotValue.CurValue;
-	// Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
-	// m_ctrlCam->Transform()->SetRelativePos(Point);
-	
 	// Find transform value
 	Vec3 getCamRot = m_ctrlCam->Transform()->GetRelativeRot();
 	Vec3 getObjRot = m_PHQ->Transform()->GetRelativeRot();
 	Vec2 mouseInput = CKeyMgr::GetInst()->GetMouseRaw();
 	mouseInput.Normalize();
-
-	
 	
 	// Calculate move magnitude
 	float deltaYaw = XMConvertToRadians(mouseInput.x * m_CamInfo.MouseSensitivity);		// Y 축 회전, 수평으로 돌리는데 사용 
 	float deltaPitch = XMConvertToRadians(mouseInput.y * m_CamInfo.MouseSensitivity);	// X 축 회전, 수직으로 돌리는데 사용
 	float xCamRot, yObjRot;
-
 	m_CamInfo.PrevCamRotY = getCamRot.y + deltaYaw;		// 카메라 수평 회전량 구하기
 	xCamRot = getCamRot.x + deltaPitch;					// 카메라 수직 회전량 구하기
-
 	yObjRot = getObjRot.y + deltaYaw;					// 오브젝트의 수평 회전량 구하기
-
-
-	// =============================================================================
-	
 
 	// 회전 조건
 	bool justRotCam = false;
@@ -151,57 +128,38 @@ void CP_MouseCtrlScript::changeTransfrom()
 			|| ePlayerStance::Crouch == *m_PlayerStance
 			|| ePlayerStance::Dodge == *m_PlayerStance)
 			justRotCam = true;
-	}
-	
+	}	
 	
 	// Apply change according to Rotation Mode
 	if (justRotCam)
 	{
-		//Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, 0);
-		//m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
-		
-		// 다시 생각해보니까
-		// 위의 Move 스크립트는 사실상 없어도 되고
-
-		// rot으로 카메라 만 회전시켜야 하면
-		// 오브젝트와 카메라간에 오프셋 벡터 방향만큼 상대적으로 거리를 유지해야함
-
-		// 카메라만 회전시키는건데
-		// 본격적으로 회전시키려면 카메라의 위치도 바꿔주고
-		// 카메라의 위치도 회전시켜야함
-
-
-		
-		// 카메라의 회전 구하기
 		Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, 0);
 		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
 
+		Vec3 camR = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
+		Vec3 camF = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+		Vec3 camU = Vec3(0,1,0);
 
-		// 카메라의 위치 구하기
-		// Object Position 으로부터 Front 방향 벡터를 가져와서
-		// Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
-		// m_ctrlCam->Transform()->SetRelativePos(Point);
-		// 이거로 구하는게 맞긴한듯?
-		// 상대적이니까 objPos가 없어도 될거같음
-
-		// owner 방향 가져와서
-		//Vec3 ownerF = m_ctrlCam->Transform()->GetWorldDir(DIR_TYPE::FRONT);
-		//Vec3 ownerR = m_ctrlCam->Transform()->GetWorldDir(DIR_TYPE::RIGHT);
-		//Vec3 ownerU = m_ctrlCam->Transform()->GetWorldDir(DIR_TYPE::UP);
-		//Vec3 Point = ownerF * m_CamInfo.CamOffset.x + ownerR * -m_CamInfo.CamOffset.z + ownerU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
-		//m_ctrlCam->Transform()->SetRelativePos(Point);
-
-		// 여기까지
-		// 카메라를 회전시키고, 그담에 오브젝트의 방향에 맞게 위치를 이동시킴
-
+		Vec3 Point = camR * m_CamInfo.CamOffset.x + camF * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
+		Point.y += m_PivotValue.CurValue;
+		m_ctrlCam->Transform()->SetRelativePos(Point);
 	}
 	else
 	{
+		// 여기로 왔으면 카메라가 회전하는게 아니라 오브젝트가 회전해야함
+		
+		// 카메라는 오브젝트의 자식이기 때문에 기존의 카메라 회전량을 지우고 오브젝트만 회전해야할듯?
 		Vec3 outObjEuler = Vec3(0, yObjRot, 0);
-		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, 0);
+		Vec3 outCamEuler = Vec3(xCamRot, 0, 0);
 		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
-		m_ctrlCam->Transform()->SetRelativeRot(Vec3(0,0,0));
 		m_Weapon->Transform()->SetRelativeRot(outObjEuler);
+		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
+
+		Vec3 Point = m_CamInfo.CamOffset;
+		Point.y += m_PivotValue.CurValue;
+		m_ctrlCam->Transform()->SetRelativePos(Point);
+
+		// 위치 조정을 해줘야 하는데 여기서 하는게 아니라 외부에서 해줘야할거같기도하고
 	}
 }
 
