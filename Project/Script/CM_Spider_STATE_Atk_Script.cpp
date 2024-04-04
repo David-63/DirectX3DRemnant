@@ -141,6 +141,7 @@ void CM_Spider_STATE_Atk_Script::CreateProj()
 	info.size = Vector3(40.f, 1.f, 2.f);
 	proj->RigidBody()->PushBackShapeInfo(info);
 	proj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
+	proj->RigidBody()->SetSleep(true);
 
 	m_CProj = proj;
 }
@@ -254,6 +255,11 @@ void CM_Spider_STATE_Atk_Script::Enter()
 
 void CM_Spider_STATE_Atk_Script::Exit()
 {
+	if (m_CProj)
+	{
+		DestroyObject(m_CProj);
+	}
+
 	Clear();
 }
 

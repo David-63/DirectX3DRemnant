@@ -277,7 +277,9 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
         vOutColor *= ParticleBuffer[_in.iInstID].vColor;
 
     }
-
+    
+    if (vOutColor.x <= 0.18f && vOutColor.y <= 0.18f && vOutColor.z <= 0.18f)
+        vOutColor.w = 0.0f;
 
     return vOutColor;
 }

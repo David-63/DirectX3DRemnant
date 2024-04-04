@@ -36,6 +36,7 @@ void CM_Spider_Proj_Script::tick()
 	}
 	else if (m_bShootStart)
 	{
+		GetOwner()->RigidBody()->SetSleep(false);
 		Vec3 projPos = GetOwner()->Transform()->GetRelativePos();
 		projPos += -m_vdir * DT * 1500.f;
 
