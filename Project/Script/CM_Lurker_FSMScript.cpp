@@ -83,7 +83,7 @@ void CM_Lurker_FSMScript::tick()
 		Vec3 dir = hitPos - OwnerPos;
 		dir = dir.Normalize();
 
-		Vec3 front = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+		Vec3 front = -GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 		if (front.Dot(dir) < 0)
 			return;
 
@@ -105,6 +105,10 @@ void CM_Lurker_FSMScript::tick()
 		else if (front.Cross(dir).y < 0 && info.HitPos.y <= OwnerPos.y + 80.f)
 		{
 			dynamic_cast<CM_Lurker_STATE_Damaged_Script*>(FindStateScript((UINT)eM_States::DAMAGED))->SetPart(1);
+		}
+		else
+		{
+			dynamic_cast<CM_Lurker_STATE_Damaged_Script*>(FindStateScript((UINT)eM_States::DAMAGED))->SetPart(0);
 		}
 
 		ChangeState((UINT)eLurkerState::Damaged);
