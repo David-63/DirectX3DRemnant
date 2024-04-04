@@ -12,7 +12,8 @@ struct tHealthStat
 
         void GotDamage(float _in)
         {
-            if (CurHp -= _in <= 0)
+            CurHp -= _in;
+            if (CurHp <= 0)
             {
                 CurHp = 0;
                 IsDead = true;
@@ -20,7 +21,8 @@ struct tHealthStat
         }
         void GotHeal(float _in)
         {
-            if (CurHp += _in >= MaxHp)
+            CurHp += _in;
+            if (CurHp >= MaxHp)
             {
                 CurHp = MaxHp;
             }
