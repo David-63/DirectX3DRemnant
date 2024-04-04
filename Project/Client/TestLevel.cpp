@@ -391,5 +391,21 @@ void CreateTestLevel()
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
 	}
+
+	{
+		//CGameObject* obj = new CGameObject();
+		//obj->AddComponent(new CTransform());
+		//obj->AddComponent(new CMeshRender());
+		////obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+		////obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
+		////obj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\aim.png"));
+
+
+		//obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+		//obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"),0);
+		//obj->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
+		//obj->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
+		//SpawnGameObject(obj, Vec3(0,0,0), 0);
+	}
 	
 }
