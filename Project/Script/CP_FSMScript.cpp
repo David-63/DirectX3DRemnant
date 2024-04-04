@@ -91,9 +91,18 @@ void CP_FSMScript::initAnim()
 	Animator3D()->Add(P_R2MoveSprint_L);
 	Animator3D()->Add(P_R2MoveSprint_R);
 
+	Animator3D()->Add(P_R2ImpactStagger);
+	Animator3D()->Add(P_R2ImpactStagger_B);
+
+	
+		
 	Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::AfterCallAnim, this);
 	Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
 	Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
+
+	Animator3D()->CompleteEvent(P_R2ImpactStagger) = std::bind(&CP_FSMScript::GotoIdle, this);
+	Animator3D()->CompleteEvent(P_R2ImpactStagger_B) = std::bind(&CP_FSMScript::GotoIdle, this);
+
 
 	Animator3D()->CompleteEvent(P_R2Dodge) = std::bind(&CP_FSMScript::GotoMove, this);
 	Animator3D()->CompleteEvent(P_R2Dodge_L) = std::bind(&CP_FSMScript::GotoMove, this);
