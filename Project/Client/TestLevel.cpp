@@ -138,62 +138,107 @@ void CreateTestLevel()
 
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}
+
+
 	{
-		CGameObject* pObj = new CGameObject;
-		pObj->SetName(L"Collition Test");
-		pObj->AddComponent(new CTransform());
-		pObj->AddComponent(new CC_FSMScript());
-		pObj->AddComponent(new CRigidBody());
+		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Wasteland_Spider_Turn180_L.mdat");
+		CGameObject* obj = pMeshData->Instantiate();
+		//obj->Animator3D()->SimpleGen(L"animclip\Spider\Wasteland_Spider_Turn180_L.animclip");
+		Vec3 startpos = Vec3(600.f, 0.f, 0.f);
 
-		Vec3 targetPos = Vec3(1000.f, 100.f, 1000.f);
-		pObj->Transform()->SetRelativePos(targetPos);
-		pObj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+		obj->SetName(L"Spider");
+		obj->AddComponent(new CM_Spider_FSMScript);
+		obj->AddComponent(new CHitBoxScript);
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
 
-		tShapeInfo info = {};                       // foot
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(200.f, 200.f, 200.f);
-		pObj->RigidBody()->PushBackShapeInfo(info);
-		info = {};									// head
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(200.f, 200.f, 200.f);
-		pObj->RigidBody()->PushBackShapeInfo(info);
-		info = {};
-		pObj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		obj->AddComponent(new CPathFinderScript());
+		obj->AddComponent(new CMonsterMoveScript());
 
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		pObj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		pObj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-		pObj->RigidBody()->SetShapeLocalPos(1, Vec3(0.f, 30.f, 0.f));
-		SpawnGameObject(pObj, targetPos, (UINT)LAYER_TYPE::Monster);
-	}
-	{
-		CGameObject* pGround = new CGameObject;
-		pGround->SetName(L"Ground");
-		pGround->AddComponent(new CTransform);
-		pGround->Transform()->SetRelativeScale(10000.f, 10.f, 10000.f);
-		pGround->SetLayerIdx((UINT)LAYER_TYPE::Ground);
-		pGround->Transform()->SetRelativePos(Vec3(0.f, -500.f, 0.f));
+		obj->AddComponent(new CRigidBody);
+		obj->Transform()->SetRelativePos(startpos);
 
-		pGround->AddComponent(new CCollider3D);
-		pGround->AddComponent(new CRigidBody);
 		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Box;
-		info.size = Vector3(10000.f, 1000.f, 10000.f);
-		info.massProperties.restitution = 0.2f;
-		info.massProperties.dynamicFriction = 0.3f;
-		info.massProperties.staticFriction = 0.3f;
-		pGround->RigidBody()->PushBackShapeInfo(info);
-		pGround->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
+		info.eGeomType = GEOMETRY_TYPE::Sphere;
+		info.size = Vector3(15.f, 15.f, 15.f);
+		info.massProperties.restitution = 0.99f;
+		info.CollideType = (UINT)COLLIDE_TYPE::Monster;
+		obj->RigidBody()->PushBackShapeInfo(info);
 
-		pGround->AddComponent(new CMeshRender);
-		Ptr<CMesh> mesh = CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug");
-		Ptr<CMaterial> mater = CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl");
-		pGround->MeshRender()->SetMesh(mesh);
-		pGround->MeshRender()->SetMaterial(mater, 0);
+		tShapeInfo info2 = {};
+		info2.eGeomType = GEOMETRY_TYPE::Sphere;
+		info2.size = Vector3(150.f, 15.f, 15.f);
+		info2.massProperties.restitution = 0.99f;
+		info2.CollideType = (UINT)COLLIDE_TYPE::Monster;
+		obj->RigidBody()->PushBackShapeInfo(info2);
 
-		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), (UINT)LAYER_TYPE::Ground);
+
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+
+
+		int num = obj->RigidBody()->GetRigidActor()->getNbShapes();
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+		obj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 130.f, 0.f));
+
+
+		obj->AddComponent(new CCollider3D);
+
+		SpawnGameObject(obj, startpos, (UINT)LAYER_TYPE::Monster);
 	}
 
+	{
 
+		//{
+		//   Ptr<CMeshData> pMeshData = nullptr;
+		//   CGameObject* player = nullptr;
+
+		//   pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
+		//   player = pMeshData->Instantiate();
+
+		//   player->SetName(L"Player");
+		//   player->MeshRender()->SetFrustumCheck(false);
+		//   CP_FSMScript* pFSM = new CP_FSMScript();
+		//   player->AddComponent(pFSM);
+
+		//   // rigidbody 에 전달할 데이터 미리 초기화
+		//   Vec3 playerStartPos = Vec3(0, 0.f, 0);
+		//   player->Transform()->SetRelativePos(playerStartPos);
+		//   player->SetLayerIdx((UINT)LAYER_TYPE::Player);
+
+		//   //// 쉐이프 정의 및 등록
+		//   player->AddComponent(new CRigidBody);
+		//   tShapeInfo info = {};                        // foot
+		//   info.eGeomType = GEOMETRY_TYPE::Sphere;
+		//   info.size = Vector3(15.f, 15.f, 15.f);
+		//   info.CollideType = (UINT)COLLIDE_TYPE::Player;
+		//   player->RigidBody()->PushBackShapeInfo(info);
+		//   info = {};                                 // head
+		//   info.eGeomType = GEOMETRY_TYPE::Sphere;
+		//   info.size = Vector3(35.f, 35.f, 35.f);
+		//   info.CollideType = (UINT)COLLIDE_TYPE::Player;
+		//   player->RigidBody()->PushBackShapeInfo(info);
+		//   info = {};                                 // body
+		//   info.eGeomType = GEOMETRY_TYPE::Sphere;
+		//   info.size = Vector3(55.f, 55.f, 55.f);
+		//   info.CollideType = (UINT)COLLIDE_TYPE::Player;
+		//   player->RigidBody()->PushBackShapeInfo(info);
+		//   // 피지컬 등록하기
+		//   player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+
+		//   player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+		//   player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+		//   player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+		//   player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+		//   
+		//   ////////////////////////
+		//   //player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+
+		//   player->AddComponent(new CCollider3D);
+
+		//   SpawnGameObject(player, playerStartPos, (UINT)LAYER_TYPE::Player);
+		//}
+	}
 }
