@@ -117,7 +117,7 @@ void CreateTestLevel()
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}
 
-	
+
 	// Test obj
 	/*{
 		CGameObject* pObj = new CGameObject;
@@ -243,7 +243,7 @@ void CreateTestLevel()
 		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
 		obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-		
+
 
 		int num = obj->RigidBody()->GetRigidActor()->getNbShapes();
 		obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
@@ -256,51 +256,33 @@ void CreateTestLevel()
 	}*/
 
 
-	{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\prop1.fbx");
-		CGameObject* obj = data->Instantiate();
-
-		obj->SetName(L"prop1");
-		obj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
-		obj->SetLayerIdx((UINT)LAYER_TYPE::Ground);
-		obj->AddComponent(new CRigidBody);
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Box;
-		info.size = Vector3(90.f, 110.f, 140.f);
-		info.CollideType = (UINT)COLLIDE_TYPE::Other;
-		obj->RigidBody()->PushBackShapeInfo(info);
-		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
-
-		obj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 60.f, 0.f));
-
-		SpawnGameObject(obj, Vec3(-700.f, 0.f, -20.f), (UINT)LAYER_TYPE::Ground);
-	}
-
-	//석관
+	//맵오브젝트
 	/*{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\SarcoPhagus.fbx");
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\BossBack.fbx");
 		CGameObject* obj = data->Instantiate();
 
-		obj->SetName(L"MapObj");
+		obj->SetName(L"BossBack");
 		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
 
 		obj->AddComponent(new CRigidBody);
-		obj->Transform()->SetRelativePos(Vec3(-700.f, 0.f, -20.f));
+		obj->Transform()->SetRelativePos(Vec3(42.f, 0.f, 4107.f));
+		obj->Transform()->SetRelativeScale(Vec3(4.f, 4.f, 4.5f));
+		obj->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
 
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Box;
-		info.size = Vector3(160.f, 300.f, 100.f);
+		info.size = Vector3(1400.f, 760.f, 220);
 		info.CollideType = (UINT)COLLIDE_TYPE::Other;
 		obj->RigidBody()->PushBackShapeInfo(info);
 		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
 
-		obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 150.f, -40.f));
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 360.f, 300.f));
 
-		SpawnGameObject(obj, Vec3(-700.f, 0.f, -20.f), (UINT)LAYER_TYPE::Wall);
+		SpawnGameObject(obj, Vec3(42.f, 0.f, 4107.f), (UINT)LAYER_TYPE::Wall);
 	}*/
 
 	//lurker    
-	{
+	/*{
 		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.fbx");
 		CGameObject* obj = data->Instantiate();
 		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.animclip");
@@ -313,107 +295,41 @@ void CreateTestLevel()
 		obj->AddComponent(new CMonsterMoveScript());
 		obj->AddComponent(new CRigidBody());
 
-		
+
 
 		tShapeInfo info = {};
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.size = Vector3(2.f, 2.f, 2.f);
 		info.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		
 		obj->RigidBody()->PushBackShapeInfo(info);
 
 		tShapeInfo info1 = {};
 		info1.eGeomType = GEOMETRY_TYPE::Sphere;
-		info1.size = Vector3(50.f, 40.f, 40.f);
+		info1.size = Vector3(90.f, 2.f, 2.f);
 		info1.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info1);
 
 		tShapeInfo info2 = {};
 		info2.eGeomType = GEOMETRY_TYPE::Sphere;
-		info2.size = Vector3(30.f, 20.f, 20.f);
+		info2.size = Vector3(90.f, 2.f, 2.f);
 		info2.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info2);
 
 		tShapeInfo info3 = {};
 		info3.eGeomType = GEOMETRY_TYPE::Sphere;
-		info3.size = Vector3(40.f, 20.f, 20.f);
+		info3.size = Vector3(30.f, 2.f, 2.f);
 		info3.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info3);
 
-		tShapeInfo info4 = {};
-		info4.eGeomType = GEOMETRY_TYPE::Sphere;
-		info4.size = Vector3(40.f, 20.f, 20.f);
-		info4.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info4);
-
-		tShapeInfo info5 = {};
-		info5.eGeomType = GEOMETRY_TYPE::Sphere;
-		info5.size = Vector3(40.f, 20.f, 20.f);
-		info5.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info5);
-
-		tShapeInfo info6 = {};
-		info6.eGeomType = GEOMETRY_TYPE::Sphere;
-		info6.size = Vector3(40.f, 20.f, 20.f);
-		info6.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info6);
-
-		tShapeInfo info7 = {};
-		info7.eGeomType = GEOMETRY_TYPE::Sphere;
-		info7.size = Vector3(40.f, 20.f, 20.f);
-		info7.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info7);
-
-		tShapeInfo info8 = {};
-		info8.eGeomType = GEOMETRY_TYPE::Sphere;
-		info8.size = Vector3(40.f, 20.f, 20.f);
-		info8.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info8);
-
-		tShapeInfo info9 = {};
-		info9.eGeomType = GEOMETRY_TYPE::Sphere;
-		info9.size = Vector3(40.f, 20.f, 20.f);
-		info9.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info9);
-
-		tShapeInfo info10 = {};
-		info10.eGeomType = GEOMETRY_TYPE::Sphere;
-		info10.size = Vector3(40.f, 20.f, 20.f);
-		info10.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info10);
-
-		tShapeInfo info11 = {};
-		info11.eGeomType = GEOMETRY_TYPE::Sphere;
-		info11.size = Vector3(40.f, 20.f, 20.f);
-		info11.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info11);
-
-		tShapeInfo info12 = {};
-		info12.eGeomType = GEOMETRY_TYPE::Sphere;
-		info12.size = Vector3(40.f, 20.f, 20.f);
-		info12.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info12);
-
-		tShapeInfo info13 = {};
-		info13.eGeomType = GEOMETRY_TYPE::Sphere;
-		info13.size = Vector3(40.f, 20.f, 20.f);
-		info13.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info13);
-
-		tShapeInfo info14 = {};
-		info14.eGeomType = GEOMETRY_TYPE::Sphere;
-		info14.size = Vector3(40.f, 20.f, 20.f);
-		info14.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info14);
-
-		tShapeInfo info15 = {};
-		info15.eGeomType = GEOMETRY_TYPE::Sphere;
-		info15.size = Vector3(40.f, 20.f, 20.f);
-		info15.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info15);
 
 
 		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 1.f, -10.f));
+		obj->RigidBody()->SetShapeLocalPos(1, Vec3(0.f, 45.f, -10.f));
+		obj->RigidBody()->SetShapeLocalPos(2, Vec3(0.f, 120.f, -10.f));
+		obj->RigidBody()->SetShapeLocalPos(3, Vec3(0.f, 160.f, -10.f));
+
+
 		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
 		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
@@ -421,26 +337,8 @@ void CreateTestLevel()
 
 
 
-		obj->RigidBody()->SetBoneSoket(0, 0);
-		obj->RigidBody()->SetBoneSoket(1, 1);
-		obj->RigidBody()->SetBoneSoket(2, 6);
-		obj->RigidBody()->SetBoneSoket(3, 9);
-		obj->RigidBody()->SetBoneSoket(4, 27);
-		obj->RigidBody()->SetBoneSoket(5, 10);
-		obj->RigidBody()->SetBoneSoket(6, 28);
-		obj->RigidBody()->SetBoneSoket(7, 8); 
-		obj->RigidBody()->SetBoneSoket(8, 4);
-		obj->RigidBody()->SetBoneSoket(9, 49);
-		obj->RigidBody()->SetBoneSoket(10, 53);
-		obj->RigidBody()->SetBoneSoket(11, 50);
-		obj->RigidBody()->SetBoneSoket(12, 54);
-		obj->RigidBody()->SetBoneSoket(13, 26); 
-		obj->RigidBody()->SetBoneSoket(14, 52); 
-		obj->RigidBody()->SetBoneSoket(15, 48);
-
-
 		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
-	}
+	}*/
 
 
 	//Ptr<CMeshData> pMeshData = nullptr;
@@ -513,7 +411,7 @@ void CreateTestLevel()
 	//	SpawnGameObject(obj, Vec3(0, 0.f, -20.f), (UINT)LAYER_TYPE::Wall);
 	//}
 
-	
+
 
 
 
@@ -637,7 +535,7 @@ void CreateTestLevel()
 
 		}*/
 
-	//player
+		//player
 	{
 		CGameObject* pObj = new CGameObject;
 		pObj->SetName(L"Player Obj");
@@ -649,13 +547,20 @@ void CreateTestLevel()
 
 	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
 
+
+
+
+
+
+
+
+
+
 	//바닥
 	{
 		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\FloorTile.pref", L"prefab\\FloorTile.pref");
 		fab->PrefabLoad(L"prefab\\FloorTile.pref");
 		CGameObject* empty = nullptr;
-
-
 
 		for (int i = 0; i <= 3; ++i)
 		{
@@ -671,4 +576,161 @@ void CreateTestLevel()
 			}
 		}
 	}
+
+#define WallSize 13
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\BC_Wall.pref", L"prefab\\BC_Wall.pref");
+		fab->PrefabLoad(L"prefab\\BC_Wall.pref");
+		CGameObject* empty = nullptr;
+		Vec3 spawnPos = Vec3(0, 0, 0);
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, 5000);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, -5000);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, 5000);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(-5000.f, 0.f, -4600.f + (size * 800.f));
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(5000.f, 0.f, -4600.f + (size * 800.f));
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+
+		for (int size = 0; size < 3; ++size)
+		{
+			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, -3400);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+
+		spawnPos = Vec3(-2600.f, 0.f, -3800);
+		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+
+		for (int size = 0; size < 2; ++size)
+		{
+			spawnPos = Vec3(-2200.f + (size * 800.f), 0.f, -4200);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		spawnPos = Vec3(-1000.f, 0.f, -3800);
+		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		spawnPos = Vec3(600.f, 0.f, -4600);
+		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		spawnPos = Vec3(600.f, 0.f, -3800);
+		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+
+
+		for (int size = 0; size < 6; ++size)
+		{
+			spawnPos = Vec3(1000.f + (size * 800.f), 0.f, -3400);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		for (int size = 0; size < 2; ++size)
+		{
+			spawnPos = Vec3(-2200.f + (size * 800.f), 0.f, -3400);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+	}
+
+	//StatueC
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\StatueC.pref", L"prefab\\StatueC.pref");
+		fab->PrefabLoad(L"prefab\\StatueC.pref");
+		CGameObject* obj = fab->Instantiate(Vec3(1200.f, 0.f, 4400.f), (UINT)LAYER_TYPE::Wall);
+		obj->SetName(L"StatueC");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+		SpawnGameObject(obj, Vec3(1200.f, 0.f, 4200.f), (UINT)LAYER_TYPE::Wall);
+	}
+
+	////StatueB
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Prop_StatueB.pref", L"prefab\\Prop_StatueB.pref");
+		fab->PrefabLoad(L"prefab\\Prop_StatueB.pref");
+		CGameObject* obj = fab->Instantiate(Vec3(-1200.f, 0.f, 4400.f), (UINT)LAYER_TYPE::Wall);
+		obj->SetName(L"StatueB");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+		SpawnGameObject(obj, Vec3(-1200.f, 0.f, 4200.f), (UINT)LAYER_TYPE::Wall);
+	}
+
+	//석관들
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\prop_SarcoPhagus.pref", L"prefab\\prop_SarcoPhagus.pref");
+		fab->PrefabLoad(L"prefab\\prop_SarcoPhagus.pref");
+		CGameObject* obj = fab->Instantiate(Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Wall);
+		obj->SetName(L"Sarco");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Wall);
+	}
+
+	//파이프
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Prop_Pipe.pref", L"prefab\\Prop_Pipe.pref");
+		fab->PrefabLoad(L"prefab\\Prop_Pipe.pref");
+		CGameObject* obj = fab->Instantiate(Vec3(483.f, 0.f, -4897.f), (UINT)LAYER_TYPE::Wall);
+		obj->SetName(L"Pipe");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+		SpawnGameObject(obj, Vec3(483.f, 0.f, -4897.f), (UINT)LAYER_TYPE::Wall);
+	}
+
+	//보스쪽벽면
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\BossBack.pref", L"prefab\\BossBack.pref");
+		fab->PrefabLoad(L"prefab\\BossBack.pref");
+		CGameObject* obj = fab->Instantiate(Vec3(42, 0.f, 4207), (UINT)LAYER_TYPE::Wall);
+		obj->SetName(L"BossBack");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+		SpawnGameObject(obj, Vec3(42.f, 0.f, 4207.f), (UINT)LAYER_TYPE::Wall);
+	}
+
+
 }

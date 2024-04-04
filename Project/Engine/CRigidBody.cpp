@@ -74,7 +74,7 @@ void CRigidBody::tick()
 }
 void CRigidBody::finaltick()
 {
-	//DrawDebugMesh();
+	DrawDebugMesh();
 
 	//if(!m_bSoketUse)
 

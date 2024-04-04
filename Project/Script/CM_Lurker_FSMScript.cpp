@@ -90,7 +90,7 @@ void CM_Lurker_FSMScript::tick()
 		//부위에 따른 피격효과 
 		OwnerPos = GetOwner()->Transform()->GetRelativePos();
 		if (OwnerPos.y + 122.f <= info.HitPos.y && info.HitPos.y <= OwnerPos.y + 140.f
-			&& OwnerPos.x - 8.f <= info.HitPos.x && info.HitPos.x <= OwnerPos.x + 8.f)
+			&& OwnerPos.x - 20.f <= info.HitPos.x && info.HitPos.x <= OwnerPos.x + 20.f)
 		{
 			dynamic_cast<CM_Lurker_STATE_Damaged_Script*>(FindStateScript((UINT)eM_States::DAMAGED))->SetPart(4);
 		}
