@@ -5,6 +5,8 @@ class CP_STATEDodgeScript : public CP_StatesScript
 {
 private:
     Vec2 m_evadeDir;
+    float m_maxTime;
+    float m_curTime;
 public:
     virtual void tick() override;
 

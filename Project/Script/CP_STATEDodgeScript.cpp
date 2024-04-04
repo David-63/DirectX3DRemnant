@@ -35,13 +35,21 @@ void CP_STATEDodgeScript::tick()
 	moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT;
 
 	// 최종 이동량 계산
-	vMoveVector *= moveMagnitude * 80.f;
+	if (m_curTime <= m_maxTime)
+	{
+		m_curTime += ScaleDT;
+	}
+
+	float totalSpeed = FloatLerp(moveMagnitude * 80.f, moveMagnitude, m_curTime / m_maxTime);
+	vMoveVector *= totalSpeed;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }
 
 void CP_STATEDodgeScript::Enter()
 {
 	m_evadeDir = *m_PHQ->GetMoveDir();
+	m_maxTime = 1.f;
+	m_curTime = 0.f;
 }
 
 void CP_STATEDodgeScript::Exit()
