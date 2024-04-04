@@ -48,7 +48,7 @@ CParticleSystem::CParticleSystem()
 	m_ModuleData.vSpawnScaleMax = Vec3(20.f, 20.f, 1.f);
 
 	m_ModuleData.SpawnShapeType = 0;
-	m_ModuleData.vBoxShapeScale = Vec3(0.f, 0.f, 0.f);
+	m_ModuleData.vBoxShapeScale = Vec3(200.f, 200.f, 200.f);
 	m_ModuleData.vSpawnAreaOffsetFactor = Vec3(0.f, 0.f, 0.f);
 	m_ModuleData.Space = 0; // ½Ã¹Ä·¹ÀÌ¼Ç ÁÂÇ¥°è
 

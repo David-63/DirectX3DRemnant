@@ -37,7 +37,7 @@ public:
     void SetAndGetPath(CGameObject* _pObject);
     void SetAndGetPath(Vec3 _pos);
     void MoveOn(bool _is);
-    std::stack<Vec3>* GetStack() { return m_Stack; } // 사이즈가 0이나 1
+    std::stack<Vec3>* GetStack() { return m_Stack; }
     bool RenewPath();
     void SetNearPlayer(bool is) { m_bNearPlayer = is; }
 

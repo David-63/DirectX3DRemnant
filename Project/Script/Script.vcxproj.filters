@@ -94,9 +94,6 @@
     <Filter Include="Script\Creature\Monster\M_Scripts\Spider">
       <UniqueIdentifier>{49b4f726-fded-4c98-ac5a-75770431b3ad}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Script\Creature\Boss\B_States\B_Projec">
-      <UniqueIdentifier>{cab573c4-3bb4-4ab8-b711-584c87498f15}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -249,9 +246,6 @@
     <ClInclude Include="CP_STATEStaggerScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
-    <ClInclude Include="CB_RangeBallScript.h">
-      <Filter>Script\Creature\Boss\B_States\B_Projec</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pch.cpp">
@@ -403,9 +397,6 @@
     </ClCompile>
     <ClCompile Include="CP_STATEStaggerScript.cpp">
       <Filter>Script\Creature\Player\P_States</Filter>
-    </ClCompile>
-    <ClCompile Include="CB_RangeBallScript.cpp">
-      <Filter>Script\Creature\Boss\B_States\B_Projec</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

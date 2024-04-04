@@ -32,11 +32,9 @@ public:
 
 public:
 	Vec3 GetPlayerPos();
-	CGameObject* GetPlayerObj();
 
 	virtual void SetStateType(UINT _StateType) override { m_BStateType = static_cast<eB_States>(_StateType); }
 	virtual UINT GetStateType() const override { return static_cast<UINT>(m_BStateType); }
-
 
 
 

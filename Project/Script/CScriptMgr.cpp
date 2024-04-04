@@ -2,7 +2,6 @@
 #include "CScriptMgr.h"
 
 #include "CB_FSMScript.h"
-#include "CB_RangeBallScript.h"
 #include "CB_STATEDamagedScript.h"
 #include "CB_STATEDeadScript.h"
 #include "CB_STATEHealScript.h"
@@ -51,7 +50,6 @@
 void CScriptMgr::GetScriptInfo(vector<wstring>& _vec)
 {
 	_vec.push_back(L"CB_FSMScript");
-	_vec.push_back(L"CB_RangeBallScript");
 	_vec.push_back(L"CB_STATEDamagedScript");
 	_vec.push_back(L"CB_STATEDeadScript");
 	_vec.push_back(L"CB_STATEHealScript");
@@ -102,8 +100,6 @@ CScript * CScriptMgr::GetScript(const wstring& _strScriptName)
 {
 	if (L"CB_FSMScript" == _strScriptName)
 		return new CB_FSMScript;
-	if (L"CB_RangeBallScript" == _strScriptName)
-		return new CB_RangeBallScript;
 	if (L"CB_STATEDamagedScript" == _strScriptName)
 		return new CB_STATEDamagedScript;
 	if (L"CB_STATEDeadScript" == _strScriptName)
@@ -201,9 +197,6 @@ CScript * CScriptMgr::GetScript(UINT _iScriptType)
 	{
 	case (UINT)SCRIPT_TYPE::B_FSMSCRIPT:
 		return new CB_FSMScript;
-		break;
-	case (UINT)SCRIPT_TYPE::B_RANGEBALLSCRIPT:
-		return new CB_RangeBallScript;
 		break;
 	case (UINT)SCRIPT_TYPE::B_STATEDAMAGEDSCRIPT:
 		return new CB_STATEDamagedScript;
@@ -347,10 +340,6 @@ const wchar_t * CScriptMgr::GetScriptName(CScript * _pScript)
 	{
 	case SCRIPT_TYPE::B_FSMSCRIPT:
 		return L"CB_FSMScript";
-		break;
-
-	case SCRIPT_TYPE::B_RANGEBALLSCRIPT:
-		return L"CB_RangeBallScript";
 		break;
 
 	case SCRIPT_TYPE::B_STATEDAMAGEDSCRIPT:

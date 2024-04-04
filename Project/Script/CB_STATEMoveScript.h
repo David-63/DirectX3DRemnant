@@ -26,27 +26,7 @@ private:
 	bool        m_IsPhase_1;
 	bool        m_GetWeapon;
 	bool        m_OnceEvade;
-
 	bool        m_OnceSpawnSpell;
-	bool        m_OnceSpawnSpellUp;
-	bool        m_OnceSpawnSpell_Stop;
-	bool        m_OnceSpawnSpell_FireSpawn;
-	bool        m_OnceSpawnSpell_Fire;
-
-
-	int         m_SpellCooltime;
-
-	CGameObject* m_SpellObj_Spawn_R;
-	CGameObject* m_SpellObj_Spawn_UP_R;
-	CGameObject* m_SpellObj_Spawn_Stop_R;
-	CGameObject* m_SpellObj_Fire_R;
-
-	CGameObject* m_SpellObj_Spawn_L;
-	CGameObject* m_SpellObj_Spawn_UP_L;
-	CGameObject* m_SpellObj_Spawn_Stop_L;
-	CGameObject* m_SpellObj_Fire_L;
-
-
 	bool        m_bBloodDrink;
 	bool        m_bOnEvade;
 
@@ -107,13 +87,8 @@ private:
 	bool mKey;
 	bool       m_bEnterDistCheck;
 
-	float      m_fTime;
-
 
 public:
-
-	void SpawnSpell();
-	void SpawnSpellMove();
 	void NoWeapon_MoveToDir();
 	void Weapon_Move();
 	void Weapon_StanceChange();
@@ -121,6 +96,11 @@ public:
 
 	void FastWalk_End();
 	void Evade_End();
+
+	void BloodDrink_StartEnd();
+	void BloodDrink_LoopEnd();
+	void BloodDrink_End();
+
 
 	void Evade_MoveZero();
 	void Evade_MoveRestore();
