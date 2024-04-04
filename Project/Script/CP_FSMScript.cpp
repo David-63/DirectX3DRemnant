@@ -97,6 +97,7 @@ void CP_FSMScript::initAnim()
 	
 		
 	Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::AfterCallAnim, this);
+
 	Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
 	Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
 
@@ -122,10 +123,14 @@ void CP_FSMScript::initWeapon()
 	GetOwner()->AddChild(weapon);
 
 
-	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_FixMuzzleFlash.pref", L"prefab\\P_FixMuzzleFlash.pref");
-	fab->PrefabLoad(L"prefab\\P_FixMuzzleFlash.pref");
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_MuzzleFlashLight.pref", L"prefab\\P_MuzzleFlashLight.pref");
+	fab->PrefabLoad(L"prefab\\P_MuzzleFlashLight.pref");
 	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(13.f, 172.f, 108.f), 1);
 	m_MuzzleFlash->SetName(L"P_MuzzleFlash");
+	m_MuzzleFlash->Transform()->SetDebugSphereUse(false);
+	m_MuzzleFlash->Light3D()->SetActiveLight(false);
+	m_MuzzleFlash->Light3D()->SetRadius(2000);
+	m_MuzzleFlash->Light3D()->SetLightAmbient(Vec3(0.3f, 0.2f, 0.1f));
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_MuzzleFlash, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(m_MuzzleFlash);
 	tParticleModule ModuleData = m_MuzzleFlash->ParticleSystem()->GetModuleData();
@@ -137,6 +142,7 @@ void CP_FSMScript::initWeapon()
 	fab->PrefabLoad(L"prefab\\P_FixBullet.pref");
 	m_Bullet = fab.Get()->Instantiate(Vec3(5.f, 152.f, 110.f), 1);
 	m_Bullet->SetName(L"P_Bullet");
+	m_Bullet->Transform()->SetDebugSphereUse(false);
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_Bullet, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(m_Bullet);
 	ModuleData = m_Bullet->ParticleSystem()->GetModuleData();
@@ -380,7 +386,6 @@ void CP_FSMScript::GotoMove()
 
 void CP_FSMScript::BeginOverlap(CCollider3D* _Other)
 {
-
 }
 
 void CP_FSMScript::OnOverlap(CCollider3D* _Other)

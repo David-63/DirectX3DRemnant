@@ -5,7 +5,7 @@
 class CCamera : public CComponent
 {
 private:
-    CFrustum                m_Frustum;
+    //CFrustum                m_Frustum;
     tRay                    m_ray;              // 마우스 방향을 향하는 직선
     int                     m_iCamIdx;          // 카메라 우선순위
     PROJ_TYPE               m_ProjType;
