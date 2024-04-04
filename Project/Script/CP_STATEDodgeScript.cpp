@@ -40,7 +40,7 @@ void CP_STATEDodgeScript::tick()
 		m_curTime += ScaleDT;
 	}
 
-	float totalSpeed = FloatLerp(moveMagnitude * 80.f, moveMagnitude, m_curTime / m_maxTime);
+	float totalSpeed = FloatLerp(moveMagnitude * 40.f, moveMagnitude, m_curTime / m_maxTime);
 	vMoveVector *= totalSpeed;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }
