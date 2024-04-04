@@ -12,21 +12,12 @@ CP_STATEMoveScript::~CP_STATEMoveScript()
 {
 }
 
-void CP_STATEMoveScript::begin()
-{
-	CP_StatesScript::begin();
-	m_readyToFire.SetFinishTime(m_Gun->FireLate);
-}
-
 void CP_STATEMoveScript::tick()
 {
 	if ((0.1 >= m_PlayerMoveDir->y && -0.1 <= m_PlayerMoveDir->y)
 		&& (0.1 >= m_PlayerMoveDir->x && -0.1 <= m_PlayerMoveDir->x))
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::IDLE));
 
-	// 여기서 애니메이션 2중 호출됨 (조건을 완화시켜야할듯?) 
-	// 의도한 로직은 진행방향이 바뀌면 애니메이션을 갱신시키는건데
-	// 멈춰있다가 이동하니까 여기에 조건이 걸림
 	if (m_prevDir != *m_PlayerMoveDir)
 	{
 		m_prevDir = *m_PlayerMoveDir;
@@ -37,68 +28,8 @@ void CP_STATEMoveScript::tick()
 		CallAnimation();
 		
 	}
-	if (!m_readyToFire.IsFinish())
-	{
-		m_readyToFire.curTime += ScaleDT;
-	}
-	else
-	{
-		m_readyToFire.Activate();
-	}
-
 
 	moveVelocity();
-	if (KEY_TAP(KEY::R))
-	{
-		if (m_Gun->ReloadMag())
-		{
-			if (ePlayerStance::Crouch == *m_PlayerStance)
-				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false); 
-			else
-				m_PHQ->PlayAnimation(P_R2Reload, false);
-
-			if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
-				m_PHQ->InputCrouch();
-			if (m_PHQ->IsInput((UINT)eInpStance::Aim))
-				m_PHQ->InputAim();
-			m_PHQ->InputSprint(false);
-			m_PHQ->ChangeState(static_cast<UINT>(eP_States::RELOAD));
-		}
-	}
-	if (!m_PHQ->IsSprint())
-	{
-		if (ePlayerStance::Aim == *m_PlayerStance)
-		{
-			if (KEY_HOLD(KEY::LBTN))
-			{
-				if (m_readyToFire.IsActivate())
-				{
-					m_readyToFire.ResetTime();
-					if (m_Gun->Fire())
-					{
-						m_PHQ->PlayAnimation(P_R2Fire, false);
-						CParticleSystem* particle = m_PHQ->GetBullet()->ParticleSystem();
-						tParticleModule ModuleData = particle->GetModuleData();
-						ModuleData.bDead = false;
-						particle->SetModuleData(ModuleData);
-						particle->ActiveParticle();
-						particle = m_PHQ->GetMuzzelFlash()->ParticleSystem();
-						ModuleData = particle->GetModuleData();
-						ModuleData.bDead = false;
-						particle->SetModuleData(ModuleData);
-						particle->ActiveParticle();
-						if (m_PHQ->IsInput((UINT)eInpStance::Crouch))
-							m_PHQ->InputCrouch();
-						m_PHQ->InputSprint(false);
-					}
-				}
-
-				
-			}
-		}
-	}
-
-	
 }
 
 void CP_STATEMoveScript::moveVelocity()
@@ -250,7 +181,7 @@ void CP_STATEMoveScript::CallAnimation()
 
 void CP_STATEMoveScript::Enter()
 {
-	//CallAnimation();
+	CallAnimation();
 }
 
 void CP_STATEMoveScript::Exit()
