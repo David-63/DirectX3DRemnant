@@ -42,8 +42,8 @@ void CB_STATEMeleeScript::begin()
 
 
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 19) = std::bind(&CB_STATEMeleeScript::SpawnSpell, this);
-	//m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 84) = std::bind(&CB_STATEMeleeScript::SpawnSpellGravity, this); 
-	//m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 93) = std::bind(&CB_STATEMeleeScript::SpawnSpellOff, this);
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 84) = std::bind(&CB_STATEMeleeScript::SpawnSpellGravity, this); 
+	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 86) = std::bind(&CB_STATEMeleeScript::SpawnSpellOff, this);
 
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 85) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOn, this);
 	m_BHQ->Animator3D()->ActionEvent(B_Melee_Atk_Weapon_AOE, 110) = std::bind(&CB_STATEMeleeScript::AOE_AttackBoxOff, this);
@@ -109,7 +109,7 @@ void CB_STATEMeleeScript::begin()
 void CB_STATEMeleeScript::Enter()
 {
 	// 테스트 용으로 공격상태 일단 미리 지정(테스트 완료 후 지우기)
-	m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::AOE);
+	m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::MELEE_ATK);
 
 
 	//m_iAttackType = AttackTypeRandom();
@@ -284,8 +284,6 @@ void CB_STATEMeleeScript::AOE_AttackBoxOff()
 
 void CB_STATEMeleeScript::AttackEnd()
 {
-	m_BHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(6);
-
 	m_BHQ->SetPlaying(false);
 
 	m_bAttack = true;

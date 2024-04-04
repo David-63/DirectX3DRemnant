@@ -119,21 +119,21 @@ void CreateTestLevel()
 		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.animclip");
 		obj->SetName(L"TestObj");*/
 
-	Ptr<CMeshData> pMeshData = nullptr;
-	CGameObject* player = nullptr;
+	//Ptr<CMeshData> pMeshData = nullptr;
+	//CGameObject* player = nullptr;
 
-	// 인스턴싱 테스트
-	pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
-	player = pMeshData->Instantiate();
+	//// 인스턴싱 테스트
+	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\P_R2Idle.mdat");
+	//player = pMeshData->Instantiate();
 
-	//player->AddComponent(new CM_Lurker_FSMScript);
-	//player->AddComponent(new CHitBoxScript);
-	//player->AddComponent(new CPathFinderScript());
-	//player->AddComponent(new CMonsterMoveScript());
-	player->SetName(L"TestPlayerObj");
+	////player->AddComponent(new CM_Lurker_FSMScript);
+	////player->AddComponent(new CHitBoxScript);
+	////player->AddComponent(new CPathFinderScript());
+	////player->AddComponent(new CMonsterMoveScript());
+	//player->SetName(L"TestPlayerObj");
 
 
-	SpawnGameObject(player, Vec3(-449.000f, 0.f, -1395.000f), (UINT)LAYER_TYPE::Player);
+	//SpawnGameObject(player, Vec3(-449.000f, 0.f, -1395.000f), (UINT)LAYER_TYPE::Player);
 
 
 
@@ -444,6 +444,16 @@ void CreateTestLevel()
 	}
 
 	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
+
+	{
+		CGameObject* pObj = new CGameObject;
+		pObj->SetName(L"test Obj");
+		pObj->AddComponent(new CTransform);
+		pObj->AddComponent(new CTestScript);
+
+		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
+	}
+
 
 
 	////파티클

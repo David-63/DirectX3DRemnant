@@ -36,11 +36,11 @@ void CB_RangeBallScript::tick()
 
 
 
-	// 발사체의 초기 위치와 발사된 현재 위치의 거리가 1000을 넘어갔거나, 플레이어와 부딪쳤다면 삭제한다. 
-	if (Vector3::Distance(m_vCurPos, m_vInitialPos) > 5000.f)
-	{
-		DestroyObject(GetOwner());
-	}
+	//// 발사체의 초기 위치와 발사된 현재 위치의 거리가 1000을 넘어갔거나, 플레이어와 부딪쳤다면 삭제한다. 
+	//if (Vector3::Distance(m_vCurPos, m_vInitialPos) > 5000.f)
+	//{
+	//	DestroyObject(GetOwner());
+	//}
 
 
 }
@@ -55,6 +55,8 @@ void CB_RangeBallScript::BeginOverlap(CCollider3D* _Other)
 		info.Shooter = GetOwner()->GetReserver();
 		info.ShooterPos = GetOwner()->GetReserver()->Transform()->GetRelativePos();
 		_Other->GetOwner()->GetScript<CC_FSMScript>()->GiveAtkInfo(info);
+
+		DestroyObject(GetOwner());
 	}
 
 

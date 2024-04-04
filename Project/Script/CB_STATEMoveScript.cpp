@@ -77,9 +77,8 @@ void CB_STATEMoveScript::Enter()
 
 
 
-	m_GetWeapon = false;
+	m_GetWeapon = true;
 	m_BHQ->SetStance_NoWeapon(CB_FSMScript::eBossStance_NoWeapon::NORMAL_WALK);
-
 
 
 
@@ -110,7 +109,11 @@ void CB_STATEMoveScript::Enter()
 void CB_STATEMoveScript::tick()
 {
 
-
+	if (KEY_TAP(KEY::_9))
+	{
+		m_GetWeapon = true;
+		m_BHQ->SetStance_Weapon(CB_FSMScript::eBossStance_Weapon::FAST_WALK);
+	}
 
 	//====================
 
@@ -413,51 +416,51 @@ void CB_STATEMoveScript::SpawnSpell()
 	// =============================
 		// 해당 상태일때는 원을 생성한다. (몬스터 모션 x)
 	//if (m_SpellCooltime > 20.f && !m_OnceSpawnSpell)
-	if (!m_OnceSpawnSpell) // 디버깅용
-	{
-		if (m_OnceSpawnSpell)
-			return;
+	//if (!m_OnceSpawnSpell) // 디버깅용
+	//{
+	//	if (m_OnceSpawnSpell)
+	//		return;
 
-		m_OnceSpawnSpell = true; // 구체 스크립트 exit에서 false로 바꿔주기
-		m_SpellCooltime = 0.f;
-
-
-		// 아래에서 구체를 생성하는 코드 작성. 그리고 구체 스크립트 컴포넌트를 갖다붙인다. (상태 변경x 캐릭터가 움직여야하므로)
-		// 동시에 구체 2개를 생성한다. (플레이어의 좌우에)
-		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\B_Projec_Spawn.pref", L"prefab\\B_Projec_Spawn.pref");
-		fab->PrefabLoad(L"prefab\\B_Projec_Spawn.pref");
-
-		//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
-		m_SpellObj_Spawn_L = fab.Get()->Instantiate(Vec3(-1123.000, 0.f, 0.f), 3);
-		fab->FabClear();
-
-		SpawnGameObject(m_SpellObj_Spawn_L, Vec3(-1123.000, 0.f, 0.f), L"Effect");
-		m_SpellObj_Spawn_L->SetName(L"B_Projec_Spawn_L");
-
-		m_SpellObj_Spawn_L->ParticleSystem()->SetSpawnTime(0.9f); // 0.95
-		m_SpellObj_Spawn_L->ParticleSystem()->SetTimeSpawn(true);
-	}
-
-	if (m_SpellObj_Spawn_L->ParticleSystem()->isFinish() && !m_OnceSpawnSpellUp)
-	{
-		// 구체가 날라간다. 플레이어에게로 
-
-		m_OnceSpawnSpellUp = true;
-
-		//	DestroyObject(m_SpellObj_Spawn_L);
-		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Move_RangeBoll_stop.pref", L"prefab\\Move_RangeBoll_stop.pref");
-		fab->PrefabLoad(L"prefab\\Move_RangeBoll_stop.pref");
-
-		//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
-		m_SpellObj_Spawn_UP_L = fab.Get()->Instantiate(Vec3(-1123.000, 0.f, 0.f), 3);
-		fab->FabClear();
-
-		SpawnGameObject(m_SpellObj_Spawn_UP_L, Vec3(-1123.000, 0.f, 0.f), L"Effect");
-		m_SpellObj_Spawn_UP_L->SetName(L"B_bullet_L");
-		m_SpellObj_Spawn_UP_L->ParticleSystem()->SetOffsetPos(Vec3(-166.5f, -130.75f, 200.f));
+	//	m_OnceSpawnSpell = true; // 구체 스크립트 exit에서 false로 바꿔주기
+	//	m_SpellCooltime = 0.f;
 
 
-	}
+	//	// 아래에서 구체를 생성하는 코드 작성. 그리고 구체 스크립트 컴포넌트를 갖다붙인다. (상태 변경x 캐릭터가 움직여야하므로)
+	//	// 동시에 구체 2개를 생성한다. (플레이어의 좌우에)
+	//	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\B_Projec_Spawn.pref", L"prefab\\B_Projec_Spawn.pref");
+	//	fab->PrefabLoad(L"prefab\\B_Projec_Spawn.pref");
+
+	//	//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
+	//	m_SpellObj_Spawn_L = fab.Get()->Instantiate(Vec3(-1123.000, 0.f, 0.f), 3);
+	//	fab->FabClear();
+
+	//	SpawnGameObject(m_SpellObj_Spawn_L, Vec3(-1123.000, 0.f, 0.f), L"Effect");
+	//	m_SpellObj_Spawn_L->SetName(L"B_Projec_Spawn_L");
+
+	//	m_SpellObj_Spawn_L->ParticleSystem()->SetSpawnTime(0.9f); // 0.95
+	//	m_SpellObj_Spawn_L->ParticleSystem()->SetTimeSpawn(true);
+	//}
+
+	//if (m_SpellObj_Spawn_L->ParticleSystem()->isFinish() && !m_OnceSpawnSpellUp)
+	//{
+	//	// 구체가 날라간다. 플레이어에게로 
+
+	//	m_OnceSpawnSpellUp = true;
+
+	//	//	DestroyObject(m_SpellObj_Spawn_L);
+	//	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Move_RangeBoll_stop.pref", L"prefab\\Move_RangeBoll_stop.pref");
+	//	fab->PrefabLoad(L"prefab\\Move_RangeBoll_stop.pref");
+
+	//	//==== spawn Object함수랑 cloneObj함수랑 위치 값 똑같이 해주기 
+	//	m_SpellObj_Spawn_UP_L = fab.Get()->Instantiate(Vec3(-1123.000, 0.f, 0.f), 3);
+	//	fab->FabClear();
+
+	//	SpawnGameObject(m_SpellObj_Spawn_UP_L, Vec3(-1123.000, 0.f, 0.f), L"Effect");
+	//	m_SpellObj_Spawn_UP_L->SetName(L"B_bullet_L");
+	//	m_SpellObj_Spawn_UP_L->ParticleSystem()->SetOffsetPos(Vec3(-166.5f, -130.75f, 200.f));
+
+
+	//}
 
 
 
