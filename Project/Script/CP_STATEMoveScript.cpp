@@ -53,15 +53,16 @@ void CP_STATEMoveScript::moveVelocity()
 		vMoveVector -= vFront;
 
 	// 상태에 맞게 이동량 계산
-	if (ePlayerStance::Crouch == *m_PlayerStance)
-		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.1f;
+	if (ePlayerStance::Crouch == *m_PlayerStance
+		|| ePlayerStance::Aim == *m_PlayerStance)
+		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.35f;
 	else if (ePlayerStance::Sprint == *m_PlayerStance && m_PHQ->IsFrontDir())
-		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 3.8f;
+		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 2.f;
 	else
 		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT;
 
 	// 최종 이동량 계산
-	vMoveVector *= moveMagnitude * 50.f;
+	vMoveVector *= moveMagnitude * 15.f;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }
 
