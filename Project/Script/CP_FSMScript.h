@@ -79,9 +79,6 @@ private:
 
     void inputStance();
     void changeStance();    // 상태 변경해주기
-    void colliderUpdate();
-
-
 
 public:
     void PlayAnimation(wstring _name, bool _repeat);

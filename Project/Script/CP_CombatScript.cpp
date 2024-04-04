@@ -40,12 +40,13 @@ void CP_CombatScript::tick()
 	if (m_PHQ->GetAtkSign())
 	{
 		tHitInfo info = m_PHQ->GetHitInfo();
-
+		CGameObject* enemyObj = info.Shooter->GetReserver();
+		Vec3 enemyPos = enemyObj->Transform()->GetRelativePos();
 		// 방향 찾기
 		Vec3 ownerPos = m_PHQ->Transform()->GetRelativePos();
 		Vec3 ownerFrontDir = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 
-		Vec2 m_Location = Vec2(info.ShooterPos.x, info.ShooterPos.z);
+		Vec2 m_Location = Vec2(enemyPos.x, enemyPos.z);
 		Vec2 p_Location = Vec2(ownerPos.x, ownerPos.z);
 		Vec2 hitDir = p_Location - m_Location;
 		hitDir.Normalize();
