@@ -108,7 +108,7 @@ void CM_Spider_FSMScript::tick()
 		Vec3 dir = hitPos - OwnerPos;
 		dir = dir.Normalize();
 
-		Vec3 front = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+		Vec3 front = -GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 		if (front.Dot(dir) < 0)
 			return;
 		
