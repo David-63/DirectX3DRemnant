@@ -165,15 +165,14 @@ void CRenderMgr::Clear()
 
 CCamera* CRenderMgr::GetMainCam()
 {
-    if (CLevelMgr::GetInst()->GetCurLevel()->GetState() == LEVEL_STATE::PLAY)
-    {
-        if (m_vecCam.empty())
-            return nullptr;
+    if (m_vecCam.empty())
+        return nullptr;
 
-        return m_vecCam[0];
-    }
-    else
-    {
+    return m_vecCam[0];
+}
+
+CCamera* CRenderMgr::GetEditorCam()
+{
+    if (m_pEditorCam)
         return m_pEditorCam;
-    }
 }

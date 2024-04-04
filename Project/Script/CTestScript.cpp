@@ -34,13 +34,13 @@ void CTestScript::tick()
 
 	if (KEY_TAP(KEY::J))
 	{
-		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\memPlayer.pref", L"prefab\\memPlayer.pref");
-		fab->PrefabLoad(L"prefab\\memPlayer.pref");
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_Main.pref", L"prefab\\P_Main.pref");
+		fab->PrefabLoad(L"prefab\\P_Main.pref");
 		CGameObject* player = fab.Get()->Instantiate(Vec3(0, 0, 0), 1);
 		SpawnGameObject(player, Vec3(0, 0, 0), 1);
 	}
 
-	if (KEY_HOLD(KEY::NUM_8))
+	/*if (KEY_HOLD(KEY::NUM_8))
 	{
 		vMoveVector += DT * vFront * fSpeed;
 	}
@@ -61,7 +61,7 @@ void CTestScript::tick()
 	}
 
 	GetOwner()->RigidBody()->SetVelocity(vMoveVector);
-	vMoveVector = Vec3(0.f, 0.f, 0.f);
+	vMoveVector = Vec3(0.f, 0.f, 0.f);*/
 	
 }
 

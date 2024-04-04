@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CM_Lurker_FSMScript.h"
 #include "CM_Lurker_StatesScript.h"
+#include "CM_Lurker_STATE_Damaged_Script.h"
 
 CM_Lurker_FSMScript::CM_Lurker_FSMScript()
 {
@@ -13,8 +14,8 @@ CM_Lurker_FSMScript::~CM_Lurker_FSMScript()
 
 void CM_Lurker_FSMScript::begin()
 {
-	m_tMonsterInfo.M_Health.MaxHp = 1000.f;
-	m_tMonsterInfo.M_Health.CurHp = 1000.f;
+	m_tMonsterInfo.M_Health.MaxHp = 100.f;
+	m_tMonsterInfo.M_Health.CurHp = 100.f;
 
 	GetOwner()->Animator3D()->Add(Lurker_ALERT01);
 	GetOwner()->Animator3D()->Add(Lurker_ALERT03);
@@ -64,11 +65,52 @@ void CM_Lurker_FSMScript::tick()
 	CC_FSMScript::tick();
 	DeathCheck();
 
-
-	if (KEY_TAP(KEY::O))
+	if (GetAtkSign() && GetCurStateType() != (UINT)eM_States::DEAD)
 	{
+		tHitInfo info = GetHitInfo();
+
+		//대미지적용하기
+		m_tMonsterInfo.M_Health.GotDamage(info.Damage);
+
+		if (GetCurStateType() == (UINT)eM_States::DAMAGED)
+			return;
+
+		//앞뒤 구분, 뒤면 피격상태안됨
+		Vec3 hitPos = info.HitPos;
+		hitPos.y = 0.f;
+		Vec3 OwnerPos = GetOwner()->Transform()->GetRelativePos();
+		OwnerPos.y = 0.f;
+		Vec3 dir = hitPos - OwnerPos;
+		dir = dir.Normalize();
+
+		Vec3 front = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+		if (front.Dot(dir) < 0)
+			return;
+
+		//부위에 따른 피격효과 
+		OwnerPos = GetOwner()->Transform()->GetRelativePos();
+		if (OwnerPos.y + 122.f <= info.HitPos.y && info.HitPos.y <= OwnerPos.y + 140.f
+			&& OwnerPos.x - 8.f <= info.HitPos.x && info.HitPos.x <= OwnerPos.x + 8.f)
+		{
+			dynamic_cast<CM_Lurker_STATE_Damaged_Script*>(FindStateScript((UINT)eM_States::DAMAGED))->SetPart(4);
+		}
+		else if(OwnerPos.y + 90.f <= info.HitPos.y && info.HitPos.y <= OwnerPos.y + 170.f)
+		{
+			dynamic_cast<CM_Lurker_STATE_Damaged_Script*>(FindStateScript((UINT)eM_States::DAMAGED))->SetPart(3);
+		}
+		else if (front.Cross(dir).y > 0 && info.HitPos.y <= OwnerPos.y + 80.f)
+		{
+			dynamic_cast<CM_Lurker_STATE_Damaged_Script*>(FindStateScript((UINT)eM_States::DAMAGED))->SetPart(2);
+		}
+		else if (front.Cross(dir).y < 0 && info.HitPos.y <= OwnerPos.y + 80.f)
+		{
+			dynamic_cast<CM_Lurker_STATE_Damaged_Script*>(FindStateScript((UINT)eM_States::DAMAGED))->SetPart(1);
+		}
+
 		ChangeState((UINT)eLurkerState::Damaged);
+
 	}
+	
 }
 
 void CM_Lurker_FSMScript::BeginOverlap(CCollider3D* _Other)

@@ -11,6 +11,7 @@ CCameraMoveScript
 CCharacterMoveScript
 CC_FSMScript
 CC_StatesScript
+CHitBoxInfoScript
 CHitBoxScript
 CIdleStateScript
 CMonsterMoveScript
@@ -22,6 +23,7 @@ CM_Lurker_STATE_Idle_Script
 CM_Lurker_STATE_Melee_Script
 CM_Lurker_STATE_Move_Script
 CM_Spider_FSMScript
+CM_Spider_proj_Explosion_Script
 CM_Spider_Proj_Script
 CM_Spider_StatesScript
 CM_Spider_STATE_Atk_Script
@@ -32,6 +34,7 @@ CM_Spider_STATE_Move_Script
 CPathFinderScript
 CPlayerScript
 CPlayerScriptFsm
+CP_CombatScript
 CP_FSMScript
 CP_MouseCtrlScript
 CP_STATEDodgeScript

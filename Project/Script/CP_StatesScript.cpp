@@ -14,7 +14,6 @@ CP_StatesScript::~CP_StatesScript()
 void CP_StatesScript::begin()
 {
 	m_PHQ = dynamic_cast<CP_FSMScript*>(m_FSMHQ);
-	m_Gun = m_PHQ->GetLongGunInfo();
 	m_PlayerStance = m_PHQ->GetStance();
 	m_PlayerMoveDir = m_PHQ->GetMoveDir();
 	m_PlayerInfo = m_PHQ->GetPlayerInfo();

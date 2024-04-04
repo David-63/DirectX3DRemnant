@@ -4,6 +4,7 @@
 class CP_STATEIdleScript : public CP_StatesScript
 {
 private:
+
 public:
     virtual void tick() override;
 

@@ -69,6 +69,7 @@ public:
 
     // level main 카메라 혹은 editor 카메라 가져오기
     CCamera* GetMainCam();
+    CCamera* GetEditorCam();
 
     void CopyRenderTarget();
 

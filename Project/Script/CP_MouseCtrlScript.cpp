@@ -6,7 +6,7 @@
 
 CP_MouseCtrlScript::CP_MouseCtrlScript()
 	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr), m_Weapon(nullptr), m_LongGun(nullptr)
-	, m_CamInfo({ -180.f, 5.f, 35.f }, 0.54f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
+	, m_CamInfo({ 40.f, 100.f, -150.f }, 1.14f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
 	
 {
 	m_RotMat[(UINT)eRotMat::Normal] = XMMatrixIdentity();
@@ -57,7 +57,6 @@ void CP_MouseCtrlScript::begin()
 {
 	m_PlayerStance = m_PHQ->GetStance();
 
-	
 }
 
 void CP_MouseCtrlScript::tick()
@@ -68,20 +67,15 @@ void CP_MouseCtrlScript::tick()
 	if (!m_PHQ->IsAbleMouse())
 		return;
 
-	ctrlMovePos();
-	ctrlMoveRot();
+	changeFov();
+	changeTransfrom();
 	mouseRock();
 
 	updateWeaponMatrix();
 }
 
-void CP_MouseCtrlScript::ctrlMovePos()
+void CP_MouseCtrlScript::changeFov()
 {
-	Vec3 objPos = m_PHQ->Transform()->GetRelativePos();
-	Vec3 camF = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-	Vec3 camR = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
-	Vec3 camU = m_ctrlCam->Transform()->GetRelativeDir(DIR_TYPE::UP);
-
 	if (m_PivotValue.BlendTime.IsActivate())
 	{
 		m_PivotValue.BlendTime.curTime += ScaleDT;
@@ -91,6 +85,7 @@ void CP_MouseCtrlScript::ctrlMovePos()
 		}
 		m_PivotValue.GetRatio();
 		m_PivotValue.CurValue = FloatLerp(m_PivotValue.CurValue, m_PivotValue.TargetValue, m_PivotValue.Ratio);
+		m_ctrlCam->SetFov(m_FovValue.CurValue);
 	}
 	if (m_FovValue.BlendTime.IsActivate())
 	{
@@ -103,54 +98,33 @@ void CP_MouseCtrlScript::ctrlMovePos()
 		m_FovValue.CurValue = FloatLerp(m_FovValue.CurValue, m_FovValue.TargetValue, m_FovValue.Ratio);
 		m_ctrlCam->SetFov(m_FovValue.CurValue);
 	}
-
-	objPos.y += m_PivotValue.CurValue;
-	Vec3 Point = objPos + camF * m_CamInfo.CamOffset.x + camR * m_CamInfo.CamOffset.z + camU * m_CamInfo.CamOffset.y; // OffX : front, offZ : right, offY : Up
-	m_ctrlCam->Transform()->SetRelativePos(Point);
+	
 }
 
-void CP_MouseCtrlScript::ctrlMoveRot()
+void CP_MouseCtrlScript::changeTransfrom()
 {
-	// Find stance or state about Rotation Mode
-	eP_States stateType = static_cast<eP_States>(m_PHQ->GetCurStateType());
-
-	bool justRotCam = false;
-	if (eP_States::IDLE == stateType)
-	{
-		if (ePlayerStance::Normal == *m_PlayerStance
-			|| ePlayerStance::Crouch == *m_PlayerStance
-			|| ePlayerStance::Dodge == *m_PlayerStance)
-			justRotCam = true;
-	}
-
 	// Find transform value
 	Vec3 getCamRot = m_ctrlCam->Transform()->GetRelativeRot();
 	Vec3 getObjRot = m_PHQ->Transform()->GetRelativeRot();
+	
+	// Calculate move position & rotation
 	Vec2 mouseInput = CKeyMgr::GetInst()->GetMouseRaw();
 	mouseInput.Normalize();
-
-	// Calculate move magnitude
-	float deltaYaw = XMConvertToRadians(mouseInput.x * m_CamInfo.MouseSensitivity);
-	float deltaPitch = XMConvertToRadians(mouseInput.y * m_CamInfo.MouseSensitivity); // Y축 반전 처리
+	float deltaYaw = XMConvertToRadians(mouseInput.x * m_CamInfo.MouseSensitivity);		// Y 축 회전, 수평으로 돌리는데 사용 
+	float deltaPitch = XMConvertToRadians(mouseInput.y * m_CamInfo.MouseSensitivity);	// X 축 회전, 수직으로 돌리는데 사용
 	float xCamRot, yObjRot;
-	xCamRot = getCamRot.x + deltaPitch;
-	m_CamInfo.PrevCamRotY = getCamRot.y + deltaYaw;
-	yObjRot = getObjRot.y + deltaYaw;
+	xCamRot = getCamRot.x + deltaPitch;					// 카메라 수직 회전량 구하기
+	yObjRot = getObjRot.y + deltaYaw;					// 오브젝트의 수평 회전량 구하기
+	Vec3 outCamEuler = Vec3(xCamRot, 0, 0);
+	Vec3 outObjEuler = Vec3(0, yObjRot, 0);
 
-	// Apply change according to Rotation Mode
-	if (justRotCam)
-	{
-		Vec3 outCamEuler = Vec3(xCamRot, m_CamInfo.PrevCamRotY, 0);
-		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
-	}
-	else
-	{
-		Vec3 outObjEuler = Vec3(0, yObjRot, 0);
-		Vec3 outCamEuler = Vec3(xCamRot, yObjRot, 0);
-		m_PHQ->Transform()->SetRelativeRot(outObjEuler);
-		m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
-		//m_Weapon->Transform()->SetRelativeRot(outObjEuler);
-	}
+	m_PHQ->Transform()->SetRelativeRot(outObjEuler);
+	m_Weapon->Transform()->SetRelativeRot(outObjEuler);
+	m_ctrlCam->Transform()->SetRelativeRot(outCamEuler);
+
+	Vec3 Point = m_CamInfo.CamOffset;
+	Point.y += m_PivotValue.CurValue;
+	m_ctrlCam->Transform()->SetRelativePos(Point);	
 }
 
 void CP_MouseCtrlScript::mouseRock()
@@ -174,10 +148,4 @@ void CP_MouseCtrlScript::updateWeaponMatrix()
 	Vec4 boneQRot = DirectX::XMQuaternionRotationMatrix(weaponMat);
 	Vec3 boneRot = QuatToEuler(boneQRot);
 	m_Weapon->Transform()->SetRelativeRot(boneRot);
-}
-
-
-void CP_MouseCtrlScript::OverrideObjRotY()
-{
-	m_PHQ->Transform()->SetRelativeRot(Vec3(0.f, m_CamInfo.PrevCamRotY, 0.f));
 }

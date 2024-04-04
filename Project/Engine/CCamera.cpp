@@ -119,7 +119,8 @@ void CCamera::CalcViewMat()
 	m_matView = XMMatrixIdentity();
 
 	// 카메라 좌표를 원점으로 이동
-	Vec3 vCamPos = Transform()->GetRelativePos();
+	// 원점 대신에 월드위치로 이동
+	Vec3 vCamPos = Transform()->GetWorldPos();
 	Matrix matViewTrans = XMMatrixTranslation(-vCamPos.x, -vCamPos.y, -vCamPos.z);
 
 	// 카메라가 바라보는 방향을 Z 축과 평행하게 만드는 회전 행렬을 적용

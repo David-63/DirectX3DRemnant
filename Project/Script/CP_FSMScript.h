@@ -2,9 +2,9 @@
 #include "CC_FSMScript.h"
 #include "CP_StatesScript.h"
 #include "CP_MouseCtrlScript.h"
+#include "CP_CombatScript.h"
 
 #define P_R2Dodge                       L"animclip\\player\\P_R2Dodge.animclip"
-#define P_R2Dodge_B                     L"animclip\\player\\P_R2Dodge_B.animclip"   // 이건 안쓰는게 맞을듯
 #define P_R2Dodge_L                     L"animclip\\player\\P_R2Dodge_L.animclip"   
 #define P_R2Dodge_N                     L"animclip\\player\\P_R2Dodge_N.animclip"
 #define P_R2Dodge_R                     L"animclip\\player\\P_R2Dodge_R.animclip"
@@ -46,23 +46,24 @@
 
 class CP_FSMScript : public CC_FSMScript
 {
-public:
 private:
     tP_Info             m_PlayerInfo;
     tP_LongGunInfo      m_LongGunInfo;
 
 private:
     CP_MouseCtrlScript  m_MouseCtrl;
+    CP_CombatScript     m_Combat;
     CGameObject*        m_Weapon;
     CGameObject*        m_MuzzleFlash;
     CGameObject*        m_Bullet;
-
+    tTimeCtrl           m_readyToFire;
 
     ePlayerStance       P_Stance;
     tTimeCtrl           m_StanceDelay;
     bool                m_TogleInput[(UINT)eInpStance::End];
     bool                m_StanceCheck[(UINT)eStanceCheck::End];
     Vec2                m_moveDir;
+    int                 m_hitDir;
 
 public:
     virtual void begin() override;
@@ -74,15 +75,20 @@ private:
     void initWeapon();
 
 private:
-    void stanceControl();
-    void dirInput();
-    void stanceInput();
+    void inputDir();        // 방향 입력
+
+    void inputStance();
+    void changeStance();    // 상태 변경해주기
+    void colliderUpdate();
+
+
 
 public:
     void PlayAnimation(wstring _name, bool _repeat);
-    void OverrideObjRotY() { m_MouseCtrl.OverrideObjRotY(); }
+    void AfterCallAnim();
     void DoDodge();
     void ShootRay();
+
 
 public:
     void SetWeapon(CGameObject* _obj)
@@ -90,8 +96,6 @@ public:
         m_Weapon = _obj;
         m_MouseCtrl.SetWeaponObj(m_Weapon);
     }
-
-
 
 public:
     void ChangeStance(ePlayerStance _stance) { P_Stance = _stance; }
@@ -107,8 +111,9 @@ public:
     void ClearStanceChange() { m_StanceCheck[(UINT)eStanceCheck::IsChange] = false; }
     void InputCrouch() { m_TogleInput[(UINT)eInpStance::Crouch] ? m_TogleInput[(UINT)eInpStance::Crouch] = false : m_TogleInput[(UINT)eInpStance::Crouch] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
     void InputAim() { m_TogleInput[(UINT)eInpStance::Aim] ? m_TogleInput[(UINT)eInpStance::Aim] = false : m_TogleInput[(UINT)eInpStance::Aim] = true; m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
+    
     bool IsInput(UINT _stance) { return m_TogleInput[_stance]; }
-    bool IsFrontDir() { return m_StanceCheck[m_StanceCheck[(UINT)eStanceCheck::IsFrontDir]]; }
+    bool IsFrontDir() { return m_StanceCheck[(UINT)eStanceCheck::IsFrontDir]; }
 
     
     void InputSprint(bool _isHold) { m_TogleInput[(UINT)eInpStance::Sprint] = _isHold;  m_StanceCheck[(UINT)eStanceCheck::IsChange] = true; }
@@ -119,10 +124,11 @@ public:
 
 
 public:
-    void InputMove(Vec2 _input) { m_moveDir += _input; }
-    void InputMove(int _inputX, int _inputY) { m_moveDir += Vec2(_inputX, _inputY); }
-    void ClearMoveDir() { m_moveDir = Vec2(0, 0); }
     Vec2* GetMoveDir() { return &m_moveDir; }
+
+    void HitDir(int _zDir) { m_hitDir = _zDir; }
+    int GetHitDir() { return m_hitDir; }
+
 
 public:
     void GotoIdle();

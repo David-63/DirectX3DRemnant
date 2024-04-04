@@ -18,49 +18,21 @@ void CP_STATEMoveScript::tick()
 		&& (0.1 >= m_PlayerMoveDir->x && -0.1 <= m_PlayerMoveDir->x))
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::IDLE));
 
-	// 여기서 애니메이션 2중 호출됨 (조건을 완화시켜야할듯?) 
-	// 의도한 로직은 진행방향이 바뀌면 애니메이션을 갱신시키는건데
-	// 멈춰있다가 이동하니까 여기에 조건이 걸림
 	if (m_prevDir != *m_PlayerMoveDir)
 	{
 		m_prevDir = *m_PlayerMoveDir;
+		if (KEY_HOLD(KEY::U))
+		{
+			int a = 0;
+		}
 		CallAnimation();
-	}
-	translateInput();
-	if (KEY_TAP(KEY::R))
-	{
-		if (m_Gun->ReloadMag())
-		{
-			if (ePlayerStance::Crouch == *m_PlayerStance)
-			{
-				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false);
-			}
-			else
-			{
-				m_PHQ->PlayAnimation(P_R2Reload, false);
-			}
-			m_PHQ->ChangeState(static_cast<UINT>(eP_States::RELOAD));
-		}
-	}
-	if (!m_PHQ->IsSprint())
-	{
-		if (ePlayerStance::Aim == *m_PlayerStance)
-		{
-			if (KEY_HOLD(KEY::LBTN))
-			{
-				if (m_Gun->Fire())
-				{
-					m_PHQ->PlayAnimation(P_R2Fire, false);
-					m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
-				}
-			}
-		}
+		
 	}
 
-	
+	moveVelocity();
 }
 
-void CP_STATEMoveScript::translateInput()
+void CP_STATEMoveScript::moveVelocity()
 {
 	float moveMagnitude = 0.f;
 	Vec3 vMoveVector(0.f, 0.f, 0.f);
@@ -69,23 +41,28 @@ void CP_STATEMoveScript::translateInput()
 	Vec3 vUp = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::UP);
 	Vec3 vRight = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
 
-	if (ePlayerStance::Crouch == *m_PlayerStance)
-		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.1f;
+	// 방향부터 계산
+
+	if (0.3 <= m_PlayerMoveDir->x)
+		vMoveVector += vRight;
+	else if (-0.3 >= m_PlayerMoveDir->x)
+		vMoveVector -= vRight;
+	if (0.3 <= m_PlayerMoveDir->y)
+		vMoveVector += vFront;
+	else if (-0.3 >= m_PlayerMoveDir->y)
+		vMoveVector -= vFront;
+
+	// 상태에 맞게 이동량 계산
+	if (ePlayerStance::Crouch == *m_PlayerStance
+		|| ePlayerStance::Aim == *m_PlayerStance)
+		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.35f;
 	else if (ePlayerStance::Sprint == *m_PlayerStance && m_PHQ->IsFrontDir())
-		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 3.8f;
+		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 2.f;
 	else
 		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT;
 
-
-	if (KEY_HOLD(KEY::W))
-		vMoveVector += vFront;
-	if (KEY_HOLD(KEY::S))
-		vMoveVector -= vFront;
-	if (KEY_HOLD(KEY::A))
-		vMoveVector -= vRight;
-	if (KEY_HOLD(KEY::D))
-		vMoveVector += vRight;
-	vMoveVector *= moveMagnitude * 50.f;
+	// 최종 이동량 계산
+	vMoveVector *= moveMagnitude * 15.f;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }
 
@@ -205,7 +182,7 @@ void CP_STATEMoveScript::CallAnimation()
 
 void CP_STATEMoveScript::Enter()
 {
-	//CallAnimation();
+	CallAnimation();
 }
 
 void CP_STATEMoveScript::Exit()

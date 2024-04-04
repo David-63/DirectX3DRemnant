@@ -3,6 +3,7 @@
 #include "Engine/CLevelMgr.h"
 #include "Engine/CLevel.h"
 #include "Engine/CRigidBody.h"
+#include "CHitBoxInfoScript.h"
 
 CHitBoxScript::CHitBoxScript()
 	: CScript(SCRIPT_TYPE::HITBOXSCRIPT)
@@ -22,10 +23,24 @@ void CHitBoxScript::begin()
 
 void CHitBoxScript::tick()
 {
-	int a = m_vGameObjects.size();
+	m_vOwnerPos = GetOwner()->Transform()->GetRelativePos();
+	m_vOwnerRot = GetOwner()->Transform()->GetRelativeRot();
+	m_vOwnerFront = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
+	m_vOwnerRight = GetOwner()->Transform()->GetRelativeDir(DIR_TYPE::RIGHT);
+
+	for (int i = 0; i < m_vGameObjects.size(); ++i)
+	{
+		m_vFinalPos = m_vOwnerPos;
+		m_vFinalPos.y += m_vOffsets[i].y;
+		m_vFinalPos += m_vOwnerFront * m_vOffsets[i].z;
+		m_vFinalPos += m_vOwnerRight * m_vOffsets[i].x;
+
+		m_vGameObjects[i]->Transform()->SetRelativePos(m_vFinalPos);
+		m_vGameObjects[i]->Transform()->SetRelativeRot(m_vOwnerRot);
+	}
 }
 
-void CHitBoxScript::MakeHitBox(bool _isPlayer, Vec3 _size, Vec3 _posOffset)
+void CHitBoxScript::MakeHitBox(bool _isPlayer, Vec3 _size, Vec3 _posOffset, tHitInfo _hitInfo)
 {
 	CGameObject* obj = new CGameObject();
 	obj->SetName(L"HitBoxObject");
@@ -56,9 +71,14 @@ void CHitBoxScript::MakeHitBox(bool _isPlayer, Vec3 _size, Vec3 _posOffset)
 		CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(obj, (UINT)LAYER_TYPE::HitBoxPlayer, true);
 	else
 		CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(obj, (UINT)LAYER_TYPE::HitBoxMonster, true);
+
+	obj->AddComponent(new CHitBoxInfoScript);
+	obj->GetScript<CHitBoxInfoScript>()->SetHitInfo(_hitInfo);
+
+	obj->SetReserver(GetOwner());
 	
-	GetOwner()->AddChild(obj);
 	m_vGameObjects.push_back(obj);
+	m_vOffsets.push_back(_posOffset);
 }
 
 void CHitBoxScript::SetSleep(int _idx)

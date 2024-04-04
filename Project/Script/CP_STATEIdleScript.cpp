@@ -16,36 +16,10 @@ CP_STATEIdleScript::~CP_STATEIdleScript()
 
 void CP_STATEIdleScript::tick()
 {
-	// 이동상태 확인
-
+	// 정지상태 확인
 	if (Vec2(0, 0) != *m_PlayerMoveDir)
 		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
 
-
-	if (ePlayerStance::Aim == *m_PlayerStance)
-	{
-		if (KEY_HOLD(KEY::LBTN))
-		{
-			if (m_Gun->Fire())
-			{
-				m_PHQ->PlayAnimation(P_R2Fire, false);
-				m_PHQ->ChangeState(static_cast<UINT>(eP_States::FIRE));
-			}
-		}
-	}
-	
-	if (KEY_TAP(KEY::R))
-	{
-		if (m_Gun->ReloadMag())
-		{
-			if (ePlayerStance::Crouch == *m_PlayerStance)
-				m_PHQ->PlayAnimation(P_R2ReloadCrouch, false);
-			else
-				m_PHQ->PlayAnimation(P_R2Reload, false);
-
-			m_PHQ->ChangeState(static_cast<UINT>(eP_States::RELOAD));
-		}		
-	}		
 }
 
 void CP_STATEIdleScript::CallAnimation()
@@ -74,5 +48,4 @@ void CP_STATEIdleScript::Enter()
 
 void CP_STATEIdleScript::Exit()
 {
-	m_PHQ->OverrideObjRotY();
 }

@@ -22,7 +22,6 @@ void CM_Spider_STATE_Atk_Script::begin()
 {
 	CM_Spider_StatesScript::begin();
 	m_MHQ->Animator3D()->CompleteEvent(Spi_Atk) = std::bind(&CM_Spider_STATE_Atk_Script::ShootComplete, this);
-	//m_MHQ->Animator3D()->StartEvent(Spi_Atk) = std::bind(&CM_Spider_STATE_Atk_Script::CreateProj, this);
 	m_MHQ->Animator3D()->StartEvent(Spi_Atk) = std::bind(&CM_Spider_STATE_Atk_Script::SetDelayStart, this);
 	m_MHQ->Animator3D()->ActionEvent(Spi_Atk, 60) = std::bind(&CM_Spider_STATE_Atk_Script::LiftStart, this);
 
@@ -30,7 +29,14 @@ void CM_Spider_STATE_Atk_Script::begin()
 	m_MHQ->Animator3D()->ActionEvent(Spi_AtkPush, 20) = std::bind(&CM_Spider_STATE_Atk_Script::AdjustZeroSpeed, this);
 	m_MHQ->Animator3D()->ActionEvent(Spi_AtkPush, 34) = std::bind(&CM_Spider_STATE_Atk_Script::PushHitBoxOn, this);
 	
-	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(90.f, 50.f, 30.f), Vec3(0.f, 100.f, -150.f));
+
+	tHitInfo info0;
+	info0.Damage = 10;
+	info0.KnockBackGrade = 2;
+	info0.Shooter = m_MHQ->GetOwner();
+	info0.ShooterPos = m_MHQ->GetOwner()->Transform()->GetRelativePos();
+
+	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(90.f, 50.f, 30.f), Vec3(0.f, 100.f, -150.f), info0);
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(0);
 	
 	m_eAtkState = eAtkState::Shoot;
@@ -118,7 +124,6 @@ void CM_Spider_STATE_Atk_Script::CreateProj()
 	proj->AddComponent(new CM_Spider_Proj_Script);
 	proj->AddComponent(new CCollider3D);
 	proj->AddComponent(new CRigidBody);
-	
 
 	proj->GetScript<CM_Spider_Proj_Script>()->SetSpider(m_MHQ->GetOwner());
 
@@ -126,12 +131,14 @@ void CM_Spider_STATE_Atk_Script::CreateProj()
 	//proj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
 	//proj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
 	
-	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(proj, L"HitBoxMonster", true);
+	proj->SetReserver(m_MHQ->GetOwner());
+	proj->SetLayerIdx((UINT)LAYER_TYPE::HitBoxMonster);
+	SpawnGameObject(proj, projPos, L"HitBoxMonster");
 
 	proj->SetLayerIdx((UINT)LAYER_TYPE::HitBoxMonster);
 	tShapeInfo info = {};
 	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	info.size = Vector3(20.f, 1.f, 2.f);
+	info.size = Vector3(40.f, 1.f, 2.f);
 	proj->RigidBody()->PushBackShapeInfo(info);
 	proj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
 

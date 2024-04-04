@@ -4,13 +4,13 @@
 class CP_STATEMoveScript : public CP_StatesScript
 {
 private:
-    Vec2                m_prevDir;
-
+    Vec2        m_prevDir;
+    
 public:
     virtual void tick() override;
 
 private:
-    void translateInput();
+    void moveVelocity();
 
 public:
     virtual void CallAnimation() override;
