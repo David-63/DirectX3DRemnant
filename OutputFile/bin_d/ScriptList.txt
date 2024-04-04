@@ -1,4 +1,5 @@
 CB_FSMScript
+CB_RangeBallScript
 CB_STATEDamagedScript
 CB_STATEDeadScript
 CB_STATEHealScript

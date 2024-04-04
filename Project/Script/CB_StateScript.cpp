@@ -35,6 +35,16 @@ Vec3 CB_StateScript::GetPlayerPos()
 	return Vec3(0.f, 0.f, 0.f);
 }
 
+CGameObject* CB_StateScript::GetPlayerObj()
+{
+	vector<CGameObject*> vec = CLevelMgr::GetInst()->GetCurLevel()->GetLayer((UINT)LAYER_TYPE::Player)->GetParentObject();
+
+	for (CGameObject* obj : vec)
+	{
+		return obj;
+	}
+}
+
 void CB_StateScript::SaveToScene(FILE* _pFile)
 {
 }

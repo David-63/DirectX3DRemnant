@@ -158,7 +158,6 @@ void GS_ParticleRender(point VS_OUT _in[1], inout TriangleStream<GS_OUT> _outstr
         }
     }
 
-    
 
 
     GS_OUT output[4] = { (GS_OUT)0.f, (GS_OUT)0.f, (GS_OUT)0.f, (GS_OUT)0.f };
@@ -264,6 +263,11 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
             {
                 vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
 
+              /*  if (vOutColor.r < 0.01 && vOutColor.g < 0.01 && vOutColor.b < 0.01)
+                {
+                    discard;
+				}*/
+
             }
         }
 
@@ -271,6 +275,8 @@ float4 PS_ParticleRender(GS_OUT _in) : SV_Target
         else
         {
             vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
+            
+
         }
 
 

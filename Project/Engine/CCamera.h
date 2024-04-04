@@ -19,6 +19,7 @@ private:
 
     Matrix                  m_matView;
     Matrix                  m_matViewInv;
+    Matrix                  m_matViewNoRot;
     Matrix                  m_matProj;
     Matrix                  m_matProjInv;
 

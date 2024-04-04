@@ -122,6 +122,7 @@ void CCamera::CalcViewMat()
 	Vec3 vCamPos = Transform()->GetRelativePos();
 	Matrix matViewTrans = XMMatrixTranslation(-vCamPos.x, -vCamPos.y, -vCamPos.z);
 
+	//============
 	// 카메라가 바라보는 방향을 Z 축과 평행하게 만드는 회전 행렬을 적용
 	Matrix matViewRot = XMMatrixIdentity();
 
@@ -135,6 +136,9 @@ void CCamera::CalcViewMat()
 
 	m_matView = matViewTrans * matViewRot;
 
+	//===============
+	// 카메라의 회전은 고려하지 않고, 위치 이동만 반영하여 뷰 매트릭스를 생성
+	m_matViewNoRot = matViewTrans;
 
 	// View 역행렬 구하기
 	m_matViewInv = XMMatrixInverse(nullptr, m_matView);
@@ -165,6 +169,7 @@ void CCamera::updateMatrix()
 {
 	g_transform.matView = m_matView;
 	g_transform.matViewInv = m_matViewInv;
+	g_transform.matViewNoRot = m_matViewNoRot;
 
 	g_transform.matProj = m_matProj;
 	g_transform.matProjInv = m_matProjInv;

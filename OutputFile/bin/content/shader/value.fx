@@ -10,6 +10,7 @@ cbuffer TRANSFORM : register(b0)
     matrix g_matWorldInv;    
     matrix g_matView;
     matrix g_matViewInv;    
+    Matrix g_matViewNoRot; // 회전 적용 x 
     matrix g_matProj;
     matrix g_matProjInv;    
     matrix g_matWV;

@@ -320,6 +320,7 @@ struct tTransform
 	Matrix matWorldInv;
 	Matrix matView;
 	Matrix matViewInv;
+	Matrix matViewNoRot;
 	Matrix matProj;
 	Matrix matProjInv;
 

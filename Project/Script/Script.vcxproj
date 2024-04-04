@@ -173,6 +173,7 @@ call CodeGen.exe</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CB_FSMScript.h" />
+    <ClInclude Include="CB_RangeBallScript.h" />
     <ClInclude Include="CB_STATEDamagedScript.h" />
     <ClInclude Include="CB_STATEDeadScript.h" />
     <ClInclude Include="CB_STATEHealScript.h" />
@@ -224,6 +225,7 @@ call CodeGen.exe</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CB_FSMScript.cpp" />
+    <ClCompile Include="CB_RangeBallScript.cpp" />
     <ClCompile Include="CB_STATEDamagedScript.cpp" />
     <ClCompile Include="CB_STATEDeadScript.cpp" />
     <ClCompile Include="CB_STATEHealScript.cpp" />
