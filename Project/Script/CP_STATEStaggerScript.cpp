@@ -28,7 +28,7 @@ void CP_STATEStaggerScript::tick()
 	}
 	moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.6f;
 
-	float totalSpeed = FloatLerp(moveMagnitude * 50.f, moveMagnitude, m_curTime / m_maxTime);
+	float totalSpeed = FloatLerp(moveMagnitude * 20.f, moveMagnitude, m_curTime / m_maxTime);
 	vMoveVector *= totalSpeed;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }

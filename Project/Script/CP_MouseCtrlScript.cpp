@@ -6,7 +6,7 @@
 
 CP_MouseCtrlScript::CP_MouseCtrlScript()
 	: CScript((UINT)SCRIPT_TYPE::P_MOUSECTRLSCRIPT), m_PHQ(nullptr), m_ctrlCam(nullptr), m_Weapon(nullptr), m_LongGun(nullptr)
-	, m_CamInfo({ 40.f, 100.f, -150.f }, 0.54f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
+	, m_CamInfo({ 40.f, 100.f, -150.f }, 1.14f), m_IsChangeStance(false), m_PivotValue(PIVOT_HIGH), m_FovValue(FOV_HIGH)
 	
 {
 	m_RotMat[(UINT)eRotMat::Normal] = XMMatrixIdentity();

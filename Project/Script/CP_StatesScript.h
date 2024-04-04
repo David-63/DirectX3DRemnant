@@ -40,7 +40,7 @@ enum class ePlayerStance
 struct tPlayerStat
 {
     float MoveSpeed;
-    tPlayerStat() : MoveSpeed(1500.f) {}
+    tPlayerStat() : MoveSpeed(1000.f) {}
 };
 struct tP_Info
 {
