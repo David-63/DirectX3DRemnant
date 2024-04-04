@@ -36,8 +36,11 @@ void CTestScript::tick()
 	{
 		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_Main.pref", L"prefab\\P_Main.pref");
 		fab->PrefabLoad(L"prefab\\P_Main.pref");
-		CGameObject* player = fab.Get()->Instantiate(Vec3(0, 0, 0), 1);
-		SpawnGameObject(player, Vec3(0, 0, 0), 1);
+		Vec3 playerPos = Vec3(-4000, 0, -4200);
+		CGameObject* player = fab.Get()->Instantiate(playerPos, 1);
+		player->Transform()->SetRelativeRot(Vec3(0, XM_PIDIV2, 0));
+		SpawnGameObject(player, playerPos, 1);
+		// -4200
 	}
 
 	/*if (KEY_HOLD(KEY::NUM_8))
