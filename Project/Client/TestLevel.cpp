@@ -256,28 +256,25 @@ void CreateTestLevel()
 	}*/
 
 
-	//
-	/*{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\MeicalBed.fbx");
-		CGameObject* obj = data->Instantiate();
+	//{
+	//	Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\Tile.fbx");
+	//	CGameObject* obj = data->Instantiate();
 
-		obj->SetName(L"MapObj");
-		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+	//	obj->SetName(L"FloorTile");
+	//	obj->Transform()->SetRelativePos(Vec3(0.f, -50.f, 0.f));
+	//	obj->SetLayerIdx((UINT)LAYER_TYPE::Ground);
+	//	/*obj->AddComponent(new CRigidBody);
+	//	tShapeInfo info = {};
+	//	info.eGeomType = GEOMETRY_TYPE::Box;
+	//	info.size = Vector3(400.f, 1.f, 400.f);
+	//	info.CollideType = (UINT)COLLIDE_TYPE::Other;
+	//	obj->RigidBody()->PushBackShapeInfo(info);
+	//	obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
 
-		obj->AddComponent(new CRigidBody);
-		obj->Transform()->SetRelativePos(Vec3(-700.f, 0.f, -20.f));
+	//	obj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 0.f, 0.f));*/
 
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Box;
-		info.size = Vector3(300.f, 100.f, 100.f);
-		info.CollideType = (UINT)COLLIDE_TYPE::Other;
-		obj->RigidBody()->PushBackShapeInfo(info);
-		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
-
-		obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 150.f, -40.f));
-
-		SpawnGameObject(obj, Vec3(-700.f, 0.f, -20.f), (UINT)LAYER_TYPE::Wall);
-	}*/
+	//	SpawnGameObject(obj, Vec3(-700.f, 0.f, -20.f), (UINT)LAYER_TYPE::Ground);
+	//}
 
 	//¼®°ü
 	/*{
@@ -651,4 +648,27 @@ void CreateTestLevel()
 	}
 
 	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
+
+	//¹Ù´Ú
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\FloorTile.pref", L"prefab\\FloorTile.pref");
+		fab->PrefabLoad(L"prefab\\FloorTile.pref");
+		CGameObject* empty = nullptr;
+
+
+
+		for (int i = 0; i <= 3; ++i)
+		{
+			for (int j = 0; j <= 3; ++j)
+			{
+				Vec3 spawnPos = Vec3(-5000.f + (j * 3200), -1.f, 5000.f - (i * 3200));
+				empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Ground);
+				empty->Transform()->SetRelativeScale(8.f, 1.f, 8.f);
+				empty->MeshRender()->SetFrustumCheck(false);
+				empty->SetName(L"FloorTile");
+				empty->SetLayerIdx((UINT)LAYER_TYPE::Ground);
+				SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Ground);
+			}
+		}
+	}
 }
