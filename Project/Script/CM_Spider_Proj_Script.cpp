@@ -28,7 +28,7 @@ void CM_Spider_Proj_Script::tick()
 		spiderPos.y = 140.f;
 		//spiderPos.y = 220.f;
 		m_vdir = mSpider->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-		m_vdir.y += 0.03f;
+		m_vdir.y += 0.08f;
 
 		Vec3 m_vInitialPos = spiderPos - m_vdir * 150.f + mOffset;
 		
@@ -74,7 +74,7 @@ void CM_Spider_Proj_Script::BeginOverlap(CCollider3D* _Other)
 	proj->SetLayerIdx((UINT)LAYER_TYPE::Default);
 	SpawnGameObject(proj, curPos, L"Default");
 
-	DestroyObject(GetOwner());
+	
 }
 
 void CM_Spider_Proj_Script::OnOverlap(CCollider3D* _Other)
@@ -83,4 +83,5 @@ void CM_Spider_Proj_Script::OnOverlap(CCollider3D* _Other)
 
 void CM_Spider_Proj_Script::EndOverlap(CCollider3D* _Other)
 {
+	//DestroyObject(GetOwner());
 }

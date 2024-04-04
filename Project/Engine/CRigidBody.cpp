@@ -496,7 +496,7 @@ void CRigidBody::CreateGeometry()
 		case GEOMETRY_TYPE::Box:
 		{
 			mGeometries[i] = new Geometries(mShapeInfos[i].eGeomType, mShapeInfos[i].size / 2.f);
-			GetOwner()->Transform()->SetRelativeScale(mShapeInfos[i].size);
+			//GetOwner()->Transform()->SetRelativeScale(mShapeInfos[i].size);
 		}
 		break;
 
