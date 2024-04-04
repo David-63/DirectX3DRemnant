@@ -206,10 +206,10 @@ void CreateTestLevel()
 		obj->Animator3D()->SimpleGen(L"animclip\\Spider\\Wasteland_Spider_Gun_Turn180_L.animclip");
 	}*/
 	//Annointed
-	{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Spider\\Wasteland_Spider_Turn180_L.fbx");
+	/*{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Spider\\Wasteland_Spider_Death_F_01.fbx");
 		CGameObject* obj = data->Instantiate();
-		obj->Animator3D()->SimpleGen(L"animclip\\Spider\\Wasteland_Spider_Turn180_L.animclip");
+		obj->Animator3D()->SimpleGen(L"animclip\\Spider\\Wasteland_Spider_Death_F_01.animclip");
 
 		obj->SetName(L"Spider");
 		obj->AddComponent(new CM_Spider_FSMScript);
@@ -238,7 +238,7 @@ void CreateTestLevel()
 		obj->RigidBody()->PushBackShapeInfo(info2);
 
 
-		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Kinematic);
 		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
 		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
 		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
@@ -253,7 +253,7 @@ void CreateTestLevel()
 		obj->AddComponent(new CCollider3D);
 
 		SpawnGameObject(obj, Vec3(-500.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
-	}
+	}*/
 
 
 	//
@@ -303,7 +303,7 @@ void CreateTestLevel()
 	}*/
 
 	//lurker    
-	/*{
+	{
 		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.fbx");
 		CGameObject* obj = data->Instantiate();
 		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Impact_Heavy_F_01.animclip");
@@ -443,7 +443,7 @@ void CreateTestLevel()
 
 
 		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
-	}*/
+	}
 
 
 	//Ptr<CMeshData> pMeshData = nullptr;
@@ -642,10 +642,12 @@ void CreateTestLevel()
 
 	//player
 	{
-		CGameObject* player = new CGameObject;
-		player->AddComponent(new CTestScript);
+		CGameObject* pObj = new CGameObject;
+		pObj->SetName(L"Player Obj");
+		pObj->AddComponent(new CTransform);
+		pObj->AddComponent(new CTestScript);
 
-		
+		SpawnGameObject(pObj, Vec3(200.f, 0.f, 0.f), 0);
 	}
 
 	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
