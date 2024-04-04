@@ -16,6 +16,8 @@ private:
     UINT            m_LightIdx;
     CGameObject*    m_CamObj;
 
+    bool            m_isActive;
+
 public:
     virtual void finaltick() override;
     void render();                          // light render
@@ -31,6 +33,8 @@ public:
     void SetRadius(float _fRadius);
     void SetAngle(float _Angle) { m_LightInfo.Angle = _Angle; }
     void SetDebugRendering(bool _power) { m_isShowRange = _power; }
+    void SetActiveLight(bool _power) { m_isActive = _power; }
+
 
     Vec3 GetLightColor() { return m_LightInfo.Color.vDiffuse; }
     Vec3 GetLightAmbient() { return m_LightInfo.Color.vAmbient; }

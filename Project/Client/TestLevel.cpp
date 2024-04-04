@@ -111,8 +111,8 @@ void CreateTestLevel()
 
 		pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
 		pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-		pLightObj->Light3D()->SetLightColor(Vec3(1.f, 1.f, 1.f));
-		pLightObj->Light3D()->SetLightAmbient(Vec3(0.5f, 0.5f, 0.5f));
+		pLightObj->Light3D()->SetLightColor(Vec3(0.7f, 0.7f, 0.7f));
+		pLightObj->Light3D()->SetLightAmbient(Vec3(0.1f, 0.1f, 0.1f));
 
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}

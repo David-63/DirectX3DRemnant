@@ -6,7 +6,8 @@ class CP_FSMScript;
 class CP_CombatScript : public CScript
 {
 private:
-	CP_FSMScript* m_PHQ;
+	CP_FSMScript*	m_PHQ;
+	tTimeCtrl		m_lightLife;
 	//tP_LongGunInfo* m_Gun;
 
 public:

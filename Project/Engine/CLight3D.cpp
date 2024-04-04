@@ -12,6 +12,7 @@ CLight3D::CLight3D()
 	, m_LightIdx(-1)
 	, m_isShowRange(true)
 	, m_CamObj(nullptr)
+	, m_isActive(true)
 {
 	m_CamObj = new CGameObject();
 	m_CamObj->AddComponent(new CTransform());
@@ -27,6 +28,7 @@ CLight3D::CLight3D(const CLight3D& _origin)
 	, m_LightIdx(-1)
 	, m_isShowRange(_origin.m_isShowRange)
 	, m_CamObj(nullptr)
+	, m_isActive(true)
 {
 	m_CamObj = new CGameObject(*_origin.m_CamObj);
 	m_LightInfo = _origin.m_LightInfo;
@@ -41,6 +43,9 @@ CLight3D::~CLight3D()
 
 void CLight3D::finaltick()
 {
+	if (!m_isActive)
+		return;
+
 	m_LightInfo.vWorldPos = Transform()->GetWorldPos();
 	m_LightInfo.vWorldDir = Transform()->GetWorldDir(DIR_TYPE::FRONT);
 	
@@ -66,6 +71,8 @@ void CLight3D::finaltick()
 
 void CLight3D::render()
 {
+	if (!m_isActive)
+		return;
 	Transform()->UpdateData();
 	
 	// Light 재질 업데이트

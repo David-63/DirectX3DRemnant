@@ -142,7 +142,7 @@ void CAnimator3D::animaTick()
 	if (events)
 	{
 		if (m_CurFrameIdx >= events->ActionEvents.size())
-			return;		
+			return;
 		if (m_CurFrameIdx != -1 && events->ActionEvents[m_CurFrameIdx].mEvent)
 		{
 			events->ActionEvents[m_CurFrameIdx].mEvent();

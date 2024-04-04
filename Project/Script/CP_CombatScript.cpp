@@ -3,7 +3,7 @@
 #include "CP_CombatScript.h"
 #include "CP_FSMScript.h"
 
-CP_CombatScript::CP_CombatScript() : CScript((UINT)SCRIPT_TYPE::P_COMBATSCRIPT)
+CP_CombatScript::CP_CombatScript() : CScript((UINT)SCRIPT_TYPE::P_COMBATSCRIPT), m_PHQ(nullptr), m_lightLife(0.1f)
 {
 }
 
@@ -25,6 +25,16 @@ void CP_CombatScript::tick()
 			m_PHQ->GetLongGunInfo()->ReadyToFire.curTime += ScaleDT;
 		else
 			m_PHQ->GetLongGunInfo()->ReadyToFire.Activate();
+	}
+
+	if (m_lightLife.IsActivate())
+	{
+		m_lightLife.curTime += ScaleDT;
+		if (m_lightLife.IsFinish())
+		{
+			m_lightLife.ResetTime();
+			m_PHQ->GetMuzzelFlash()->Light3D()->SetActiveLight(false);
+		}
 	}
 
 	if (m_PHQ->GetAtkSign())
@@ -68,7 +78,8 @@ void CP_CombatScript::tick()
 				if (m_PHQ->GetLongGunInfo()->Fire())
 				{
 					m_PHQ->PlayAnimation(P_R2Fire, false);
-
+					m_PHQ->GetMuzzelFlash()->Light3D()->SetActiveLight(true);
+					m_lightLife.Activate();
 					CParticleSystem* particle = m_PHQ->GetBullet()->ParticleSystem();
 					tParticleModule ModuleData = particle->GetModuleData();
 					ModuleData.bDead = false;
