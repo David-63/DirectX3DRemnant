@@ -22,15 +22,21 @@ void CP_STATEStaggerScript::tick()
 	else if (1 == m_hitDir)
 		vMoveVector -= vFront;
 
+	if (m_curTime <= m_maxTime)
+	{
+		m_curTime += ScaleDT;
+	}
 	moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.6f;
-	vMoveVector *= moveMagnitude * 50.f;
+
+	float totalSpeed = FloatLerp(moveMagnitude * 50.f, moveMagnitude, m_curTime / m_maxTime);
+	vMoveVector *= totalSpeed;
 	m_PHQ->RigidBody()->SetVelocity(vMoveVector);
 }
 
 void CP_STATEStaggerScript::CallAnimation()
 {
-	int hitDir = m_PHQ->GetHitDir();
-	if (-1 == hitDir)
+	//int hitDir = m_PHQ->GetHitDir();
+	if (-1 == m_hitDir)
 	{
 		m_PHQ->PlayAnimation(P_R2ImpactStagger_B, true);
 	}
@@ -44,10 +50,13 @@ void CP_STATEStaggerScript::Enter()
 {
 	m_hitDir = m_PHQ->GetHitDir();
 	CallAnimation();
+	m_maxTime = 1.f;
+	m_curTime = 0.f;
 }
 
 void CP_STATEStaggerScript::Exit()
 {
 	m_hitDir = 0;
+	m_PHQ->RigidBody()->SetVelocity(Vec3(0,0,0));
 }
 

@@ -4,7 +4,9 @@
 class CP_STATEStaggerScript : public CP_StatesScript
 {
 private:
-    int m_hitDir;
+    int     m_hitDir;
+    float   m_maxTime;
+    float   m_curTime;
 public:
     virtual void tick() override;
 
