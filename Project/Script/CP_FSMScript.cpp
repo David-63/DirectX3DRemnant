@@ -52,6 +52,7 @@ void CP_FSMScript::initState()
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEDODGESCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATERELOADSCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATEFIRESCRIPT)));
+	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::P_STATESTAGGERSCRIPT)));
 }
 void CP_FSMScript::initAnim()
 {
@@ -146,12 +147,6 @@ void CP_FSMScript::initWeapon()
 
 void CP_FSMScript::changeStance()
 {
-	if (GetAtkSign())
-	{
-		tHitInfo info = GetHitInfo();
-		ChangeState((UINT)eP_States::STAGGER);
-	}
-
 	if (m_StanceCheck[(UINT)eStanceCheck::IsChange])
 	{
 		CP_StatesScript* curState = dynamic_cast<CP_StatesScript*>(GetCurState());
