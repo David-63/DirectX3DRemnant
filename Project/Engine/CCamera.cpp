@@ -783,8 +783,7 @@ void CCamera::render_forward_Decal()
 
 void CCamera::geometryRender()
 {
-	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFFERRED_PARTICLE)->OMSet();
-	render_particle();
+
 
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 	render_deferred();
@@ -792,6 +791,9 @@ void CCamera::geometryRender()
 	// decal은 다른 객체들이 그려진 다음에 그려야함
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED_DECAL)->OMSet(true);
 	render_deferred_Decal();
+
+	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFFERRED_PARTICLE)->OMSet();
+	render_particle();
 }
 
 void CCamera::lightRender()

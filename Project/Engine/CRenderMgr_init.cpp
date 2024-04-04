@@ -103,9 +103,9 @@ void CRenderMgr::CreateMRT()
 
               // arrRTTex[0] = CResMgr::GetInst()->FindRes<CTexture>(L"ColorTargetTex");
         arrRTTex[0] = CResMgr::GetInst()->FindRes<CTexture>(L"EmissiveTargetTex");
-        //arrRTTex[2] = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
+        arrRTTex[1] = CResMgr::GetInst()->FindRes<CTexture>(L"PositionTargetTex");
 
-        m_MRT[(UINT)MRT_TYPE::DEFFERRED_PARTICLE]->Create(arrRTTex, 1, pDSTex);
+        m_MRT[(UINT)MRT_TYPE::DEFFERRED_PARTICLE]->Create(arrRTTex, 2, pDSTex);
     }
 
 

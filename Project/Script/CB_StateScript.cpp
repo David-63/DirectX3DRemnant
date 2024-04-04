@@ -22,6 +22,24 @@ void CB_StateScript::begin()
 	m_BHQ = dynamic_cast<CB_FSMScript*>(m_FSMHQ);
 }
 
+void CB_StateScript::BeginOverlap(CCollider3D* _Other)
+{
+
+	if (_Other->GetOwner()->GetLayerIndex() == (UINT)LAYER_TYPE::Player)
+	{
+		//tHitInfo info;
+		//info.Damage = 10;
+		//info.KnockBackGrade = 0;
+		//info.Shooter = GetOwner()->GetReserver();
+		//info.ShooterPos = GetOwner()->GetReserver()->Transform()->GetRelativePos();
+		//_Other->GetOwner()->GetScript<CC_FSMScript>()->GiveAtkInfo(info);
+	}
+
+
+
+
+}
+
 Vec3 CB_StateScript::GetPlayerPos()
 {
 

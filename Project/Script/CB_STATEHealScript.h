@@ -14,6 +14,14 @@ public:
     virtual void tick() override;
     virtual void Exit() override;
 
+
+private:
+    float m_fTime;
+public:
+    void BloodDrink_LoopEnd();
+
+
+
 public:
     CLONE(CB_STATEHealScript);
     CB_STATEHealScript();
