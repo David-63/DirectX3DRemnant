@@ -256,25 +256,25 @@ void CreateTestLevel()
 	}*/
 
 
-	//{
-	//	Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\Tile.fbx");
-	//	CGameObject* obj = data->Instantiate();
+	{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\prop1.fbx");
+		CGameObject* obj = data->Instantiate();
 
-	//	obj->SetName(L"FloorTile");
-	//	obj->Transform()->SetRelativePos(Vec3(0.f, -50.f, 0.f));
-	//	obj->SetLayerIdx((UINT)LAYER_TYPE::Ground);
-	//	/*obj->AddComponent(new CRigidBody);
-	//	tShapeInfo info = {};
-	//	info.eGeomType = GEOMETRY_TYPE::Box;
-	//	info.size = Vector3(400.f, 1.f, 400.f);
-	//	info.CollideType = (UINT)COLLIDE_TYPE::Other;
-	//	obj->RigidBody()->PushBackShapeInfo(info);
-	//	obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
+		obj->SetName(L"prop1");
+		obj->Transform()->SetRelativePos(Vec3(0.f, 0.f, 0.f));
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Ground);
+		obj->AddComponent(new CRigidBody);
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Box;
+		info.size = Vector3(90.f, 110.f, 140.f);
+		info.CollideType = (UINT)COLLIDE_TYPE::Other;
+		obj->RigidBody()->PushBackShapeInfo(info);
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
 
-	//	obj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 0.f, 0.f));*/
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 60.f, 0.f));
 
-	//	SpawnGameObject(obj, Vec3(-700.f, 0.f, -20.f), (UINT)LAYER_TYPE::Ground);
-	//}
+		SpawnGameObject(obj, Vec3(-700.f, 0.f, -20.f), (UINT)LAYER_TYPE::Ground);
+	}
 
 	//¼®°ü
 	/*{
@@ -324,37 +324,37 @@ void CreateTestLevel()
 
 		tShapeInfo info1 = {};
 		info1.eGeomType = GEOMETRY_TYPE::Sphere;
-		info1.size = Vector3(40.f, 40.f, 40.f);
+		info1.size = Vector3(50.f, 40.f, 40.f);
 		info1.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info1);
 
 		tShapeInfo info2 = {};
 		info2.eGeomType = GEOMETRY_TYPE::Sphere;
-		info2.size = Vector3(20.f, 20.f, 20.f);
+		info2.size = Vector3(30.f, 20.f, 20.f);
 		info2.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info2);
 
 		tShapeInfo info3 = {};
 		info3.eGeomType = GEOMETRY_TYPE::Sphere;
-		info3.size = Vector3(30.f, 20.f, 20.f);
+		info3.size = Vector3(40.f, 20.f, 20.f);
 		info3.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info3);
 
 		tShapeInfo info4 = {};
 		info4.eGeomType = GEOMETRY_TYPE::Sphere;
-		info4.size = Vector3(30.f, 20.f, 20.f);
+		info4.size = Vector3(40.f, 20.f, 20.f);
 		info4.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info4);
 
 		tShapeInfo info5 = {};
 		info5.eGeomType = GEOMETRY_TYPE::Sphere;
-		info5.size = Vector3(30.f, 20.f, 20.f);
+		info5.size = Vector3(40.f, 20.f, 20.f);
 		info5.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info5);
 
 		tShapeInfo info6 = {};
 		info6.eGeomType = GEOMETRY_TYPE::Sphere;
-		info6.size = Vector3(30.f, 20.f, 20.f);
+		info6.size = Vector3(40.f, 20.f, 20.f);
 		info6.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info6);
 
@@ -372,25 +372,25 @@ void CreateTestLevel()
 
 		tShapeInfo info9 = {};
 		info9.eGeomType = GEOMETRY_TYPE::Sphere;
-		info9.size = Vector3(30.f, 20.f, 20.f);
+		info9.size = Vector3(40.f, 20.f, 20.f);
 		info9.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info9);
 
 		tShapeInfo info10 = {};
 		info10.eGeomType = GEOMETRY_TYPE::Sphere;
-		info10.size = Vector3(30.f, 20.f, 20.f);
+		info10.size = Vector3(40.f, 20.f, 20.f);
 		info10.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info10);
 
 		tShapeInfo info11 = {};
 		info11.eGeomType = GEOMETRY_TYPE::Sphere;
-		info11.size = Vector3(30.f, 20.f, 20.f);
+		info11.size = Vector3(40.f, 20.f, 20.f);
 		info11.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info11);
 
 		tShapeInfo info12 = {};
 		info12.eGeomType = GEOMETRY_TYPE::Sphere;
-		info12.size = Vector3(30.f, 20.f, 20.f);
+		info12.size = Vector3(40.f, 20.f, 20.f);
 		info12.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info12);
 
@@ -402,13 +402,13 @@ void CreateTestLevel()
 
 		tShapeInfo info14 = {};
 		info14.eGeomType = GEOMETRY_TYPE::Sphere;
-		info14.size = Vector3(30.f, 20.f, 20.f);
+		info14.size = Vector3(40.f, 20.f, 20.f);
 		info14.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info14);
 
 		tShapeInfo info15 = {};
 		info15.eGeomType = GEOMETRY_TYPE::Sphere;
-		info15.size = Vector3(30.f, 20.f, 20.f);
+		info15.size = Vector3(40.f, 20.f, 20.f);
 		info15.CollideType = (UINT)COLLIDE_TYPE::Monster;
 		obj->RigidBody()->PushBackShapeInfo(info15);
 
