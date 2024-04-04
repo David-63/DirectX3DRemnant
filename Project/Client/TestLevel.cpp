@@ -135,12 +135,6 @@ void CreateTestLevel()
 		pGround->RigidBody()->PushBackShapeInfo(info);
 		pGround->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
 
-		pGround->AddComponent(new CMeshRender);
-		Ptr<CMesh> mesh = CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug");
-		Ptr<CMaterial> mater = CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl");
-		pGround->MeshRender()->SetMesh(mesh);
-		pGround->MeshRender()->SetMaterial(mater, 0);
-
 		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), (UINT)LAYER_TYPE::Ground);
 	}
 
@@ -154,55 +148,172 @@ void CreateTestLevel()
 		SpawnGameObject(pObj, Vec3(200.f, 100.f, 0.f), 0);
 	}
 
-
 	{
-		Ptr<CMeshData> pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Wasteland_Spider_Turn180_L.mdat");
-		CGameObject* obj = pMeshData->Instantiate();
-		//obj->Animator3D()->SimpleGen(L"animclip\Spider\Wasteland_Spider_Turn180_L.animclip");
-		Vec3 startpos = Vec3(600.f, 0.f, 0.f);
-
-		obj->SetName(L"Spider");
-		obj->AddComponent(new CM_Spider_FSMScript);
-		obj->AddComponent(new CHitBoxScript);
-		obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
-
-		obj->AddComponent(new CPathFinderScript());
-		obj->AddComponent(new CMonsterMoveScript());
+		/*Ptr<CMeshData> pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\BC_Wall4M.mdat");
+		CGameObject* obj = pMeshData->InstMesh();
+		obj->SetName(L"MapObj");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
 
 		obj->AddComponent(new CRigidBody);
-		obj->Transform()->SetRelativePos(startpos);
+		obj->Transform()->SetRelativePos(Vec3(0, 0, 0));
+		obj->Transform()->SetRelativeScale(Vec3(2.f, 2.f, 1.f));
 
 		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(15.f, 15.f, 15.f);
-		info.massProperties.restitution = 0.99f;
-		info.CollideType = (UINT)COLLIDE_TYPE::Monster;
+		info.eGeomType = GEOMETRY_TYPE::Box;
+		info.size = Vector3(800.f, 800.f, 18.f);
+		info.CollideType = (UINT)COLLIDE_TYPE::Other;
 		obj->RigidBody()->PushBackShapeInfo(info);
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
 
-		tShapeInfo info2 = {};
-		info2.eGeomType = GEOMETRY_TYPE::Sphere;
-		info2.size = Vector3(150.f, 15.f, 15.f);
-		info2.massProperties.restitution = 0.99f;
-		info2.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		obj->RigidBody()->PushBackShapeInfo(info2);
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(0.f, 400.f, -9.f));
 
-
-		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-		obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-		obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
-
-
-		int num = obj->RigidBody()->GetRigidActor()->getNbShapes();
-		obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-		obj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 130.f, 0.f));
-
-
-		obj->AddComponent(new CCollider3D);
-
-		SpawnGameObject(obj, startpos, (UINT)LAYER_TYPE::Monster);
+		SpawnGameObject(obj, Vec3(0, 0, 0), (UINT)LAYER_TYPE::Wall);*/
 	}
+	{
+	//	Ptr<CMeshData> pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\Wasteland_Spider_Turn180_L.mdat");
+	//	CGameObject* obj = pMeshData->Instantiate();
+	//	//obj->Animator3D()->SimpleGen(L"animclip\Spider\Wasteland_Spider_Turn180_L.animclip");
+	//	Vec3 startpos = Vec3(600.f, 0.f, 0.f);
+
+	//	obj->SetName(L"Spider");
+	//	obj->AddComponent(new CM_Spider_FSMScript);
+	//	obj->AddComponent(new CHitBoxScript);
+	//	obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+	//	obj->AddComponent(new CPathFinderScript());
+	//	obj->AddComponent(new CMonsterMoveScript());
+
+	//	obj->AddComponent(new CRigidBody);
+	//	obj->Transform()->SetRelativePos(startpos);
+
+	//	tShapeInfo info = {};
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.size = Vector3(15.f, 15.f, 15.f);
+	//	info.massProperties.restitution = 0.99f;
+	//	info.CollideType = (UINT)COLLIDE_TYPE::Monster;
+	//	obj->RigidBody()->PushBackShapeInfo(info);
+
+	//	tShapeInfo info2 = {};
+	//	info2.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info2.size = Vector3(150.f, 15.f, 15.f);
+	//	info2.massProperties.restitution = 0.99f;
+	//	info2.CollideType = (UINT)COLLIDE_TYPE::Monster;
+	//	obj->RigidBody()->PushBackShapeInfo(info2);
 
 
+	//	obj->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+	//	obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+	//	obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+	//	obj->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+	//	obj->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+
+
+	//	int num = obj->RigidBody()->GetRigidActor()->getNbShapes();
+	//	obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+	//	obj->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 130.f, 0.f));
+
+
+	//	obj->AddComponent(new CCollider3D);
+
+	//	SpawnGameObject(obj, startpos, (UINT)LAYER_TYPE::Monster);
+	}
+#define WallSize 13
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\BC_Wall.pref", L"prefab\\BC_Wall.pref");
+		fab->PrefabLoad(L"prefab\\BC_Wall.pref");
+		CGameObject* empty = nullptr;
+		Vec3 spawnPos = Vec3(0, 0, 0);
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, 5000);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, -5000);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, 5000);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(-5000.f, 0.f, -4600.f +(size * 800.f));
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		for (int size = 0; size < WallSize; ++size)
+		{
+			spawnPos = Vec3(5000.f, 0.f, -4600.f + (size * 800.f));
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+
+		for (int size = 0; size < 3; ++size)
+		{
+			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, -3400);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+
+		spawnPos = Vec3(-2600.f, 0.f, -3800);
+		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+
+		for (int size = 0; size < 2; ++size)
+		{
+			spawnPos = Vec3(-2200.f + (size * 800.f), 0.f, -4200);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		spawnPos = Vec3(-1000.f, 0.f, -3800);
+		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		spawnPos = Vec3(600.f, 0.f, -4600);
+		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		spawnPos = Vec3(600.f, 0.f, -3800);
+		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		
+
+		for (int size = 0; size < 6; ++size)
+		{
+			spawnPos = Vec3(1000.f + (size * 800.f), 0.f, -3400);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		for (int size = 0; size < 2; ++size)
+		{
+			spawnPos = Vec3(-2200.f + (size * 800.f), 0.f, -3400);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+	}
 }

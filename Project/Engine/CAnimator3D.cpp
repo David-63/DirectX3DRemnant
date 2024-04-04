@@ -171,6 +171,8 @@ void CAnimator3D::UpdateData()
 {
 	if (nullptr == m_pCurrentAnim)
 		return;
+	if (!m_isRun)
+		return;
 
 	if (!m_isFinalMatUpdate)
 	{		

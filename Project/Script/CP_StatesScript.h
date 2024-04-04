@@ -54,7 +54,7 @@ struct tP_LongGunInfo
     float       Damage;
     tTimeCtrl   ReadyToFire;
 
-    tP_LongGunInfo() : CurAmmo(12), MaxAmmo(12), Damage(12), ReadyToFire(0.17f) {}
+    tP_LongGunInfo() : CurAmmo(10), MaxAmmo(10), Damage(70), ReadyToFire(0.4f) {}
 
     bool IsAble() { return (0 < CurAmmo) ? true : false; }
 
