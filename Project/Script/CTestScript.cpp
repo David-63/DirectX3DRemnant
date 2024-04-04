@@ -40,7 +40,7 @@ void CTestScript::tick()
 		SpawnGameObject(player, Vec3(0, 0, 0), 1);
 	}
 
-	if (KEY_HOLD(KEY::NUM_8))
+	/*if (KEY_HOLD(KEY::NUM_8))
 	{
 		vMoveVector += DT * vFront * fSpeed;
 	}
@@ -61,7 +61,7 @@ void CTestScript::tick()
 	}
 
 	GetOwner()->RigidBody()->SetVelocity(vMoveVector);
-	vMoveVector = Vec3(0.f, 0.f, 0.f);
+	vMoveVector = Vec3(0.f, 0.f, 0.f);*/
 	
 }
 

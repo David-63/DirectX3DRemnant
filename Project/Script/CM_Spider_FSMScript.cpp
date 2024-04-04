@@ -90,7 +90,7 @@ void CM_Spider_FSMScript::tick()
 		ChangeState((UINT)eSpiderState::Damaged);
 	}
 
-	if (GetAtkSign())
+	if (GetAtkSign() && GetCurStateType() != (UINT)eSpiderState::Dead)
 	{
 		tHitInfo info = GetHitInfo();
 

@@ -61,8 +61,6 @@ void CM_Spider_Proj_Script::BeginOverlap(CCollider3D* _Other)
 		_Other->GetOwner()->GetScript<CC_FSMScript>()->GiveAtkInfo(info);
 	}
 
-	GetOwner()->RigidBody()->SetSleep(true);
-
 	//폭발이펙트 오브젝트생성
 	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Spider_Proj_Explosion.pref", L"prefab\\Spider_Proj_Explosion.pref");
 	fab->PrefabLoad(L"prefab\\Spider_Proj_Explosion.pref");
@@ -76,7 +74,7 @@ void CM_Spider_Proj_Script::BeginOverlap(CCollider3D* _Other)
 	proj->SetLayerIdx((UINT)LAYER_TYPE::Default);
 	SpawnGameObject(proj, curPos, L"Default");
 
-	DestroyObject(GetOwner());
+	
 }
 
 void CM_Spider_Proj_Script::OnOverlap(CCollider3D* _Other)
@@ -85,4 +83,5 @@ void CM_Spider_Proj_Script::OnOverlap(CCollider3D* _Other)
 
 void CM_Spider_Proj_Script::EndOverlap(CCollider3D* _Other)
 {
+	//DestroyObject(GetOwner());
 }

@@ -21,7 +21,21 @@ void CM_Spider_proj_Explosion_Script::tick()
 
 	if (m_deathTime > 1.f)
 	{
-		GetOwner()->RigidBody()->SetSleep(true);
+		Vec3 pos = GetOwner()->Transform()->GetRelativePos();
+		pos.y += 10000.f;
+		GetOwner()->Transform()->SetRelativePos(pos);
 		DestroyObject(GetOwner());
 	}
+}
+
+void CM_Spider_proj_Explosion_Script::BeginOverlap(CCollider3D* _Other)
+{
+}
+
+void CM_Spider_proj_Explosion_Script::OnOverlap(CCollider3D* _Other)
+{
+}
+
+void CM_Spider_proj_Explosion_Script::EndOverlap(CCollider3D* _Other)
+{
 }

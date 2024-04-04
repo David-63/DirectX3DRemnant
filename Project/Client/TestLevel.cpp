@@ -446,56 +446,56 @@ void CreateTestLevel()
 	}*/
 
 
-	Ptr<CMeshData> pMeshData = nullptr;
-	CGameObject* player = nullptr;
+	//Ptr<CMeshData> pMeshData = nullptr;
+	//CGameObject* player = nullptr;
 
 	// 
 	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\house.fbx");
-	pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
+	//pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\monster.fbx");
 	//pMeshData = CResMgr::GetInst()->FindRes<CMeshData>(L"meshdata\\monster.mdat");
-	player = pMeshData->Instantiate();
-	player->AddComponent(new CTestScript());
+	//player->AddComponent(new CTestScript());
+	//player = pMeshData->Instantiate();
+	//
+	//player->SetName(L"Player");
+	//player->Transform()->SetDebugSphereUse(true);
+	//player->SetLayerIdx((UINT)LAYER_TYPE::Player);
+	//player->Transform()->SetRelativePos(Vec3(900.f, 0.f, 50.f));
+	//player->AddComponent(new CRigidBody);
 
-	player->SetName(L"Player");
-	player->Transform()->SetDebugSphereUse(true);
-	player->SetLayerIdx((UINT)LAYER_TYPE::Player);
-	player->Transform()->SetRelativePos(Vec3(900.f, 0.f, 50.f));
-	player->AddComponent(new CRigidBody);
+	//tShapeInfo info = {};
+	//info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//info.size = Vector3(15.f, 15.f, 15.f);
+	//info.CollideType = (UINT)COLLIDE_TYPE::Player;
+	//player->RigidBody()->PushBackShapeInfo(info);
 
-	tShapeInfo info = {};
-	info.eGeomType = GEOMETRY_TYPE::Sphere;
-	info.size = Vector3(15.f, 15.f, 15.f);
-	info.CollideType = (UINT)COLLIDE_TYPE::Player;
-	player->RigidBody()->PushBackShapeInfo(info);
+	//tShapeInfo info2 = {};
+	//info2.eGeomType = GEOMETRY_TYPE::Sphere;
+	//info2.size = Vector3(15.f, 15.f, 15.f);
+	//info2.CollideType = (UINT)COLLIDE_TYPE::Player;
+	//player->RigidBody()->PushBackShapeInfo(info2);
 
-	tShapeInfo info2 = {};
-	info2.eGeomType = GEOMETRY_TYPE::Sphere;
-	info2.size = Vector3(15.f, 15.f, 15.f);
-	info2.CollideType = (UINT)COLLIDE_TYPE::Player;
-	player->RigidBody()->PushBackShapeInfo(info2);
+	//tShapeInfo info3 = {};
+	//info3.eGeomType = GEOMETRY_TYPE::Sphere;
+	//info3.size = Vector3(8.f, 8.f, 8.f);
+	//info3.CollideType = (UINT)COLLIDE_TYPE::Player;
+	//player->RigidBody()->PushBackShapeInfo(info3);
 
-	tShapeInfo info3 = {};
-	info3.eGeomType = GEOMETRY_TYPE::Sphere;
-	info3.size = Vector3(8.f, 8.f, 8.f);
-	info3.CollideType = (UINT)COLLIDE_TYPE::Player;
-	player->RigidBody()->PushBackShapeInfo(info3);
-
-	player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
-	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
-	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
-	player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
-	player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
+	//player->RigidBody()->SetPhysical(ACTOR_TYPE::Dynamic);
+	//player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Y, true);
+	//player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_X, true);
+	//player->RigidBody()->SetFreezeRotation(FreezeRotationFlag::ROTATION_Z, true);
+	//player->RigidBody()->GetRigidBody()->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_CCD, true);
 
 
-	//int num = player->RigidBody()->GetRigidActor()->getNbShapes();
-	player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
-	player->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
-	player->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
+	////int num = player->RigidBody()->GetRigidActor()->getNbShapes();
+	//player->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 7.5f, 0.f));
+	//player->RigidBody()->SetShapeLocalPos(1, Vec3(5.f, 22.5f, 0.f));
+	//player->RigidBody()->SetShapeLocalPos(2, Vec3(5.f, 34.f, 0.f));
 
-	player->AddComponent(new CCollider3D);
-	player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
+	//player->AddComponent(new CCollider3D);
+	//player->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 
-	SpawnGameObject(player, Vec3(900, 0.f, 50.f), (UINT)LAYER_TYPE::Player);
+	//SpawnGameObject(player, Vec3(900, 0.f, 50.f), (UINT)LAYER_TYPE::Player);
 
 	////ruler
 	//{
@@ -639,6 +639,14 @@ void CreateTestLevel()
 		SpawnGameObject(pObj, Vec3(-200.f, 700.f, 0.f), 5);
 
 		}*/
+
+	//player
+	{
+		CGameObject* player = new CGameObject;
+		player->AddComponent(new CTestScript);
+
+		
+	}
 
 	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
 }

@@ -65,7 +65,7 @@ void CM_Lurker_FSMScript::tick()
 	CC_FSMScript::tick();
 	DeathCheck();
 
-	if (GetAtkSign() && GetCurStateType() != (UINT)eM_States::DAMAGED)
+	if (GetAtkSign() && GetCurStateType() != (UINT)eM_States::DEAD)
 	{
 		tHitInfo info = GetHitInfo();
 

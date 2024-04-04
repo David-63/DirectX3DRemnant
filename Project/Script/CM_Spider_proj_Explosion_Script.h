@@ -16,6 +16,9 @@ public:
 	virtual void tick() override;
 
 public:
+	virtual void BeginOverlap(CCollider3D* _Other);
+	virtual void OnOverlap(CCollider3D* _Other);
+	virtual void EndOverlap(CCollider3D* _Other);
 
 public:
 	
