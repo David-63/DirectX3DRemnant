@@ -111,8 +111,8 @@ void CreateTestLevel()
 
 		pLightObj->Transform()->SetRelativeRot(Vec3(XM_PI / 4.f, XM_PI / 4.f, 0.f));
 		pLightObj->Light3D()->SetLightType(LIGHT_TYPE::DIRECTIONAL);
-		pLightObj->Light3D()->SetLightColor(Vec3(0.7f, 0.7f, 0.7f));
-		pLightObj->Light3D()->SetLightAmbient(Vec3(0.1f, 0.1f, 0.1f));
+		pLightObj->Light3D()->SetLightColor(Vec3(0.5f, 0.5f, 0.5f));
+		pLightObj->Light3D()->SetLightAmbient(Vec3(0.2f, 0.2f, 0.2f));
 
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}
@@ -138,7 +138,7 @@ void CreateTestLevel()
 		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), (UINT)LAYER_TYPE::Ground);
 	}
 
-	// Test obj (rigidbody)
+	// Test obj
 	{
 		CGameObject* pObj = new CGameObject;
 		pObj->SetName(L"test Obj");
@@ -316,4 +316,96 @@ void CreateTestLevel()
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
 	}
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\FloorTile.pref", L"prefab\\FloorTile.pref");
+		fab->PrefabLoad(L"prefab\\FloorTile.pref");
+		CGameObject* empty = nullptr;
+
+		for (int i = 0; i <= 3; ++i)
+		{
+			for (int j = 0; j <= 3; ++j)
+			{
+				Vec3 spawnPos = Vec3(-5000.f + (j * 3200), -1.f, 5000.f - (i * 3200));
+				empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Ground);
+				empty->Transform()->SetRelativeScale(8.f, 1.f, 8.f);
+				empty->MeshRender()->SetFrustumCheck(false);
+				empty->SetName(L"FloorTile");
+				empty->SetLayerIdx((UINT)LAYER_TYPE::Ground);
+				SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Ground);
+			}
+		}
+	}
+	{
+		/*Ptr<CMeshData> pMeshData = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\XM_WL_Pillar.fbx");
+		CGameObject* obj = pMeshData->InstMesh();
+		obj->SetName(L"Pillar");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+		obj->AddComponent(new CRigidBody);
+		obj->Transform()->SetRelativePos(Vec3(0, 0, 0));
+		obj->Transform()->SetRelativeScale(Vec3(3.f, 3.f, 3.f));
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Box;
+		info.size = Vector3(650.f, 1200.f, 750.f);
+		info.CollideType = (UINT)COLLIDE_TYPE::Other;
+		obj->RigidBody()->PushBackShapeInfo(info);
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
+
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(0, 600.f, 0.f));
+
+		SpawnGameObject(obj, Vec3(0, 0, 0), (UINT)LAYER_TYPE::Wall);*/
+	}
+
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Pillar.pref", L"prefab\\Pillar.pref");
+		fab->PrefabLoad(L"prefab\\Pillar.pref");
+		CGameObject* empty = nullptr;
+		Vec3 spawnPos = Vec3(0, 0, 0);
+		{
+			spawnPos = Vec3(-2600.f, 0.f, 0);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+			spawnPos = Vec3(2600.f, 0.f, 0);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+
+			spawnPos = Vec3(-2600.f, 0.f, 2400.f);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+			spawnPos = Vec3(2600.f, 0.f, 2400.f);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+
+			spawnPos = Vec3(-2600.f, 0.f, -1800.f);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+			spawnPos = Vec3(2600.f, 0.f, -1800.f);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+	}
+
+	{
+		//CGameObject* obj = new CGameObject();
+		//obj->AddComponent(new CTransform());
+		//obj->AddComponent(new CMeshRender());
+		////obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
+		////obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
+		////obj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\aim.png"));
+
+
+		//obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
+		//obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"),0);
+		//obj->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
+		//obj->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
+		//SpawnGameObject(obj, Vec3(0,0,0), 0);
+	}
+	
 }
