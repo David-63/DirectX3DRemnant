@@ -10,7 +10,6 @@ enum class eP_States
     RELOAD,
     MELEE,
     STAGGER,
-    DAMAGED,
     DEAD,
     END,
 };
@@ -50,13 +49,12 @@ struct tP_Info
 };
 struct tP_LongGunInfo
 {
-    int CurAmmo;
-    int MaxAmmo;
-    float Damage;
-    float FireLate;
-    float ReloadSpeed;
+    int         CurAmmo;
+    int         MaxAmmo;
+    float       Damage;
+    tTimeCtrl   ReadyToFire;
 
-    tP_LongGunInfo() : CurAmmo(12), MaxAmmo(12), Damage(12), FireLate(0.17f), ReloadSpeed(0.22f) {}
+    tP_LongGunInfo() : CurAmmo(12), MaxAmmo(12), Damage(12), ReadyToFire(0.17f) {}
 
     bool IsAble() { return (0 < CurAmmo) ? true : false; }
 
@@ -89,7 +87,6 @@ class CP_StatesScript : public CC_StatesScript
 {
 protected:
     CP_FSMScript*   m_PHQ;
-    tP_LongGunInfo* m_Gun;
     ePlayerStance*  m_PlayerStance;
     tP_Info*        m_PlayerInfo;
     Vec2*           m_PlayerMoveDir;
