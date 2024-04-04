@@ -116,6 +116,8 @@ void CreateTestLevel()
 
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}
+
+	
 	// Test obj
 	/*{
 		CGameObject* pObj = new CGameObject;
@@ -217,6 +219,8 @@ void CreateTestLevel()
 		obj->AddComponent(new CPathFinderScript());
 		obj->AddComponent(new CMonsterMoveScript());
 
+		obj->Transform()->SetRelativePos(Vec3(-500.f, 0.f, 0.f));
+
 		obj->AddComponent(new CRigidBody);
 
 		tShapeInfo info = {};
@@ -247,12 +251,56 @@ void CreateTestLevel()
 
 
 		obj->AddComponent(new CCollider3D);
-		obj->Collider3D()->SetType(COLLIDER3D_TYPE::Player);
 
-		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
+		SpawnGameObject(obj, Vec3(-500.f, 0.f, 0.f), (UINT)LAYER_TYPE::Monster);
 	}
 
 
+	//
+	/*{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\MeicalBed.fbx");
+		CGameObject* obj = data->Instantiate();
+
+		obj->SetName(L"MapObj");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+		obj->AddComponent(new CRigidBody);
+		obj->Transform()->SetRelativePos(Vec3(-700.f, 0.f, -20.f));
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Box;
+		info.size = Vector3(300.f, 100.f, 100.f);
+		info.CollideType = (UINT)COLLIDE_TYPE::Other;
+		obj->RigidBody()->PushBackShapeInfo(info);
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
+
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 150.f, -40.f));
+
+		SpawnGameObject(obj, Vec3(-700.f, 0.f, -20.f), (UINT)LAYER_TYPE::Wall);
+	}*/
+
+	//¼®°ü
+	/*{
+		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Map\\SarcoPhagus.fbx");
+		CGameObject* obj = data->Instantiate();
+
+		obj->SetName(L"MapObj");
+		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+		obj->AddComponent(new CRigidBody);
+		obj->Transform()->SetRelativePos(Vec3(-700.f, 0.f, -20.f));
+
+		tShapeInfo info = {};
+		info.eGeomType = GEOMETRY_TYPE::Box;
+		info.size = Vector3(160.f, 300.f, 100.f);
+		info.CollideType = (UINT)COLLIDE_TYPE::Other;
+		obj->RigidBody()->PushBackShapeInfo(info);
+		obj->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
+
+		obj->RigidBody()->SetShapeLocalPos(0, Vec3(5.f, 150.f, -40.f));
+
+		SpawnGameObject(obj, Vec3(-700.f, 0.f, -20.f), (UINT)LAYER_TYPE::Wall);
+	}*/
 
 	//lurker    
 	/*{
@@ -449,24 +497,27 @@ void CreateTestLevel()
 
 	SpawnGameObject(player, Vec3(900, 0.f, 50.f), (UINT)LAYER_TYPE::Player);
 
-	//ruler
-	{
-		CGameObject* obj = new CGameObject;
-		obj->AddComponent(new CMeshRender);
-		obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug"));
-		obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
+	////ruler
+	//{
+	//	CGameObject* obj = new CGameObject;
+	//	obj->AddComponent(new CMeshRender);
+	//	obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug"));
+	//	obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl"), 0);
 
-		obj->AddComponent(new CTestScript());
-		obj->AddComponent(new CTransform());
-		obj->AddComponent(new CRigidBody);
+	//	obj->AddComponent(new CTestScript());
+	//	obj->AddComponent(new CTransform());
+	//	obj->AddComponent(new CRigidBody);
 
-		tShapeInfo info = {};
-		info.eGeomType = GEOMETRY_TYPE::Sphere;
-		info.size = Vector3(10.f, 15.f, 15.f);
-		info.CollideType = (UINT)COLLIDE_TYPE::Other;
-		obj->RigidBody()->PushBackShapeInfo(info);
-		SpawnGameObject(obj, Vec3(0, 0.f, -20.f), (UINT)LAYER_TYPE::Wall);
-	}
+	//	tShapeInfo info = {};
+	//	info.eGeomType = GEOMETRY_TYPE::Sphere;
+	//	info.size = Vector3(10.f, 15.f, 15.f);
+	//	info.CollideType = (UINT)COLLIDE_TYPE::Other;
+	//	obj->RigidBody()->PushBackShapeInfo(info);
+	//	SpawnGameObject(obj, Vec3(0, 0.f, -20.f), (UINT)LAYER_TYPE::Wall);
+	//}
+
+	
+
 
 
 	//prefab

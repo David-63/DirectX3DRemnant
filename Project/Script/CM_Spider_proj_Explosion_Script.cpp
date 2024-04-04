@@ -21,6 +21,7 @@ void CM_Spider_proj_Explosion_Script::tick()
 
 	if (m_deathTime > 1.f)
 	{
+		GetOwner()->RigidBody()->SetSleep(true);
 		DestroyObject(GetOwner());
 	}
 }

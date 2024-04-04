@@ -28,7 +28,7 @@ void CM_Spider_Proj_Script::tick()
 		spiderPos.y = 140.f;
 		//spiderPos.y = 220.f;
 		m_vdir = mSpider->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-		m_vdir.y += 0.03f;
+		m_vdir.y += 0.08f;
 
 		Vec3 m_vInitialPos = spiderPos - m_vdir * 150.f + mOffset;
 		
@@ -60,6 +60,8 @@ void CM_Spider_Proj_Script::BeginOverlap(CCollider3D* _Other)
 		info.ShooterPos = GetOwner()->GetReserver()->Transform()->GetRelativePos();
 		_Other->GetOwner()->GetScript<CC_FSMScript>()->GiveAtkInfo(info);
 	}
+
+	GetOwner()->RigidBody()->SetSleep(true);
 
 	//폭발이펙트 오브젝트생성
 	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Spider_Proj_Explosion.pref", L"prefab\\Spider_Proj_Explosion.pref");
