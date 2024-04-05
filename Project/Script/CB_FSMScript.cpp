@@ -2,6 +2,7 @@
 #include "CB_FSMScript.h"
 #include "CB_STATEDamagedScript.h"
 #include <Engine\Physics.h>
+#include <random>
 
 CB_FSMScript::CB_FSMScript()
 	: m_bPlaying(false)
@@ -192,6 +193,32 @@ CB_FSMScript::eBossMoveDir CB_FSMScript::RandomDir()
 	B_MoveDir = static_cast<eBossMoveDir>(rand() % static_cast<UINT>(eBossMoveDir::END));
 
 	return eBossMoveDir();
+}
+
+void CB_FSMScript::RandomStance_Melee_WithoutEvade()
+{
+
+	std::random_device rd;
+	std::mt19937_64 gen(rd());
+	std::uniform_int_distribution<int> distribution(0, 1);
+
+	m_eWeapon_Stance = (eBossStance_Weapon)distribution(gen);
+	//SetStance_Weapon(m_eWeapon_Stance);
+
+}
+
+CB_FSMScript::eBossStance_Weapon CB_FSMScript::RandomStance_Melee()
+{
+	m_eWeapon_Stance =
+		static_cast<eBossStance_Weapon>(rand() % static_cast<UINT>(eBossStance_Weapon::END));
+
+	if (m_eWeapon_Stance == eBossStance_Weapon::BLOOD_DRINK_START
+		|| m_eWeapon_Stance == eBossStance_Weapon::BLOOD_DRINK_LOOP
+		|| m_eWeapon_Stance == eBossStance_Weapon::BLOOD_DRINK_END
+		|| m_eWeapon_Stance == eBossStance_Weapon::FAST_WALK)
+		return RandomStance_Melee();
+
+	return m_eWeapon_Stance;
 }
 
 

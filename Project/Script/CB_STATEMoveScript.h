@@ -25,7 +25,6 @@ private:
 
 	bool        m_IsPhase_1;
 	bool        m_GetWeapon;
-	bool        m_OnceEvade;
 
 	bool        m_OnceSpawnSpell;
 	bool        m_OnceSpawnSpellUp;
@@ -48,7 +47,6 @@ private:
 
 
 	bool        m_bBloodDrink;
-	bool        m_bOnEvade;
 
 
 	int         m_DirSetCount;
@@ -104,10 +102,12 @@ private:
 	//GetBack
 	int        m_iGetBackStage;
 
-	bool mKey;
+	bool		mKey;
 	bool       m_bEnterDistCheck;
 
 	float      m_fTime;
+
+	bool bWeaponStateCheck;
 
 
 public:
@@ -120,10 +120,6 @@ public:
 	void Weapon_StanceEvent();
 
 	void FastWalk_End();
-	void Evade_End();
-
-	void Evade_MoveZero();
-	void Evade_MoveRestore();
 	int ZeroToOneRandom();
 
 
@@ -155,6 +151,8 @@ public:
 	void GetBack();
 	bool DistCheck();
 	void Clear();
+
+	void DecidePattern();
 
 public:
 	CLONE(CB_STATEMoveScript);

@@ -79,10 +79,10 @@ public:
 
     enum class eBossStance_Weapon
     {
-        FAST_WALK, // 1페이즈
-        EVADE,
         MELEE_ATK,
         AOE,
+        EVADE,
+        FAST_WALK, // 1페이즈
         BLOOD_DRINK_START,
         BLOOD_DRINK_LOOP,
         BLOOD_DRINK_END,
@@ -155,6 +155,10 @@ public:
 
     eBossMoveDir RandomDir_SomeExclude(); // 안씀
     eBossMoveDir RandomDir();
+
+
+    void RandomStance_Melee_WithoutEvade();
+    eBossStance_Weapon RandomStance_Melee();
 
     void Phase1_AnimEnd();
     void BoneRigidbody_Check();

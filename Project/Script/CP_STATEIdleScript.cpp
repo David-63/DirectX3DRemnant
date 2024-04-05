@@ -18,7 +18,7 @@ void CP_STATEIdleScript::tick()
 {
 	// 정지상태 확인
 	if (Vec2(0, 0) != *m_PlayerMoveDir)
-		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MOVE));
+		m_PHQ->ChangeState(static_cast<UINT>(eP_States::MELEE));
 
 }
 

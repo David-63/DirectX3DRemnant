@@ -114,10 +114,10 @@ void CreateTestLevel()
 
 	// ========== 몬스터 
 
-		//Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.fbx");
-		/*CGameObject* obj = data->Instantiate();
-		obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.animclip");
-		obj->SetName(L"TestObj");*/
+	//	Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.fbx");
+	//	/*CGameObject* obj = data->Instantiate();
+	//	obj->Animator3D()->SimpleGen(L"animclip\\Lurker\\Wasteland_Lurker_Atk_Slash_R_Combo.animclip");
+	//	obj->SetName(L"TestObj");*/
 
 	//Ptr<CMeshData> pMeshData = nullptr;
 	//CGameObject* player = nullptr;
@@ -445,6 +445,9 @@ void CreateTestLevel()
 
 	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
 
+
+
+	// 캐릭터
 	{
 		CGameObject* pObj = new CGameObject;
 		pObj->SetName(L"test Obj");
@@ -505,7 +508,7 @@ void CreateTestLevel()
 		player->RigidBody()->PushBackShapeInfo(info);
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.CollideType = (UINT)COLLIDE_TYPE::Monster;
-		info.size = Vector3(200.f, 200.f, 200.f); // 사이즈는 수동으로 조절
+		info.size = Vector3(100.f, 100.f, 200.f); // 사이즈는 수동으로 조절
 		player->RigidBody()->PushBackShapeInfo(info);
 		info.eGeomType = GEOMETRY_TYPE::Sphere;
 		info.CollideType = (UINT)COLLIDE_TYPE::Monster;

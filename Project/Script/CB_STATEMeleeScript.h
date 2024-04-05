@@ -8,8 +8,9 @@ private:
     //common
 
     CGameObject* m_AOE_Circle;
+    CGameObject* m_AOE_Fog;
     bool    m_bSpawnCircleSpell;
-    bool    m_bAttack;
+    bool    m_bSpawnFog;
     bool    m_bAtkComplete;
     bool    m_bAnimOnce;
     float   m_fSpeed;
@@ -24,6 +25,15 @@ private:
     UINT    m_iAttackType;
 
 
+
+    float m_fCurForce;
+    float m_fPrevForce; // Force값 저장해두는 백업용
+    Vec3 m_vPlayerPos;
+    bool m_bStorePlayerPos;
+    void EvadeMove();
+
+
+
 public:
     virtual void begin() override;
 
@@ -35,7 +45,7 @@ public:
 public:
     UINT MeleeAttackRandom();
     UINT AttackTypeRandom();
-    void DistCheck();
+    bool DistCheck();
 
     void AttackBoxOn();
     void AttackBoxOn2();
@@ -44,6 +54,7 @@ public:
     void AttackBoxOn5();
     void AttackBoxOn6();
     void AOE_AttackBoxOn();
+    
 
     void AttackBoxOff();
     void AttackBoxOff2();
@@ -54,11 +65,18 @@ public:
     void AOE_AttackBoxOff();
 
     void AttackEnd();
+    void AOE_End();
     void PlayerToRotate();
     void SpawnSpell();
     void SpawnSpellGravity();
     void SpawnSpellOff();
 
+
+    void EvadeEnd();
+    void Evade_MoveZero();
+    void Evade_MoveRestore();
+
+    int ZeroToOneRandom();
 
 
 

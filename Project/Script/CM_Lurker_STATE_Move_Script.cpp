@@ -388,7 +388,7 @@ void CM_Lurker_STATE_Move_Script::RenewPath()
 void CM_Lurker_STATE_Move_Script::DecidePattern()
 {
 	float dist = DistBetwPlayer();
-	if (dist > 450.f)
+	if (dist > 450.f) // ´ë½¬ 
 	{
 		std::random_device rd;
 		std::mt19937_64 gen(rd());

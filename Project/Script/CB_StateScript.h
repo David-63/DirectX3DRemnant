@@ -23,8 +23,6 @@ class CB_StateScript :
 protected:
 	CB_FSMScript*	m_BHQ;
 	float           m_ratio;
-	
-private:
 	eB_States		m_BStateType;
 
 public:
