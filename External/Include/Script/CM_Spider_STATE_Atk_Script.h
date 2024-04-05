@@ -24,6 +24,8 @@ private:
 	//Push
 	bool			 m_bPushOnce;
 
+	Ptr<CSound>		 m_Sound;
+
 private:
 	void SetDelayStart() { m_bdelayStart = true; }
 

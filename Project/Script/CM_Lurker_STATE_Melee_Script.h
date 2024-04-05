@@ -21,6 +21,7 @@ private:
 	//Slash
 	bool			 m_bSlashOnce;
 	
+	Ptr<CSound>      m_Sound;
 
 public:
 	virtual void tick() override;
