@@ -273,6 +273,10 @@ void CM_Lurker_STATE_Melee_Script::Enter()
 
 void CM_Lurker_STATE_Melee_Script::Exit()
 {
+	m_bAtkComplete = false;
+	m_bDashOnce = false;
+	m_bHeavyOnce = false;
+	m_bSlashOnce = false;
 }
 
 
