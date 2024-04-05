@@ -79,10 +79,10 @@ public:
 
     enum class eBossStance_Weapon
     {
-        FAST_WALK, // 1페이즈
-        EVADE,
         MELEE_ATK,
         AOE,
+        EVADE,
+        FAST_WALK, // 1페이즈
         BLOOD_DRINK_START,
         BLOOD_DRINK_LOOP,
         BLOOD_DRINK_END,
@@ -142,7 +142,7 @@ public:
     tB_Info GetBossInfo() { return m_tBossInfo; }
 
     void SetStance_NoWeapon(eBossStance_NoWeapon _e) { m_eNoWeapon_Stance = _e; }
-    eBossStance_NoWeapon GetStance_NoWeapon() { return m_eNoWeapon_Stance;  }
+    eBossStance_NoWeapon GetStance_NoWeapon() { return m_eNoWeapon_Stance; }
 
     void SetStance_Weapon(eBossStance_Weapon _e) { m_eWeapon_Stance = _e; }
     eBossStance_Weapon GetStance_Weapon() { return m_eWeapon_Stance; }
@@ -156,7 +156,12 @@ public:
     eBossMoveDir RandomDir_SomeExclude(); // 안씀
     eBossMoveDir RandomDir();
 
+
+    void RandomStance_Melee_WithoutEvade();
+    eBossStance_Weapon RandomStance_Melee();
+
     void Phase1_AnimEnd();
+    void BoneRigidbody_Check();
 
 
 
