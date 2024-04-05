@@ -3,6 +3,8 @@
 #include "CM_Lurker_FSMScript.h"
 #include "Engine/func.h"
 #include "CHitBoxScript.h"
+#include "Engine/CResMgr.h"
+#include "Engine/CSound.h"
 
 
 CM_Lurker_STATE_Melee_Script::CM_Lurker_STATE_Melee_Script()
@@ -70,6 +72,9 @@ void CM_Lurker_STATE_Melee_Script::begin()
 	info3.ShooterPos = ShooterPos;
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->MakeHitBox(false, Vec3(180.f, 50.f, 30.f), Vec3(-20.f, 100.f, -160.f), info3);
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(3);
+
+	m_Sound = CResMgr::GetInst()->FindRes<CSound>(L"sound\\Lurker\\Lurker_Whoosh_Low_02.wav");
+
 }
 
 void CM_Lurker_STATE_Melee_Script::tick()
@@ -99,6 +104,7 @@ void CM_Lurker_STATE_Melee_Script::Dash()
 {
 	if (!m_bDashOnce)
 	{
+		m_Sound->Play(1, 0.5f, false);
 		m_MHQ->Animator3D()->Play(Lurker_Dash, false);
 		m_fSpeed = 300.f;
 		m_vAtkDir = -GetMyFront();
@@ -143,6 +149,7 @@ void CM_Lurker_STATE_Melee_Script::Heavy1()
 {
 	if (!m_bHeavyOnce)
 	{
+		m_Sound->Play(1, 0.5f, false);
 		m_MHQ->Animator3D()->Play(Lurker_Heavy1, false);
 
 		m_vAtkDir = -GetMyFront();
@@ -176,6 +183,7 @@ void CM_Lurker_STATE_Melee_Script::Slash()
 {
 	if (!m_bSlashOnce)
 	{
+		m_Sound->Play(1, 0.5f, false);
 		m_MHQ->Animator3D()->Play(Lurker_SlashR, false);
 
 		m_vAtkDir = -GetMyFront();
@@ -204,6 +212,7 @@ void CM_Lurker_STATE_Melee_Script::SlashCombo()
 {
 	if (!m_bSlashOnce)
 	{
+		m_Sound->Play(1, 0.5f, false);
 		m_MHQ->Animator3D()->Play(Lurker_SlashRCombo, false);
 
 		m_vAtkDir = -GetMyFront();

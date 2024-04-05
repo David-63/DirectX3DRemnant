@@ -75,7 +75,9 @@ void CM_Spider_Proj_Script::BeginOverlap(CCollider3D* _Other)
 	proj->SetLayerIdx((UINT)LAYER_TYPE::Default);
 	SpawnGameObject(proj, curPos, L"Default");
 
-	
+	Vec3 pos = GetOwner()->Transform()->GetRelativePos();
+	pos.y += 10000.f;
+	GetOwner()->Transform()->SetRelativePos(pos);
 }
 
 void CM_Spider_Proj_Script::OnOverlap(CCollider3D* _Other)
@@ -84,5 +86,4 @@ void CM_Spider_Proj_Script::OnOverlap(CCollider3D* _Other)
 
 void CM_Spider_Proj_Script::EndOverlap(CCollider3D* _Other)
 {
-	//DestroyObject(GetOwner());
 }
