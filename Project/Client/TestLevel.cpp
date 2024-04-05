@@ -155,11 +155,6 @@ void CreateTestLevel()
 		pGround->RigidBody()->PushBackShapeInfo(info);
 		pGround->RigidBody()->SetPhysical(ACTOR_TYPE::Static);
 
-		pGround->AddComponent(new CMeshRender);
-		Ptr<CMesh> mesh = CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh_Debug");
-		Ptr<CMaterial> mater = CResMgr::GetInst()->FindRes<CMaterial>(L"DebugShapeMtrl");
-		pGround->MeshRender()->SetMesh(mesh);
-		pGround->MeshRender()->SetMaterial(mater, 0);
 
 		SpawnGameObject(pGround, Vec3(0.f, -500.f, 0.f), (UINT)LAYER_TYPE::Ground);
 	}

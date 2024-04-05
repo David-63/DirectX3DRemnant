@@ -84,7 +84,9 @@ void CEditorObjMgr::progress()
 
 	tick();
 
-	render();
+	m_DebugShapeInfo.clear();
+	m_vecEditorObj.clear();
+	//render();
 }
 
 
