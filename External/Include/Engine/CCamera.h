@@ -5,7 +5,7 @@
 class CCamera : public CComponent
 {
 private:
-    CFrustum                m_Frustum;
+    //CFrustum                m_Frustum;
     tRay                    m_ray;              // 마우스 방향을 향하는 직선
     int                     m_iCamIdx;          // 카메라 우선순위
     PROJ_TYPE               m_ProjType;
@@ -16,6 +16,7 @@ private:
     float                   m_Fov;
     float                   m_OrthoWidth;
     float                   m_OrthoHeight;
+    bool                    m_uiOnly;
 
     Matrix                  m_matView;
     Matrix                  m_matViewInv;
@@ -44,6 +45,7 @@ private:
 public:
     void SetProjType(PROJ_TYPE _Type) { m_ProjType = _Type; }
     PROJ_TYPE GetProjType() { return m_ProjType; }
+    void SetUIOnly(bool _able = true) { m_uiOnly = _able; }
 
     void SetScale(float _fScale) { m_fScale = _fScale; }
     float GetScale() { return m_fScale; }

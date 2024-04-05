@@ -22,6 +22,8 @@ void CP_FSMScript::begin()
 	initState();
 	initAnim();
 	initWeapon();
+	RigidBody()->SetShapeLocalPos(1, Vec3(0, 140, 0));
+	RigidBody()->SetShapeLocalPos(2, Vec3(0, 90, 0));
 
 	PlayAnimation(P_R2Idle, true);
 	ChangeState(static_cast<UINT>(eP_States::IDLE));	
@@ -40,8 +42,7 @@ void CP_FSMScript::tick()
 	// 마우스를 잠구면 멈추는 로직
 	if (m_TogleInput[(UINT)eInpStance::Mouse])
 	{
-		inputStance();				// 플레이어의 상태및 자세를 변경시키는 입력을 감지		
-		colliderUpdate();			// 충돌체의 위치를 갱신
+		inputStance();				// 플레이어의 상태및 자세를 변경시키는 입력을 감지
 	}
 }
 
@@ -97,6 +98,7 @@ void CP_FSMScript::initAnim()
 	
 		
 	Animator3D()->CompleteEvent(P_R2Fire) = std::bind(&CP_FSMScript::AfterCallAnim, this);
+
 	Animator3D()->CompleteEvent(P_R2Reload) = std::bind(&CP_FSMScript::GotoIdle, this);
 	Animator3D()->CompleteEvent(P_R2ReloadCrouch) = std::bind(&CP_FSMScript::GotoIdle, this);
 
@@ -122,10 +124,14 @@ void CP_FSMScript::initWeapon()
 	GetOwner()->AddChild(weapon);
 
 
-	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_FixMuzzleFlash.pref", L"prefab\\P_FixMuzzleFlash.pref");
-	fab->PrefabLoad(L"prefab\\P_FixMuzzleFlash.pref");
-	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(13.f, 172.f, 108.f), 1);
+	Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\P_MuzzleFlashLight.pref", L"prefab\\P_MuzzleFlashLight.pref");
+	fab->PrefabLoad(L"prefab\\P_MuzzleFlashLight.pref");
+	m_MuzzleFlash = fab.Get()->Instantiate(Vec3(25.f, 172.f, 250.f), 1);
 	m_MuzzleFlash->SetName(L"P_MuzzleFlash");
+	m_MuzzleFlash->Transform()->SetDebugSphereUse(false);
+	m_MuzzleFlash->Light3D()->SetActiveLight(false);
+	m_MuzzleFlash->Light3D()->SetRadius(2000);
+	m_MuzzleFlash->Light3D()->SetLightAmbient(Vec3(0.3f, 0.2f, 0.1f));
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_MuzzleFlash, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(m_MuzzleFlash);
 	tParticleModule ModuleData = m_MuzzleFlash->ParticleSystem()->GetModuleData();
@@ -137,6 +143,7 @@ void CP_FSMScript::initWeapon()
 	fab->PrefabLoad(L"prefab\\P_FixBullet.pref");
 	m_Bullet = fab.Get()->Instantiate(Vec3(5.f, 152.f, 110.f), 1);
 	m_Bullet->SetName(L"P_Bullet");
+	m_Bullet->Transform()->SetDebugSphereUse(false);
 	CLevelMgr::GetInst()->GetCurLevel()->AddGameObject(m_Bullet, (UINT)LAYER_TYPE::Player, true);
 	GetOwner()->AddChild(m_Bullet);
 	ModuleData = m_Bullet->ParticleSystem()->GetModuleData();
@@ -288,29 +295,6 @@ void CP_FSMScript::inputStance()
 		}
 	}
 }
-void CP_FSMScript::colliderUpdate()
-{
-	PxTransform retTransform;
-	Matrix ownerMat = Transform()->GetWorldMat();
-
-	Matrix retBoneMat = Animator3D()->GetBoneMatrix(46);
-	Matrix totalMat = retBoneMat * ownerMat;
-	Vec3 retPos = totalMat.Translation();
-	Vec4 retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
-	retTransform.p = { retPos.x, retPos.y, retPos.z };
-	retTransform.q = { retRot.x, retRot.y, retRot.z, retRot.w };
-
-	RigidBody()->SetShapeLocalPxTransform(1, retTransform);
-
-
-	retBoneMat = Animator3D()->GetBoneMatrix(10);
-	totalMat = retBoneMat * ownerMat;
-	retPos = totalMat.Translation();
-	retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
-	retTransform.p = { retPos.x, retPos.y, retPos.z };
-	retTransform.q = { retRot.x, retRot.y, retRot.z, retRot.w };
-	RigidBody()->SetShapeLocalPxTransform(2, retTransform);
-}
 
 void CP_FSMScript::PlayAnimation(wstring _name, bool _repeat)
 {
@@ -380,7 +364,6 @@ void CP_FSMScript::GotoMove()
 
 void CP_FSMScript::BeginOverlap(CCollider3D* _Other)
 {
-
 }
 
 void CP_FSMScript::OnOverlap(CCollider3D* _Other)

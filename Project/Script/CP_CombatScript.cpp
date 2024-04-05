@@ -3,7 +3,7 @@
 #include "CP_CombatScript.h"
 #include "CP_FSMScript.h"
 
-CP_CombatScript::CP_CombatScript() : CScript((UINT)SCRIPT_TYPE::P_COMBATSCRIPT)
+CP_CombatScript::CP_CombatScript() : CScript((UINT)SCRIPT_TYPE::P_COMBATSCRIPT), m_PHQ(nullptr), m_lightLife(0.1f)
 {
 }
 
@@ -27,15 +27,26 @@ void CP_CombatScript::tick()
 			m_PHQ->GetLongGunInfo()->ReadyToFire.Activate();
 	}
 
+	if (m_lightLife.IsActivate())
+	{
+		m_lightLife.curTime += ScaleDT;
+		if (m_lightLife.IsFinish())
+		{
+			m_lightLife.ResetTime();
+			m_PHQ->GetMuzzelFlash()->Light3D()->SetActiveLight(false);
+		}
+	}
+
 	if (m_PHQ->GetAtkSign())
 	{
 		tHitInfo info = m_PHQ->GetHitInfo();
-
+		CGameObject* enemyObj = info.Shooter->GetReserver();
+		Vec3 enemyPos = enemyObj->Transform()->GetRelativePos();
 		// 방향 찾기
 		Vec3 ownerPos = m_PHQ->Transform()->GetRelativePos();
 		Vec3 ownerFrontDir = m_PHQ->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
 
-		Vec2 m_Location = Vec2(info.ShooterPos.x, info.ShooterPos.z);
+		Vec2 m_Location = Vec2(enemyPos.x, enemyPos.z);
 		Vec2 p_Location = Vec2(ownerPos.x, ownerPos.z);
 		Vec2 hitDir = p_Location - m_Location;
 		hitDir.Normalize();
@@ -68,7 +79,8 @@ void CP_CombatScript::tick()
 				if (m_PHQ->GetLongGunInfo()->Fire())
 				{
 					m_PHQ->PlayAnimation(P_R2Fire, false);
-
+					m_PHQ->GetMuzzelFlash()->Light3D()->SetActiveLight(true);
+					m_lightLife.Activate();
 					CParticleSystem* particle = m_PHQ->GetBullet()->ParticleSystem();
 					tParticleModule ModuleData = particle->GetModuleData();
 					ModuleData.bDead = false;
@@ -93,8 +105,5 @@ void CP_CombatScript::tick()
 
 		}
 	}
-	// 플레이어의 공격 기능을 여기에 추가
-
-	// 플레이어의 피격 기능을 여기에 추가
 }
 

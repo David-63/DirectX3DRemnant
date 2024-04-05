@@ -57,7 +57,7 @@ void CP_STATEMoveScript::moveVelocity()
 		|| ePlayerStance::Aim == *m_PlayerStance)
 		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 0.35f;
 	else if (ePlayerStance::Sprint == *m_PlayerStance && m_PHQ->IsFrontDir())
-		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 2.f;
+		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT * 1.75f;
 	else
 		moveMagnitude = m_PlayerInfo->P_Stat.MoveSpeed * ScaleDT;
 

@@ -26,7 +26,7 @@
 
 CCamera::CCamera()
 	: CComponent(COMPONENT_TYPE::CAMERA)
-	, m_Frustum(this)
+	//, m_Frustum(this)
 	, m_fAspectRatio(1.f)
 	, m_fScale(1.f)
 	, m_Far(10000.f)
@@ -47,7 +47,7 @@ CCamera::CCamera()
 
 CCamera::CCamera(const CCamera& _Other)
 	: CComponent(_Other)
-	, m_Frustum(this)
+	//, m_Frustum(this)
 	, m_fAspectRatio(_Other.m_fAspectRatio)
 	, m_fScale(_Other.m_fScale)
 	, m_Far(_Other.m_Far)
@@ -84,7 +84,7 @@ void CCamera::finaltick()
 	CalcViewMat();
 
 	CalcProjMat();
-	m_Frustum.finaltick();
+	//m_Frustum.finaltick();
 	CalRay();
 }
 
@@ -220,9 +220,9 @@ void CCamera::SortObject()
 
 				Vec3 objPos = vecObject[objIdx]->Transform()->GetWorldPos();
 				float radius = vecObject[objIdx]->Transform()->GetSphereRadius();
-				if (pRenderCom->IsUseFrustumCheck()
+				/*if (pRenderCom->IsUseFrustumCheck()
 					&& false == m_Frustum.FrustumCheckBound(objPos, radius))
-					continue;
+					continue;*/
 
 				// 머티리얼 수 만큼 반복
 				UINT iMtrlCount = pRenderCom->GetMtrlCount();
@@ -335,9 +335,9 @@ void CCamera::SortObject_Shadow()
 
 				Vec3 objPos = vecObject[objIdx]->Transform()->GetWorldPos();
 				float radius = vecObject[objIdx]->Transform()->GetSphereRadius();
-				if (pRenderCom->IsUseFrustumCheck()
+				/*if (pRenderCom->IsUseFrustumCheck()
 					&& false == m_Frustum.FrustumCheckBound(objPos, radius))
-					continue;
+					continue;*/
 
 				if (!pRenderCom->IsDynamicShadow())
 					continue;
@@ -405,13 +405,15 @@ void CCamera::SortObject_Shadow()
 
 void CCamera::render()
 {
-	geometryRender();	// deferred render	| MRT::DEFERRED rendering
-	lightRender();		// light render		| MRT::LIGHT	rendering
-	mergeRender();		//					| MRT::SWAPCHAINrendering
-
-	render_forward();	
-	render_forward_Decal();
-	render_transparent();
+	if (!m_uiOnly)
+	{
+		geometryRender();	// deferred render	| MRT::DEFERRED rendering
+		lightRender();		// light render		| MRT::LIGHT	rendering
+		mergeRender();		//					| MRT::SWAPCHAINrendering
+		render_forward();
+		render_forward_Decal();
+		render_transparent();
+	}
 
 	render_postprocess();
 	render_ui();
@@ -784,7 +786,6 @@ void CCamera::render_forward_Decal()
 void CCamera::geometryRender()
 {
 
-
 	CRenderMgr::GetInst()->GetMRT(MRT_TYPE::DEFERRED)->OMSet(true);
 	render_deferred();
 
@@ -856,7 +857,7 @@ void CCamera::render_ui()
 
 void CCamera::SaveToLevelFile(FILE* _File)
 {
-	fwrite(&m_Frustum, sizeof(CFrustum), 1, _File);
+	//fwrite(&m_Frustum, sizeof(CFrustum), 1, _File);
 	fwrite(&m_ray, sizeof(tRay), 1, _File);
 	fwrite(&m_iCamIdx, sizeof(int), 1, _File);
 	fwrite(&m_ProjType, sizeof(UINT), 1, _File);
@@ -871,8 +872,8 @@ void CCamera::SaveToLevelFile(FILE* _File)
 
 void CCamera::LoadFromLevelFile(FILE* _File)
 {
-	fread(&m_Frustum, sizeof(CFrustum), 1, _File);
-	m_Frustum.SetCamera(this);
+	//fread(&m_Frustum, sizeof(CFrustum), 1, _File);
+	//m_Frustum.SetCamera(this);
 	fread(&m_ray, sizeof(tRay), 1, _File);
 	fread(&m_iCamIdx, sizeof(int), 1, _File);
 	fread(&m_ProjType, sizeof(UINT), 1, _File);
