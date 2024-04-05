@@ -81,7 +81,9 @@ void CreateTestLevel()
 	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
-	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
+	pUICam->Camera()->SetUIOnly();
+	pUICam->Camera()->SetFar(20000.f);
+	SpawnGameObject(pUICam, Vec3(19.f, -46.f, -500.f), 0);
 
 
 	//
@@ -118,6 +120,20 @@ void CreateTestLevel()
 		SpawnGameObject(pLightObj, Vec3(-2000, 2000.f, -2000.f), 0);
 	}
 
+	{
+		CGameObject* pObject = new CGameObject;
+		pObject->SetName(L"CrossHair");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
+
+		pObject->Transform()->SetRelativeScale(Vec3(45.f, 45.f, 1.f));
+
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DUIMtrl"), 0);
+		pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\aim2.png"));
+
+		SpawnGameObject(pObject, Vec3(19.f, -46.f, -500.f), L"ViewPort UI");
+	}
 
 	// Test obj
 	/*{
@@ -987,13 +1003,13 @@ void CreateTestLevel()
 		{
 			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Spider.pref", L"prefab\\Monster_Spider.pref");
 			fab->PrefabLoad(L"prefab\\Monster_Spider.pref");
-			CGameObject* obj = fab->Instantiate(Vec3(-46.f, 0.f, 1209.f), (UINT)LAYER_TYPE::Monster);
+			CGameObject* obj = fab->Instantiate(Vec3(-46.f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
 			fab->FabClear();
 			obj->SetName(L"Spider");
 			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
 
 
-			SpawnGameObject(obj, Vec3(-46.f, 0.f, 1209.f), (UINT)LAYER_TYPE::Monster);
+			SpawnGameObject(obj, Vec3(-46.f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
 		}
 		{
 			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Spider.pref", L"prefab\\Monster_Spider.pref");
