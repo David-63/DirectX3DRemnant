@@ -26,7 +26,10 @@ void CP_FSMScript::begin()
 	RigidBody()->SetShapeLocalPos(2, Vec3(0, 90, 0));
 
 	PlayAnimation(P_R2Idle, true);
-	ChangeState(static_cast<UINT>(eP_States::IDLE));	
+	ChangeState(static_cast<UINT>(eP_States::IDLE));
+	Ptr<CSound> sound = CResMgr::GetInst()->FindRes<CSound>(L"sound\\Mus_Wasteland_Citadel_Action_Loop.wav");
+	sound->Play(0, 0.9f);
+	;
 }
 
 void CP_FSMScript::tick()
@@ -292,6 +295,8 @@ void CP_FSMScript::inputStance()
 				InputAim();
 			InputSprint(false);
 			ChangeState(static_cast<UINT>(eP_States::RELOAD));
+			Ptr<CSound> sound = CResMgr::GetInst()->FindRes<CSound>(L"sound\\Gun_Foley_2H_Draw_02.wav");
+			sound->Play(1, 0.6f);
 		}
 	}
 }

@@ -79,6 +79,8 @@ void CP_CombatScript::tick()
 				m_PHQ->GetLongGunInfo()->ReadyToFire.ResetTime();
 				if (m_PHQ->GetLongGunInfo()->Fire())
 				{
+					Ptr<CSound> sound = CResMgr::GetInst()->FindRes<CSound>(L"sound\\Assault_Rifle_Fire_01.wav");
+					sound->Play(1, 0.3f, true);
 					m_PHQ->PlayAnimation(P_R2Fire, false);
 					m_PHQ->GetMuzzelFlash()->Light3D()->SetActiveLight(true);
 					m_lightLife.Activate();

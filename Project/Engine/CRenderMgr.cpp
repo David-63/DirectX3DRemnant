@@ -83,6 +83,8 @@ void CRenderMgr::render_play()
 
         m_vecCam[i]->render();
     }
+
+    m_vecCam[0]->updateMatrix();
 }
 
 void CRenderMgr::render_editor()
