@@ -19,6 +19,8 @@ private:
 	int m_iEmergeStage;
 
 	bool mKey;
+	int  m_iAniCount;
+	bool m_bStopOnce;
 
 public:
 	virtual void tick() override;
@@ -27,6 +29,7 @@ public:
 public:
 	void ClearIdleState() {}
 	void SetInitialPose(UINT _pose); 
+	void AniStop();
 
 private:
 	void InitialPose();

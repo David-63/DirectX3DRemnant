@@ -446,7 +446,7 @@ void CFBXLoader::LoadTexture()
 					copy(path_origin, path_dest);
 				}
 
-				path_dest = GetRelativePath(CPathMgr::GetInst()->GetContentPath(), path_dest);
+			path_dest = GetRelativePath(CPathMgr::GetInst()->GetContentPath(), path_dest);
 				CResMgr::GetInst()->Load<CTexture>(path_dest, path_dest);
 
 				switch (k)

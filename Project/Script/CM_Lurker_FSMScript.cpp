@@ -2,6 +2,7 @@
 #include "CM_Lurker_FSMScript.h"
 #include "CM_Lurker_StatesScript.h"
 #include "CM_Lurker_STATE_Damaged_Script.h"
+#include "CM_Lurker_STATE_Idle_Script.h"
 
 CM_Lurker_FSMScript::CM_Lurker_FSMScript()
 {
@@ -53,6 +54,8 @@ void CM_Lurker_FSMScript::begin()
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_DAMAGED_SCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_DEAD_SCRIPT)));
 
+	dynamic_cast<CM_Lurker_STATE_Idle_Script*>(FindStateScript(0))->SetInitialPose(m_IdlePose);
+
 
 	ChangeState(static_cast<UINT>(eLurkerState::Idle));
 	//ChangeState(static_cast<UINT>(eLurkerState::Move));
@@ -90,7 +93,7 @@ void CM_Lurker_FSMScript::tick()
 		//부위에 따른 피격효과 
 		OwnerPos = GetOwner()->Transform()->GetRelativePos();
 		if (OwnerPos.y + 122.f <= info.HitPos.y && info.HitPos.y <= OwnerPos.y + 140.f
-			&& OwnerPos.x - 8.f <= info.HitPos.x && info.HitPos.x <= OwnerPos.x + 8.f)
+			&& OwnerPos.x - 20.f <= info.HitPos.x && info.HitPos.x <= OwnerPos.x + 20.f)
 		{
 			dynamic_cast<CM_Lurker_STATE_Damaged_Script*>(FindStateScript((UINT)eM_States::DAMAGED))->SetPart(4);
 		}

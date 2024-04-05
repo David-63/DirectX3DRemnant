@@ -12,7 +12,6 @@ public:
 	   Move,
 	   Damaged,
 	   Dead,
-
 	};
 
 	struct tMonsterStat
@@ -30,6 +29,7 @@ public:
 
 private:
 	tM_Info      m_tMonsterInfo;
+	UINT         m_IdlePose;
 
 
 public:
@@ -40,6 +40,9 @@ public:
 	virtual void BeginOverlap(CCollider3D* _Other) override;
 	virtual void OnOverlap(CCollider3D* _Other) override;
 	virtual void EndOverlap(CCollider3D* _Other) override;
+
+public:
+	void SetIdlePose(UINT _pose) { m_IdlePose = _pose; }
 
 private:
 	void DeathCheck();

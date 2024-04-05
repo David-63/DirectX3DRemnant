@@ -21,12 +21,10 @@ void CColCallBack::onContact(const PxContactPairHeader& pairHeader, const PxCont
 
                 if (nullptr != pContact && nullptr != pOther)
                 {
-                    if (pContact->Collider3D())
-                        pContact->Collider3D()->OnCollisionEnter(pOther->Collider3D());
-
-                    if (pOther->Collider3D())
+                    if (pContact->Collider3D() && pOther->Collider3D())
                     {
-                        pOther->Collider3D()->OnCollisionEnter(pContact->Collider3D());
+                        pContact->Collider3D()->OnTriggerEnter(pOther->Collider3D());
+                        pOther->Collider3D()->OnTriggerEnter(pContact->Collider3D());
                     }
                 }
             }
@@ -37,35 +35,34 @@ void CColCallBack::onContact(const PxContactPairHeader& pairHeader, const PxCont
             if (pairHeader.actors[0]->userData && pairHeader.actors[1]->userData)
             {
                 CGameObject* pContact = static_cast<CGameObject*>(pairHeader.actors[0]->userData);
-                CGameObject* pOther = static_cast<CGameObject*>(pairHeader.actors[1]->userData);
+				CGameObject* pOther = static_cast<CGameObject*>(pairHeader.actors[1]->userData);
 
-                if (nullptr != pContact && nullptr != pOther)
-                {
-                    if (pOther->Collider3D())
-                    {
-                        pOther->Collider3D()->OnCollisionStay(pContact->Collider3D());
 
-                        //if (pOther->Collider3D()->GetType() == COLLIDER3D_TYPE::Wall 
-                        //    && pContact->Collider3D()->GetType() == COLLIDER3D_TYPE::Player)
-                        //{
-                        //
-						//	const PxU32 count = cp.contactCount;
-						//	PxContactPairPoint point;
-						//	cp.extractContacts(&point, count);
-						//	PxVec3 normal = point.normal;
-                        //    //AssertEx(normal == PxVec3(0.f,0.f,0.f), L"Wall충돌면의 normal을 받아오지 못함.");
-						//	Vec3 vec = { normal.x, normal.y, normal.z };
-                        //    
-                        //    pOther->Collider3D()->SetOhterNormal(vec);
-                        //}
-                    }
+				if (nullptr != pContact && nullptr != pOther)
+				{
+					if (pContact->Collider3D() && pOther->Collider3D())
+					{
+						pContact->Collider3D()->OnTriggerEnter(pOther->Collider3D());
+						pOther->Collider3D()->OnTriggerEnter(pContact->Collider3D());
+					}
+				}
 
-                    if (pContact->Collider3D())
-                        pContact->Collider3D()->OnCollisionStay(pOther->Collider3D());
+				//if (pOther->Collider3D()->GetType() == COLLIDER3D_TYPE::Wall 
+				//    && pContact->Collider3D()->GetType() == COLLIDER3D_TYPE::Player)
+				//{
+				//
+				//	const PxU32 count = cp.contactCount;
+				//	PxContactPairPoint point;
+				//	cp.extractContacts(&point, count);
+				//	PxVec3 normal = point.normal;
+				//    //AssertEx(normal == PxVec3(0.f,0.f,0.f), L"Wall충돌면의 normal을 받아오지 못함.");
+				//	Vec3 vec = { normal.x, normal.y, normal.z };
+				//    
+				//    pOther->Collider3D()->SetOhterNormal(vec);
+				//}
 
-                }
-            }
-        }
+			}
+		}
 
         else if (cp.events & PxPairFlag::eNOTIFY_TOUCH_LOST)
         {
@@ -76,12 +73,10 @@ void CColCallBack::onContact(const PxContactPairHeader& pairHeader, const PxCont
 
                 if (nullptr != pContact && nullptr != pOther)
                 {
-                    if (pContact->Collider3D())
-                        pContact->Collider3D()->OnCollisionExit(pOther->Collider3D());
-
-                    if (pOther->Collider3D())
+                    if (pContact->Collider3D() && pOther->Collider3D())
                     {
-                        pOther->Collider3D()->OnCollisionExit(pContact->Collider3D());
+                        pContact->Collider3D()->OnTriggerEnter(pOther->Collider3D());
+                        pOther->Collider3D()->OnTriggerEnter(pContact->Collider3D());
                     }
                 }
             }
@@ -104,11 +99,11 @@ void CColCallBack::onTrigger(PxTriggerPair* pairs, PxU32 count)
 
                 if (nullptr != pTrigger && nullptr != pOther)
                 {
-                    if (pTrigger->Collider3D())
+                    if (pTrigger->Collider3D() && pOther->Collider3D())
+                    {
                         pTrigger->Collider3D()->OnTriggerEnter(pOther->Collider3D());
-
-                    if (pOther->Collider3D())
                         pOther->Collider3D()->OnTriggerEnter(pTrigger->Collider3D());
+                    }
                 }
             }
         }
@@ -122,11 +117,11 @@ void CColCallBack::onTrigger(PxTriggerPair* pairs, PxU32 count)
 
                 if (nullptr != pTrigger && nullptr != pOther)
                 {
-                    if (pTrigger->Collider3D())
-                        pTrigger->Collider3D()->OnTriggerExit(pOther->Collider3D());
-
-                    if (pOther->Collider3D())
-                        pOther->Collider3D()->OnTriggerExit(pTrigger->Collider3D());
+                    if (pTrigger->Collider3D() && pOther->Collider3D())
+                    {
+                        pTrigger->Collider3D()->OnTriggerEnter(pOther->Collider3D());
+                        pOther->Collider3D()->OnTriggerEnter(pTrigger->Collider3D());
+                    }
                 }
 
             }

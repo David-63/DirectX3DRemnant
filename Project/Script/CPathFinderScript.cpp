@@ -289,6 +289,10 @@ void CPathFinderScript::FindPath()
 
 		// 2. Open List 에서 가장 효율이 좋은 노드를 꺼낸다.
 		//  - 해당 노드는 ClostList 에 넣는다.
+
+		if (m_OpenList.size() == 0)
+			return;
+
 		pCurNode = m_OpenList.top();
 		pCurNode->bClosed = true;
 

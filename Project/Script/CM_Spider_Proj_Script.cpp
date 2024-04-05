@@ -28,7 +28,7 @@ void CM_Spider_Proj_Script::tick()
 		spiderPos.y = 140.f;
 		//spiderPos.y = 220.f;
 		m_vdir = mSpider->Transform()->GetRelativeDir(DIR_TYPE::FRONT);
-		m_vdir.y += 0.08f;
+		m_vdir.y += 0.05f;
 
 		Vec3 m_vInitialPos = spiderPos - m_vdir * 150.f + mOffset;
 		

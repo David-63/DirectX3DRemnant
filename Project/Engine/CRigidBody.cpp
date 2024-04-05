@@ -657,11 +657,11 @@ void CRigidBody::DrawDebugMesh()
 		{
 			if (mShapeInfos[i].eGeomType == GEOMETRY_TYPE::Box)
 			{
-				DrawDebugCube(GetShapePosition(i), mShapeInfos[i].size, Vec4(0.7f, 0.0f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+				DrawDebugCube(GetShapePosition(i), mShapeInfos[i].size, Vec4(0.7f, 0.0f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, false);
 			}
 			else if (mShapeInfos[0].eGeomType == GEOMETRY_TYPE::Sphere)
 			{
-				DrawDebugSphere(GetShapePosition(i), mShapeInfos[i].size.x / 2.f, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, true);
+				DrawDebugSphere(GetShapePosition(i), mShapeInfos[i].size.x / 2.f, Vec4(0.7f, 1.f, 0.7f, 0.6f), Vec3(0.f, 0.f, 0.f), 0.f, false);
 			}
 
 		}

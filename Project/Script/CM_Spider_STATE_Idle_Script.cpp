@@ -35,7 +35,7 @@ void CM_Spider_STATE_Idle_Script::tick()
 
 	if (!m_bAlert)
 	{
-		if (DistBetwPlayer() < 1600.f)
+		if (DistBetwPlayer() < 1500.f)
 			m_bAlert = true;
 	}
 
@@ -49,8 +49,8 @@ void CM_Spider_STATE_Idle_Script::tick()
 
 void CM_Spider_STATE_Idle_Script::EmergePose()
 {
-	m_MHQ->Animator3D()->Play(Spi_Alert, true);
-	m_MHQ->GetGun()->Animator3D()->Play(SpiGun_Alert, true);
+	m_MHQ->Animator3D()->Play(Spi_Alert, false);
+	m_MHQ->GetGun()->Animator3D()->Play(SpiGun_Alert, false);
 }
 
 void CM_Spider_STATE_Idle_Script::ChangeStateChase()
@@ -61,7 +61,7 @@ void CM_Spider_STATE_Idle_Script::ChangeStateChase()
 
 void CM_Spider_STATE_Idle_Script::Enter()
 {
-	m_MHQ->Animator3D()->CompleteEvent(SpiGun_Alert) = std::bind(&CM_Spider_STATE_Idle_Script::ChangeStateChase, this);
+	m_MHQ->Animator3D()->CompleteEvent(Spi_Alert) = std::bind(&CM_Spider_STATE_Idle_Script::ChangeStateChase, this);
 
 	m_MHQ->Animator3D()->Play(Spi_IdleP, true);
 	m_MHQ->GetGun()->Animator3D()->Play(SpiGun_IdleP, true);

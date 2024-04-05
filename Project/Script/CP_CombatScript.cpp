@@ -40,7 +40,8 @@ void CP_CombatScript::tick()
 	if (m_PHQ->GetAtkSign())
 	{
 		tHitInfo info = m_PHQ->GetHitInfo();
-		CGameObject* enemyObj = info.Shooter->GetReserver();
+		CGameObject* enemyObj = info.Shooter;
+		
 		Vec3 enemyPos = enemyObj->Transform()->GetRelativePos();
 		// 방향 찾기
 		Vec3 ownerPos = m_PHQ->Transform()->GetRelativePos();
