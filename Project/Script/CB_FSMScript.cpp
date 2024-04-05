@@ -1,5 +1,8 @@
 #include "pch.h"
 #include "CB_FSMScript.h"
+#include "CB_STATEDamagedScript.h"
+#include <Engine\Physics.h>
+#include <random>
 
 CB_FSMScript::CB_FSMScript()
 	: m_bPlaying(false)
@@ -111,6 +114,22 @@ void CB_FSMScript::tick()
 {
 	CC_FSMScript::tick();
 
+	BoneRigidbody_Check();
+
+	if (GetAtkSign() && GetCurStateType() != (UINT)eB_States::DEAD)
+	{
+		tHitInfo info = GetHitInfo();
+
+		//대미지적용하기
+		m_tBossInfo.B_Health.GotDamage(info.Damage);
+
+		if (GetCurStateType() == (UINT)eB_States::DAMAGED)
+			return;
+
+
+		ChangeState((UINT)eB_States::DAMAGED);
+	}
+
 
 }
 
@@ -176,6 +195,32 @@ CB_FSMScript::eBossMoveDir CB_FSMScript::RandomDir()
 	return eBossMoveDir();
 }
 
+void CB_FSMScript::RandomStance_Melee_WithoutEvade()
+{
+
+	std::random_device rd;
+	std::mt19937_64 gen(rd());
+	std::uniform_int_distribution<int> distribution(0, 1);
+
+	m_eWeapon_Stance = (eBossStance_Weapon)distribution(gen);
+	//SetStance_Weapon(m_eWeapon_Stance);
+
+}
+
+CB_FSMScript::eBossStance_Weapon CB_FSMScript::RandomStance_Melee()
+{
+	m_eWeapon_Stance =
+		static_cast<eBossStance_Weapon>(rand() % static_cast<UINT>(eBossStance_Weapon::END));
+
+	if (m_eWeapon_Stance == eBossStance_Weapon::BLOOD_DRINK_START
+		|| m_eWeapon_Stance == eBossStance_Weapon::BLOOD_DRINK_LOOP
+		|| m_eWeapon_Stance == eBossStance_Weapon::BLOOD_DRINK_END
+		|| m_eWeapon_Stance == eBossStance_Weapon::FAST_WALK)
+		return RandomStance_Melee();
+
+	return m_eWeapon_Stance;
+}
+
 
 void CB_FSMScript::Phase1_AnimEnd()
 {
@@ -198,6 +243,46 @@ void CB_FSMScript::Phase1_AnimEnd()
 	}
 
 
+
+}
+
+void CB_FSMScript::BoneRigidbody_Check()
+{
+	//// 매 틱마다 충돌체를 뼈 위치에 옮겨주는 코드 
+	Matrix retBoneat = Animator3D()->GetBoneMatrix(57); // 번호는 매쉬 번호 뜯어서 보기 
+	Matrix ownerMat = Transform()->GetWorldMat();
+	Matrix totalMat = retBoneat * ownerMat;
+	Vec3 retPos = totalMat.Translation();
+	Vec4 retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
+
+	PxTransform retTransform;
+	retTransform.p.x = retPos.x;
+	retTransform.p.y = retPos.y;
+	retTransform.p.z = retPos.z;
+	retTransform.q.x = retRot.x;
+	retTransform.q.y = retRot.y;
+	retTransform.q.z = retRot.z;
+	retTransform.q.w = retRot.w;
+
+	RigidBody()->SetShapeLocalPxTransform(1, retTransform); // 0번은 바닥충돌용으로 쓸것이기 때문에 1번부터 하기 
+
+	// =============== 
+	retBoneat = Animator3D()->GetBoneMatrix(12); // 번호는 매쉬 번호 뜯어서 보기 
+	ownerMat = Transform()->GetWorldMat();
+	totalMat = retBoneat * ownerMat;
+	retPos = totalMat.Translation();
+	retRot = DirectX::XMQuaternionRotationMatrix(totalMat);
+
+	retTransform;
+	retTransform.p.x = retPos.x;
+	retTransform.p.y = retPos.y;
+	retTransform.p.z = retPos.z;
+	retTransform.q.x = retRot.x;
+	retTransform.q.y = retRot.y;
+	retTransform.q.z = retRot.z;
+	retTransform.q.w = retRot.w;
+
+	RigidBody()->SetShapeLocalPxTransform(2, retTransform); // 0번은 바닥충돌용으로 쓸것이기 때문에 1번부터 하기 
 
 }
 

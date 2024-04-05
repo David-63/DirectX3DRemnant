@@ -26,6 +26,7 @@ void CMonsterMoveScript::tick()
 		return;
 
 
+	// SetAndGetPath을 써야 targetOn이 설정됨.
 	if (m_bTargetOn && !m_bNearPlayer)
 		Trace();
 }

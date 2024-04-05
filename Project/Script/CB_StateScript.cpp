@@ -22,6 +22,7 @@ void CB_StateScript::begin()
 	m_BHQ = dynamic_cast<CB_FSMScript*>(m_FSMHQ);
 }
 
+
 Vec3 CB_StateScript::GetPlayerPos()
 {
 

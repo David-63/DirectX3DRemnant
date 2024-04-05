@@ -12,7 +12,7 @@ class CPathFinderMgr
 {
 	SINGLE(CPathFinderMgr);
 private:
-	const float m_fLength = 70.f;
+	const float m_fLength = 120.f;
 	const int m_iXCount = 2000;
 	const int m_iYCount = 2000;
 
