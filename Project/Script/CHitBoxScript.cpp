@@ -15,6 +15,13 @@ CHitBoxScript::CHitBoxScript()
 
 CHitBoxScript::~CHitBoxScript()
 {
+	for (CGameObject* obj : m_vGameObjects)
+	{
+		if (nullptr != obj)
+		{
+			DestroyObject(obj);
+		}
+	}
 }
 
 void CHitBoxScript::begin()

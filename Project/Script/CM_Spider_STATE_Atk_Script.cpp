@@ -7,6 +7,8 @@
 #include "Engine/CLevelMgr.h"
 #include "Engine/CLevel.h"
 #include "Engine/CParticleSystem.h"
+#include "Engine/CSound.h"
+#include "Engine/CResMgr.h"
 
 
 CM_Spider_STATE_Atk_Script::CM_Spider_STATE_Atk_Script()
@@ -40,6 +42,7 @@ void CM_Spider_STATE_Atk_Script::begin()
 	m_MHQ->GetOwner()->GetScript<CHitBoxScript>()->SetSleep(0);
 	
 	m_eAtkState = eAtkState::Shoot;
+	m_Sound = CResMgr::GetInst()->FindRes<CSound>(L"sound\\Spider\\Voc_Strider_Attack_Long_01.wav");
 }
 
 void CM_Spider_STATE_Atk_Script::tick()
@@ -79,6 +82,8 @@ void CM_Spider_STATE_Atk_Script::Shoot()
 
 	if (m_bAtkComplete)
 	{
+		m_Sound->Play(1, 0.5f, false);
+
 		m_bShootOnce = false;
 		m_bAtkComplete = false;
 		m_MHQ->ChangeState((UINT)eM_A_States::MOVE);

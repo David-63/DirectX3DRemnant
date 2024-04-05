@@ -252,8 +252,9 @@
     <ClInclude Include="CP_CombatScript.h">
       <Filter>Script\Creature\Player\Module</Filter>
     </ClInclude>
+    <ClInclude Include="CB_RangeBallScript.h" />
     <ClInclude Include="CM_Spider_Proj_Script.h">
-      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
+      <Filter>Script\Creature\Monster\M_Scripts\Spider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -416,5 +417,6 @@
     <ClCompile Include="CP_CombatScript.cpp">
       <Filter>Script\Creature\Player\Module</Filter>
     </ClCompile>
+    <ClCompile Include="CB_RangeBallScript.cpp" />
   </ItemGroup>
 </Project>

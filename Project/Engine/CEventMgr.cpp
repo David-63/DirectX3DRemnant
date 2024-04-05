@@ -128,6 +128,7 @@ void CEventMgr::GC_Clear()
 				m_vecGC[i]->DisconnectFromParent();
 			
 			delete m_vecGC[i];
+			m_vecGC[i] = nullptr;
 
 			m_LevelChanged = true;
 		}		
