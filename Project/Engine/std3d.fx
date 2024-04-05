@@ -33,10 +33,10 @@ struct VS_OUT
 // Param
 #define SPEC_COEFF      saturate(g_float_0) // 반사 계수
 
-#define IS_SKYBOX_ENV   g_btexcube_0
-#define SKYBOX_ENV_TEX  g_cube_0
 #define IsOutputTex g_btex_0
 #define IsNormalTex g_btex_1
+#define IS_SKYBOX_ENV   g_btexcube_0
+#define SKYBOX_ENV_TEX  g_cube_0
 
 VS_OUT VS_Std3D(VS_IN _in)
 {
@@ -66,7 +66,10 @@ float4 PS_Std3D(VS_OUT _in) : SV_Target
     {
         vOutColor = g_tex_0.Sample(g_sam_0, _in.vUV);
     }
-    
+    if (0.1 >= vOutColor.a)
+    {
+        discard;
+    }
     if (IsNormalTex)
     {
         float3 vNormal = g_tex_1.Sample(g_sam_0, _in.vUV).xyz;        
