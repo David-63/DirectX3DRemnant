@@ -127,6 +127,11 @@ void CEventMgr::GC_Clear()
 			if (m_vecGC[i]->GetParent())			
 				m_vecGC[i]->DisconnectFromParent();
 			
+			if (m_vecGC[i]->RigidBody())
+			{
+				m_vecGC[i]->RigidBody()->Destroy();
+				m_vecGC[i]->RigidBody()->ReleaseActor();
+			}
 			delete m_vecGC[i];
 			m_vecGC[i] = nullptr;
 

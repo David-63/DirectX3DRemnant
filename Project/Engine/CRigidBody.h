@@ -39,6 +39,10 @@ public:
 	void PushBackShapeInfo(const tShapeInfo _info) { mShapeInfos.push_back(_info); }
 	bool IsAppliedPhysics();
 
+	void ReleaseActor();
+
+
+
 	physx::PxActor* GetActor() { return mActor; }
 
 	template<typename T>

@@ -37,6 +37,7 @@ CRigidBody::~CRigidBody()
 		delete mGeometries[i];
 		mGeometries[i] = nullptr;
 	}
+
 }
 void CRigidBody::SaveToLevelFile(FILE* _File)
 {
@@ -135,6 +136,15 @@ void CRigidBody::SetPhysical(ACTOR_TYPE _eActorType)
 bool CRigidBody::IsAppliedPhysics()
 {
 	return mbAppliedPhysics;
+}
+void CRigidBody::ReleaseActor()
+{
+	for (auto shape : mShapes)
+	{
+		shape->release();
+	}
+
+	mActor->release();
 }
 void CRigidBody::AddActorToLevel()
 {
