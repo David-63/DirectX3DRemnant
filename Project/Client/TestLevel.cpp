@@ -68,7 +68,7 @@ void CreateTestLevel()
 	pMainCam->Camera()->SetLayerMaskAll(true);	// 모든 레이어 체크
 	pMainCam->Camera()->SetLayerMask(31, false);// UI Layer 는 렌더링하지 않는다.
 	pMainCam->Camera()->SetFar(20000.f);
-	SpawnGameObject(pMainCam, Vec3(200.f, 133.f, -500.f), 0);
+	SpawnGameObject(pMainCam, Vec3(0.f, 0.f, 0.f), 0);
 
 	// UI cameara
 	CGameObject* pUICam = new CGameObject;
@@ -80,7 +80,9 @@ void CreateTestLevel()
 	pUICam->Camera()->SetProjType(PROJ_TYPE::ORTHOGRAPHIC);
 	pUICam->Camera()->SetCameraIndex(1);		// Sub 카메라로 지정
 	pUICam->Camera()->SetLayerMask(31, true);	// 31번 레이어만 체크
-	SpawnGameObject(pUICam, Vec3(0.f, 0.f, 0.f), 0);
+	pUICam->Camera()->SetUIOnly();
+	pUICam->Camera()->SetFar(20000.f);
+	SpawnGameObject(pUICam, Vec3(19.f, -46.f, -1400.f), 0);
 
 
 	//
@@ -393,19 +395,17 @@ void CreateTestLevel()
 	}
 
 	{
-		//CGameObject* obj = new CGameObject();
-		//obj->AddComponent(new CTransform());
-		//obj->AddComponent(new CMeshRender());
-		////obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"CubeMesh"));
-		////obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DMtrl"), 0);
-		////obj->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\aim.png"));
+		CGameObject* pObject = new CGameObject;
+		pObject->SetName(L"Plane");
+		pObject->AddComponent(new CTransform);
+		pObject->AddComponent(new CMeshRender);
 
+		pObject->Transform()->SetRelativeScale(Vec3(45.f, 45.f, 1.f));
 
-		//obj->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"SphereMesh"));
-		//obj->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3D_DeferredMtrl"),0);
-		//obj->MeshRender()->GetMaterial()->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01.tga"));
-		//obj->MeshRender()->GetMaterial()->SetTexParam(TEX_1, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\tile\\TILE_01_N.tga"));
-		//SpawnGameObject(obj, Vec3(0,0,0), 0);
+		pObject->MeshRender()->SetMesh(CResMgr::GetInst()->FindRes<CMesh>(L"RectMesh"));
+		pObject->MeshRender()->SetMaterial(CResMgr::GetInst()->FindRes<CMaterial>(L"Std3DUIMtrl"), 0);
+		pObject->MeshRender()->GetMaterial(0)->SetTexParam(TEX_0, CResMgr::GetInst()->FindRes<CTexture>(L"texture\\aim2.png"));
+
+		SpawnGameObject(pObject, Vec3(0.f, 0.f, -500.f), L"ViewPort UI");
 	}
-	
 }
