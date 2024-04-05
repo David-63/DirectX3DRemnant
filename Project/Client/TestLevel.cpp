@@ -26,6 +26,7 @@
 #include <Script/CHitBoxScript.h>
 #include <Script/CP_FSMScript.h>
 #include <Script/CB_FSMScript.h>
+#include <Script/CM_Lurker_STATE_Idle_Script.h>
 
 
 void CreateTestLevel()
@@ -200,11 +201,11 @@ void CreateTestLevel()
 		obj->Animator3D()->SimpleGen(L"animclip\\Spider\\Wasteland_Spider_Gun_Turn135_L.animclip");
 
 	}*/
-	/*{
-		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Spider\\Wasteland_Spider_Gun_Turn180_L.fbx");
-		CGameObject* obj = data->Instantiate();
-		obj->Animator3D()->SimpleGen(L"animclip\\Spider\\Wasteland_Spider_Gun_Turn180_L.animclip");
-	}*/
+	//{
+	//	Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Spider\\Wasteland_Spider_Alert.fbx");
+	//	CGameObject* obj = data->Instantiate();
+	//	obj->Animator3D()->SimpleGen(L"animclip\\Spider\\Wasteland_Spider_Alert.animclip");
+	//}
 	//Annointed
 	/*{
 		Ptr<CMeshData> data = CResMgr::GetInst()->LoadFBX(L"fbx\\Spider\\Wasteland_Spider_Death_F_01.fbx");
@@ -538,11 +539,11 @@ void CreateTestLevel()
 		//player
 	{
 		CGameObject* pObj = new CGameObject;
-		pObj->SetName(L"Player Obj");
+		pObj->SetName(L"can");
 		pObj->AddComponent(new CTransform);
 		pObj->AddComponent(new CTestScript);
 
-		SpawnGameObject(pObj, Vec3(200.f, 0.f, 0.f), 0);
+		SpawnGameObject(pObj, Vec3(000.f, 0.f, 000.f), 0);
 	}
 
 	tRayCastInfo* hit = Physics::GetInst()->RayCast(Vec3(500.f, 100.f, 500.f), Vec3(0.f, 0.f, -1.f), 1000.f);
@@ -575,6 +576,7 @@ void CreateTestLevel()
 				SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Ground);
 			}
 		}
+		fab->FabClear();
 	}
 
 #define WallSize 13
@@ -587,6 +589,7 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, 5000);
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
@@ -594,6 +597,7 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, -5000);
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
@@ -602,6 +606,7 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, 5000);
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
@@ -610,6 +615,7 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(-5000.f, 0.f, -4600.f + (size * 800.f));
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
@@ -618,6 +624,7 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(5000.f, 0.f, -4600.f + (size * 800.f));
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
@@ -627,12 +634,14 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(-4600.f + (size * 800.f), 0.f, -3400);
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
 
 		spawnPos = Vec3(-2600.f, 0.f, -3800);
 		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->AddComponent(new CCollider3D);
 		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
 		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
@@ -641,21 +650,25 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(-2200.f + (size * 800.f), 0.f, -4200);
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
 		spawnPos = Vec3(-1000.f, 0.f, -3800);
 		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->AddComponent(new CCollider3D);
 		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
 		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		spawnPos = Vec3(600.f, 0.f, -4600);
 		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->AddComponent(new CCollider3D);
 		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
 		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		spawnPos = Vec3(600.f, 0.f, -3800);
 		empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+		empty->AddComponent(new CCollider3D);
 		empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 		empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
 		SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
@@ -665,6 +678,7 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(1000.f + (size * 800.f), 0.f, -3400);
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
@@ -672,9 +686,12 @@ void CreateTestLevel()
 		{
 			spawnPos = Vec3(-2200.f + (size * 800.f), 0.f, -3400);
 			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
 			empty->Transform()->SetRelativeScale(2.f, 2.f, 1.f);
 			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 		}
+
+		fab->FabClear();
 	}
 
 	//StatueC
@@ -682,6 +699,8 @@ void CreateTestLevel()
 		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\StatueC.pref", L"prefab\\StatueC.pref");
 		fab->PrefabLoad(L"prefab\\StatueC.pref");
 		CGameObject* obj = fab->Instantiate(Vec3(1200.f, 0.f, 4400.f), (UINT)LAYER_TYPE::Wall);
+		fab->FabClear();
+		obj->AddComponent(new CCollider3D);
 		obj->SetName(L"StatueC");
 		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
 
@@ -693,6 +712,8 @@ void CreateTestLevel()
 		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Prop_StatueB.pref", L"prefab\\Prop_StatueB.pref");
 		fab->PrefabLoad(L"prefab\\Prop_StatueB.pref");
 		CGameObject* obj = fab->Instantiate(Vec3(-1200.f, 0.f, 4400.f), (UINT)LAYER_TYPE::Wall);
+		fab->FabClear();
+		obj->AddComponent(new CCollider3D);
 		obj->SetName(L"StatueB");
 		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
 
@@ -701,13 +722,67 @@ void CreateTestLevel()
 
 	//석관들
 	{
-		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\prop_SarcoPhagus.pref", L"prefab\\prop_SarcoPhagus.pref");
-		fab->PrefabLoad(L"prefab\\prop_SarcoPhagus.pref");
-		CGameObject* obj = fab->Instantiate(Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Wall);
-		obj->SetName(L"Sarco");
-		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\prop_SarcoPhagus.pref", L"prefab\\prop_SarcoPhagus.pref");
+			fab->PrefabLoad(L"prefab\\prop_SarcoPhagus.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(2565.f, 0.f, 1998.f), (UINT)LAYER_TYPE::Wall);
+			fab->FabClear();
+			obj->AddComponent(new CCollider3D);
+			obj->SetName(L"Sarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
 
-		SpawnGameObject(obj, Vec3(0.f, 0.f, 0.f), (UINT)LAYER_TYPE::Wall);
+			SpawnGameObject(obj, Vec3(2565.f, 0.f, 1998.f), (UINT)LAYER_TYPE::Wall);
+		}
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\prop_SarcoPhagus.pref", L"prefab\\prop_SarcoPhagus.pref");
+			fab->PrefabLoad(L"prefab\\prop_SarcoPhagus.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(2565.f, 0.f, -379.f), (UINT)LAYER_TYPE::Wall);
+			fab->FabClear();
+			obj->SetName(L"Sarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+			SpawnGameObject(obj, Vec3(2565.f, 0.f, -379.f), (UINT)LAYER_TYPE::Wall);
+		}
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\prop_SarcoPhagus.pref", L"prefab\\prop_SarcoPhagus.pref");
+			fab->PrefabLoad(L"prefab\\prop_SarcoPhagus.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(2565.f, 0.f, -2178.f), (UINT)LAYER_TYPE::Wall);
+			fab->FabClear();
+			obj->SetName(L"Sarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+			SpawnGameObject(obj, Vec3(2565.f, 0.f, -2178.f), (UINT)LAYER_TYPE::Wall);
+		}
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\prop_SarcoPhagus.pref", L"prefab\\prop_SarcoPhagus.pref");
+			fab->PrefabLoad(L"prefab\\prop_SarcoPhagus.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-2565.f, 0.f, 1998.f), (UINT)LAYER_TYPE::Wall);
+			fab->FabClear();
+			obj->SetName(L"Sarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+			SpawnGameObject(obj, Vec3(-2565.f, 0.f, 1998.f), (UINT)LAYER_TYPE::Wall);
+		}
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\prop_SarcoPhagus.pref", L"prefab\\prop_SarcoPhagus.pref");
+			fab->PrefabLoad(L"prefab\\prop_SarcoPhagus.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-2565.f, 0.f, -379.f), (UINT)LAYER_TYPE::Wall);
+			fab->FabClear();
+			obj->SetName(L"Sarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+			SpawnGameObject(obj, Vec3(-2565.f, 0.f, -379.f), (UINT)LAYER_TYPE::Wall);
+		}
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\prop_SarcoPhagus.pref", L"prefab\\prop_SarcoPhagus.pref");
+			fab->PrefabLoad(L"prefab\\prop_SarcoPhagus.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-2565.f, 0.f, -2178.f), (UINT)LAYER_TYPE::Wall);
+			fab->FabClear();
+			obj->SetName(L"Sarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
+
+			SpawnGameObject(obj, Vec3(-2565.f, 0.f, -2178.f), (UINT)LAYER_TYPE::Wall);
+		}
 	}
 
 	//파이프
@@ -715,6 +790,8 @@ void CreateTestLevel()
 		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Prop_Pipe.pref", L"prefab\\Prop_Pipe.pref");
 		fab->PrefabLoad(L"prefab\\Prop_Pipe.pref");
 		CGameObject* obj = fab->Instantiate(Vec3(483.f, 0.f, -4897.f), (UINT)LAYER_TYPE::Wall);
+		fab->FabClear();
+		obj->AddComponent(new CCollider3D);
 		obj->SetName(L"Pipe");
 		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
 
@@ -726,11 +803,208 @@ void CreateTestLevel()
 		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\BossBack.pref", L"prefab\\BossBack.pref");
 		fab->PrefabLoad(L"prefab\\BossBack.pref");
 		CGameObject* obj = fab->Instantiate(Vec3(42, 0.f, 4207), (UINT)LAYER_TYPE::Wall);
+		fab->FabClear();
+		obj->AddComponent(new CCollider3D);
 		obj->SetName(L"BossBack");
 		obj->SetLayerIdx((UINT)LAYER_TYPE::Wall);
 
 		SpawnGameObject(obj, Vec3(42.f, 0.f, 4207.f), (UINT)LAYER_TYPE::Wall);
 	}
 
+	//기둥들
+	{
+		Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Pillar.pref", L"prefab\\Pillar.pref");
+		fab->PrefabLoad(L"prefab\\Pillar.pref");
+		CGameObject* empty = nullptr;
+		Vec3 spawnPos = Vec3(0, 0, 0);
+		{
+			spawnPos = Vec3(-2600.f, 0.f, 0);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+			spawnPos = Vec3(2600.f, 0.f, 0);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
 
+			spawnPos = Vec3(-2600.f, 0.f, 2400.f);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+			spawnPos = Vec3(2600.f, 0.f, 2400.f);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+
+			spawnPos = Vec3(-2600.f, 0.f, -1800.f);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+			spawnPos = Vec3(2600.f, 0.f, -1800.f);
+			empty = fab.Get()->Instantiate(spawnPos, (UINT)LAYER_TYPE::Wall);
+			empty->AddComponent(new CCollider3D);
+			empty->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+			SpawnGameObject(empty, spawnPos, (UINT)LAYER_TYPE::Wall);
+		}
+		fab->FabClear();
+	}
+
+
+	//러커배치(석관)
+	{
+		//3시
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Lurker.pref", L"prefab\\Monster_Lurker.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Lurker.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(2565.f, 0.f, -457.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Lurker1ClockSarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+			dynamic_cast<CM_Lurker_FSMScript*>(obj->GetScript<CM_Lurker_FSMScript>())->SetIdlePose(5);
+
+			SpawnGameObject(obj, Vec3(2565.f, 0.f, -457.f), (UINT)LAYER_TYPE::Monster);
+		}
+		//5시
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Lurker.pref", L"prefab\\Monster_Lurker.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Lurker.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(2565.f, 0.f, -2279.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Lurker1ClockSarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+			dynamic_cast<CM_Lurker_FSMScript*>(obj->GetScript<CM_Lurker_FSMScript>())->SetIdlePose(5);
+
+			SpawnGameObject(obj, Vec3(2565.f, 0.f, -2279.f), (UINT)LAYER_TYPE::Monster);
+		}
+		//11시
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Lurker.pref", L"prefab\\Monster_Lurker.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Lurker.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-2565.f, 0.f, 1920.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Lurker1ClockSarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+			dynamic_cast<CM_Lurker_FSMScript*>(obj->GetScript<CM_Lurker_FSMScript>())->SetIdlePose(5);
+
+			SpawnGameObject(obj, Vec3(-2565.f, 0.f, 1920.f), (UINT)LAYER_TYPE::Monster);
+		}
+		//9시
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Lurker.pref", L"prefab\\Monster_Lurker.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Lurker.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-2565.f, 0.f, -457.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Lurker1ClockSarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+			dynamic_cast<CM_Lurker_FSMScript*>(obj->GetScript<CM_Lurker_FSMScript>())->SetIdlePose(5);
+
+			SpawnGameObject(obj, Vec3(-2565.f, 0.f, -457.f), (UINT)LAYER_TYPE::Monster);
+		}
+	}
+
+	//러커배치(벽)
+	{
+		//1시
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Lurker.pref", L"prefab\\Monster_Lurker.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Lurker.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(2208.f, 0.f, 2788.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Lurker1ClockSarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+			obj->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+
+			dynamic_cast<CM_Lurker_FSMScript*>(obj->GetScript<CM_Lurker_FSMScript>())->SetIdlePose(3);
+
+			SpawnGameObject(obj, Vec3(2208.f, 0.f, 2788.f), (UINT)LAYER_TYPE::Monster);
+		}
+		//5시
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Lurker.pref", L"prefab\\Monster_Lurker.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Lurker.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(2208.f, 0.f, -1404.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Lurker5ClockSarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+			obj->Transform()->SetRelativeRot(Vec3(0.f, XM_PIDIV2, 0.f));
+
+			dynamic_cast<CM_Lurker_FSMScript*>(obj->GetScript<CM_Lurker_FSMScript>())->SetIdlePose(3);
+
+			SpawnGameObject(obj, Vec3(2208.f, 0.f, -1404.f), (UINT)LAYER_TYPE::Monster);
+		}
+		//6시
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Lurker.pref", L"prefab\\Monster_Lurker.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Lurker.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-2268.f, 0.f, 411.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Lurker3ClockSarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+			obj->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
+
+			dynamic_cast<CM_Lurker_FSMScript*>(obj->GetScript<CM_Lurker_FSMScript>())->SetIdlePose(4);
+
+			SpawnGameObject(obj, Vec3(-2268.f, 0.f, 411.f), (UINT)LAYER_TYPE::Monster);
+		}
+		//7시
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Lurker.pref", L"prefab\\Monster_Lurker.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Lurker.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-2268.f, 0.f, -1404.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Lurker5ClockSarco");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+			obj->Transform()->SetRelativeRot(Vec3(0.f, -XM_PIDIV2, 0.f));
+
+			dynamic_cast<CM_Lurker_FSMScript*>(obj->GetScript<CM_Lurker_FSMScript>())->SetIdlePose(4);
+
+			SpawnGameObject(obj, Vec3(-2268.f, 0.f, -1404.f), (UINT)LAYER_TYPE::Monster);
+		}
+	}
+
+	//스파이더
+	{
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Spider.pref", L"prefab\\Monster_Spider.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Spider.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-1143.f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Spider");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+
+			SpawnGameObject(obj, Vec3(-1143.f, 0.f, 3338.f), (UINT)LAYER_TYPE::Monster);
+		}
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Spider.pref", L"prefab\\Monster_Spider.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Spider.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(-46.f, 0.f, 1209.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Spider");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+
+			SpawnGameObject(obj, Vec3(-46.f, 0.f, 1209.f), (UINT)LAYER_TYPE::Monster);
+		}
+		{
+			Ptr<CPrefab> fab = CResMgr::GetInst()->Load<CPrefab>(L"prefab\\Monster_Spider.pref", L"prefab\\Monster_Spider.pref");
+			fab->PrefabLoad(L"prefab\\Monster_Spider.pref");
+			CGameObject* obj = fab->Instantiate(Vec3(1245.f, 0.f, -844.f), (UINT)LAYER_TYPE::Monster);
+			fab->FabClear();
+			obj->SetName(L"Spider");
+			obj->SetLayerIdx((UINT)LAYER_TYPE::Monster);
+
+
+			SpawnGameObject(obj, Vec3(1245.f, 0.f, -844.f), (UINT)LAYER_TYPE::Monster);
+		}
+	}
 }

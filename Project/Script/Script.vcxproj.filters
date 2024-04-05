@@ -237,9 +237,6 @@
     <ClInclude Include="CB_STATEHealScript.h">
       <Filter>Script\Creature\Boss\B_States</Filter>
     </ClInclude>
-    <ClInclude Include="CM_Spider_Proj_Script.h">
-      <Filter>Script\Creature\Monster\M_Scripts\Spider</Filter>
-    </ClInclude>
     <ClInclude Include="CP_STATEStaggerScript.h">
       <Filter>Script\Creature\Player\P_States</Filter>
     </ClInclude>
@@ -254,6 +251,9 @@
     </ClInclude>
     <ClInclude Include="CP_CombatScript.h">
       <Filter>Script\Creature\Player\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="CM_Spider_Proj_Script.h">
+      <Filter>Script\Creature\Monster\M_States\Lurker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

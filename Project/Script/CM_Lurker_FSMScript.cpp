@@ -2,6 +2,7 @@
 #include "CM_Lurker_FSMScript.h"
 #include "CM_Lurker_StatesScript.h"
 #include "CM_Lurker_STATE_Damaged_Script.h"
+#include "CM_Lurker_STATE_Idle_Script.h"
 
 CM_Lurker_FSMScript::CM_Lurker_FSMScript()
 {
@@ -52,6 +53,8 @@ void CM_Lurker_FSMScript::begin()
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_MOVE_SCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_DAMAGED_SCRIPT)));
 	AddState(dynamic_cast<CC_StatesScript*>(CScriptMgr::GetScript(SCRIPT_TYPE::M_LURKER_STATE_DEAD_SCRIPT)));
+
+	dynamic_cast<CM_Lurker_STATE_Idle_Script*>(FindStateScript(0))->SetInitialPose(m_IdlePose);
 
 
 	ChangeState(static_cast<UINT>(eLurkerState::Idle));
