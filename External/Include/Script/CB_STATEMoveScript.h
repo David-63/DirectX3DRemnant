@@ -25,10 +25,28 @@ private:
 
 	bool        m_IsPhase_1;
 	bool        m_GetWeapon;
-	bool        m_OnceEvade;
+
 	bool        m_OnceSpawnSpell;
+	bool        m_OnceSpawnSpellUp;
+	bool        m_OnceSpawnSpell_Stop;
+	bool        m_OnceSpawnSpell_FireSpawn;
+	bool        m_OnceSpawnSpell_Fire;
+
+
+	int         m_SpellCooltime;
+
+	CGameObject* m_SpellObj_Spawn_R;
+	CGameObject* m_SpellObj_Spawn_UP_R;
+	CGameObject* m_SpellObj_Spawn_Stop_R;
+	CGameObject* m_SpellObj_Fire_R;
+
+	CGameObject* m_SpellObj_Spawn_L;
+	CGameObject* m_SpellObj_Spawn_UP_L;
+	CGameObject* m_SpellObj_Spawn_Stop_L;
+	CGameObject* m_SpellObj_Fire_L;
+
+
 	bool        m_bBloodDrink;
-	bool        m_bOnEvade;
 
 
 	int         m_DirSetCount;
@@ -84,26 +102,24 @@ private:
 	//GetBack
 	int        m_iGetBackStage;
 
-	bool mKey;
+	bool		mKey;
 	bool       m_bEnterDistCheck;
+
+	float      m_fTime;
+
+	bool bWeaponStateCheck;
 
 
 public:
+
+	void SpawnSpell();
+	void SpawnSpellMove();
 	void NoWeapon_MoveToDir();
 	void Weapon_Move();
 	void Weapon_StanceChange();
 	void Weapon_StanceEvent();
 
 	void FastWalk_End();
-	void Evade_End();
-
-	void BloodDrink_StartEnd();
-	void BloodDrink_LoopEnd();
-	void BloodDrink_End();
-
-
-	void Evade_MoveZero();
-	void Evade_MoveRestore();
 	int ZeroToOneRandom();
 
 
@@ -135,6 +151,8 @@ public:
 	void GetBack();
 	bool DistCheck();
 	void Clear();
+
+	void DecidePattern();
 
 public:
 	CLONE(CB_STATEMoveScript);
