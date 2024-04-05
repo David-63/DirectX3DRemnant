@@ -405,13 +405,15 @@ void CCamera::SortObject_Shadow()
 
 void CCamera::render()
 {
-	geometryRender();	// deferred render	| MRT::DEFERRED rendering
-	lightRender();		// light render		| MRT::LIGHT	rendering
-	mergeRender();		//					| MRT::SWAPCHAINrendering
-
-	render_forward();	
-	render_forward_Decal();
-	render_transparent();
+	if (!m_uiOnly)
+	{
+		geometryRender();	// deferred render	| MRT::DEFERRED rendering
+		lightRender();		// light render		| MRT::LIGHT	rendering
+		mergeRender();		//					| MRT::SWAPCHAINrendering
+		render_forward();
+		render_forward_Decal();
+		render_transparent();
+	}
 
 	render_postprocess();
 	render_ui();
